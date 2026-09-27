@@ -77,6 +77,34 @@
 
   --font-display: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Satoshi", ui-sans-serif, system-ui, sans-serif;
+
+  /* Type scale (Figma: Typography) — Instrument Sans H1–H4, Satoshi H5/p,
+     line-height = font-size × 1.618 (golden ratio), rounded to the pixel. */
+  --text-h1: 2.5rem; /* 40px */
+  --text-h1--line-height: 4.0625rem; /* 65px */
+  --text-h2: 1.75rem; /* 28px */
+  --text-h2--line-height: 2.8125rem; /* 45px */
+  --text-h3: 1.375rem; /* 22px */
+  --text-h3--line-height: 2.25rem; /* 36px */
+  --text-h4: 1rem; /* 16px */
+  --text-h4--line-height: 1.625rem; /* 26px */
+  --text-h5: 0.8125rem; /* 13px */
+  --text-h5--line-height: 1.3125rem; /* 21px */
+  --text-p: 1rem; /* 16px */
+  --text-p--line-height: 1.625rem; /* 26px */
+
+  /* Spacing scale (Figma: Layout / Spacing) — deliberately not redefined
+     here: Tailwind's default numeric scale (4px base unit) already maps
+     exactly to xs to 5xl (gap-1=4px, gap-2=8px, gap-4=16px, gap-6=24px,
+     gap-8=32px, gap-12=48px, gap-16=64px, gap-20=80px, gap-24=96px), and
+     redefining named keys under --spacing- would also override Tailwind's
+     shared width, max-width and height scale, which uses that namespace. */
+
+  /* Radius scale (Figma: Object styles / Radius) */
+  --radius-sm: 0.25rem; /* 4px — chips, tags, badges */
+  --radius-md: 0.5rem; /* 8px — buttons, form fields */
+  --radius-lg: 1rem; /* 16px — cards, panels */
+  --radius-full: 62.4375rem; /* 999px — avatars, pills */
 }
 
 html {

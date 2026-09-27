@@ -131,17 +131,17 @@ function Arrow() {
 
 export default function HowItWorks() {
   return (
-    <section className="bg-page py-20">
-      <div className="mx-auto max-w-7xl px-6">
+    <section className="bg-page py-16 sm:py-20">
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-10 xl:px-20">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary-500">
+          <p className="text-h5 font-semibold uppercase tracking-[0.5px] text-primary-500">
             How It Works
           </p>
-          <h2 className="mt-3 font-display text-3xl font-bold text-heading sm:text-4xl">
+          <h2 className="mt-3 font-display text-[22px] font-bold text-heading sm:text-h2">
             From enterprise data to{" "}
             <span className="text-primary-500">better decisions.</span>
           </h2>
-          <p className="mt-4 text-body">
+          <p className="text-p mt-4 text-body">
             Superatom AI brings together your enterprise data, business
             context, rules and AI to help teams make, execute and
             continuously improve thousands of decisions — every day.
@@ -158,7 +158,7 @@ export default function HowItWorks() {
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-500 text-sm font-bold text-secondary-800">
                 {step.n}
               </div>
-              <p className="mt-3 font-display text-sm font-semibold text-heading">
+              <p className="text-h4 mt-3 font-display font-semibold text-heading">
                 {step.title}
               </p>
               <p className="mt-1 text-xs leading-relaxed text-caption">

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import logoWhite from "../assets/logo-white.png";
 
 const solutions = [
   { name: "Inventory Intelligence", blurb: "Optimize, rebalance, prevent." },
@@ -37,16 +38,11 @@ function ChevronDown() {
 
 function Logo() {
   return (
-    <a href="/" className="flex shrink-0 items-center gap-2.5">
-      <span className="grid h-8 w-8 grid-cols-2 gap-[3px] rounded-[9px] bg-gradient-to-br from-primary-500 to-accent-500 p-[7px]">
-        <span className="rounded-full bg-white" />
-        <span className="rounded-full bg-white" />
-        <span className="rounded-full bg-white" />
-        <span className="rounded-full bg-white" />
-      </span>
-      <span className="font-display text-[17px] font-bold tracking-tight text-heading">
-        Superatom&nbsp;AI
-      </span>
+    <a
+      href="/"
+      className="flex shrink-0 items-center rounded-md bg-secondary-500 px-3 py-2"
+    >
+      <img src={logoWhite} alt="Superatom AI" className="h-5 w-auto" />
     </a>
   );
 }
@@ -65,12 +61,12 @@ function DropdownNavItem({
         <ChevronDown />
       </button>
       <div className="invisible absolute left-1/2 top-full z-50 w-72 -translate-x-1/2 pt-4 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100">
-        <div className="rounded-xl border border-secondary-100 bg-white p-2 shadow-xl shadow-secondary-900/10">
+        <div className="rounded-lg border border-secondary-100 bg-white p-2 shadow-xl shadow-secondary-900/10">
           {items.map((item) => (
             <a
               key={item.name}
               href="#"
-              className="block rounded-lg px-3 py-2.5 transition-colors hover:bg-primary-100/40"
+              className="block rounded-md px-3 py-2.5 transition-colors hover:bg-primary-100/40"
             >
               <p className="font-display text-sm font-semibold text-heading">
                 {item.name}
@@ -89,7 +85,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 h-16 bg-transparent">
-      <div className="mx-auto flex h-16 max-w-[1320px] items-center justify-between px-6">
+      <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-4 sm:px-10 xl:px-20">
         <Logo />
 
         <nav className="hidden items-center gap-[30px] lg:flex">
@@ -150,7 +146,7 @@ export default function Header() {
       </div>
 
       {mobileOpen && (
-        <div className="border-t border-secondary-100 bg-white px-6 py-4 lg:hidden">
+        <div className="border-t border-secondary-100 bg-white px-4 py-4 sm:px-10 lg:hidden">
           <nav className="flex flex-col gap-4">
             <a href="#" className="text-sm font-medium text-body">
               Platform
