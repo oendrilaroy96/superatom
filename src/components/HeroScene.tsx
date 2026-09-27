@@ -31,11 +31,11 @@ const data: Record<NodeKey, { name: string; tag: string }> = {
 // Hand-placed depth positions (three.js units, camera-space) — alternating
 // near/far for an orbiting-shell read.
 const positions: Record<NodeKey, { x: number; y: number; z: number }> = {
-  demand: { x: -255, y: 95, z: 42 },
-  procurement: { x: 12, y: 168, z: -32 },
-  manufacturing: { x: 270, y: 38, z: 58 },
-  logistics: { x: 212, y: -158, z: -38 },
-  inventory: { x: -240, y: -155, z: 18 },
+  demand: { x: -255, y: 60, z: 42 },
+  procurement: { x: 80, y: 130, z: -32 },
+  manufacturing: { x: 270, y: 24, z: 58 },
+  logistics: { x: 212, y: -98, z: -38 },
+  inventory: { x: -240, y: -96, z: 18 },
 };
 
 const hubPos = { x: 0, y: 14, z: 96 };
@@ -466,10 +466,10 @@ export default function HeroScene() {
   }, []);
 
   return (
-    <div className="relative w-full">
+    <div className="relative h-full w-full">
       <div
         ref={stageRef}
-        className="hero-gl-stage relative aspect-[16/11.6] max-h-[500px] w-full overflow-hidden rounded-[18px] max-lg:hidden"
+        className="hero-gl-stage relative h-full min-h-[280px] w-full overflow-hidden rounded-[18px] max-lg:hidden"
       >
         <div className="pointer-events-none absolute bottom-2 left-1/2 z-[6] flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap font-display text-[10.5px] uppercase tracking-[0.08em] text-muted">
           <svg

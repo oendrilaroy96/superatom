@@ -22,13 +22,13 @@ function StatIcon({ path }: { path: string }) {
 
 function ScenePlaceholder() {
   return (
-    <div className="aspect-[16/11.6] max-h-[500px] w-full animate-pulse rounded-[18px] bg-primary-100/40 max-lg:hidden" />
+    <div className="min-h-[280px] w-full animate-pulse rounded-[18px] bg-primary-100/40 max-lg:hidden lg:h-full lg:min-h-0" />
   );
 }
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f8fafd_100%)]">
+    <section className="relative flex flex-col overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f8fafd_100%)] lg:h-[calc(100vh-4rem)]">
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -51,18 +51,18 @@ export default function Hero() {
         aria-hidden="true"
       />
 
-      <div className="relative z-[2] mx-auto flex max-w-[1320px] flex-col gap-10 px-6 pt-13 sm:pt-16">
+      <div className="relative z-[2] mx-auto flex w-full max-w-[1320px] flex-1 flex-col gap-4 px-6 pt-6 sm:pt-8 lg:min-h-0 lg:gap-6">
         <div className="mx-auto flex max-w-[720px] flex-col items-center text-center">
-          <p className="mb-4.5 font-sans text-[11.5px] font-medium uppercase tracking-[0.16em] text-muted">
+          <p className="mb-3 font-sans text-[11.5px] font-medium uppercase tracking-[0.16em] text-muted">
             Decision intelligence for the supply chain
           </p>
-          <h1 className="m-0 mb-5 font-display text-[34px] font-bold leading-[1.08] tracking-[-0.02em] text-heading sm:text-[44px] lg:text-[52px]">
+          <h1 className="m-0 mb-3 font-display text-[34px] font-bold leading-[1.08] tracking-[-0.02em] text-heading sm:text-[44px] lg:text-[52px]">
             Decision Intelligence for the{" "}
             <span className="bg-gradient-to-r from-accent-500 to-primary-500 bg-clip-text text-transparent">
               Supply Chain.
             </span>
           </h1>
-          <p className="mb-[30px] max-w-[52ch] text-base leading-[1.55] text-body">
+          <p className="mb-5 max-w-[52ch] text-base leading-[1.55] text-body">
             Make, automate and execute thousands of better decisions across
             the supply chain.
           </p>
@@ -86,12 +86,14 @@ export default function Hero() {
           </a>
         </div>
 
-        <Suspense fallback={<ScenePlaceholder />}>
-          <HeroScene />
-        </Suspense>
+        <div className="w-full lg:min-h-0 lg:flex-1">
+          <Suspense fallback={<ScenePlaceholder />}>
+            <HeroScene />
+          </Suspense>
+        </div>
       </div>
 
-      <div className="relative z-[2] mx-auto mt-15 flex max-w-[1320px] flex-wrap gap-8 border-t border-secondary-100 px-6 pb-11 pt-9">
+      <div className="relative z-[2] mx-auto flex w-full max-w-[1320px] flex-wrap gap-8 border-t border-secondary-100 px-6 pb-5 pt-5">
         <div className="flex min-w-[150px] items-center gap-3">
           <StatIcon path='<path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/>' />
           <span className="text-[13.5px] font-semibold leading-tight text-body">
