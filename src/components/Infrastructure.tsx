@@ -78,22 +78,22 @@ function StackGraphic() {
   return (
     <div className="flex items-center justify-center gap-10">
       <div className="space-y-2">
-        <div className="mb-2 flex h-14 w-32 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-400 to-cyan-600 text-xs font-semibold text-[#0a1929] shadow-lg">
+        <div className="mb-2 flex h-14 w-32 items-center justify-center rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 text-xs font-semibold text-white shadow-lg">
           Superatom AI
         </div>
         {layers.map((layer, i) => (
           <div
             key={layer}
-            className="flex h-9 items-center justify-center rounded-lg border border-cyan-400/20 bg-[#0f2942] text-xs font-medium tracking-wide text-cyan-300"
+            className="flex h-9 items-center justify-center rounded-lg border border-primary-200 bg-secondary-500 text-xs font-medium tracking-wide text-primary-200"
             style={{ width: `${128 + i * 10}px`, marginLeft: `${i * 5}px` }}
           >
             {layer.toUpperCase()}
           </div>
         ))}
       </div>
-      <div className="hidden flex-col gap-4 border-l border-slate-200 pl-6 sm:flex">
+      <div className="hidden flex-col gap-4 border-l border-secondary-100 pl-6 sm:flex">
         {outcomes.map((o) => (
-          <p key={o} className="text-xs font-semibold text-slate-500">
+          <p key={o} className="text-xs font-semibold text-caption">
             {o}
           </p>
         ))}
@@ -108,18 +108,18 @@ export default function Infrastructure() {
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-cyan-600">
+            <p className="text-xs font-semibold uppercase tracking-widest text-primary-500">
               Infrastructure
             </p>
-            <h2 className="mt-3 text-3xl font-bold text-[#0a1929] sm:text-4xl">
+            <h2 className="mt-3 font-display text-3xl font-bold text-heading sm:text-4xl">
               Enterprise-grade infrastructure for{" "}
-              <span className="text-cyan-600">real-world operations</span>
+              <span className="text-primary-500">real-world operations</span>
             </h2>
-            <p className="mt-4 max-w-md text-slate-600">
+            <p className="mt-4 max-w-md text-body">
               A secure, governed foundation built for the demands of modern
               enterprise supply chains.
             </p>
-            <ul className="mt-6 space-y-2 text-sm text-slate-500">
+            <ul className="mt-6 space-y-2 text-sm text-caption">
               <li>• Superatom AI sits inside your infrastructure</li>
               <li>• ISO 27001 and SOC 2 aligned</li>
               <li>• Enterprise SSO out of the box</li>
@@ -132,17 +132,17 @@ export default function Infrastructure() {
           {features.map((f) => (
             <div
               key={f.title}
-              className="rounded-xl border border-slate-200 p-6"
+              className="rounded-xl border border-secondary-100 p-6"
             >
-              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600">
+              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary-100 text-primary-500">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                   {f.icon}
                 </svg>
               </span>
-              <p className="mt-4 text-sm font-semibold text-[#0a1929]">
+              <p className="mt-4 font-display text-sm font-semibold text-heading">
                 {f.title}
               </p>
-              <p className="mt-1.5 text-xs leading-relaxed text-slate-500">
+              <p className="mt-1.5 text-xs leading-relaxed text-caption">
                 {f.desc}
               </p>
             </div>

@@ -18,16 +18,16 @@ const resources = [
 function ChevronDown() {
   return (
     <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
+      width="9"
+      height="6"
+      viewBox="0 0 10 6"
       fill="none"
       className="transition-transform duration-200 group-hover:rotate-180"
     >
       <path
-        d="M6 9l6 6 6-6"
+        d="M1 1l4 4 4-4"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="1.6"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -37,17 +37,15 @@ function ChevronDown() {
 
 function Logo() {
   return (
-    <a href="/" className="flex items-center gap-2.5 shrink-0">
-      <span className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-400 to-cyan-600">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <circle cx="7" cy="7" r="2.4" fill="white" />
-          <circle cx="17" cy="7" r="1.6" fill="white" fillOpacity="0.85" />
-          <circle cx="7" cy="17" r="1.6" fill="white" fillOpacity="0.85" />
-          <circle cx="17" cy="17" r="2.4" fill="white" />
-        </svg>
+    <a href="/" className="flex shrink-0 items-center gap-2.5">
+      <span className="grid h-8 w-8 grid-cols-2 gap-[3px] rounded-[9px] bg-gradient-to-br from-primary-500 to-accent-500 p-[7px]">
+        <span className="rounded-full bg-white" />
+        <span className="rounded-full bg-white" />
+        <span className="rounded-full bg-white" />
+        <span className="rounded-full bg-white" />
       </span>
-      <span className="text-lg font-semibold tracking-tight text-white">
-        Superatom <span className="text-cyan-400">AI</span>
+      <span className="font-display text-[17px] font-bold tracking-tight text-heading">
+        Superatom&nbsp;AI
       </span>
     </a>
   );
@@ -62,20 +60,22 @@ function DropdownNavItem({
 }) {
   return (
     <div className="group relative">
-      <button className="flex items-center gap-1 text-sm font-medium text-slate-300 transition-colors hover:text-white">
+      <button className="flex items-center gap-1 text-[13.5px] text-body transition-colors hover:text-heading">
         {label}
         <ChevronDown />
       </button>
       <div className="invisible absolute left-1/2 top-full z-50 w-72 -translate-x-1/2 pt-4 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100">
-        <div className="rounded-xl border border-white/10 bg-[#0f2942] p-2 shadow-2xl shadow-black/40">
+        <div className="rounded-xl border border-secondary-100 bg-white p-2 shadow-xl shadow-secondary-900/10">
           {items.map((item) => (
             <a
               key={item.name}
               href="#"
-              className="block rounded-lg px-3 py-2.5 transition-colors hover:bg-white/5"
+              className="block rounded-lg px-3 py-2.5 transition-colors hover:bg-primary-100/40"
             >
-              <p className="text-sm font-medium text-white">{item.name}</p>
-              <p className="mt-0.5 text-xs text-slate-400">{item.blurb}</p>
+              <p className="font-display text-sm font-semibold text-heading">
+                {item.name}
+              </p>
+              <p className="mt-0.5 text-xs text-caption">{item.blurb}</p>
             </a>
           ))}
         </div>
@@ -99,31 +99,31 @@ export default function Header() {
     <header
       className={`sticky top-0 z-50 border-b transition-colors duration-200 ${
         scrolled
-          ? "border-white/10 bg-[#0a1929]/95 backdrop-blur"
-          : "border-transparent bg-[#0a1929]"
+          ? "border-secondary-100 bg-white/90 backdrop-blur"
+          : "border-transparent bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+      <div className="mx-auto flex h-16 max-w-[1320px] items-center justify-between px-6">
         <Logo />
 
-        <nav className="hidden items-center gap-8 lg:flex">
+        <nav className="hidden items-center gap-[30px] lg:flex">
           <a
             href="#"
-            className="text-sm font-medium text-slate-300 transition-colors hover:text-white"
+            className="text-[13.5px] text-body transition-colors hover:text-heading"
           >
             Platform
           </a>
           <DropdownNavItem label="Solutions" items={solutions} />
           <a
             href="#"
-            className="text-sm font-medium text-slate-300 transition-colors hover:text-white"
+            className="text-[13.5px] text-body transition-colors hover:text-heading"
           >
             Industries
           </a>
           <DropdownNavItem label="Resources" items={resources} />
           <a
             href="#"
-            className="text-sm font-medium text-slate-300 transition-colors hover:text-white"
+            className="text-[13.5px] text-body transition-colors hover:text-heading"
           >
             About us
           </a>
@@ -132,16 +132,16 @@ export default function Header() {
         <div className="hidden lg:block">
           <a
             href="#"
-            className="rounded-full bg-cyan-400 px-5 py-2.5 text-sm font-semibold text-[#0a1929] transition-colors hover:bg-cyan-300"
+            className="rounded-lg border border-accent-500/50 px-[17px] py-[9px] text-[13px] font-semibold text-accent-500 transition-colors hover:bg-accent-100"
           >
-            Book a Demo →
+            Book a demo
           </a>
         </div>
 
         <button
           aria-label="Toggle menu"
           onClick={() => setMobileOpen((v) => !v)}
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-white lg:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-lg text-heading lg:hidden"
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
             {mobileOpen ? (
@@ -164,28 +164,28 @@ export default function Header() {
       </div>
 
       {mobileOpen && (
-        <div className="border-t border-white/10 bg-[#0a1929] px-6 py-4 lg:hidden">
+        <div className="border-t border-secondary-100 bg-white px-6 py-4 lg:hidden">
           <nav className="flex flex-col gap-4">
-            <a href="#" className="text-sm font-medium text-slate-300">
+            <a href="#" className="text-sm font-medium text-body">
               Platform
             </a>
-            <a href="#" className="text-sm font-medium text-slate-300">
+            <a href="#" className="text-sm font-medium text-body">
               Solutions
             </a>
-            <a href="#" className="text-sm font-medium text-slate-300">
+            <a href="#" className="text-sm font-medium text-body">
               Industries
             </a>
-            <a href="#" className="text-sm font-medium text-slate-300">
+            <a href="#" className="text-sm font-medium text-body">
               Resources
             </a>
-            <a href="#" className="text-sm font-medium text-slate-300">
+            <a href="#" className="text-sm font-medium text-body">
               About us
             </a>
             <a
               href="#"
-              className="mt-2 rounded-full bg-cyan-400 px-5 py-2.5 text-center text-sm font-semibold text-[#0a1929]"
+              className="mt-2 rounded-lg border border-accent-500/50 px-5 py-2.5 text-center text-sm font-semibold text-accent-500"
             >
-              Book a Demo →
+              Book a demo
             </a>
           </nav>
         </div>
