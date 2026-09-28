@@ -192,11 +192,12 @@ export default function HeroScene() {
     if (!reduceMotion) animateFloor();
 
     // ---------- ambient depth particles ----------
-    const particleCount = reduceMotion ? 0 : 90;
+    // A restrained, monochrome data-point field (not additive-blended
+    // "confetti") — reads as technical instrumentation, not decoration.
+    const particleCount = reduceMotion ? 0 : 50;
     const particlePositions = new Float32Array(particleCount * 3);
     const particleColors = new Float32Array(particleCount * 3);
-    const primaryColor = new THREE.Color(0x533afd);
-    const accentColor = new THREE.Color(0xff7600);
+    const dustColor = new THREE.Color(0x8d9ec9);
     const particleBase: { x: number; y: number; phase: number; speed: number }[] =
       [];
     for (let i = 0; i < particleCount; i++) {
@@ -212,10 +213,9 @@ export default function HeroScene() {
         phase: Math.random() * Math.PI * 2,
         speed: 0.4 + Math.random() * 0.5,
       });
-      const c = Math.random() > 0.55 ? primaryColor : accentColor;
-      particleColors[i * 3] = c.r;
-      particleColors[i * 3 + 1] = c.g;
-      particleColors[i * 3 + 2] = c.b;
+      particleColors[i * 3] = dustColor.r;
+      particleColors[i * 3 + 1] = dustColor.g;
+      particleColors[i * 3 + 2] = dustColor.b;
     }
     const particleGeo = new THREE.BufferGeometry();
     particleGeo.setAttribute(
@@ -227,13 +227,12 @@ export default function HeroScene() {
       new THREE.BufferAttribute(particleColors, 3),
     );
     const particleMat = new THREE.PointsMaterial({
-      size: 6,
+      size: 3,
       sizeAttenuation: true,
       vertexColors: true,
       transparent: true,
-      opacity: 0.75,
+      opacity: 0.35,
       depthWrite: false,
-      blending: THREE.AdditiveBlending,
     });
     const particles = new THREE.Points(particleGeo, particleMat);
     scene.add(particles);
@@ -260,22 +259,22 @@ export default function HeroScene() {
         mid,
         new THREE.Vector3(p.x, p.y, p.z),
       );
-      const tubeGeo = new THREE.TubeGeometry(curve, 40, 1.4, 6, false);
+      const tubeGeo = new THREE.TubeGeometry(curve, 40, 1, 6, false);
       const tubeMat = new THREE.MeshBasicMaterial({
-        color: 0x533afd,
+        color: 0x8d9ec9,
         transparent: true,
-        opacity: 0.32,
+        opacity: 0.22,
       });
       const tube = new THREE.Mesh(tubeGeo, tubeMat);
       scene.add(tube);
 
       let bead: THREE.Mesh | null = null;
       if (!reduceMotion) {
-        const beadGeo = new THREE.SphereGeometry(3.4, 12, 12);
+        const beadGeo = new THREE.SphereGeometry(2.4, 12, 12);
         const beadMat = new THREE.MeshBasicMaterial({
-          color: 0xff7600,
+          color: 0x533afd,
           transparent: true,
-          opacity: 0.95,
+          opacity: 0.9,
         });
         bead = new THREE.Mesh(beadGeo, beadMat);
         scene.add(bead);
@@ -327,9 +326,9 @@ export default function HeroScene() {
           `.node3d[data-node="${k}"]`,
         );
         if (mob) mob.classList.toggle("active", active);
-        beams[k].tubeMat.color.set(active ? 0xff7600 : 0x533afd);
-        beams[k].tubeMat.opacity = active ? 0.85 : 0.28;
-        if (beams[k].beadMat) beams[k].beadMat.opacity = active ? 1 : 0.6;
+        beams[k].tubeMat.color.set(active ? 0x533afd : 0x8d9ec9);
+        beams[k].tubeMat.opacity = active ? 0.6 : 0.2;
+        if (beams[k].beadMat) beams[k].beadMat.opacity = active ? 0.95 : 0.45;
       });
     }
     function autoAdvance() {

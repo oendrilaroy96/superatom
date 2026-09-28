@@ -51,9 +51,7 @@ export default function Hero() {
           </p>
           <h1 className="m-0 mb-3 font-display text-[28px] font-bold leading-[1.15] tracking-[-0.02em] text-heading sm:text-[32px] sm:leading-[1.3] lg:text-h1">
             Decision Intelligence for the{" "}
-            <span className="bg-gradient-to-r from-accent-500 to-primary-500 bg-clip-text text-transparent">
-              Supply Chain.
-            </span>
+            <span className="text-primary-500">Supply Chain.</span>
           </h1>
           <p className="text-p mb-5 max-w-[52ch] text-body">
             Make, automate and execute thousands of better decisions across
