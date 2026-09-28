@@ -526,9 +526,9 @@ export default function Hero() {
           <div>
             <Button
               href="#"
-              variant="accent"
+              variant="primary"
               iconRight={<MdArrowForward size={18} />}
-              className="shadow-[0_10px_30px_-10px_rgba(255,118,0,0.35)] transition-transform hover:-translate-y-px"
+              className="shadow-[0_10px_30px_-10px_rgba(83,58,253,0.35)] transition-transform hover:-translate-y-px"
             >
               Explore the Platform
             </Button>

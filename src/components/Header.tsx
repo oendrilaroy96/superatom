@@ -129,7 +129,7 @@ export default function Header() {
         </nav>
 
         <div className="hidden lg:block">
-          <Button href="#" variant="accent" className="px-5 py-2.5 text-[13px]">
+          <Button href="#" variant="secondary" className="px-5 py-2.5 text-[13px]">
             Book a demo
           </Button>
         </div>
@@ -161,7 +161,7 @@ export default function Header() {
             <a href="#" className="text-sm font-medium text-body">
               About us
             </a>
-            <Button href="#" variant="accent" className="mt-2 w-full justify-center">
+            <Button href="#" variant="secondary" className="mt-2 w-full justify-center">
               Book a demo
             </Button>
           </nav>
