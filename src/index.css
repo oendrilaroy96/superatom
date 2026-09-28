@@ -171,3 +171,25 @@ body {
   color: var(--color-muted);
   transition: opacity 0.4s ease;
 }
+
+/* ================= Infrastructure stack diagram ================= */
+.infra-layer {
+  animation: infraGlow 4.4s ease-in-out infinite;
+}
+@keyframes infraGlow {
+  0%,
+  85%,
+  100% {
+    border-color: rgba(83, 58, 253, 0.3);
+    box-shadow: none;
+  }
+  10% {
+    border-color: var(--color-primary-300);
+    box-shadow: 0 0 0 1px rgba(83, 58, 253, 0.25);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .infra-layer {
+    animation: none;
+  }
+}
