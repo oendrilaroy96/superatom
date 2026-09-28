@@ -110,12 +110,6 @@ export default function Header() {
             Platform
           </a>
           <DropdownNavItem label="Solutions" items={solutions} />
-          <a
-            href="#"
-            className="text-[13.5px] text-body transition-colors hover:text-heading"
-          >
-            Industries
-          </a>
           <DropdownNavItem label="Resources" items={resources} />
           <a
             href="#"
@@ -148,9 +142,6 @@ export default function Header() {
             </a>
             <a href="#" className="text-sm font-medium text-body">
               Solutions
-            </a>
-            <a href="#" className="text-sm font-medium text-body">
-              Industries
             </a>
             <a href="#" className="text-sm font-medium text-body">
               Resources
