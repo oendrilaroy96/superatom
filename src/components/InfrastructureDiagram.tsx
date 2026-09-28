@@ -32,11 +32,12 @@ function easeOutCubic(t: number) {
 const BOX_W = 2.6;
 const BOX_D = 2.6;
 const BOX_H = 0.62;
-const DOT_OFFSET_PCT = 9.4;
+const EDGE_GAP_PCT = 3.2;
 const LABEL_GAP = 12;
 const LABEL_W = 148;
 
 type Anchor = { x: number; y: number };
+type Bounds = { minX: number; maxX: number };
 
 /**
  * WebGL rendering of the infrastructure stack (real extruded boxes under an
@@ -47,6 +48,7 @@ type Anchor = { x: number; y: number };
 export default function InfrastructureDiagram() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [anchors, setAnchors] = useState<Anchor[] | null>(null);
+  const [bounds, setBounds] = useState<Bounds | null>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -116,6 +118,32 @@ export default function InfrastructureDiagram() {
       return { materials, mesh, restY, targetOpacity: c.opacity };
     });
 
+    // Screen-x for this isometric camera depends only on world x/z, not y
+    // (camera.up is orthogonal to the right vector along the height axis),
+    // so the stack's left/right silhouette is identical at every layer.
+    // Project all four footprint corners once to get the true edge the
+    // connector/label must clear, instead of guessing a fixed offset that
+    // breaks when the container's aspect ratio changes the box's on-screen
+    // proportion.
+    function computeBounds(): Bounds {
+      const corners = [
+        new THREE.Vector3(BOX_W / 2, 0, BOX_D / 2),
+        new THREE.Vector3(BOX_W / 2, 0, -BOX_D / 2),
+        new THREE.Vector3(-BOX_W / 2, 0, BOX_D / 2),
+        new THREE.Vector3(-BOX_W / 2, 0, -BOX_D / 2),
+      ];
+      let minX = Infinity;
+      let maxX = -Infinity;
+      corners.forEach((c) => {
+        const p = c.clone();
+        p.project(camera);
+        const xPct = ((p.x + 1) / 2) * 100;
+        minX = Math.min(minX, xPct);
+        maxX = Math.max(maxX, xPct);
+      });
+      return { minX, maxX };
+    }
+
     function computeAnchors() {
       const pts = LAYERS.map((layer, i) => {
         const x = layer.side === "right" ? BOX_W / 2 : -BOX_W / 2;
@@ -124,6 +152,7 @@ export default function InfrastructureDiagram() {
         return { x: ((p.x + 1) / 2) * 100, y: ((1 - p.y) / 2) * 100 };
       });
       setAnchors(pts);
+      setBounds(computeBounds());
     }
     computeAnchors();
 
@@ -199,10 +228,13 @@ export default function InfrastructureDiagram() {
     >
       <div ref={containerRef} className="absolute inset-4 sm:inset-6">
         {anchors &&
+          bounds &&
           LAYERS.map((layer, i) => {
             const isRight = layer.side === "right";
             const a = anchors[i];
-            const dotX = isRight ? a.x + DOT_OFFSET_PCT : a.x - DOT_OFFSET_PCT;
+            const dotX = isRight
+              ? bounds.maxX + EDGE_GAP_PCT
+              : bounds.minX - EDGE_GAP_PCT;
             return (
               <div key={`${layer.name}-line`} aria-hidden="true">
                 <div
@@ -210,7 +242,7 @@ export default function InfrastructureDiagram() {
                   style={{
                     top: `${a.y}%`,
                     left: `${isRight ? a.x : dotX}%`,
-                    width: `${DOT_OFFSET_PCT}%`,
+                    width: `${Math.abs(dotX - a.x)}%`,
                     opacity: visible ? 1 : 0,
                     transition: `opacity 0.3s ease ${revealDelay(i) + 0.08}s`,
                   }}
@@ -230,10 +262,13 @@ export default function InfrastructureDiagram() {
           })}
 
         {anchors &&
+          bounds &&
           LAYERS.map((layer, i) => {
             const isRight = layer.side === "right";
             const a = anchors[i];
-            const dotX = isRight ? a.x + DOT_OFFSET_PCT : a.x - DOT_OFFSET_PCT;
+            const dotX = isRight
+              ? bounds.maxX + EDGE_GAP_PCT
+              : bounds.minX - EDGE_GAP_PCT;
             return (
               <div
                 key={`${layer.name}-label`}
