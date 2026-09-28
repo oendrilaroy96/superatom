@@ -538,37 +538,29 @@ export default function Hero() {
         <HeroDiagram headingRef={headingRef} />
       </div>
 
-      <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-wrap gap-8 border-t border-secondary-100 px-4 pb-11 pt-9 sm:px-10 xl:px-20">
-        <div className="flex min-w-[150px] items-center gap-3">
+      <div className="relative z-[2] mx-auto grid w-full max-w-[1440px] grid-cols-2 gap-x-6 gap-y-6 border-t border-secondary-100 px-4 pb-11 pt-9 sm:grid-cols-4 sm:gap-x-8 sm:px-10 xl:px-20">
+        <div className="flex items-center gap-3">
           <StatIcon Icon={MdBolt} />
           <span className="text-[13.5px] font-semibold leading-tight text-body">
-            Faster
-            <br />
-            decisions
+            Faster decisions
           </span>
         </div>
-        <div className="flex min-w-[150px] items-center gap-3">
+        <div className="flex items-center gap-3">
           <StatIcon Icon={MdTrendingDown} />
           <span className="text-[13.5px] font-semibold leading-tight text-body">
-            Lower
-            <br />
-            costs
+            Lower costs
           </span>
         </div>
-        <div className="flex min-w-[150px] items-center gap-3">
+        <div className="flex items-center gap-3">
           <StatIcon Icon={MdTrendingUp} />
           <span className="text-[13.5px] font-semibold leading-tight text-body">
-            Better
-            <br />
-            service levels
+            Better service levels
           </span>
         </div>
-        <div className="flex min-w-[150px] items-center gap-3">
+        <div className="flex items-center gap-3">
           <StatIcon Icon={MdShield} />
           <span className="text-[13.5px] font-semibold leading-tight text-body">
-            A more resilient
-            <br />
-            supply chain
+            A more resilient supply chain
           </span>
         </div>
       </div>
