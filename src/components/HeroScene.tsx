@@ -31,11 +31,11 @@ const data: Record<NodeKey, { name: string; tag: string }> = {
 // Hand-placed depth positions (three.js units, camera-space) — alternating
 // near/far for an orbiting-shell read.
 const positions: Record<NodeKey, { x: number; y: number; z: number }> = {
-  demand: { x: -255, y: 60, z: 42 },
-  procurement: { x: 80, y: 130, z: -32 },
-  manufacturing: { x: 270, y: 24, z: 58 },
-  logistics: { x: 212, y: -98, z: -38 },
-  inventory: { x: -240, y: -96, z: 18 },
+  demand: { x: -255, y: 95, z: 42 },
+  procurement: { x: 12, y: 168, z: -32 },
+  manufacturing: { x: 270, y: 38, z: 58 },
+  logistics: { x: 212, y: -158, z: -38 },
+  inventory: { x: -240, y: -155, z: 18 },
 };
 
 const hubPos = { x: 0, y: 14, z: 96 };
