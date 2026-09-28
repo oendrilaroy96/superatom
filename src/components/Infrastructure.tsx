@@ -45,11 +45,17 @@ const LABEL_GAP = 12;
 const LABEL_W = 148;
 
 const LAYER_COLORS = [
-  { top: "var(--color-accent-400)", left: "var(--color-accent-500)", right: "var(--color-accent-600)", opacity: 0.3 },
-  { top: "var(--color-primary-400)", left: "var(--color-primary-500)", right: "var(--color-primary-600)", opacity: 0.26 },
-  { top: "var(--color-primary-400)", left: "var(--color-primary-500)", right: "var(--color-primary-600)", opacity: 0.2 },
-  { top: "var(--color-primary-400)", left: "var(--color-primary-500)", right: "var(--color-primary-600)", opacity: 0.14 },
+  { top: "var(--color-accent-300)", left: "var(--color-accent-500)", right: "var(--color-accent-600)", opacity: 0.85 },
+  { top: "var(--color-primary-200)", left: "var(--color-primary-400)", right: "var(--color-primary-600)", opacity: 0.85 },
+  { top: "var(--color-primary-200)", left: "var(--color-primary-400)", right: "var(--color-primary-600)", opacity: 0.7 },
+  { top: "var(--color-primary-200)", left: "var(--color-primary-400)", right: "var(--color-primary-600)", opacity: 0.55 },
 ];
+
+// Reveal order runs bottom-to-top: the last layer (index LAYERS.length - 1)
+// animates in first.
+function revealDelay(i: number) {
+  return 0.12 * (LAYERS.length - 1 - i);
+}
 
 function layerGeometry(i: number) {
   const topY = START_Y + i * (TOP_DEPTH + FRONT_H + GAP);
@@ -94,7 +100,7 @@ function InfrastructureDiagram() {
   return (
     <div
       ref={containerRef}
-      className="relative mx-auto w-full max-w-[640px] overflow-hidden rounded-2xl bg-secondary-600 px-4 py-6"
+      className="relative mx-auto w-full max-w-[640px] overflow-hidden rounded-2xl border border-secondary-100 bg-page px-4 py-6"
       style={{ aspectRatio: `${VB_W} / ${VB_H}` }}
     >
       <svg
@@ -115,12 +121,12 @@ function InfrastructureDiagram() {
                 opacity: visible ? 1 : 0,
                 transform: visible ? "translateY(0)" : "translateY(14px)",
                 transformOrigin: `${CX}px ${g.peak.y}px`,
-                transition: `opacity 0.55s ease ${0.12 * i}s, transform 0.55s ease ${0.12 * i}s`,
+                transition: `opacity 0.55s ease ${revealDelay(i)}s, transform 0.55s ease ${revealDelay(i)}s`,
               }}
             >
-              <polygon points={leftFace} fill={c.left} fillOpacity={c.opacity} stroke={c.left} strokeOpacity={0.55} strokeWidth={1} />
-              <polygon points={rightFace} fill={c.right} fillOpacity={c.opacity} stroke={c.right} strokeOpacity={0.55} strokeWidth={1} />
-              <polygon points={topFace} fill={c.top} fillOpacity={c.opacity + 0.08} stroke={c.top} strokeOpacity={0.7} strokeWidth={1} />
+              <polygon points={leftFace} fill={c.left} fillOpacity={c.opacity} stroke={c.right} strokeOpacity={0.4} strokeWidth={1} />
+              <polygon points={rightFace} fill={c.right} fillOpacity={c.opacity} stroke={c.right} strokeOpacity={0.4} strokeWidth={1} />
+              <polygon points={topFace} fill={c.top} fillOpacity={1} stroke={c.right} strokeOpacity={0.35} strokeWidth={1} />
             </g>
           );
         })}
@@ -143,17 +149,17 @@ function InfrastructureDiagram() {
                 style={{
                   strokeDasharray: 1,
                   strokeDashoffset: visible ? 0 : 1,
-                  transition: `stroke-dashoffset 0.6s ease ${0.12 * i + 0.35}s`,
+                  transition: `stroke-dashoffset 0.6s ease ${revealDelay(i) + 0.35}s`,
                 }}
               />
               <circle
                 cx={toX}
                 cy={g.connectorY}
                 r={3.5}
-                fill="var(--color-primary-300)"
+                fill="var(--color-primary-500)"
                 style={{
                   opacity: visible ? 1 : 0,
-                  transition: `opacity 0.4s ease ${0.12 * i + 0.7}s`,
+                  transition: `opacity 0.4s ease ${revealDelay(i) + 0.7}s`,
                 }}
               />
             </g>
@@ -183,13 +189,13 @@ function InfrastructureDiagram() {
               transform: visible
                 ? "translateX(0)"
                 : `translateX(${isRight ? 8 : -8}px)`,
-              transition: `opacity 0.5s ease ${0.12 * i + 0.75}s, transform 0.5s ease ${0.12 * i + 0.75}s`,
+              transition: `opacity 0.5s ease ${revealDelay(i) + 0.75}s, transform 0.5s ease ${revealDelay(i) + 0.75}s`,
             }}
           >
-            <p className="font-display text-[15px] font-bold text-white">
+            <p className="font-display text-[15px] font-bold text-heading">
               {layer.name}
             </p>
-            <p className="mt-1 text-[11.5px] leading-snug text-secondary-200">
+            <p className="mt-1 text-[11.5px] leading-snug text-caption">
               {layer.outcome}
             </p>
           </div>
