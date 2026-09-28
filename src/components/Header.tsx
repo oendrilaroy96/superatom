@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
+import { MdClose, MdMenu } from "react-icons/md";
 import logoWhite from "../assets/logo-white.png";
+import Button from "./ui/Button";
+import IconButton from "./ui/IconButton";
 
 const solutions = [
   { name: "Inventory Intelligence", blurb: "Optimize, rebalance, prevent." },
@@ -126,37 +129,18 @@ export default function Header() {
         </nav>
 
         <div className="hidden lg:block">
-          <a
-            href="#"
-            className="rounded-lg border border-accent-500/50 px-[17px] py-[9px] text-[13px] font-semibold text-accent-500 transition-colors hover:bg-accent-100"
-          >
+          <Button href="#" variant="accent" className="px-5 py-2.5 text-[13px]">
             Book a demo
-          </a>
+          </Button>
         </div>
 
-        <button
+        <IconButton
+          icon={mobileOpen ? MdClose : MdMenu}
           aria-label="Toggle menu"
+          variant="subtle"
           onClick={() => setMobileOpen((v) => !v)}
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-heading lg:hidden"
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            {mobileOpen ? (
-              <path
-                d="M6 6l12 12M18 6L6 18"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            ) : (
-              <path
-                d="M4 7h16M4 12h16M4 17h16"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            )}
-          </svg>
-        </button>
+          className="lg:hidden"
+        />
       </div>
 
       {mobileOpen && (
@@ -177,12 +161,9 @@ export default function Header() {
             <a href="#" className="text-sm font-medium text-body">
               About us
             </a>
-            <a
-              href="#"
-              className="mt-2 rounded-lg border border-accent-500/50 px-5 py-2.5 text-center text-sm font-semibold text-accent-500"
-            >
+            <Button href="#" variant="accent" className="mt-2 w-full justify-center">
               Book a demo
-            </a>
+            </Button>
           </nav>
         </div>
       )}
