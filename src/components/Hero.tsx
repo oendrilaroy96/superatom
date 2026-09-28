@@ -483,7 +483,7 @@ export default function Hero() {
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   return (
-    <section className="relative flex flex-col overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f8fafd_100%)]">
+    <section className="relative flex min-h-[calc(100vh-4rem)] flex-col justify-center overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f8fafd_100%)]">
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -538,7 +538,7 @@ export default function Hero() {
         <HeroDiagram headingRef={headingRef} />
       </div>
 
-      <div className="relative z-[2] mx-auto grid w-full max-w-[1440px] grid-cols-2 gap-x-6 gap-y-6 border-t border-secondary-100 px-4 pb-11 pt-9 sm:grid-cols-4 sm:gap-x-8 sm:px-10 xl:px-20">
+      <div className="relative z-[2] mx-auto mt-auto grid w-full max-w-[1440px] grid-cols-2 gap-x-6 gap-y-6 border-t border-secondary-100 px-4 pb-11 pt-9 sm:grid-cols-4 sm:gap-x-8 sm:px-10 xl:px-20">
         <div className="flex items-center gap-3">
           <StatIcon Icon={MdBolt} />
           <span className="text-[13.5px] font-semibold leading-tight text-body">
