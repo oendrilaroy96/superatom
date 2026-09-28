@@ -1,6 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense } from "react";
 import { MdShield, MdLock, MdStorage, MdVpnKey } from "react-icons/md";
 import type { IconType } from "react-icons";
+
+const InfrastructureDiagram = lazy(() => import("./InfrastructureDiagram"));
+
+function DiagramPlaceholder() {
+  return (
+    <div
+      className="mx-auto w-full max-w-[640px] animate-pulse rounded-2xl border border-secondary-100 bg-page"
+      style={{ aspectRatio: "640 / 400" }}
+    />
+  );
+}
 
 const features: { title: string; desc: string; Icon: IconType }[] = [
   {
@@ -24,190 +35,6 @@ const features: { title: string; desc: string; Icon: IconType }[] = [
     Icon: MdVpnKey,
   },
 ];
-
-const LAYERS: { name: string; outcome: string; side: "left" | "right" }[] = [
-  { name: "Secure", outcome: "People", side: "right" },
-  { name: "Governed", outcome: "Data", side: "left" },
-  { name: "Scalable", outcome: "Decisions", side: "right" },
-  { name: "Reliable", outcome: "A stronger tomorrow", side: "left" },
-];
-
-const VB_W = 640;
-const VB_H = 400;
-const CX = 320;
-const BOX_W = 210;
-const TOP_DEPTH = 24;
-const FRONT_H = 54;
-const GAP = 0;
-const START_Y = 24;
-const DOT_OFFSET = 60;
-const LABEL_GAP = 12;
-const LABEL_W = 148;
-
-const LAYER_COLORS = [
-  { top: "var(--color-accent-300)", left: "var(--color-accent-500)", right: "var(--color-accent-600)", opacity: 0.85 },
-  { top: "var(--color-primary-200)", left: "var(--color-primary-400)", right: "var(--color-primary-600)", opacity: 0.85 },
-  { top: "var(--color-primary-200)", left: "var(--color-primary-400)", right: "var(--color-primary-600)", opacity: 0.7 },
-  { top: "var(--color-primary-200)", left: "var(--color-primary-400)", right: "var(--color-primary-600)", opacity: 0.55 },
-];
-
-// Reveal order runs bottom-to-top: the last layer (index LAYERS.length - 1)
-// animates in first. Each layer's entrance finishes before the next one
-// starts, so it reads as a clear one-by-one sequence rather than an
-// overlapping cascade.
-const LAYER_STAGGER = 0.4;
-const START_DELAY = 0.5;
-function revealDelay(i: number) {
-  return START_DELAY + LAYER_STAGGER * (LAYERS.length - 1 - i);
-}
-
-function layerGeometry(i: number) {
-  const topY = START_Y + i * (TOP_DEPTH + FRONT_H + GAP);
-  const peak = { x: CX, y: topY };
-  const left = { x: CX - BOX_W / 2, y: topY + TOP_DEPTH / 2 };
-  const right = { x: CX + BOX_W / 2, y: topY + TOP_DEPTH / 2 };
-  const bottom = { x: CX, y: topY + TOP_DEPTH };
-  const frontLeftBottom = { x: left.x, y: left.y + FRONT_H };
-  const frontRightBottom = { x: right.x, y: right.y + FRONT_H };
-  const frontBottom = { x: CX, y: bottom.y + FRONT_H };
-  const connectorY = left.y + FRONT_H / 2;
-  return { peak, left, right, bottom, frontLeftBottom, frontRightBottom, frontBottom, connectorY };
-}
-
-function InfrastructureDiagram() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    if (reduceMotion) {
-      setVisible(true);
-      return;
-    }
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.35 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={containerRef}
-      className="relative mx-auto w-full max-w-[640px] overflow-hidden rounded-2xl border border-secondary-100 bg-page px-4 py-6"
-      style={{ aspectRatio: `${VB_W} / ${VB_H}` }}
-    >
-      <svg
-        viewBox={`0 0 ${VB_W} ${VB_H}`}
-        className="absolute inset-0 h-full w-full"
-        aria-hidden="true"
-      >
-        {LAYERS.map((layer, i) => {
-          const g = layerGeometry(i);
-          const c = LAYER_COLORS[i];
-          const topFace = `${g.peak.x} ${g.peak.y} ${g.right.x} ${g.right.y} ${g.bottom.x} ${g.bottom.y} ${g.left.x} ${g.left.y}`;
-          const leftFace = `${g.left.x} ${g.left.y} ${g.bottom.x} ${g.bottom.y} ${g.frontBottom.x} ${g.frontBottom.y} ${g.frontLeftBottom.x} ${g.frontLeftBottom.y}`;
-          const rightFace = `${g.bottom.x} ${g.bottom.y} ${g.right.x} ${g.right.y} ${g.frontRightBottom.x} ${g.frontRightBottom.y} ${g.frontBottom.x} ${g.frontBottom.y}`;
-          return (
-            <g
-              key={layer.name}
-              style={{
-                opacity: visible ? 1 : 0,
-                transform: visible ? "translateY(0)" : "translateY(14px)",
-                transformOrigin: `${CX}px ${g.peak.y}px`,
-                transition: `opacity 0.35s ease ${revealDelay(i)}s, transform 0.35s ease ${revealDelay(i)}s`,
-              }}
-            >
-              <polygon points={leftFace} fill={c.left} fillOpacity={c.opacity} stroke={c.right} strokeOpacity={0.4} strokeWidth={1} />
-              <polygon points={rightFace} fill={c.right} fillOpacity={c.opacity} stroke={c.right} strokeOpacity={0.4} strokeWidth={1} />
-              <polygon points={topFace} fill={c.top} fillOpacity={1} stroke={c.right} strokeOpacity={0.35} strokeWidth={1} />
-            </g>
-          );
-        })}
-
-        {LAYERS.map((layer, i) => {
-          const g = layerGeometry(i);
-          const fromX = layer.side === "right" ? g.right.x : g.left.x;
-          const toX =
-            layer.side === "right" ? g.right.x + DOT_OFFSET : g.left.x - DOT_OFFSET;
-          return (
-            <g key={`${layer.name}-line`}>
-              <line
-                x1={fromX}
-                y1={g.connectorY}
-                x2={toX}
-                y2={g.connectorY}
-                stroke="var(--color-secondary-300)"
-                strokeWidth={1.5}
-                pathLength={1}
-                style={{
-                  strokeDasharray: 1,
-                  strokeDashoffset: visible ? 0 : 1,
-                  transition: `stroke-dashoffset 0.3s ease ${revealDelay(i) + 0.08}s`,
-                }}
-              />
-              <circle
-                cx={toX}
-                cy={g.connectorY}
-                r={3.5}
-                fill="var(--color-primary-500)"
-                style={{
-                  opacity: visible ? 1 : 0,
-                  transition: `opacity 0.25s ease ${revealDelay(i) + 0.2}s`,
-                }}
-              />
-            </g>
-          );
-        })}
-      </svg>
-
-      {LAYERS.map((layer, i) => {
-        const g = layerGeometry(i);
-        const isRight = layer.side === "right";
-        const dotX = isRight ? g.right.x + DOT_OFFSET : g.left.x - DOT_OFFSET;
-        return (
-          <div
-            key={`${layer.name}-label`}
-            className="absolute"
-            style={{
-              top: `${((g.connectorY - 26) / VB_H) * 100}%`,
-              left: isRight
-                ? `${((dotX + LABEL_GAP) / VB_W) * 100}%`
-                : undefined,
-              right: !isRight
-                ? `${((VB_W - dotX + LABEL_GAP) / VB_W) * 100}%`
-                : undefined,
-              width: LABEL_W,
-              textAlign: isRight ? "left" : "right",
-              opacity: visible ? 1 : 0,
-              transform: visible
-                ? "translateX(0)"
-                : `translateX(${isRight ? 8 : -8}px)`,
-              transition: `opacity 0.3s ease ${revealDelay(i) + 0.12}s, transform 0.3s ease ${revealDelay(i) + 0.12}s`,
-            }}
-          >
-            <p className="font-display text-[15px] font-bold text-heading">
-              {layer.name}
-            </p>
-            <p className="mt-1 text-[11.5px] leading-snug text-caption">
-              {layer.outcome}
-            </p>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
 
 export default function Infrastructure() {
   return (
@@ -253,7 +80,9 @@ export default function Infrastructure() {
               <li>• Enterprise SSO out of the box</li>
             </ul>
           </div>
-          <InfrastructureDiagram />
+          <Suspense fallback={<DiagramPlaceholder />}>
+            <InfrastructureDiagram />
+          </Suspense>
         </div>
 
         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
