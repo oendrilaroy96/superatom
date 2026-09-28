@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logoWhite from "../assets/logo-white.png";
 
 const solutions = [
@@ -82,9 +82,23 @@ function DropdownNavItem({
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 h-16 bg-transparent">
+    <header
+      className={`sticky top-0 z-50 h-16 border-b transition-colors duration-200 ${
+        scrolled
+          ? "border-secondary-100 bg-white/90 backdrop-blur"
+          : "border-transparent bg-transparent"
+      }`}
+    >
       <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-4 sm:px-10 xl:px-20">
         <Logo />
 
