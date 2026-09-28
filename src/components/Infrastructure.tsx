@@ -25,21 +25,44 @@ const features: { title: string; desc: string; Icon: IconType }[] = [
   },
 ];
 
-const LAYERS = ["Secure", "Governed", "Scalable", "Reliable"];
-const OUTCOMES = ["People", "Data", "Decisions", "A stronger tomorrow"];
+const LAYERS: { name: string; outcome: string; side: "left" | "right" }[] = [
+  { name: "Secure", outcome: "People", side: "right" },
+  { name: "Governed", outcome: "Data", side: "left" },
+  { name: "Scalable", outcome: "Decisions", side: "right" },
+  { name: "Reliable", outcome: "A stronger tomorrow", side: "left" },
+];
 
-const VB_W = 600;
-const VB_H = 300;
-const STACK_TOP = 20;
-const STACK_W = 250;
-const CAP_H = 46;
-const LAYER_H = 44;
-const LAYER_GAP = 9;
-const STACK_RIGHT = STACK_W;
-const STACK_CENTER_Y =
-  STACK_TOP + (CAP_H + LAYER_GAP + LAYERS.length * (LAYER_H + LAYER_GAP)) / 2;
-const OUTCOME_X = VB_W - 14;
-const OUTCOME_YS = [40, 112, 184, 262];
+const VB_W = 640;
+const VB_H = 400;
+const CX = 320;
+const BOX_W = 210;
+const TOP_DEPTH = 24;
+const FRONT_H = 54;
+const GAP = 16;
+const START_Y = 24;
+const DOT_OFFSET = 60;
+const LABEL_GAP = 12;
+const LABEL_W = 148;
+
+const LAYER_COLORS = [
+  { top: "var(--color-accent-400)", left: "var(--color-accent-500)", right: "var(--color-accent-600)", opacity: 0.3 },
+  { top: "var(--color-primary-400)", left: "var(--color-primary-500)", right: "var(--color-primary-600)", opacity: 0.26 },
+  { top: "var(--color-primary-400)", left: "var(--color-primary-500)", right: "var(--color-primary-600)", opacity: 0.2 },
+  { top: "var(--color-primary-400)", left: "var(--color-primary-500)", right: "var(--color-primary-600)", opacity: 0.14 },
+];
+
+function layerGeometry(i: number) {
+  const topY = START_Y + i * (TOP_DEPTH + FRONT_H + GAP);
+  const peak = { x: CX, y: topY };
+  const left = { x: CX - BOX_W / 2, y: topY + TOP_DEPTH / 2 };
+  const right = { x: CX + BOX_W / 2, y: topY + TOP_DEPTH / 2 };
+  const bottom = { x: CX, y: topY + TOP_DEPTH };
+  const frontLeftBottom = { x: left.x, y: left.y + FRONT_H };
+  const frontRightBottom = { x: right.x, y: right.y + FRONT_H };
+  const frontBottom = { x: CX, y: bottom.y + FRONT_H };
+  const connectorY = left.y + FRONT_H / 2;
+  return { peak, left, right, bottom, frontLeftBottom, frontRightBottom, frontBottom, connectorY };
+}
 
 function InfrastructureDiagram() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -71,97 +94,107 @@ function InfrastructureDiagram() {
   return (
     <div
       ref={containerRef}
-      className="relative mx-auto w-full max-w-[560px]"
+      className="relative mx-auto w-full max-w-[640px] overflow-hidden rounded-2xl bg-secondary-600 px-4 py-6"
       style={{ aspectRatio: `${VB_W} / ${VB_H}` }}
     >
       <svg
         viewBox={`0 0 ${VB_W} ${VB_H}`}
-        className="absolute inset-0 h-full w-full overflow-visible"
+        className="absolute inset-0 h-full w-full"
         aria-hidden="true"
       >
-        {OUTCOMES.map((o, i) => {
-          const y = OUTCOME_YS[i];
-          const midX = (STACK_RIGHT + OUTCOME_X) / 2;
-          const d = `M${STACK_RIGHT} ${STACK_CENTER_Y} C ${midX} ${STACK_CENTER_Y}, ${midX} ${y}, ${OUTCOME_X - 10} ${y}`;
+        {LAYERS.map((layer, i) => {
+          const g = layerGeometry(i);
+          const c = LAYER_COLORS[i];
+          const topFace = `${g.peak.x} ${g.peak.y} ${g.right.x} ${g.right.y} ${g.bottom.x} ${g.bottom.y} ${g.left.x} ${g.left.y}`;
+          const leftFace = `${g.left.x} ${g.left.y} ${g.bottom.x} ${g.bottom.y} ${g.frontBottom.x} ${g.frontBottom.y} ${g.frontLeftBottom.x} ${g.frontLeftBottom.y}`;
+          const rightFace = `${g.bottom.x} ${g.bottom.y} ${g.right.x} ${g.right.y} ${g.frontRightBottom.x} ${g.frontRightBottom.y} ${g.frontBottom.x} ${g.frontBottom.y}`;
           return (
-            <path
-              key={o}
-              d={d}
-              fill="none"
-              stroke="var(--color-secondary-200)"
-              strokeWidth={1.5}
-              strokeDasharray="4 5"
-              pathLength={1}
+            <g
+              key={layer.name}
               style={{
-                strokeDashoffset: visible ? 0 : 1,
-                transition: `stroke-dashoffset 0.9s ease ${0.15 * i + 0.25}s`,
+                opacity: visible ? 1 : 0,
+                transform: visible ? "translateY(0)" : "translateY(14px)",
+                transformOrigin: `${CX}px ${g.peak.y}px`,
+                transition: `opacity 0.55s ease ${0.12 * i}s, transform 0.55s ease ${0.12 * i}s`,
               }}
-            />
+            >
+              <polygon points={leftFace} fill={c.left} fillOpacity={c.opacity} stroke={c.left} strokeOpacity={0.55} strokeWidth={1} />
+              <polygon points={rightFace} fill={c.right} fillOpacity={c.opacity} stroke={c.right} strokeOpacity={0.55} strokeWidth={1} />
+              <polygon points={topFace} fill={c.top} fillOpacity={c.opacity + 0.08} stroke={c.top} strokeOpacity={0.7} strokeWidth={1} />
+            </g>
           );
         })}
-        {OUTCOMES.map((o, i) => (
-          <circle
-            key={o}
-            cx={OUTCOME_X - 10}
-            cy={OUTCOME_YS[i]}
-            r={4}
-            fill="var(--color-primary-400)"
-            style={{
-              opacity: visible ? 1 : 0,
-              transition: `opacity 0.4s ease ${0.15 * i + 0.9}s`,
-            }}
-          />
-        ))}
+
+        {LAYERS.map((layer, i) => {
+          const g = layerGeometry(i);
+          const fromX = layer.side === "right" ? g.right.x : g.left.x;
+          const toX =
+            layer.side === "right" ? g.right.x + DOT_OFFSET : g.left.x - DOT_OFFSET;
+          return (
+            <g key={`${layer.name}-line`}>
+              <line
+                x1={fromX}
+                y1={g.connectorY}
+                x2={toX}
+                y2={g.connectorY}
+                stroke="var(--color-secondary-300)"
+                strokeWidth={1.5}
+                pathLength={1}
+                style={{
+                  strokeDasharray: 1,
+                  strokeDashoffset: visible ? 0 : 1,
+                  transition: `stroke-dashoffset 0.6s ease ${0.12 * i + 0.35}s`,
+                }}
+              />
+              <circle
+                cx={toX}
+                cy={g.connectorY}
+                r={3.5}
+                fill="var(--color-primary-300)"
+                style={{
+                  opacity: visible ? 1 : 0,
+                  transition: `opacity 0.4s ease ${0.12 * i + 0.7}s`,
+                }}
+              />
+            </g>
+          );
+        })}
       </svg>
 
-      <div
-        className="absolute flex flex-col justify-between text-right"
-        style={{ top: STACK_TOP + 2, right: 0, height: 264, width: 175 }}
-      >
-        {OUTCOMES.map((o, i) => (
-          <span
-            key={o}
-            className="whitespace-nowrap text-[11px] font-semibold uppercase leading-tight tracking-[0.06em] text-caption"
-            style={{
-              opacity: visible ? 1 : 0,
-              transform: visible ? "translateX(0)" : "translateX(8px)",
-              transition: `opacity 0.5s ease ${0.15 * i + 0.9}s, transform 0.5s ease ${0.15 * i + 0.9}s`,
-            }}
-          >
-            {o}
-          </span>
-        ))}
-      </div>
-
-      <div
-        className="absolute left-0 flex flex-col items-stretch"
-        style={{ top: STACK_TOP, width: STACK_W, gap: LAYER_GAP }}
-      >
-        <div
-          className="rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 text-center text-[13px] font-bold text-white shadow-[0_16px_30px_-14px_rgba(83,58,253,0.5)]"
-          style={{ height: CAP_H, display: "flex", alignItems: "center", justifyContent: "center" }}
-        >
-          Superatom AI
-        </div>
-        {LAYERS.map((layer, i) => (
+      {LAYERS.map((layer, i) => {
+        const g = layerGeometry(i);
+        const isRight = layer.side === "right";
+        const dotX = isRight ? g.right.x + DOT_OFFSET : g.left.x - DOT_OFFSET;
+        return (
           <div
-            key={layer}
-            className="infra-layer relative flex items-center justify-center rounded-md border border-primary-200/50 bg-secondary-500 text-[11px] font-semibold uppercase tracking-[0.08em] text-primary-100"
+            key={`${layer.name}-label`}
+            className="absolute"
             style={{
-              height: LAYER_H,
+              top: `${((g.connectorY - 26) / VB_H) * 100}%`,
+              left: isRight
+                ? `${((dotX + LABEL_GAP) / VB_W) * 100}%`
+                : undefined,
+              right: !isRight
+                ? `${((VB_W - dotX + LABEL_GAP) / VB_W) * 100}%`
+                : undefined,
+              width: LABEL_W,
+              textAlign: isRight ? "left" : "right",
               opacity: visible ? 1 : 0,
-              transform: visible ? "translateY(0)" : "translateY(10px)",
-              transition: `opacity 0.5s ease ${0.1 * i}s, transform 0.5s ease ${0.1 * i}s`,
-              animationDelay: `${i * 1.1}s`,
+              transform: visible
+                ? "translateX(0)"
+                : `translateX(${isRight ? 8 : -8}px)`,
+              transition: `opacity 0.5s ease ${0.12 * i + 0.75}s, transform 0.5s ease ${0.12 * i + 0.75}s`,
             }}
           >
-            {layer}
+            <p className="font-display text-[15px] font-bold text-white">
+              {layer.name}
+            </p>
+            <p className="mt-1 text-[11.5px] leading-snug text-secondary-200">
+              {layer.outcome}
+            </p>
           </div>
-        ))}
-        <div className="absolute -bottom-4 -right-4 flex h-11 w-11 items-center justify-center rounded-full bg-white text-primary-500 shadow-[0_10px_24px_-10px_rgba(16,24,40,0.3)] ring-1 ring-secondary-100">
-          <MdShield size={20} />
-        </div>
-      </div>
+        );
+      })}
     </div>
   );
 }
