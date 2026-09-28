@@ -191,60 +191,13 @@ export default function HeroScene() {
     }
     if (!reduceMotion) animateFloor();
 
-    // ---------- ambient depth particles ----------
-    // A restrained, monochrome data-point field (not additive-blended
-    // "confetti") — reads as technical instrumentation, not decoration.
-    const particleCount = reduceMotion ? 0 : 50;
-    const particlePositions = new Float32Array(particleCount * 3);
-    const particleColors = new Float32Array(particleCount * 3);
-    const dustColor = new THREE.Color(0x8d9ec9);
-    const particleBase: { x: number; y: number; phase: number; speed: number }[] =
-      [];
-    for (let i = 0; i < particleCount; i++) {
-      const px = (Math.random() * 2 - 1) * 420;
-      const py = (Math.random() * 2 - 1) * 230;
-      const pz = (Math.random() * 2 - 1) * 180;
-      particlePositions[i * 3] = px;
-      particlePositions[i * 3 + 1] = py;
-      particlePositions[i * 3 + 2] = pz;
-      particleBase.push({
-        x: px,
-        y: py,
-        phase: Math.random() * Math.PI * 2,
-        speed: 0.4 + Math.random() * 0.5,
-      });
-      particleColors[i * 3] = dustColor.r;
-      particleColors[i * 3 + 1] = dustColor.g;
-      particleColors[i * 3 + 2] = dustColor.b;
-    }
-    const particleGeo = new THREE.BufferGeometry();
-    particleGeo.setAttribute(
-      "position",
-      new THREE.BufferAttribute(particlePositions, 3),
-    );
-    particleGeo.setAttribute(
-      "color",
-      new THREE.BufferAttribute(particleColors, 3),
-    );
-    const particleMat = new THREE.PointsMaterial({
-      size: 3,
-      sizeAttenuation: true,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.35,
-      depthWrite: false,
-    });
-    const particles = new THREE.Points(particleGeo, particleMat);
-    scene.add(particles);
-
-    // ---------- connecting beams (hub -> each pillar) ----------
+    // ---------- connecting lines (hub -> each pillar) ----------
+    // Static, thin architecture-diagram lines — no ambient particle field
+    // and no traveling light-orb; the state change is a flat color/opacity
+    // shift on the line itself.
     type Beam = {
       curve: THREE.QuadraticBezierCurve3;
       tubeMat: THREE.MeshBasicMaterial;
-      bead: THREE.Mesh | null;
-      beadMat: THREE.MeshBasicMaterial | null;
-      t: number;
-      speed: number;
     };
     const beams = {} as Record<NodeKey, Beam>;
     order.forEach((key) => {
@@ -259,7 +212,7 @@ export default function HeroScene() {
         mid,
         new THREE.Vector3(p.x, p.y, p.z),
       );
-      const tubeGeo = new THREE.TubeGeometry(curve, 40, 1, 6, false);
+      const tubeGeo = new THREE.TubeGeometry(curve, 40, 0.7, 6, false);
       const tubeMat = new THREE.MeshBasicMaterial({
         color: 0x8d9ec9,
         transparent: true,
@@ -268,26 +221,7 @@ export default function HeroScene() {
       const tube = new THREE.Mesh(tubeGeo, tubeMat);
       scene.add(tube);
 
-      let bead: THREE.Mesh | null = null;
-      if (!reduceMotion) {
-        const beadGeo = new THREE.SphereGeometry(2.4, 12, 12);
-        const beadMat = new THREE.MeshBasicMaterial({
-          color: 0x533afd,
-          transparent: true,
-          opacity: 0.9,
-        });
-        bead = new THREE.Mesh(beadGeo, beadMat);
-        scene.add(bead);
-      }
-
-      beams[key] = {
-        curve,
-        tubeMat,
-        bead,
-        beadMat: bead ? (bead.material as THREE.MeshBasicMaterial) : null,
-        t: Math.random(),
-        speed: 0.09 + Math.random() * 0.03,
-      };
+      beams[key] = { curve, tubeMat };
     });
 
     // ---------- CSS3D hub + pillar cards ----------
@@ -327,8 +261,7 @@ export default function HeroScene() {
         );
         if (mob) mob.classList.toggle("active", active);
         beams[k].tubeMat.color.set(active ? 0x533afd : 0x8d9ec9);
-        beams[k].tubeMat.opacity = active ? 0.6 : 0.2;
-        if (beams[k].beadMat) beams[k].beadMat.opacity = active ? 0.95 : 0.45;
+        beams[k].tubeMat.opacity = active ? 0.5 : 0.2;
       });
     }
     function autoAdvance() {
@@ -338,7 +271,7 @@ export default function HeroScene() {
     }
     function startAuto() {
       autoAdvance();
-      autoTimer = setInterval(autoAdvance, 3300);
+      autoTimer = setInterval(autoAdvance, 4200);
     }
 
     function wire(el: HTMLElement, key: NodeKey) {
@@ -369,8 +302,8 @@ export default function HeroScene() {
       const rect = stageEl!.getBoundingClientRect();
       const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-      targetX = nx * 95;
-      targetY = -ny * 65;
+      targetX = nx * 40;
+      targetY = -ny * 28;
     }
     function onMouseLeave() {
       targetX = 0;
@@ -397,38 +330,18 @@ export default function HeroScene() {
     ro.observe(stageEl);
 
     // ---------- render loop ----------
-    const clock = new THREE.Clock();
     function animate() {
       if (disposed) return;
       rafId = requestAnimationFrame(animate);
-      const t = clock.getElapsedTime();
-
-      if (!reduceMotion && particleCount) {
-        const pos = particleGeo.attributes.position;
-        for (let i = 0; i < particleCount; i++) {
-          const b = particleBase[i];
-          pos.array[i * 3 + 1] = b.y + Math.sin(t * b.speed + b.phase) * 10;
-        }
-        pos.needsUpdate = true;
-      }
-
-      order.forEach((key) => {
-        const beam = beams[key];
-        if (!beam.bead) return;
-        beam.t += 0.0034 * (60 * beam.speed);
-        if (beam.t > 1) beam.t -= 1;
-        const pt = beam.curve.getPointAt(beam.t);
-        beam.bead.position.copy(pt);
-      });
 
       if (canHover && !reduceMotion) {
         camera.position.x += (camBase.x + targetX - camera.position.x) * 0.06;
         camera.position.y += (camBase.y + targetY - camera.position.y) * 0.06;
         camera.position.z += (camBase.z - camera.position.z) * 0.06;
       } else if (!reduceMotion) {
-        idleAngle += 0.0028;
-        camera.position.x = camBase.x + Math.sin(idleAngle) * 60;
-        camera.position.y = camBase.y + Math.sin(idleAngle * 0.6) * 30;
+        idleAngle += 0.0016;
+        camera.position.x = camBase.x + Math.sin(idleAngle) * 24;
+        camera.position.y = camBase.y + Math.sin(idleAngle * 0.6) * 12;
         camera.position.z = camBase.z;
       } else {
         camera.position.copy(camBase);
@@ -447,15 +360,12 @@ export default function HeroScene() {
       ro.disconnect();
       stageEl.removeEventListener("mousemove", onMouseMove);
       stageEl.removeEventListener("mouseleave", onMouseLeave);
-      particleGeo.dispose();
-      particleMat.dispose();
       floorGeo.dispose();
       floorMat.dispose();
       tex.dispose();
       alphaTex.dispose();
       Object.values(beams).forEach((beam) => {
         beam.tubeMat.dispose();
-        beam.beadMat?.dispose();
       });
       glRenderer.dispose();
       glRenderer.domElement.remove();
