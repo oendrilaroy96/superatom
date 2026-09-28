@@ -124,135 +124,50 @@ body {
   font-family: var(--font-sans);
 }
 
-/* ================= Hero WebGL depth graphic ================= */
-.hero-gl-stage canvas {
-  position: absolute;
-  inset: 0;
+/* ================= Hero decision diagram ================= */
+.hero-heading span {
   display: block;
+  color: #c9d2df;
+  transition: color 0.5s ease;
 }
-.css3d-layer {
+.hero-heading span.on {
+  color: var(--color-heading);
+}
+.hero-heading span:last-child {
+  width: fit-content;
+}
+.hero-heading span.on:last-child {
+  background: linear-gradient(
+    90deg,
+    var(--color-primary-500) 0%,
+    var(--color-primary-400) 45%,
+    var(--color-accent-500) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hero-heading.intro span {
+  color: var(--color-heading);
+}
+
+.hero-viz {
+  position: relative;
+}
+.hero-viz::before {
+  content: "";
   position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-.css3d-layer > div {
-  pointer-events: none;
-}
-
-.hub3d,
-.node3d {
-  pointer-events: auto;
+  inset: -6% -4%;
+  z-index: -1;
+  border-radius: 40px;
+  background:
+    radial-gradient(40% 45% at 35% 45%, rgba(83, 58, 253, 0.1), transparent 70%),
+    radial-gradient(35% 40% at 80% 55%, rgba(255, 118, 0, 0.08), transparent 70%);
 }
 
-.hub3d {
-  width: 150px;
-  height: 150px;
-  border-radius: 10px;
-  background: #ffffff;
-  border: 1px solid var(--color-secondary-100);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 5px;
-  padding: 10px;
-  box-shadow: 0 12px 24px -18px rgba(16, 24, 40, 0.2);
-}
-.hub3d .mark {
-  width: 22px;
-  height: 22px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3px;
-}
-.hub3d .mark span {
-  background: var(--color-primary-500);
-  border-radius: 50%;
-}
-.hub3d .name {
-  font-family: "Instrument Sans", ui-sans-serif, sans-serif;
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: -0.01em;
-  color: var(--color-heading);
-}
-.hub3d .tag {
-  font-size: 9.5px;
-  color: var(--color-body);
-  line-height: 1.25;
-}
-
-.node3d {
-  width: 144px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 10px 8px 9px;
-  border-radius: 6px;
-  background: #ffffff;
-  border: 1px solid var(--color-secondary-100);
-  border-left: 3px solid transparent;
-  text-align: left;
-  color: var(--color-heading);
-  font-family: inherit;
-  box-shadow: 0 8px 18px -16px rgba(16, 24, 40, 0.18);
-  transition:
-    border-color 0.2s ease,
-    background 0.2s ease;
-}
-.node3d:hover,
-.node3d.active {
-  border-color: var(--color-secondary-100);
-  border-left-color: var(--color-primary-500);
-  background: #ffffff;
-}
-.node3d .ic {
-  flex: 0 0 auto;
-  width: 25px;
-  height: 25px;
-  border-radius: 6px;
-  display: grid;
-  place-items: center;
-  background: var(--color-page);
-  color: var(--color-secondary-400);
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
-}
-.node3d.active .ic,
-.node3d:hover .ic {
-  background: var(--color-primary-100);
-  color: var(--color-primary-600);
-}
-.node3d .ic svg {
-  width: 13.5px;
-  height: 13.5px;
-}
-.node3d .lbl .name {
-  font-family: "Instrument Sans", ui-sans-serif, sans-serif;
-  font-size: 11.5px;
-  font-weight: 700;
-  margin: 0 0 1px;
-}
-.node3d .lbl .tag {
-  font-family: "Satoshi", ui-sans-serif, sans-serif;
-  font-size: 8.5px;
+.hero-caption {
+  min-height: 20px;
+  font-size: 13.5px;
   color: var(--color-muted);
-}
-.node3d.active .lbl .tag {
-  color: var(--color-primary-600);
-}
-
-.hero-mobile-list .node3d {
-  width: 100%;
-  box-shadow: none;
-}
-
-@media (max-width: 1024px) {
-  .hero-mobile-list {
-    display: flex !important;
-  }
+  transition: opacity 0.4s ease;
 }
