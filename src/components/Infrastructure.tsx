@@ -50,7 +50,7 @@ const features: { title: string; desc: string; Icon: IconType }[] = [
 
 export default function Infrastructure() {
   return (
-    <section className="relative overflow-hidden py-16 sm:py-20">
+    <section className="relative overflow-hidden py-24 sm:py-28">
       <div className="relative z-[2] mx-auto max-w-[1440px] px-4 sm:px-10 xl:px-20">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
@@ -60,7 +60,7 @@ export default function Infrastructure() {
                 Infrastructure
               </p>
             </div>
-            <h2 className="mt-4 font-display text-[22px] font-bold text-heading sm:text-h2">
+            <h2 className="mt-4 font-display text-[26px] font-bold leading-[1.15] text-heading sm:text-h1">
               Enterprise-grade infrastructure for{" "}
               <span className="text-primary-500">real-world operations</span>
             </h2>
