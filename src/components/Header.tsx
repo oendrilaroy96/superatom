@@ -3,6 +3,7 @@ import { MdClose, MdMenu } from "react-icons/md";
 import logo from "../assets/superatom-logo.png";
 import Button from "./ui/Button";
 import IconButton from "./ui/IconButton";
+import DemoModal from "./DemoModal";
 
 const solutions = [
   { name: "Inventory Intelligence", blurb: "Optimize, rebalance, prevent." },
@@ -83,6 +84,12 @@ function DropdownNavItem({
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [demoOpen, setDemoOpen] = useState(false);
+
+  function openDemo() {
+    setMobileOpen(false);
+    setDemoOpen(true);
+  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -120,7 +127,7 @@ export default function Header() {
         </nav>
 
         <div className="hidden lg:block">
-          <Button href="#" variant="secondary" className="px-5 py-2.5 text-[13px]">
+          <Button variant="secondary" className="px-5 py-2.5 text-[13px]" onClick={openDemo}>
             Book a demo
           </Button>
         </div>
@@ -149,12 +156,14 @@ export default function Header() {
             <a href="#" className="text-sm font-medium text-body">
               About us
             </a>
-            <Button href="#" variant="secondary" className="mt-2 w-full justify-center">
+            <Button variant="secondary" className="mt-2 w-full justify-center" onClick={openDemo}>
               Book a demo
             </Button>
           </nav>
         </div>
       )}
+
+      <DemoModal open={demoOpen} onClose={() => setDemoOpen(false)} />
     </header>
   );
 }
