@@ -4,7 +4,28 @@ import Infrastructure from "./components/Infrastructure";
 
 function App() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="relative min-h-screen overflow-x-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f8fafd_45%,#ffffff_100%)]">
+      <div
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{
+          backgroundImage:
+            "radial-gradient(1200px 900px at 82% 4%, rgba(83,58,253,0.07), transparent 55%), radial-gradient(1000px 800px at 15% 55%, rgba(255,118,0,0.05), transparent 50%), radial-gradient(1100px 800px at 80% 95%, rgba(83,58,253,0.06), transparent 55%)",
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{
+          backgroundImage:
+            "linear-gradient(#edf1f7 1px, transparent 1px), linear-gradient(90deg, #edf1f7 1px, transparent 1px)",
+          backgroundSize: "44px 44px",
+          maskImage:
+            "linear-gradient(180deg, transparent 0%, black 6%, black 94%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(180deg, transparent 0%, black 6%, black 94%, transparent 100%)",
+        }}
+        aria-hidden="true"
+      />
       <Header />
       <main>
         <Hero />

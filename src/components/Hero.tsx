@@ -483,29 +483,7 @@ export default function Hero() {
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   return (
-    <section className="relative flex min-h-[calc(100vh-4rem)] flex-col justify-center overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f8fafd_100%)]">
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          backgroundImage:
-            "radial-gradient(1100px 620px at 82% 8%, rgba(83,58,253,0.07), transparent 60%), radial-gradient(900px 520px at 18% 92%, rgba(255,118,0,0.06), transparent 55%)",
-        }}
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          backgroundImage:
-            "linear-gradient(#edf1f7 1px, transparent 1px), linear-gradient(90deg, #edf1f7 1px, transparent 1px)",
-          backgroundSize: "44px 44px",
-          maskImage:
-            "radial-gradient(1200px 700px at 70% 20%, black 0%, transparent 75%)",
-          WebkitMaskImage:
-            "radial-gradient(1200px 700px at 70% 20%, black 0%, transparent 75%)",
-        }}
-        aria-hidden="true"
-      />
-
+    <section className="relative flex min-h-[calc(100vh-4rem)] flex-col justify-center overflow-hidden">
       <div className="relative z-[2] mx-auto grid w-full max-w-[1440px] grid-cols-1 items-center gap-10 px-4 pb-4 pt-10 sm:px-10 sm:pt-14 lg:grid-cols-[1fr_1.15fr] lg:gap-14 xl:px-20">
         <div className="flex flex-col">
           <p className="mb-3 font-display text-[13px] font-semibold uppercase tracking-[0.08em] text-primary-500">
