@@ -1,9 +1,6 @@
 import Header from "./components/Header";
 import Hero from "./components/Hero";
-import HowItWorks from "./components/HowItWorks";
 import Infrastructure from "./components/Infrastructure";
-import SocialProof from "./components/SocialProof";
-import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -11,11 +8,8 @@ function App() {
       <Header />
       <main>
         <Hero />
-        <HowItWorks />
         <Infrastructure />
-        <SocialProof />
       </main>
-      <Footer />
     </div>
   );
 }
