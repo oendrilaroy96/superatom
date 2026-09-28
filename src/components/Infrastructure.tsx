@@ -38,7 +38,7 @@ const CX = 320;
 const BOX_W = 210;
 const TOP_DEPTH = 24;
 const FRONT_H = 54;
-const GAP = 16;
+const GAP = 6;
 const START_Y = 24;
 const DOT_OFFSET = 60;
 const LABEL_GAP = 12;
@@ -56,8 +56,9 @@ const LAYER_COLORS = [
 // starts, so it reads as a clear one-by-one sequence rather than an
 // overlapping cascade.
 const LAYER_STAGGER = 0.4;
+const START_DELAY = 0.5;
 function revealDelay(i: number) {
-  return LAYER_STAGGER * (LAYERS.length - 1 - i);
+  return START_DELAY + LAYER_STAGGER * (LAYERS.length - 1 - i);
 }
 
 function layerGeometry(i: number) {
