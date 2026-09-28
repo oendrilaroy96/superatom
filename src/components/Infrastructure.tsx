@@ -210,8 +210,29 @@ function InfrastructureDiagram() {
 
 export default function Infrastructure() {
   return (
-    <section className="bg-white py-16 sm:py-20">
-      <div className="mx-auto max-w-[1440px] px-4 sm:px-10 xl:px-20">
+    <section className="relative overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f8fafd_100%)] py-16 sm:py-20">
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage:
+            "radial-gradient(1100px 620px at 82% 8%, rgba(83,58,253,0.07), transparent 60%), radial-gradient(900px 520px at 18% 92%, rgba(255,118,0,0.06), transparent 55%)",
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage:
+            "linear-gradient(#edf1f7 1px, transparent 1px), linear-gradient(90deg, #edf1f7 1px, transparent 1px)",
+          backgroundSize: "44px 44px",
+          maskImage:
+            "radial-gradient(1200px 700px at 70% 20%, black 0%, transparent 75%)",
+          WebkitMaskImage:
+            "radial-gradient(1200px 700px at 70% 20%, black 0%, transparent 75%)",
+        }}
+        aria-hidden="true"
+      />
+      <div className="relative z-[2] mx-auto max-w-[1440px] px-4 sm:px-10 xl:px-20">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
             <p className="text-h5 font-semibold uppercase tracking-[0.5px] text-primary-500">
