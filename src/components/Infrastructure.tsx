@@ -52,9 +52,12 @@ const LAYER_COLORS = [
 ];
 
 // Reveal order runs bottom-to-top: the last layer (index LAYERS.length - 1)
-// animates in first.
+// animates in first. Each layer's entrance finishes before the next one
+// starts, so it reads as a clear one-by-one sequence rather than an
+// overlapping cascade.
+const LAYER_STAGGER = 0.4;
 function revealDelay(i: number) {
-  return 0.12 * (LAYERS.length - 1 - i);
+  return LAYER_STAGGER * (LAYERS.length - 1 - i);
 }
 
 function layerGeometry(i: number) {
@@ -121,7 +124,7 @@ function InfrastructureDiagram() {
                 opacity: visible ? 1 : 0,
                 transform: visible ? "translateY(0)" : "translateY(14px)",
                 transformOrigin: `${CX}px ${g.peak.y}px`,
-                transition: `opacity 0.55s ease ${revealDelay(i)}s, transform 0.55s ease ${revealDelay(i)}s`,
+                transition: `opacity 0.35s ease ${revealDelay(i)}s, transform 0.35s ease ${revealDelay(i)}s`,
               }}
             >
               <polygon points={leftFace} fill={c.left} fillOpacity={c.opacity} stroke={c.right} strokeOpacity={0.4} strokeWidth={1} />
@@ -149,7 +152,7 @@ function InfrastructureDiagram() {
                 style={{
                   strokeDasharray: 1,
                   strokeDashoffset: visible ? 0 : 1,
-                  transition: `stroke-dashoffset 0.6s ease ${revealDelay(i) + 0.35}s`,
+                  transition: `stroke-dashoffset 0.3s ease ${revealDelay(i) + 0.08}s`,
                 }}
               />
               <circle
@@ -159,7 +162,7 @@ function InfrastructureDiagram() {
                 fill="var(--color-primary-500)"
                 style={{
                   opacity: visible ? 1 : 0,
-                  transition: `opacity 0.4s ease ${revealDelay(i) + 0.7}s`,
+                  transition: `opacity 0.25s ease ${revealDelay(i) + 0.2}s`,
                 }}
               />
             </g>
@@ -189,7 +192,7 @@ function InfrastructureDiagram() {
               transform: visible
                 ? "translateX(0)"
                 : `translateX(${isRight ? 8 : -8}px)`,
-              transition: `opacity 0.5s ease ${revealDelay(i) + 0.75}s, transform 0.5s ease ${revealDelay(i) + 0.75}s`,
+              transition: `opacity 0.3s ease ${revealDelay(i) + 0.12}s, transform 0.3s ease ${revealDelay(i) + 0.12}s`,
             }}
           >
             <p className="font-display text-[15px] font-bold text-heading">
