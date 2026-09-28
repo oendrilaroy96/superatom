@@ -466,10 +466,10 @@ export default function HeroScene() {
   }, []);
 
   return (
-    <div className="relative h-full w-full">
+    <div className="relative w-full">
       <div
         ref={stageRef}
-        className="hero-gl-stage relative h-full min-h-[280px] w-full overflow-hidden rounded-[18px] max-lg:hidden"
+        className="hero-gl-stage relative aspect-[16/11.6] max-h-[500px] w-full overflow-hidden rounded-[18px] max-lg:hidden"
       >
         <div className="pointer-events-none absolute bottom-2 left-1/2 z-[6] flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap font-display text-[10.5px] uppercase tracking-[0.08em] text-muted">
           <svg

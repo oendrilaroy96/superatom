@@ -14,13 +14,13 @@ function StatIcon({ Icon }: { Icon: IconType }) {
 
 function ScenePlaceholder() {
   return (
-    <div className="min-h-[280px] w-full animate-pulse rounded-[18px] bg-primary-100/40 max-lg:hidden lg:h-full lg:min-h-0" />
+    <div className="aspect-[16/11.6] max-h-[500px] w-full animate-pulse rounded-[18px] bg-primary-100/40 max-lg:hidden" />
   );
 }
 
 export default function Hero() {
   return (
-    <section className="relative flex flex-col overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f8fafd_100%)] lg:h-[calc(100vh-4rem)]">
+    <section className="relative flex flex-col overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f8fafd_100%)]">
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -43,7 +43,7 @@ export default function Hero() {
         aria-hidden="true"
       />
 
-      <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-1 flex-col gap-4 px-4 pt-6 sm:px-10 sm:pt-8 lg:min-h-0 lg:gap-6 xl:px-20">
+      <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 pt-10 sm:px-10 sm:pt-14 lg:gap-10 xl:px-20">
         <div className="mx-auto flex max-w-[720px] flex-col items-center text-center">
           <p className="text-h5 mb-3 font-sans uppercase tracking-[0.5px] text-muted">
             Decision intelligence for the supply chain
@@ -78,14 +78,14 @@ export default function Hero() {
           </a>
         </div>
 
-        <div className="w-full lg:min-h-0 lg:flex-1">
+        <div className="w-full">
           <Suspense fallback={<ScenePlaceholder />}>
             <HeroScene />
           </Suspense>
         </div>
       </div>
 
-      <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-wrap gap-8 border-t border-secondary-100 px-4 pb-5 pt-5 sm:px-10 xl:px-20">
+      <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-wrap gap-8 border-t border-secondary-100 px-4 pb-11 pt-9 sm:px-10 xl:px-20">
         <div className="flex min-w-[150px] items-center gap-3">
           <StatIcon Icon={MdBolt} />
           <span className="text-[13.5px] font-semibold leading-tight text-body">
