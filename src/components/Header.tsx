@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { MdClose, MdMenu } from "react-icons/md";
-import logoWhite from "../assets/logo-white.png";
+import logo from "../assets/superatom-logo.png";
 import Button from "./ui/Button";
 import IconButton from "./ui/IconButton";
 
@@ -41,11 +41,8 @@ function ChevronDown() {
 
 function Logo() {
   return (
-    <a
-      href="/"
-      className="flex shrink-0 items-center rounded-md bg-secondary-500 px-3 py-2"
-    >
-      <img src={logoWhite} alt="Superatom AI" className="h-5 w-auto" />
+    <a href="/" className="flex shrink-0 items-center">
+      <img src={logo} alt="Superatom AI" className="h-6 w-auto" />
     </a>
   );
 }
