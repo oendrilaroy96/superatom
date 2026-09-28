@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import type { IconType } from "react-icons";
-import { MdBolt, MdTrendingDown, MdTrendingUp, MdShield } from "react-icons/md";
+import { MdArrowForward, MdBolt, MdTrendingDown, MdTrendingUp, MdShield } from "react-icons/md";
+import Button from "./ui/Button";
 
 const HeroScene = lazy(() => import("./HeroScene"));
 
@@ -58,24 +59,14 @@ export default function Hero() {
             Make, automate and execute thousands of better decisions across
             the supply chain.
           </p>
-          <a
+          <Button
             href="#"
-            className="inline-flex items-center gap-2.5 rounded-md bg-accent-500 px-[22px] py-[13px] text-[14.5px] font-bold text-secondary-800 shadow-[0_10px_30px_-10px_rgba(255,118,0,0.35)] transition-transform hover:-translate-y-px"
+            variant="accent"
+            iconRight={<MdArrowForward size={18} />}
+            className="shadow-[0_10px_30px_-10px_rgba(255,118,0,0.35)] transition-transform hover:-translate-y-px"
           >
             Explore the Platform
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M5 12h14M13 6l6 6-6 6" />
-            </svg>
-          </a>
+          </Button>
         </div>
 
         <div className="w-full">

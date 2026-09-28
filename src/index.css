@@ -66,13 +66,31 @@
 
   /* Status (Figma: Status Colors) */
   --color-error-100: #fde4e8;
+  --color-error-200: #fbc8d0;
+  --color-error-300: #f59cac;
+  --color-error-400: #ec6b82;
   --color-error-500: #d6304c;
+  --color-error-600: #b62440;
+  --color-error-700: #8f1b31;
+  --color-error-800: #6e1526;
   --color-error-900: #450d18;
   --color-warning-100: #fff3d6;
+  --color-warning-200: #ffe3a3;
+  --color-warning-300: #ffce6b;
+  --color-warning-400: #ffb938;
   --color-warning-500: #f2a200;
+  --color-warning-600: #c97f00;
+  --color-warning-700: #9c6200;
+  --color-warning-800: #6e4500;
   --color-warning-900: #452b00;
   --color-success-100: #dcf5e8;
+  --color-success-200: #b0e8cb;
+  --color-success-300: #7dd8aa;
+  --color-success-400: #45c285;
   --color-success-500: #0f9868;
+  --color-success-600: #0c7d55;
+  --color-success-700: #0a6c47;
+  --color-success-800: #074e33;
   --color-success-900: #042e1e;
 
   --font-display: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
