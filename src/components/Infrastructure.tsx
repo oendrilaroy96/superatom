@@ -35,7 +35,7 @@ const points: { title: string; desc: string; Icon: IconType }[] = [
 const features: { title: string; desc: string; Icon: IconType }[] = [
   {
     title: "Security & Compliance",
-    desc: "Enterprise-grade security controls, built toward industry compliance standards, with continuous testing and monitoring.",
+    desc: "ISO 27001:2022 certified, with SOC 2 Type I currently in progress, backed by continuous testing and monitoring.",
     Icon: MdShield,
   },
   {
