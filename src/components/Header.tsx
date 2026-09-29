@@ -1,23 +1,36 @@
 import { useEffect, useState } from "react";
-import { MdClose, MdMenu } from "react-icons/md";
+import {
+  MdClose,
+  MdMenu,
+  MdInventory2,
+  MdShowChart,
+  MdShoppingCart,
+  MdLocalShipping,
+  MdPrecisionManufacturing,
+  MdSell,
+  MdArticle,
+  MdInsights,
+  MdMenuBook,
+} from "react-icons/md";
+import type { IconType } from "react-icons";
 import logo from "../assets/superatom-logo.png";
 import Button from "./ui/Button";
 import IconButton from "./ui/IconButton";
 import DemoModal from "./DemoModal";
 
-const solutions = [
-  { name: "Inventory Intelligence", blurb: "Optimize, rebalance, prevent." },
-  { name: "Demand Intelligence", blurb: "Sense, predict, respond." },
-  { name: "Procurement Intelligence", blurb: "Source, plan, mitigate." },
-  { name: "Logistics Intelligence", blurb: "Move, optimize, deliver." },
-  { name: "Manufacturing Intelligence", blurb: "Plan, produce, adapt." },
-  { name: "Pricing Intelligence", blurb: "Price, position, grow." },
+const solutions: { name: string; blurb: string; Icon: IconType }[] = [
+  { name: "Inventory Intelligence", blurb: "Optimize, rebalance, prevent.", Icon: MdInventory2 },
+  { name: "Demand Intelligence", blurb: "Sense, predict, respond.", Icon: MdShowChart },
+  { name: "Procurement Intelligence", blurb: "Source, plan, mitigate.", Icon: MdShoppingCart },
+  { name: "Logistics Intelligence", blurb: "Move, optimize, deliver.", Icon: MdLocalShipping },
+  { name: "Manufacturing Intelligence", blurb: "Plan, produce, adapt.", Icon: MdPrecisionManufacturing },
+  { name: "Pricing Intelligence", blurb: "Price, position, grow.", Icon: MdSell },
 ];
 
-const resources = [
-  { name: "Blog", blurb: "Insights on decision intelligence." },
-  { name: "Case Studies", blurb: "How enterprises use Superatom." },
-  { name: "Docs", blurb: "Platform & integration guides." },
+const resources: { name: string; blurb: string; Icon: IconType }[] = [
+  { name: "Blog", blurb: "Insights on decision intelligence.", Icon: MdArticle },
+  { name: "Case Studies", blurb: "How enterprises use Superatom.", Icon: MdInsights },
+  { name: "Docs", blurb: "Platform & integration guides.", Icon: MdMenuBook },
 ];
 
 function ChevronDown() {
@@ -51,9 +64,11 @@ function Logo() {
 function DropdownNavItem({
   label,
   items,
+  columns = 1,
 }: {
   label: string;
-  items: { name: string; blurb: string }[];
+  items: { name: string; blurb: string; Icon: IconType }[];
+  columns?: 1 | 2;
 }) {
   return (
     <div className="group relative">
@@ -61,18 +76,31 @@ function DropdownNavItem({
         {label}
         <ChevronDown />
       </button>
-      <div className="invisible absolute left-1/2 top-full z-50 w-72 -translate-x-1/2 pt-4 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100">
-        <div className="rounded-lg border border-secondary-100 bg-white p-2 shadow-xl shadow-secondary-900/10">
+      <div
+        className={`invisible absolute left-1/2 top-full z-50 -translate-x-1/2 pt-4 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100 ${
+          columns === 2 ? "w-[620px]" : "w-80"
+        }`}
+      >
+        <div
+          className={`rounded-xl border border-secondary-100 bg-white p-3 shadow-xl shadow-secondary-900/10 ${
+            columns === 2 ? "grid grid-cols-2 gap-1" : "space-y-0.5"
+          }`}
+        >
           {items.map((item) => (
             <a
               key={item.name}
               href="#"
-              className="block rounded-md px-3 py-2.5 transition-colors hover:bg-primary-100/40"
+              className="flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-primary-100/40"
             >
-              <p className="font-display text-sm font-semibold text-heading">
-                {item.name}
-              </p>
-              <p className="mt-0.5 text-xs text-caption">{item.blurb}</p>
+              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary-100 text-primary-500">
+                <item.Icon size={18} />
+              </span>
+              <span>
+                <p className="font-display text-sm font-semibold text-heading">
+                  {item.name}
+                </p>
+                <p className="mt-0.5 text-xs text-caption">{item.blurb}</p>
+              </span>
             </a>
           ))}
         </div>
@@ -116,7 +144,7 @@ export default function Header() {
           >
             Platform
           </a>
-          <DropdownNavItem label="Solutions" items={solutions} />
+          <DropdownNavItem label="Solutions" items={solutions} columns={2} />
           <DropdownNavItem label="Resources" items={resources} />
           <a
             href="#"
