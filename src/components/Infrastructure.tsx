@@ -84,7 +84,7 @@ export default function Infrastructure() {
           {features.map((f) => (
             <div
               key={f.title}
-              className="rounded-lg border border-secondary-100 p-6"
+              className="rounded-lg border border-secondary-100 bg-white p-6"
             >
               <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
                 <f.Icon size={22} />
