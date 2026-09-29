@@ -183,7 +183,14 @@ export default function InfrastructureDiagram() {
           if (entry.isIntersecting) {
             triggerTime = performance.now();
             setVisible(true);
-            io?.disconnect();
+          } else {
+            triggerTime = null;
+            setVisible(false);
+            boxes.forEach((b) => {
+              b.mesh.position.y = b.restY - 0.3;
+              b.materials.forEach((m) => (m.opacity = 0));
+            });
+            renderer.render(scene, camera);
           }
         },
         { threshold: 0.35 },
