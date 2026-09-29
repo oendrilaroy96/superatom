@@ -131,7 +131,7 @@ function Arrow() {
 
 export default function HowItWorks() {
   return (
-    <section className="bg-page py-16 sm:py-20">
+    <section className="relative overflow-hidden py-16 sm:py-20">
       <div className="mx-auto max-w-[1440px] px-4 sm:px-10 xl:px-20">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-h5 font-semibold uppercase tracking-[0.5px] text-primary-500">

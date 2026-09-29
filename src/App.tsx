@@ -1,5 +1,6 @@
 import Header from "./components/Header";
 import Hero from "./components/Hero";
+import HowItWorks from "./components/HowItWorks";
 import Infrastructure from "./components/Infrastructure";
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
       <Header />
       <main className="relative z-10">
         <Hero />
+        <HowItWorks />
         <Infrastructure />
       </main>
     </div>
