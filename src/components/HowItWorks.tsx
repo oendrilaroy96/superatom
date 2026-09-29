@@ -155,7 +155,7 @@ export default function HowItWorks() {
         <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-6">
           {steps.map((step, i) => (
             <div key={step.n} className="relative">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-500 text-sm font-bold text-secondary-800">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-500 text-sm font-bold text-white">
                 {step.n}
               </div>
               <p className="text-h4 mt-3 font-display font-semibold text-heading">

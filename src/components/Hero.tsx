@@ -490,9 +490,9 @@ export default function Hero() {
           </p>
           <h1
             ref={headingRef}
-            className="hero-heading m-0 mb-4 font-display text-[clamp(32px,4.5vw,56px)] font-bold leading-[1.08] tracking-[-0.02em]"
+            className="hero-heading m-0 mb-4 font-display text-[clamp(28px,2.5vw,36px)] font-bold leading-[1.08] tracking-[-0.02em]"
           >
-            <div className="flex flex-wrap gap-x-[0.3em] text-[clamp(28px,2.5vw,36px)]">
+            <div className="flex flex-wrap gap-x-[0.3em]">
               <span>Decide Fast.</span>
               <span>Decide Right.</span>
             </div>
