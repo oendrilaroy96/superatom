@@ -493,8 +493,10 @@ export default function Hero() {
             ref={headingRef}
             className="hero-heading m-0 mb-4 font-display text-[clamp(32px,4.5vw,56px)] font-bold leading-[1.08] tracking-[-0.02em]"
           >
-            <span>Decide Fast.</span>
-            <span>Decide Right.</span>
+            <div className="flex flex-wrap gap-x-[0.3em]">
+              <span>Decide Fast.</span>
+              <span>Decide Right.</span>
+            </div>
             <span>Every Time.</span>
           </h1>
           <p className="mb-6 max-w-[520px] text-[18px] leading-[1.55] text-body">

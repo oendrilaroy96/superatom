@@ -133,10 +133,10 @@ body {
 .hero-heading span.on {
   color: var(--color-heading);
 }
-.hero-heading span:last-child {
+.hero-heading > span:last-child {
   width: fit-content;
 }
-.hero-heading span.on:last-child {
+.hero-heading > span.on:last-child {
   background: linear-gradient(
     90deg,
     var(--color-primary-500) 0%,
