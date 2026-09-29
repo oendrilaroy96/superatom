@@ -4,7 +4,7 @@ import Infrastructure from "./components/Infrastructure";
 
 function App() {
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f8fafd_45%,#ffffff_100%)]">
+    <div className="relative min-h-screen overflow-x-hidden bg-[linear-gradient(180deg,#f8fafd_0%,#ffffff_45%,#f8fafd_100%)]">
       <div
         className="pointer-events-none absolute inset-0 z-0"
         style={{
@@ -17,7 +17,7 @@ function App() {
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(13,23,56,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(13,23,56,0.07) 1px, transparent 1px)",
+            "linear-gradient(rgba(13,23,56,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(13,23,56,0.035) 1px, transparent 1px)",
           backgroundSize: "44px 44px",
           maskImage:
             "linear-gradient(180deg, transparent 0%, white 4%, white 96%, transparent 100%)",
