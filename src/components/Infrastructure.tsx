@@ -60,9 +60,10 @@ export default function Infrastructure() {
                 Infrastructure
               </p>
             </div>
-            <h2 className="mt-4 font-display text-[26px] font-bold leading-[1.15] text-heading sm:text-h1">
-              Enterprise-grade infrastructure for{" "}
-              <span className="text-primary-500">real-world operations</span>
+            <h2 className="mt-4 font-display text-[28px] font-bold leading-[1.15] text-heading sm:text-[32px]">
+              Enterprise-grade infrastructure
+              <br />
+              for <span className="text-primary-500">real-world operations</span>
             </h2>
             <p className="text-p mt-4 max-w-md text-body">
               A secure, governed foundation built for the demands of modern
