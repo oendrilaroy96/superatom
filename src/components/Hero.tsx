@@ -31,9 +31,8 @@ const SIGNALS = [
   { label: "Seasonality", sx: 205, sy: 395 },
 ];
 const SOURCES = [
-  { label: "ERP", y: 150 },
-  { label: "Suppliers", y: 240 },
-  { label: "Warehouses", y: 330 },
+  { label: "ERP", y: 190 },
+  { label: "Data System", y: 300 },
 ];
 const OPTIONS = [
   { label: "Shift supplier", score: 71, y: 140, win: false },
@@ -45,7 +44,7 @@ const HOLD = 1.5;
 const CYCLE = 10.8 + HOLD;
 const HOLD_CAPTION = "Signals from across your supply chain";
 const CAPTIONS = [
-  "Scattered signals connect in the semantic layer",
+  "Scattered signals connect in the decision intelligence layer",
   "The optimization engine weighs every option",
   "The decision is delivered, and every outcome feeds back",
 ];
@@ -417,7 +416,7 @@ function HeroDiagram({
             letterSpacing={1}
             opacity={0}
           >
-            SEMANTIC LAYER
+            DECISION INTELLIGENCE
           </text>
           <text
             ref={optLabelRef}
