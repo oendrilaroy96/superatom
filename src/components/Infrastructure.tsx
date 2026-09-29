@@ -76,21 +76,20 @@ export default function Infrastructure() {
               A secure, governed foundation built for the demands of modern
               enterprise supply chains.
             </p>
-            <div className="mt-7 grid gap-3 sm:grid-cols-2">
+            <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:gap-8">
               {points.map((point) => (
-                <div
-                  key={point.title}
-                  className="rounded-xl border border-secondary-100 bg-white p-4"
-                >
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-accent-100 text-accent-600">
+                <div key={point.title} className="flex items-start gap-3">
+                  <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-md bg-accent-100 text-accent-600">
                     <point.Icon size={18} />
                   </span>
-                  <p className="mt-3 font-display text-sm font-semibold text-heading">
-                    {point.title}
-                  </p>
-                  <p className="mt-1 text-xs leading-relaxed text-caption">
-                    {point.desc}
-                  </p>
+                  <div>
+                    <p className="font-display text-sm font-semibold text-heading">
+                      {point.title}
+                    </p>
+                    <p className="mt-0.5 text-xs text-caption">
+                      {point.desc}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
