@@ -4,7 +4,7 @@ import {
   MdLock,
   MdStorage,
   MdVpnKey,
-  MdCheck,
+  MdDns,
 } from "react-icons/md";
 import type { IconType } from "react-icons";
 
@@ -19,16 +19,23 @@ function DiagramPlaceholder() {
   );
 }
 
-const points = [
-  "Superatom AI sits inside your infrastructure",
-  "ISO 27001 and SOC 2 aligned",
-  "Enterprise SSO out of the box",
+const points: { title: string; desc: string; Icon: IconType }[] = [
+  {
+    title: "Runs inside your infrastructure",
+    desc: "Deploys within your own environment and existing data boundaries.",
+    Icon: MdDns,
+  },
+  {
+    title: "Enterprise SSO out of the box",
+    desc: "SAML, OIDC and Active Directory, ready on day one.",
+    Icon: MdVpnKey,
+  },
 ];
 
 const features: { title: string; desc: string; Icon: IconType }[] = [
   {
     title: "Security & Compliance",
-    desc: "Enterprise-grade security controls with ISO 27001:2022 and SOC 2 Type I compliance, with continuous testing and monitoring.",
+    desc: "Enterprise-grade security controls, built toward industry compliance standards, with continuous testing and monitoring.",
     Icon: MdShield,
   },
   {
@@ -69,18 +76,24 @@ export default function Infrastructure() {
               A secure, governed foundation built for the demands of modern
               enterprise supply chains.
             </p>
-            <ul className="mt-7 space-y-3.5">
+            <div className="mt-7 grid gap-3 sm:grid-cols-2">
               {points.map((point) => (
-                <li key={point} className="flex items-center gap-3">
-                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-accent-100 text-accent-600">
-                    <MdCheck size={16} />
+                <div
+                  key={point.title}
+                  className="rounded-xl border border-secondary-100 bg-white p-4"
+                >
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-accent-100 text-accent-600">
+                    <point.Icon size={18} />
                   </span>
-                  <span className="text-sm font-medium text-body">
-                    {point}
-                  </span>
-                </li>
+                  <p className="mt-3 font-display text-sm font-semibold text-heading">
+                    {point.title}
+                  </p>
+                  <p className="mt-1 text-xs leading-relaxed text-caption">
+                    {point.desc}
+                  </p>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
           <Suspense fallback={<DiagramPlaceholder />}>
             <InfrastructureDiagram />
