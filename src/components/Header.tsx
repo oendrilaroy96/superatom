@@ -11,6 +11,7 @@ import {
   MdArticle,
   MdInsights,
   MdMenuBook,
+  MdKeyboardArrowDown,
 } from "react-icons/md";
 import type { IconType } from "react-icons";
 import logo from "../assets/superatom-logo.png";
@@ -35,21 +36,10 @@ const resources: { name: string; blurb: string; Icon: IconType }[] = [
 
 function ChevronDown() {
   return (
-    <svg
-      width="9"
-      height="6"
-      viewBox="0 0 10 6"
-      fill="none"
+    <MdKeyboardArrowDown
+      size={16}
       className="transition-transform duration-200 group-hover:rotate-180"
-    >
-      <path
-        d="M1 1l4 4 4-4"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    />
   );
 }
 
