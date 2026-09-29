@@ -36,11 +36,6 @@ const EDGE_GAP_PCT = 3.2;
 const LABEL_GAP = 12;
 const LABEL_W = 148;
 
-// The shield reveals as a capstone once the top (last-revealed) box settles.
-const SHIELD_DELAY = revealDelay(0) + ENTER_DURATION + 0.15;
-const SHIELD_DURATION = 0.6;
-const SHIELD_RISE = 0.35;
-
 type Anchor = { x: number; y: number };
 type Bounds = { minX: number; maxX: number };
 
@@ -123,86 +118,6 @@ export default function InfrastructureDiagram() {
       return { materials, mesh, restY, targetOpacity: c.opacity };
     });
 
-    // A small security-shield accent floating above the stack, as its own
-    // 3D object so it can catch the same reveal timing as the boxes. Built
-    // as a billboard (quaternion aligned to the camera direction) so its
-    // flat shield/lock shapes read cleanly instead of foreshortening under
-    // the isometric angle.
-    const shieldGroup = new THREE.Group();
-    const camDir = new THREE.Vector3(1, 1, 1).normalize();
-    shieldGroup.quaternion.setFromUnitVectors(
-      new THREE.Vector3(0, 0, 1),
-      camDir,
-    );
-    const shieldRestY = stackHeight + 0.65;
-    shieldGroup.position.set(0, shieldRestY - SHIELD_RISE, 0);
-    scene.add(shieldGroup);
-
-    type ShieldPart = {
-      material: THREE.MeshBasicMaterial;
-      geometry: THREE.BufferGeometry;
-      targetOpacity: number;
-    };
-    const shieldParts: ShieldPart[] = [];
-
-    function addShieldPart(
-      geometry: THREE.BufferGeometry,
-      color: number,
-      targetOpacity: number,
-      position: [number, number, number],
-      scale = 1,
-    ) {
-      const material = new THREE.MeshBasicMaterial({
-        color,
-        transparent: true,
-        opacity: 0,
-        depthWrite: false,
-      });
-      const mesh = new THREE.Mesh(geometry, material);
-      mesh.position.set(...position);
-      if (scale !== 1) mesh.scale.setScalar(scale);
-      mesh.renderOrder = shieldParts.length;
-      shieldGroup.add(mesh);
-      shieldParts.push({ material, geometry, targetOpacity });
-    }
-
-    const shieldShape = new THREE.Shape();
-    shieldShape.moveTo(-0.5, 0.45);
-    shieldShape.lineTo(0.5, 0.45);
-    shieldShape.bezierCurveTo(0.5, 0.08, 0.44, -0.3, 0, -0.62);
-    shieldShape.bezierCurveTo(-0.44, -0.3, -0.5, 0.08, -0.5, 0.45);
-    const extrudeSettings = { depth: 0.08, bevelEnabled: false };
-
-    addShieldPart(
-      new THREE.ExtrudeGeometry(shieldShape, extrudeSettings),
-      0xa899ff,
-      0.16,
-      [0, 0, -0.06],
-      1.18,
-    );
-    addShieldPart(
-      new THREE.ExtrudeGeometry(shieldShape, extrudeSettings),
-      0x533afd,
-      0.55,
-      [0, 0, 0],
-    );
-    addShieldPart(new THREE.PlaneGeometry(0.24, 0.2), 0xffffff, 0.95, [
-      0, -0.08, 0.09,
-    ]);
-    addShieldPart(
-      new THREE.TorusGeometry(0.11, 0.032, 10, 20, Math.PI),
-      0xffffff,
-      0.95,
-      [0, 0.05, 0.09],
-    );
-
-    function setShieldT(t: number) {
-      shieldGroup.position.y = shieldRestY - SHIELD_RISE * (1 - t);
-      shieldParts.forEach((p) => {
-        p.material.opacity = p.targetOpacity * t;
-      });
-    }
-
     // Screen-x for this isometric camera depends only on world x/z, not y
     // (camera.up is orthogonal to the right vector along the height axis),
     // so the stack's left/right silhouette is identical at every layer.
@@ -260,7 +175,6 @@ export default function InfrastructureDiagram() {
         b.mesh.position.y = b.restY;
         b.materials.forEach((m) => (m.opacity = b.targetOpacity));
       });
-      setShieldT(1);
       setVisible(true);
       renderer.render(scene, camera);
     } else {
@@ -276,7 +190,6 @@ export default function InfrastructureDiagram() {
               b.mesh.position.y = b.restY - 0.3;
               b.materials.forEach((m) => (m.opacity = 0));
             });
-            setShieldT(0);
             renderer.render(scene, camera);
           }
         },
@@ -296,12 +209,6 @@ export default function InfrastructureDiagram() {
             const op = b.targetOpacity * t;
             b.materials.forEach((m) => (m.opacity = op));
           });
-          const shieldElapsed = (now - triggerTime) / 1000 - SHIELD_DELAY;
-          setShieldT(
-            easeOutCubic(
-              Math.max(0, Math.min(1, shieldElapsed / SHIELD_DURATION)),
-            ),
-          );
         }
         renderer.render(scene, camera);
         rafId = requestAnimationFrame(frame);
@@ -316,10 +223,6 @@ export default function InfrastructureDiagram() {
       ro.disconnect();
       geo.dispose();
       boxes.forEach((b) => b.materials.forEach((m) => m.dispose()));
-      shieldParts.forEach((p) => {
-        p.material.dispose();
-        p.geometry.dispose();
-      });
       renderer.dispose();
       renderer.domElement.remove();
     };
