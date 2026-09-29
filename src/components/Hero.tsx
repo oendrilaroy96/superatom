@@ -497,9 +497,12 @@ export default function Hero() {
             <span>Decide Right.</span>
             <span>Every Time.</span>
           </h1>
-          <p className="mb-6 max-w-[460px] text-[18px] leading-[1.55] text-body">
-            Make, automate and execute thousands of better decisions across
-            the supply chain.
+          <p className="mb-6 max-w-[520px] text-[18px] leading-[1.55] text-body">
+            Superatom AI connects and synchronizes data across enterprise
+            Systems of Record (ERP&rsquo;s) and Data systems, to create a
+            unified intelligence layer. It delivers actionable insights and
+            intelligence, and enables you to execute the decisions through
+            workflows.
           </p>
           <div>
             <Button
