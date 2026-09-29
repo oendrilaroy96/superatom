@@ -1,7 +1,6 @@
 import { lazy, Suspense } from "react";
 import {
   MdShield,
-  MdLock,
   MdStorage,
   MdVpnKey,
   MdDns,
@@ -37,11 +36,6 @@ const features: { title: string; desc: string; Icon: IconType }[] = [
     title: "Security & Compliance",
     desc: "ISO 27001:2022 certified, with SOC 2 Type I currently in progress, backed by continuous testing and monitoring.",
     Icon: MdShield,
-  },
-  {
-    title: "End-to-End Encryption",
-    desc: "Protect your data throughout its lifecycle with encryption in transit and at rest.",
-    Icon: MdLock,
   },
   {
     title: "Data Privacy & Control",
@@ -99,7 +93,7 @@ export default function Infrastructure() {
           </Suspense>
         </div>
 
-        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-16 grid gap-6 sm:grid-cols-3">
           {features.map((f) => (
             <div
               key={f.title}
