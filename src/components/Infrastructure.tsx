@@ -45,13 +45,10 @@ export default function Infrastructure() {
       <div className="relative z-[2] mx-auto max-w-[1440px] px-4 sm:px-10 xl:px-20">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-accent-200 bg-accent-100 px-3 py-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent-500" />
-              <p className="text-h5 font-semibold uppercase tracking-[0.5px] text-accent-600">
-                Infrastructure
-              </p>
-            </div>
-            <h2 className="mt-4 font-display text-[28px] font-bold leading-[1.15] text-heading sm:text-[32px]">
+            <p className="text-h5 font-semibold uppercase tracking-[0.5px] text-accent-500">
+              Infrastructure
+            </p>
+            <h2 className="mt-4 font-display text-[30px] font-bold leading-[1.15] text-heading sm:text-[34px]">
               Enterprise-grade infrastructure
               <br />
               for <span className="text-primary-500">real-world operations</span>
