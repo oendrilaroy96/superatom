@@ -1,10 +1,5 @@
 import { lazy, Suspense } from "react";
-import {
-  MdShield,
-  MdStorage,
-  MdVpnKey,
-  MdDns,
-} from "react-icons/md";
+import { MdShield, MdStorage, MdVpnKey, MdVerified } from "react-icons/md";
 import type { IconType } from "react-icons";
 
 const InfrastructureDiagram = lazy(() => import("./InfrastructureDiagram"));
@@ -20,14 +15,9 @@ function DiagramPlaceholder() {
 
 const points: { title: string; desc: string; Icon: IconType }[] = [
   {
-    title: "Runs inside your infrastructure",
-    desc: "Deploys within your own environment and existing data boundaries.",
-    Icon: MdDns,
-  },
-  {
-    title: "Enterprise SSO out of the box",
-    desc: "SAML, OIDC and Active Directory, ready on day one.",
-    Icon: MdVpnKey,
+    title: "ISO 27001 certified, SOC 2 in progress",
+    desc: "Independently certified security practices, with SOC 2 Type I underway.",
+    Icon: MdVerified,
   },
 ];
 
