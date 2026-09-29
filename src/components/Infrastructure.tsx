@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { MdShield, MdStorage, MdVpnKey, MdVerified } from "react-icons/md";
 import type { IconType } from "react-icons";
+import SectionHeading from "./ui/SectionHeading";
 
 const InfrastructureDiagram = lazy(() => import("./InfrastructureDiagram"));
 
@@ -45,18 +46,23 @@ export default function Infrastructure() {
       <div className="relative z-[2] mx-auto max-w-[1440px] px-4 sm:px-10 xl:px-20">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
-            <p className="text-h5 font-semibold uppercase tracking-[0.5px] text-accent-500">
-              Infrastructure
-            </p>
-            <h2 className="mt-4 font-display text-[30px] font-bold leading-[1.15] text-heading sm:text-[34px]">
-              Enterprise-grade infrastructure
-              <br />
-              for <span className="text-primary-500">real-world operations</span>
-            </h2>
-            <p className="text-p mt-4 max-w-md text-body">
-              A secure, governed foundation built for the demands of modern
-              enterprise supply chains.
-            </p>
+            <SectionHeading
+              eyebrow="Infrastructure"
+              eyebrowColor="accent"
+              size="lg"
+              heading={
+                <>
+                  Enterprise-grade infrastructure
+                  <br />
+                  for{" "}
+                  <span className="text-primary-500">
+                    real-world operations
+                  </span>
+                </>
+              }
+              description="A secure, governed foundation built for the demands of modern enterprise supply chains."
+              descriptionClassName="max-w-md"
+            />
             <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:gap-8">
               {points.map((point) => (
                 <div key={point.title} className="flex items-start gap-3">

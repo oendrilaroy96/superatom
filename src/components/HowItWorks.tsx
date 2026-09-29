@@ -1,3 +1,5 @@
+import SectionHeading from "./ui/SectionHeading";
+
 const enterpriseSystems = ["ERP", "APS", "WMS", "TMS", "MES", "CRM", "IoT", "Data Lake"];
 
 const coreCapabilities = [
@@ -133,20 +135,18 @@ export default function HowItWorks() {
   return (
     <section className="relative overflow-hidden py-16 sm:py-20">
       <div className="mx-auto max-w-[1440px] px-4 sm:px-10 xl:px-20">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-h5 font-semibold uppercase tracking-[0.5px] text-primary-500">
-            How It Works
-          </p>
-          <h2 className="mt-3 font-display text-[22px] font-bold text-heading sm:text-h2">
-            From enterprise data to{" "}
-            <span className="text-primary-500">better decisions.</span>
-          </h2>
-          <p className="text-p mt-4 text-body">
-            Superatom AI brings together your enterprise data, business
-            context, rules and AI to help teams make, execute and
-            continuously improve thousands of decisions — every day.
-          </p>
-        </div>
+        <SectionHeading
+          align="center"
+          className="max-w-2xl"
+          eyebrow="How It Works"
+          heading={
+            <>
+              From enterprise data to{" "}
+              <span className="text-primary-500">better decisions.</span>
+            </>
+          }
+          description="Superatom AI brings together your enterprise data, business context, rules and AI to help teams make, execute and continuously improve thousands of decisions — every day."
+        />
 
         <div className="mt-12">
           <FlowDiagram />
