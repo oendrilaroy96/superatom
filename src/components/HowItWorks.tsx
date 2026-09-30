@@ -25,12 +25,16 @@ export default function HowItWorks() {
           }
           description="Superatom AI brings together your enterprise data, business context, rules and AI to help teams make, execute and continuously improve thousands of decisions — every day."
         />
+      </div>
 
-        <div className="mt-12">
-          <Suspense fallback={<DiagramPlaceholder />}>
-            <HowItWorksDiagram />
-          </Suspense>
-        </div>
+      {/* Full-bleed within the site's max width: the diagram sets its own
+          responsive side padding, so it isn't nested inside the section's
+          own px-* wrapper (that would stack both paddings and leave it
+          confined to a narrow strip on wide screens). */}
+      <div className="mx-auto mt-12 max-w-[1920px]">
+        <Suspense fallback={<DiagramPlaceholder />}>
+          <HowItWorksDiagram />
+        </Suspense>
       </div>
     </section>
   );
