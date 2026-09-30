@@ -95,7 +95,7 @@ export default function HowItWorksDiagram() {
     const video = videoRef.current;
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const desktop = window.matchMedia("(min-width: 1180px)");
+    const desktop = window.matchMedia("(min-width: 1280px)");
     let disposed = false;
 
     function box(el: Element): Box {
