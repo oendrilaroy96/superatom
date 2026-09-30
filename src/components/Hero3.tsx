@@ -80,7 +80,7 @@ function HeroCopy() {
           Every day. Every time.
         </span>
       </h1>
-      <p className="mb-6 text-[18px] leading-[1.55] text-body">
+      <p className="mb-6 max-w-3xl text-[18px] leading-[1.55] text-body">
         Turn enterprise data into real-time intelligence and make instant,
         AI-powered decisions. Built for teams that move fast, without
         compromising security, governance or existing integrations.
