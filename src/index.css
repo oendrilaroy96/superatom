@@ -172,13 +172,14 @@ body {
 }
 .hiw-flow {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  padding: 28px 0;
   min-width: 920px;
 }
 .hiw-stage {
   position: relative;
   flex: none;
-  width: 560px;
+  width: 620px;
 }
 .hiw-stage svg {
   display: block;
@@ -187,9 +188,23 @@ body {
 }
 .hiw-connector {
   flex: none;
-  width: 56px;
-  height: 2px;
-  background: var(--color-secondary-200);
+  width: 48px;
+  height: 3px;
+  margin-top: 167px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--color-secondary-200), var(--color-primary-300));
+  position: relative;
+}
+.hiw-connector::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--color-primary-400);
+  transform: translateY(-50%);
 }
 .hiw-stage canvas {
   position: absolute;

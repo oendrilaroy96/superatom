@@ -108,14 +108,14 @@ function ChatPanel() {
   };
 
   return (
-    <div className="flex min-w-[280px] flex-1 flex-col items-center gap-5 px-4 py-8 sm:px-10">
+    <div className="flex min-w-[260px] flex-1 flex-col items-center gap-4 px-4 sm:px-10">
       <p
         className="text-center font-display text-lg text-caption sm:text-xl"
         style={textStyle}
       >
         {slide.heading}
       </p>
-      <div className="relative aspect-[4/3] w-full max-w-[420px] overflow-hidden rounded-[28px] bg-secondary-500 shadow-[0_20px_50px_-20px_rgba(13,23,56,0.45)]">
+      <div className="relative aspect-[4/3] w-full max-w-[380px] overflow-hidden rounded-[28px] bg-secondary-500 shadow-[0_20px_50px_-20px_rgba(13,23,56,0.45)]">
         <video
           className="absolute inset-0 h-full w-full object-cover opacity-0"
           autoPlay
