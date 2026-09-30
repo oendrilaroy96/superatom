@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import {
   MdArrowForward,
   MdBolt,
@@ -11,6 +11,13 @@ import type { IconType } from "react-icons";
 import Button from "./ui/Button";
 
 const FLUID_PAD = "px-[max(16px,5%)]";
+
+/** Extra scroll distance (in viewport heights) giving the video room to travel fully off-screen while the text stays pinned. */
+const SCROLL_VH = 120;
+/** The pinned text fades out gradually across nearly the whole scroll run. */
+const FADE_END = 0.9;
+
+const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
 function StatIcon({ Icon }: { Icon: IconType }) {
   return (
@@ -124,30 +131,59 @@ function VideoCard() {
 }
 
 /**
- * Hero with an explanatory-video section: copy up top, a fixed-size video
- * card below it, both in normal document flow — no scroll-driven resizing.
- * It just scrolls up like any other page content. A scroll listener logs
- * the raw window.scrollY to the console for debugging/tuning reference.
+ * Hero with an explanatory-video section: the copy stays pinned in place
+ * (position: sticky) and fades out slowly as you scroll, while the video
+ * card — plain document-flow content starting right where it looks now —
+ * scrolls up past/behind it at a constant size. A scroll listener logs the
+ * raw window.scrollY to the console for debugging/tuning reference.
  */
 export default function Hero3() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [fade, setFade] = useState(1);
+
   useEffect(() => {
-    const onScroll = () => {
+    const section = sectionRef.current;
+    if (!section) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const rect = section.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      const progress = total > 0 ? clamp01(-rect.top / total) : 0;
+      setFade(1 - clamp01(progress / FADE_END));
       // eslint-disable-next-line no-console
       console.log("scrollY:", window.scrollY);
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const onScrollOrResize = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize);
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScrollOrResize);
+      window.removeEventListener("resize", onScrollOrResize);
+    };
   }, []);
 
+  const textStyle: CSSProperties = {
+    opacity: fade,
+    pointerEvents: fade < 0.05 ? "none" : undefined,
+  };
+
   return (
-    <section className="relative flex flex-col overflow-hidden pt-14">
-      <HeroCopy />
-      <div className="mx-auto mt-10 w-full max-w-[900px] px-4">
-        <VideoCard />
-      </div>
-      <div className="mt-12">
-        <StatsRow />
-      </div>
-    </section>
+    <>
+      <section ref={sectionRef} className="relative" style={{ height: `calc(100vh + ${SCROLL_VH}vh)` }}>
+        <div className="sticky top-16 z-[2] pt-14" style={textStyle}>
+          <HeroCopy />
+        </div>
+        <div className="relative z-[1] mx-auto mt-10 w-full max-w-[900px] px-4">
+          <VideoCard />
+        </div>
+      </section>
+      <StatsRow />
+    </>
   );
 }
