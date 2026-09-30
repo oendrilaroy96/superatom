@@ -1,5 +1,5 @@
 import Header from "./components/Header";
-import Hero from "./components/Hero";
+import Hero2 from "./components/Hero2";
 import HowItWorks from "./components/HowItWorks";
 import Infrastructure from "./components/Infrastructure";
 
@@ -29,7 +29,7 @@ function App() {
       />
       <Header />
       <main className="relative z-10">
-        <Hero />
+        <Hero2 />
         <HowItWorks />
         <Infrastructure />
       </main>

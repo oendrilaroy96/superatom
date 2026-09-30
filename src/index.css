@@ -151,6 +151,11 @@ body {
   color: var(--color-heading);
 }
 
+/* ================= Hero2 (video variant) heading ================= */
+.hero2-heading {
+  font-size: clamp(26px, 3.4vw, 44px);
+}
+
 /* ================= How It Works architecture diagram ================= */
 .hiw-root {
   --hiw-dim: 0.3;
