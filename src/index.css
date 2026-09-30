@@ -114,9 +114,8 @@
   --radius-full: 62.4375rem; /* 999px — avatars, pills */
 }
 
-html {
-  scroll-behavior: smooth;
-}
+/* Smooth scrolling is handled by Lenis (see App.tsx); scroll-behavior: smooth
+   would fight its own easing on anchor-link jumps. */
 
 body {
   background-color: #ffffff;
