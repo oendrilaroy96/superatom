@@ -305,13 +305,12 @@ body {
   }
 }
 .hiw-core-frame {
-  fill: var(--color-secondary-500);
-}
-.hiw-core-inner {
-  fill: var(--color-page);
+  fill: #fff;
+  stroke: var(--color-secondary-100);
+  stroke-width: 1;
 }
 .hiw-core-title {
-  fill: #fff !important;
+  fill: var(--color-heading) !important;
   font-size: 16px;
   font-weight: 600;
   font-family: var(--font-display);

@@ -4,6 +4,11 @@ import PsychologyIcon from "@mui/icons-material/Psychology";
 import TuneIcon from "@mui/icons-material/Tune";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import HubIcon from "@mui/icons-material/Hub";
+import StorageIcon from "@mui/icons-material/Storage";
+import SensorsIcon from "@mui/icons-material/Sensors";
+import LayersIcon from "@mui/icons-material/Layers";
+import ApiIcon from "@mui/icons-material/Api";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import type { IconComponent } from "../types/icon";
 
 const NS = "http://www.w3.org/2000/svg";
@@ -57,51 +62,45 @@ function mountIcon(
   roots.push(root);
 }
 
-/** Rotating headline + sample question shown beside the diagram, in front of the looping product video. */
-type ChatSlide = { heading: string; question: string };
-const CHAT_SLIDES: ChatSlide[] = [
-  { heading: "Natural language chat interface", question: "What is the revenue impact of vendor delay?" },
-  { heading: "Ask anything about your operations", question: "Which suppliers are at risk this quarter?" },
-  { heading: "Conversational analytics, instantly", question: "Show me the top 5 delayed shipments" },
-  { heading: "No dashboards. Just answers.", question: "Why did fulfillment cost spike in Q3?" },
+/** Sample questions rotated through the pill below the video placeholder. */
+const CHAT_QUESTIONS: string[] = [
+  "What is the revenue impact of vendor delay?",
+  "Which suppliers are at risk this quarter?",
+  "Show me the top 5 delayed shipments",
+  "Why did fulfillment cost spike in Q3?",
 ];
 const CHAT_SLIDE_MS = 4200;
 const CHAT_FADE_MS = 220;
 
 /**
- * Right-hand panel: a rotating heading + sample question framing a looping
- * product video. No real clip is wired up yet — swap the `<video src>`
- * below for one and this placeholder background disappears automatically.
+ * Right-hand panel: a video placeholder ("[Answer video plays here]") with a
+ * rotating sample question below it. No real clip is wired up yet — swap
+ * the `<video src>` below for one and the placeholder label disappears
+ * automatically once the video can play.
  */
 function ChatPanel() {
   const [i, setI] = useState(0);
   const [visible, setVisible] = useState(true);
+  const [videoReady, setVideoReady] = useState(false);
 
   useEffect(() => {
     const id = window.setInterval(() => {
       setVisible(false);
       window.setTimeout(() => {
-        setI((v) => (v + 1) % CHAT_SLIDES.length);
+        setI((v) => (v + 1) % CHAT_QUESTIONS.length);
         setVisible(true);
       }, CHAT_FADE_MS);
     }, CHAT_SLIDE_MS);
     return () => window.clearInterval(id);
   }, []);
 
-  const slide = CHAT_SLIDES[i];
   const textStyle = {
     opacity: visible ? 1 : 0,
     transition: `opacity ${CHAT_FADE_MS}ms ease`,
   };
 
   return (
-    <div className="flex w-[380px] flex-none flex-col items-center gap-4">
-      <p
-        className="text-center font-display text-lg text-caption sm:text-xl"
-        style={textStyle}
-      >
-        {slide.heading}
-      </p>
+    <div className="flex w-[380px] flex-none flex-col items-center">
       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[28px] bg-secondary-500 shadow-[0_20px_50px_-20px_rgba(13,23,56,0.45)]">
         <video
           className="absolute inset-0 h-full w-full object-cover opacity-0"
@@ -111,29 +110,29 @@ function ChatPanel() {
           playsInline
           onCanPlay={(e) => {
             e.currentTarget.classList.remove("opacity-0");
+            setVideoReady(true);
           }}
         />
         <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage:
-              "radial-gradient(680px 420px at 20% 15%, rgba(83,58,253,0.55), transparent 60%), radial-gradient(560px 420px at 85% 90%, rgba(255,118,0,0.35), transparent 55%), linear-gradient(160deg, #0d1738 0%, #101d45 55%, #0d1738 100%)",
-          }}
-        />
-        <div
-          className="absolute inset-0 opacity-[0.08]"
+          className="absolute inset-0 opacity-[0.1]"
           style={{
             backgroundImage:
               "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
             backgroundSize: "36px 36px",
           }}
         />
+        {!videoReady && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-white/70">
+            <PlayArrowIcon style={{ fontSize: 22 }} />
+            <span className="font-sans text-sm">[Answer video plays here]</span>
+          </div>
+        )}
       </div>
       <div
-        className="-mt-2 w-[92%] rounded-full bg-secondary-500 px-5 py-3.5 text-center font-sans text-sm text-white shadow-[0_16px_30px_-14px_rgba(13,23,56,0.5)] sm:text-[15px]"
+        className="-mt-5 w-[94%] overflow-hidden text-ellipsis whitespace-nowrap rounded-full bg-white px-5 py-3.5 text-center font-sans text-sm text-heading shadow-[0_16px_30px_-14px_rgba(13,23,56,0.25)]"
         style={textStyle}
       >
-        {slide.question}
+        {CHAT_QUESTIONS[i]}
       </div>
     </div>
   );
@@ -309,22 +308,28 @@ export default function HowItWorksDiagram() {
     }
 
     svgText(nodeLayer, 20, 24, "Enterprise Systems", "hiw-t-title");
-    const sources: [string, string, string][] = [
-      ["erp", "ERP", "Enterprise resource planning"],
-      ["iot", "IoT", "Sensor and device data from the field"],
-      ["lake", "Data Lake", "Raw and historical enterprise data"],
-      ["api", "APIs", "Direct integrations with your existing tools"],
+    const SRC_W = 140;
+    const SRC_H = 44;
+    const SRC_GAP = 16;
+    const sources: [string, string, string, IconComponent][] = [
+      ["erp", "ERPs", "Enterprise resource planning", StorageIcon],
+      ["iot", "IoT", "Sensor and device data from the field", SensorsIcon],
+      ["lake", "Data Lake", "Raw and historical enterprise data", LayersIcon],
+      ["api", "APIs", "Direct integrations with your existing tools", ApiIcon],
     ];
-    sources.forEach(([id, n, d], i) => {
-      const y = 36 + i * 44;
+    sources.forEach(([id, n, d, Icon], i) => {
+      const y = 30 + i * (SRC_H + SRC_GAP);
       addNode(id, n, d, "hiw-src", (g) => {
-        svgEl("rect", { x: 20, y, width: 120, height: 28, rx: 6, class: "hiw-b" }, g);
-        svgText(g, 32, y + 19, n, "hiw-t-title");
+        svgEl("rect", { x: 20, y, width: SRC_W, height: SRC_H, rx: 10, class: "hiw-b" }, g);
+        svgEl("rect", { x: 30, y: y + 12, width: 20, height: 20, rx: 5, class: "hiw-ico" }, g);
+        mountIcon(g, Icon, 40, y + 22, 16, "var(--color-primary-500)", iconRoots);
+        svgText(g, 60, y + 27, n, "hiw-t-title");
       });
-      edge(id, "trunk", `M140,${y + 14} H180`, false, false, true);
+      edge(id, "trunk", `M160,${y + SRC_H / 2} H180`, false, false, true);
     });
-    const CORE_ENTRY_Y = 200;
-    const trunkEdge = edge("trunk", "core", `M180,50 V${CORE_ENTRY_Y} H228`);
+    const firstSrcCy = 30 + SRC_H / 2;
+    const CORE_ENTRY_Y = 185;
+    const trunkEdge = edge("trunk", "core", `M180,${firstSrcCy} V${CORE_ENTRY_Y} H228`);
     trunkEdge.fixed = true;
 
     addNode(
@@ -343,8 +348,7 @@ export default function HowItWorksDiagram() {
 
     const coreG = svgEl("g", {}, nodeLayer);
     svgEl("rect", { x: 230, y: 90, width: 420, height: 190, rx: 12, class: "hiw-core-frame" }, coreG);
-    svgText(coreG, 250, 117, "Superatom AI", "hiw-core-title").style.fontSize = "14px";
-    svgEl("rect", { x: 240, y: 130, width: 400, height: 140, rx: 8, class: "hiw-core-inner" }, coreG);
+    svgText(coreG, 250, 117, "Superatom AI", "hiw-core-title").style.fontSize = "15px";
 
     const mods: [string, string, string, IconComponent, number, number][] = [
       ["tribal", "Tribal Knowledge", "Captures the experience and judgment calls your best planners already know.", PsychologyIcon, 250, 140],
