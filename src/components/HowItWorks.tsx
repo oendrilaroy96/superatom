@@ -7,7 +7,7 @@ function DiagramPlaceholder() {
   return (
     <div
       className="mx-auto w-full max-w-[1230px] animate-pulse rounded-2xl border border-secondary-100 bg-white"
-      style={{ aspectRatio: "1230 / 350" }}
+      style={{ aspectRatio: "1230 / 460" }}
     />
   );
 }

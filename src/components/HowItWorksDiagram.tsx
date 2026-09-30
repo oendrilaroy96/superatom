@@ -1,13 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import ForumIcon from "@mui/icons-material/Forum";
 import PsychologyIcon from "@mui/icons-material/Psychology";
-import BarChartIcon from "@mui/icons-material/BarChart";
+import TuneIcon from "@mui/icons-material/Tune";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import HubIcon from "@mui/icons-material/Hub";
-import RecommendIcon from "@mui/icons-material/Recommend";
-import FactCheckIcon from "@mui/icons-material/FactCheck";
-import GroupsIcon from "@mui/icons-material/Groups";
-import SettingsIcon from "@mui/icons-material/Settings";
 import type { IconComponent } from "../types/icon";
 
 const NS = "http://www.w3.org/2000/svg";
@@ -66,32 +62,98 @@ type Step = { title: string; desc: string };
 const steps: Step[] = [
   {
     title: "Enterprise Data",
-    desc: "Connect data from your existing systems (ERP, APS, WMS, TMS, MES, CRM, IoT and data lakes).",
+    desc: "Connect data from your existing systems — ERP, IoT, data lakes and APIs.",
   },
   {
-    title: "Enterprise Context",
-    desc: "Enrich with business context, rules, policies, constraints and domain knowledge.",
-  },
-  {
-    title: "Decision Engine",
-    desc: "Apply AI, analytics, simulation and optimization to evaluate alternatives and identify the best course of action.",
-  },
-  {
-    title: "Recommendation",
-    desc: "Generate clear, explainable recommendations — what to do, where, when and why.",
-  },
-  {
-    title: "Human Approval",
-    desc: "Enable human-in-the-loop for oversight, judgment and governance.",
-  },
-  {
-    title: "Automation",
-    desc: "Execute approved decisions through workflows, agents and system integrations.",
+    title: "Superatom AI",
+    desc: "Tribal knowledge, optimization, generative UI and semantic modeling combine to power natural-language answers.",
   },
 ];
 
-const VW = 1230;
-const VH = 350;
+/** Rotating headline + sample question shown beside the diagram, in front of the looping product video. */
+type ChatSlide = { heading: string; question: string };
+const CHAT_SLIDES: ChatSlide[] = [
+  { heading: "Natural language chat interface", question: "What is the revenue impact of vendor delay?" },
+  { heading: "Ask anything about your operations", question: "Which suppliers are at risk this quarter?" },
+  { heading: "Conversational analytics, instantly", question: "Show me the top 5 delayed shipments" },
+  { heading: "No dashboards. Just answers.", question: "Why did fulfillment cost spike in Q3?" },
+];
+const CHAT_SLIDE_MS = 4200;
+const CHAT_FADE_MS = 220;
+
+/**
+ * Right-hand panel: a rotating heading + sample question framing a looping
+ * product video. No real clip is wired up yet — swap the `<video src>`
+ * below for one and this placeholder background disappears automatically.
+ */
+function ChatPanel() {
+  const [i, setI] = useState(0);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setVisible(false);
+      window.setTimeout(() => {
+        setI((v) => (v + 1) % CHAT_SLIDES.length);
+        setVisible(true);
+      }, CHAT_FADE_MS);
+    }, CHAT_SLIDE_MS);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const slide = CHAT_SLIDES[i];
+  const textStyle = {
+    opacity: visible ? 1 : 0,
+    transition: `opacity ${CHAT_FADE_MS}ms ease`,
+  };
+
+  return (
+    <div className="flex min-w-[280px] flex-1 flex-col items-center gap-5 px-4 py-8 sm:px-10">
+      <p
+        className="text-center font-display text-lg text-caption sm:text-xl"
+        style={textStyle}
+      >
+        {slide.heading}
+      </p>
+      <div className="relative aspect-[4/3] w-full max-w-[420px] overflow-hidden rounded-[28px] bg-secondary-500 shadow-[0_20px_50px_-20px_rgba(13,23,56,0.45)]">
+        <video
+          className="absolute inset-0 h-full w-full object-cover opacity-0"
+          autoPlay
+          loop
+          muted
+          playsInline
+          onCanPlay={(e) => {
+            e.currentTarget.classList.remove("opacity-0");
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(680px 420px at 20% 15%, rgba(83,58,253,0.55), transparent 60%), radial-gradient(560px 420px at 85% 90%, rgba(255,118,0,0.35), transparent 55%), linear-gradient(160deg, #0d1738 0%, #101d45 55%, #0d1738 100%)",
+          }}
+        />
+        <div
+          className="absolute inset-0 opacity-[0.08]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
+            backgroundSize: "36px 36px",
+          }}
+        />
+      </div>
+      <div
+        className="-mt-2 w-[92%] max-w-[380px] rounded-full bg-secondary-500 px-5 py-3.5 text-center font-sans text-sm text-white shadow-[0_16px_30px_-14px_rgba(13,23,56,0.5)] sm:text-[15px]"
+        style={textStyle}
+      >
+        {slide.question}
+      </div>
+    </div>
+  );
+}
+
+const VW = 680;
+const VH = 310;
 
 export default function HowItWorksDiagram() {
   const rootDivRef = useRef<HTMLDivElement>(null);
@@ -253,27 +315,24 @@ export default function HowItWorksDiagram() {
     svgText(nodeLayer, 20, 24, "Enterprise Systems", "hiw-t-title");
     const sources: [string, string, string][] = [
       ["erp", "ERP", "Enterprise resource planning"],
-      ["aps", "APS", "Advanced planning and scheduling"],
-      ["wms", "WMS", "Warehouse management system"],
-      ["tms", "TMS", "Transportation management system"],
-      ["mes", "MES", "Manufacturing execution system"],
-      ["crm", "CRM", "Customer relationship management"],
       ["iot", "IoT", "Sensor and device data from the field"],
       ["lake", "Data Lake", "Raw and historical enterprise data"],
+      ["api", "APIs", "Direct integrations with your existing tools"],
     ];
     sources.forEach(([id, n, d], i) => {
-      const y = 36 + i * 34;
+      const y = 36 + i * 44;
       addNode(id, n, d, "hiw-src", (g) => {
         svgEl("rect", { x: 20, y, width: 120, height: 28, rx: 6, class: "hiw-b" }, g);
         svgText(g, 32, y + 19, n, "hiw-t-title");
       });
-      edge(id, "core", `M140,${y + 14} H180 V${112 + i * 22} H228`);
+      const targetY = [150, 180, 210, 240][i];
+      edge(id, "core", `M140,${y + 14} H180 V${targetY} H228`);
     });
 
     addNode(
       "team0",
       "MIS Agent",
-      "Works with Superatom AI through the conversation agents.",
+      "Works with Superatom AI through natural-language conversation.",
       "hiw-team",
       (g) => {
         svgEl("rect", { x: 375, y: 18, width: 130, height: 36, rx: 18, class: "hiw-b" }, g);
@@ -281,7 +340,7 @@ export default function HowItWorksDiagram() {
           "var(--color-primary-600)";
       },
     );
-    const teamEdge = edge("team0", "agents", "M440,56 V88", false, true);
+    const teamEdge = edge("team0", "core", "M440,56 V88", false, true);
     teamEdge.fixed = true;
 
     const coreG = svgEl("g", {}, nodeLayer);
@@ -289,83 +348,24 @@ export default function HowItWorksDiagram() {
     svgText(coreG, 250, 117, "Superatom AI", "hiw-core-title").style.fontSize = "14px";
     svgEl("rect", { x: 240, y: 130, width: 400, height: 140, rx: 8, class: "hiw-core-inner" }, coreG);
 
-    const mods: [string, string, string, IconComponent, number, number, number][] = [
-      ["agents", "Conversation Agents", "Where the MIS Agent asks questions and receives answers, alerts and recommendations.", ForumIcon, 250, 139, 186],
-      ["ai", "AI & Domain Intelligence", "Adds business context, rules, policies, constraints and domain knowledge.", PsychologyIcon, 444, 139, 186],
-      ["ana", "Analytics & Optimization", "Applies analytics, simulation and optimization to evaluate alternatives.", BarChartIcon, 250, 182, 186],
-      ["kg", "Knowledge Graph", "Links entities and relationships across your enterprise data.", HubIcon, 444, 182, 186],
-      ["rec", "Recommendation Engine", "Generates clear, explainable recommendations.", RecommendIcon, 250, 225, 380],
+    const mods: [string, string, string, IconComponent, number, number][] = [
+      ["tribal", "Tribal Knowledge", "Captures the experience and judgment calls your best planners already know.", PsychologyIcon, 250, 140],
+      ["opt", "Optimization Engine", "Runs analytics and simulation to evaluate every alternative.", TuneIcon, 446, 140],
+      ["genui", "Generative UI", "Builds the right chart, table or view for each question, on the fly.", AutoAwesomeIcon, 250, 206],
+      ["sem", "Semantic Modeling", "Links entities and relationships across your enterprise data.", HubIcon, 446, 206],
     ];
-    mods.forEach(([id, n, d, Icon, x, y, w]) => {
+    const MOD_W = 184;
+    const MOD_H = 54;
+    mods.forEach(([id, n, d, Icon, x, y]) => {
       addNode(id, n, d, "hiw-mod", (g) => {
-        svgEl("rect", { x, y, width: w, height: 36, rx: 6, class: "hiw-b" }, g);
-        svgEl("rect", { x: x + 8, y: y + 8, width: 20, height: 20, rx: 5, class: "hiw-ico" }, g);
-        mountIcon(g, Icon, x + 18, y + 18, 16, "var(--color-primary-500)", iconRoots);
-        const t = svgText(g, x + 36, y + 22, n, "hiw-t-small");
+        svgEl("rect", { x, y, width: MOD_W, height: MOD_H, rx: 8, class: "hiw-b" }, g);
+        svgEl("rect", { x: x + 8, y: y + 17, width: 20, height: 20, rx: 5, class: "hiw-ico" }, g);
+        mountIcon(g, Icon, x + 18, y + 27, 16, "var(--color-primary-500)", iconRoots);
+        const t = svgText(g, x + 36, y + 31, n, "hiw-t-small");
         t.style.cssText = "fill:var(--color-heading);font-size:11.5px;font-weight:500";
       });
     });
     const modIds = mods.map((m) => m[0]);
-
-    addNode(
-      "reco",
-      "Recommendations & Actions",
-      "What to do, where, when and why, ready for review.",
-      "hiw-out",
-      (g) => {
-        svgEl("rect", { x: 720, y: 134, width: 110, height: 112, rx: 8, class: "hiw-b" }, g);
-        const t1 = svgText(g, 775, 154, "Recommendations", "hiw-t-small", "middle");
-        t1.style.cssText = "fill:var(--color-heading);font-weight:500";
-        const t2 = svgText(g, 775, 168, "& Actions", "hiw-t-small", "middle");
-        t2.style.cssText = "fill:var(--color-heading);font-weight:500";
-        mountIcon(g, FactCheckIcon, 775, 205, 30, "var(--color-accent-500)", iconRoots);
-      },
-    );
-    edge("core", "reco", "M650,190 H718", true);
-
-    addNode(
-      "dm",
-      "Decision Makers",
-      "Business, operations and IT teams approve, adjust or reject each recommendation.",
-      "hiw-out",
-      (g) => {
-        svgText(g, 945, 120, "Decision Makers", "hiw-t-title", "middle");
-        svgEl("rect", { x: 880, y: 132, width: 130, height: 116, rx: 8, class: "hiw-b" }, g);
-        mountIcon(g, GroupsIcon, 945, 178, 32, "var(--color-accent-500)", iconRoots);
-        svgText(g, 945, 214, "Business, Operations", "hiw-t-small", "middle");
-        svgText(g, 945, 228, "and IT Teams", "hiw-t-small", "middle");
-      },
-    );
-    edge("reco", "dm", "M830,190 H878", true);
-
-    addNode(
-      "auto",
-      "Automation Actions",
-      "Operation agents, workflow automation and system integration carry out approved decisions.",
-      "hiw-out",
-      (g) => {
-        svgEl("rect", { x: 1060, y: 132, width: 156, height: 116, rx: 8, class: "hiw-b" }, g);
-        svgEl("rect", { x: 1072, y: 144, width: 24, height: 24, rx: 6, class: "hiw-ico" }, g);
-        mountIcon(g, SettingsIcon, 1084, 156, 16, "var(--color-accent-500)", iconRoots);
-        const t1 = svgText(g, 1104, 154, "Automation", "hiw-t-title");
-        t1.style.fontSize = "12px";
-        const t2 = svgText(g, 1104, 168, "Actions", "hiw-t-title");
-        t2.style.fontSize = "12px";
-        ["Operation Agents", "Workflow Automation", "System Integration"].forEach((b, i) => {
-          svgEl(
-            "circle",
-            { cx: 1078, cy: 192 + i * 16, r: 1.8, fill: "var(--color-caption)" },
-            g,
-          );
-          svgText(g, 1086, 196 + i * 16, b, "hiw-t-small");
-        });
-      },
-    );
-    edge("dm", "auto", "M1010,190 H1058", true);
-
-    edge("auto", "lake", "M1138,248 V320 H80 V304", true);
-    svgText(nodeLayer, 610, 340, "Continuous Learning", "hiw-t-title", "middle").style.fill =
-      "var(--color-secondary-500)";
 
     function neighbours(id: string) {
       const ids = new Set([id]);
@@ -379,10 +379,6 @@ export default function HowItWorksDiagram() {
           ids.add(e.to);
         }
       });
-      if (id === "agents" || id.startsWith("team")) {
-        ["team0", "agents"].forEach((t) => ids.add(t));
-        lit.add(teamEdge);
-      }
       if (key === "core") modIds.forEach((m) => ids.add(m));
       return { ids, lit };
     }
@@ -407,12 +403,8 @@ export default function HowItWorksDiagram() {
 
     const srcIds = sources.map((s) => s[0]);
     const stages: { ids: string[]; pulse: string[]; edges: (e: Edge) => boolean }[] = [
-      { ids: srcIds, pulse: srcIds, edges: (e) => e.to === "core" },
-      { ids: ["ai", "kg"], pulse: ["ai", "kg"], edges: () => false },
-      { ids: ["ana", "ai"], pulse: ["ana"], edges: () => false },
-      { ids: ["rec", "reco"], pulse: ["rec", "reco"], edges: (e) => e.to === "reco" },
-      { ids: ["dm"], pulse: ["dm"], edges: (e) => e.to === "dm" },
-      { ids: ["auto", "lake"], pulse: ["auto"], edges: (e) => e.from === "auto" || e.to === "auto" },
+      { ids: srcIds, pulse: srcIds, edges: (e) => e.to === "core" && e.from !== "team0" },
+      { ids: modIds, pulse: modIds, edges: (e) => e.from === "team0" },
     ];
     const STEP_MS = reduceMotion ? 4500 : 3000;
     const HOLD_MS = 2400;
@@ -420,7 +412,7 @@ export default function HowItWorksDiagram() {
     const cards = Array.from(rootDiv.querySelectorAll<HTMLElement>(".hiw-step"));
 
     function showStep(i: number, animate: boolean) {
-      const ids = new Set(["team0", "agents"]);
+      const ids = new Set(["team0"]);
       const lit = new Set<Edge>([teamEdge]);
       for (let s = 0; s <= i; s++) {
         stages[s].ids.forEach((x) => ids.add(x));
@@ -450,7 +442,7 @@ export default function HowItWorksDiagram() {
       timers.forEach((t) => window.clearTimeout(t));
       const t = window.setTimeout(() => {
         if (mode !== "auto") return;
-        if (step < 5) {
+        if (step < stages.length - 1) {
           step++;
           showStep(step, true);
           schedule();
@@ -642,9 +634,13 @@ export default function HowItWorksDiagram() {
     <div ref={rootDivRef} className="hiw-root">
       <div className="hiw-card">
         <div className="hiw-scroll">
-          <div ref={stageRef} className="hiw-stage">
-            <svg ref={svgRef} viewBox={`0 0 ${VW} ${VH}`} role="img" aria-label="Superatom AI architecture" />
-            <canvas ref={canvasRef} aria-hidden="true" />
+          <div className="hiw-flow">
+            <div ref={stageRef} className="hiw-stage">
+              <svg ref={svgRef} viewBox={`0 0 ${VW} ${VH}`} role="img" aria-label="Superatom AI architecture" />
+              <canvas ref={canvasRef} aria-hidden="true" />
+            </div>
+            <div className="hiw-connector" aria-hidden="true" />
+            <ChatPanel />
           </div>
         </div>
       </div>

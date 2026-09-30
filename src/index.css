@@ -170,14 +170,26 @@ body {
 .hiw-scroll {
   overflow-x: auto;
 }
+.hiw-flow {
+  display: flex;
+  align-items: center;
+  min-width: 920px;
+}
 .hiw-stage {
   position: relative;
-  min-width: 960px;
+  flex: none;
+  width: 560px;
 }
 .hiw-stage svg {
   display: block;
   width: 100%;
   height: auto;
+}
+.hiw-connector {
+  flex: none;
+  width: 56px;
+  height: 2px;
+  background: var(--color-secondary-200);
 }
 .hiw-stage canvas {
   position: absolute;
@@ -348,7 +360,7 @@ body {
   padding: 0;
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px;
 }
 .hiw-step {
@@ -402,18 +414,10 @@ body {
   width: 0;
   background: var(--color-accent-500);
 }
-@media (max-width: 1080px) {
-  .hiw-steps {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    row-gap: 36px;
-  }
-  .hiw-step:nth-child(3)::after {
-    display: none;
-  }
-}
 @media (max-width: 640px) {
   .hiw-steps {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 36px;
   }
   .hiw-step::after {
     display: none !important;
