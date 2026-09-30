@@ -122,7 +122,7 @@ export default function Header() {
           : "border-transparent bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-4 sm:px-10 xl:px-20">
+      <div className="mx-auto flex h-16 max-w-[1920px] items-center justify-between px-4 sm:px-10 xl:px-20">
         <Logo />
 
         <nav className="hidden items-center gap-[30px] lg:flex">

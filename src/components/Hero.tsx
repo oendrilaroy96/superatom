@@ -487,7 +487,7 @@ export default function Hero() {
 
   return (
     <section className="relative flex min-h-[calc(100vh-4rem)] flex-col justify-center overflow-hidden">
-      <div className="relative z-[2] mx-auto grid w-full max-w-[1440px] grid-cols-1 items-center gap-10 px-4 pb-4 pt-10 sm:px-10 sm:pt-14 lg:grid-cols-[1fr_1.15fr] lg:gap-14 xl:px-20">
+      <div className="relative z-[2] mx-auto grid w-full max-w-[1920px] grid-cols-1 items-center gap-10 px-4 pb-4 pt-10 sm:px-10 sm:pt-14 lg:grid-cols-[1fr_1.15fr] lg:gap-14 xl:px-20">
         <div className="flex flex-col">
           <p className="mb-3 font-display text-[13px] font-semibold uppercase tracking-[0.08em] text-primary-500">
             Decision intelligence for enterprises
@@ -520,7 +520,7 @@ export default function Hero() {
         <HeroDiagram headingRef={headingRef} />
       </div>
 
-      <div className="relative z-[2] mx-auto mt-auto grid w-full max-w-[1440px] grid-cols-2 gap-x-6 gap-y-6 border-t border-secondary-100 px-4 pb-11 pt-9 sm:grid-cols-4 sm:gap-x-8 sm:px-10 xl:px-20">
+      <div className="relative z-[2] mx-auto mt-auto grid w-full max-w-[1920px] grid-cols-2 gap-x-6 gap-y-6 border-t border-secondary-100 px-4 pb-11 pt-9 sm:grid-cols-4 sm:gap-x-8 sm:px-10 xl:px-20">
         <div className="flex items-center gap-3">
           <StatIcon Icon={BoltIcon} />
           <span className="text-[13.5px] font-semibold leading-tight text-body">

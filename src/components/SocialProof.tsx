@@ -3,7 +3,7 @@ const ecosystem = ["SAP", "Microsoft Azure", "AWS"];
 export default function SocialProof() {
   return (
     <section className="bg-secondary-500 py-16 sm:py-20">
-      <div className="mx-auto max-w-[1440px] px-4 sm:px-10 xl:px-20">
+      <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-h5 font-semibold uppercase tracking-[0.5px] text-accent-400">
             Customers
