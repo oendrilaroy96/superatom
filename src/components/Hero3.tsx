@@ -131,12 +131,12 @@ function VideoCard() {
 }
 
 /**
- * Hero with an explanatory-video section: the video card stays pinned in
- * place (position: sticky) at a constant size, while the copy — plain
- * document-flow content below it, starting right where it looks now —
- * scrolls up behind it, fading out slowly as it goes. A scroll listener
- * logs the raw window.scrollY to the console for debugging/tuning
- * reference.
+ * Hero with an explanatory-video section: the copy stays pinned in place
+ * (position: sticky) and fades out slowly as you scroll, while the video
+ * card — plain document-flow content below it, starting right where it
+ * looks now — scrolls up in front of it (higher z-index) at a constant
+ * size. A scroll listener logs the raw window.scrollY to the console for
+ * debugging/tuning reference.
  */
 export default function Hero3() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -177,10 +177,10 @@ export default function Hero3() {
   return (
     <>
       <section ref={sectionRef} className="relative" style={{ height: `calc(100vh + ${SCROLL_VH}vh)` }}>
-        <div className="relative z-[1] pt-14" style={textStyle}>
+        <div className="sticky top-16 z-[1] pt-14" style={textStyle}>
           <HeroCopy />
         </div>
-        <div className="sticky top-16 z-[2] mx-auto mt-10 w-full max-w-[900px] px-4">
+        <div className="relative z-[2] mx-auto mt-10 w-full max-w-[900px] px-4">
           <VideoCard />
         </div>
       </section>
