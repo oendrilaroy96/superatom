@@ -12,8 +12,8 @@ import Button from "./ui/Button";
 
 const FLUID_PAD = "px-[max(16px,5%)]";
 
-/** Extra scroll distance (in viewport heights) giving the video room to travel fully off-screen while the text stays pinned. */
-const SCROLL_VH = 120;
+/** Extra scroll distance (px) beyond one viewport, sized so the pin releases at scrollY 680 and the next section scrolls up into view. */
+const SCROLL_EXTRA_PX = 439;
 /** Scroll distance (px) over which the pinned text fades out, finishing just before the video (gap is now only 64px) reaches it. */
 const TEXT_FADE_DISTANCE = 55;
 /** Once window.scrollY passes this, the video placeholder starts zooming in. */
@@ -194,7 +194,7 @@ export default function Hero3() {
 
   return (
     <>
-      <section ref={sectionRef} className="relative" style={{ height: `calc(100vh + ${SCROLL_VH}vh)` }}>
+      <section ref={sectionRef} className="relative" style={{ height: `calc(100vh + ${SCROLL_EXTRA_PX}px)` }}>
         <div className="sticky top-16 z-[1] pt-14" style={textStyle}>
           <HeroCopy />
         </div>
