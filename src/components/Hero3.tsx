@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect } from "react";
 import {
   MdArrowForward,
   MdBolt,
@@ -11,18 +11,6 @@ import type { IconType } from "react-icons";
 import Button from "./ui/Button";
 
 const FLUID_PAD = "px-[max(16px,5%)]";
-
-/** Extra scroll distance (in viewport heights) that drives the pin-and-grow, on top of the initial 100vh. */
-const SCROLL_VH = 180;
-/** Text fades out over the first 28% of scroll progress through the pin. */
-const FADE_END = 0.28;
-/** The card finishes growing to full size by this point, then holds there (frozen, same size) for the
- *  rest of the pin. Once the pin releases, further scrolling carries the same-size card straight up. */
-const GROW_END = 0.7;
-
-const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
-const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-const ease = (t: number) => t * t * (3 - 2 * t);
 
 function StatIcon({ Icon }: { Icon: IconType }) {
   return (
@@ -94,13 +82,13 @@ function HeroCopy() {
   );
 }
 
-/** The placeholder explanatory-video visual, styled inline so its size/position/radius can be scroll-driven. */
-function VideoCard({ style }: { style: CSSProperties }) {
+/** Placeholder explanatory-video panel: thumbnail + play button, ready to wire up to a real source. */
+function VideoCard() {
   return (
     <button
       type="button"
-      className="absolute overflow-hidden border border-secondary-100 bg-secondary-500 text-left shadow-[0_30px_80px_-30px_rgba(13,23,56,0.45)]"
-      style={style}
+      className="group relative w-full overflow-hidden rounded-2xl border border-secondary-100 bg-secondary-500 text-left shadow-[0_30px_80px_-30px_rgba(13,23,56,0.45)]"
+      style={{ aspectRatio: "16/10" }}
       aria-label="Play explanatory video: How Superatom AI works"
     >
       <div
@@ -119,7 +107,7 @@ function VideoCard({ style }: { style: CSSProperties }) {
         }}
       />
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="grid h-16 w-16 place-items-center rounded-full bg-white text-primary-500 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.5)] sm:h-20 sm:w-20">
+        <span className="grid h-16 w-16 place-items-center rounded-full bg-white text-primary-500 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.5)] transition-transform duration-200 group-hover:scale-110 sm:h-20 sm:w-20">
           <MdPlayArrow size={32} className="translate-x-0.5" />
         </span>
       </div>
@@ -135,119 +123,31 @@ function VideoCard({ style }: { style: CSSProperties }) {
   );
 }
 
-/** Static fallback for mobile/tablet and prefers-reduced-motion: content stacked normally, no scroll pin. */
-function StaticHero() {
+/**
+ * Hero with an explanatory-video section: copy up top, a fixed-size video
+ * card below it, both in normal document flow — no scroll-driven resizing.
+ * It just scrolls up like any other page content. A scroll listener logs
+ * the raw window.scrollY to the console for debugging/tuning reference.
+ */
+export default function Hero3() {
+  useEffect(() => {
+    const onScroll = () => {
+      // eslint-disable-next-line no-console
+      console.log("scrollY:", window.scrollY);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <section className="relative flex flex-col overflow-hidden pt-14">
       <HeroCopy />
-      <div className="mx-auto mt-10 w-full max-w-[720px] px-4">
-        <div className="relative w-full overflow-hidden rounded-2xl" style={{ aspectRatio: "16/10" }}>
-          <VideoCard style={{ inset: 0 }} />
-        </div>
+      <div className="mx-auto mt-10 w-full max-w-[900px] px-4">
+        <VideoCard />
       </div>
       <div className="mt-12">
         <StatsRow />
       </div>
     </section>
   );
-}
-
-/** Scroll-pinned hero: copy fades out while the video card grows to fill the viewport. */
-function ZoomHero() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const [progress, setProgress] = useState(0);
-  const [viewport, setViewport] = useState({ w: 1440, h: 900 });
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const rect = section.getBoundingClientRect();
-      const total = rect.height - window.innerHeight;
-      const p = total > 0 ? clamp01(-rect.top / total) : 0;
-      setProgress(p);
-      setViewport({ w: window.innerWidth, h: window.innerHeight });
-    };
-    const onScrollOrResize = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", onScrollOrResize, { passive: true });
-    window.addEventListener("resize", onScrollOrResize);
-    return () => {
-      if (raf) cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScrollOrResize);
-      window.removeEventListener("resize", onScrollOrResize);
-    };
-  }, []);
-
-  const fadeT = clamp01(progress / FADE_END);
-  const textStyle: CSSProperties = {
-    opacity: 1 - fadeT,
-    transform: `translateY(${lerp(0, -28, fadeT)}px)`,
-  };
-
-  // The card grows continuously from its initial small size to fill the
-  // viewport edge-to-edge by GROW_END, then holds there (frozen, same
-  // size) for the rest of the pin — no overshoot past 100%. Once the pin
-  // releases, normal scrolling carries the same-size card straight up,
-  // revealing the next section.
-  const grow = ease(clamp01(progress / GROW_END));
-
-  const cardW0 = Math.min(1040, viewport.w * 0.86);
-  const cardH0 = cardW0 * (10 / 16);
-  const left0 = (viewport.w - cardW0) / 2;
-  const top0 = viewport.h * 0.64;
-
-  const cardStyle: CSSProperties = {
-    left: lerp(left0, 0, grow),
-    top: lerp(top0, 0, grow),
-    width: lerp(cardW0, viewport.w, grow),
-    height: lerp(cardH0, viewport.h, grow),
-    borderRadius: lerp(20, 0, grow),
-  };
-
-  return (
-    <>
-      <section ref={sectionRef} className="relative" style={{ height: `calc(100vh + ${SCROLL_VH}vh)` }}>
-        <div className="sticky top-0 h-screen overflow-hidden">
-          <div className={`relative z-[2] w-full ${FLUID_PAD} pt-[14vh]`} style={textStyle}>
-            <HeroCopy />
-          </div>
-          <VideoCard style={{ position: "absolute", ...cardStyle }} />
-        </div>
-      </section>
-      <StatsRow />
-    </>
-  );
-}
-
-/**
- * Cinematic Hero variant: the copy and explanatory-video placeholder start
- * centered, then as the user scrolls the copy fades while the video card
- * scales up to fill the viewport — a pinned scroll-scrub effect. Falls back
- * to a static stacked layout below the lg breakpoint and for
- * prefers-reduced-motion, since scroll-hijacking effects don't translate
- * well to touch scrolling.
- */
-export default function Hero3() {
-  const [useZoom, setUseZoom] = useState(false);
-
-  useEffect(() => {
-    const mqDesktop = window.matchMedia("(min-width: 1024px)");
-    const mqMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setUseZoom(mqDesktop.matches && !mqMotion.matches);
-    update();
-    mqDesktop.addEventListener("change", update);
-    mqMotion.addEventListener("change", update);
-    return () => {
-      mqDesktop.removeEventListener("change", update);
-      mqMotion.removeEventListener("change", update);
-    };
-  }, []);
-
-  return useZoom ? <ZoomHero /> : <StaticHero />;
 }
