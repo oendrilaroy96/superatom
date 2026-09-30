@@ -486,24 +486,20 @@ export default function Hero() {
       <div className="relative z-[2] mx-auto grid w-full max-w-[1440px] grid-cols-1 items-center gap-10 px-4 pb-4 pt-10 sm:px-10 sm:pt-14 lg:grid-cols-[1fr_1.15fr] lg:gap-14 xl:px-20">
         <div className="flex flex-col">
           <p className="mb-3 font-display text-[13px] font-semibold uppercase tracking-[0.08em] text-primary-500">
-            Decision intelligence for the supply chain
+            Decision intelligence for enterprises
           </p>
           <h1
             ref={headingRef}
-            className="hero-heading m-0 mb-4 font-display text-[clamp(28px,calc(4px_+_2.34vw),38px)] font-bold leading-[1.08] tracking-[-0.02em]"
+            className="hero-heading m-0 mb-4 font-display text-[clamp(32px,4.5vw,56px)] font-bold leading-[1.08] tracking-[-0.02em]"
           >
-            <div className="flex flex-wrap gap-x-[0.3em]">
-              <span>Decide Fast.</span>
-              <span>Decide Right.</span>
-            </div>
-            <span>Every Time.</span>
+            <span>Better decisions.</span>
+            <span>Every day. Every time.</span>
           </h1>
           <p className="mb-6 max-w-[520px] text-[18px] leading-[1.55] text-body">
-            Superatom AI connects and synchronizes data across enterprise
-            Systems of Record (ERP&rsquo;s) and Data systems, to create a
-            unified intelligence layer. It delivers actionable insights and
-            intelligence, and enables you to execute the decisions through
-            workflows.
+            Turn enterprise data into real-time intelligence and make
+            instant, AI-powered decisions. Built for teams that move fast,
+            without compromising security, governance or existing
+            integrations.
           </p>
           <div>
             <Button
