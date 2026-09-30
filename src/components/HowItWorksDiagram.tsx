@@ -663,8 +663,8 @@ export default function HowItWorksDiagram() {
             aria-label={`Jump to step ${i + 1}: ${s.title}`}
           >
             <div className="hiw-num">{i + 1}</div>
-            <p className="mt-3 font-display text-h4 font-semibold text-heading">{s.title}</p>
-            <p className="mt-1 text-xs leading-relaxed text-caption">{s.desc}</p>
+            <p className="mt-4 font-display text-base font-bold leading-[1.25] text-heading sm:text-[18px]">{s.title}</p>
+            <p className="mt-2 text-xs leading-relaxed text-caption">{s.desc}</p>
             <div className="hiw-bar">
               <div className="hiw-bar-fill" />
             </div>

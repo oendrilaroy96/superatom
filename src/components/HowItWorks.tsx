@@ -19,7 +19,7 @@ export default function HowItWorks() {
         <SectionHeading
           align="center"
           className="max-w-2xl"
-          eyebrow="How It Works"
+          eyebrow="Beyond BI Tools"
           heading={
             <>
               From enterprise data to{" "}

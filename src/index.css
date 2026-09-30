@@ -340,23 +340,27 @@ body {
 }
 
 .hiw-steps {
-  margin: 40px 0 0;
+  margin: 48px 0 0;
   padding: 0;
   list-style: none;
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 20px;
+  gap: 24px;
 }
 .hiw-step {
   position: relative;
+  min-width: 0;
   cursor: pointer;
   outline-offset: 2px;
+}
+.hiw-step p {
+  overflow-wrap: break-word;
 }
 .hiw-step:not(:last-child)::after {
   content: "→";
   position: absolute;
-  right: -14px;
-  top: 14px;
+  right: -18px;
+  top: 18px;
   display: none;
   color: var(--color-secondary-300);
 }
@@ -367,13 +371,13 @@ body {
 }
 .hiw-num {
   display: flex;
-  height: 36px;
-  width: 36px;
+  height: 44px;
+  width: 44px;
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
   background: var(--color-accent-500);
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #fff;
 }
@@ -382,9 +386,9 @@ body {
 }
 .hiw-bar {
   position: relative;
-  margin-top: 14px;
-  height: 3px;
-  border-radius: 3px;
+  margin-top: 18px;
+  height: 5px;
+  border-radius: 5px;
   background: var(--color-secondary-100);
   overflow: hidden;
 }
