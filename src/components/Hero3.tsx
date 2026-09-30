@@ -14,8 +14,8 @@ const FLUID_PAD = "px-[max(16px,5%)]";
 
 /** Extra scroll distance (in viewport heights) giving the video room to travel fully off-screen while the text stays pinned. */
 const SCROLL_VH = 120;
-/** The pinned text fades out gradually across nearly the whole scroll run. */
-const FADE_END = 0.9;
+/** The pinned text fades out over the first 30% of the scroll run, finishing before the video reaches it. */
+const FADE_END = 0.3;
 
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
@@ -180,7 +180,7 @@ export default function Hero3() {
         <div className="sticky top-16 z-[1] pt-14" style={textStyle}>
           <HeroCopy />
         </div>
-        <div className="relative z-[2] mx-auto mt-10 w-full max-w-[900px] px-4">
+        <div className="relative z-[2] mx-auto mt-[380px] w-full max-w-[900px] px-4">
           <VideoCard />
         </div>
       </section>
