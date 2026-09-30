@@ -70,17 +70,17 @@ function StatsRow() {
 
 function HeroCopy() {
   return (
-    <div className="mx-auto flex max-w-[720px] flex-col items-center px-4 text-center">
+    <div className="mx-auto flex max-w-4xl flex-col items-center px-4 text-center">
       <p className="mb-3 font-display text-[13px] font-semibold uppercase tracking-[0.08em] text-primary-500">
         Decision intelligence for enterprises
       </p>
-      <h1 className="hero2-heading m-0 mb-4 font-display font-bold leading-[1.08] tracking-[-0.02em] text-heading">
+      <h1 className="hero2-heading m-0 mb-4 font-display font-bold leading-[1] tracking-[-0.02em] text-heading">
         <span className="block">Better decisions.</span>
         <span className="block whitespace-nowrap bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
           Every day. Every time.
         </span>
       </h1>
-      <p className="mb-6 max-w-[560px] text-[18px] leading-[1.55] text-body">
+      <p className="mb-6 text-[18px] leading-[1.55] text-body">
         Turn enterprise data into real-time intelligence and make instant,
         AI-powered decisions. Built for teams that move fast, without
         compromising security, governance or existing integrations.
