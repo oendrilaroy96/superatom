@@ -142,8 +142,8 @@ function VideoCard() {
  * Hero with an explanatory-video section: the copy stays pinned in place
  * (position: sticky) and fades out slowly as you scroll, while the video
  * card scrolls up in front of it (higher z-index) until window.scrollY
- * reaches 320, at which point the card's own position: sticky offset
- * (top: 164px) catches it and it stays pinned there. Once window.scrollY
+ * reaches ~308, at which point the card's own position: sticky offset
+ * (top: 176px) catches it and it stays pinned there. Once window.scrollY
  * passes ZOOM_START_Y (115, before the card sticks), the card also starts
  * zooming in, scaling up to ZOOM_MAX_SCALE over the next ZOOM_RANGE px of
  * scroll — this continues seamlessly through the point where it goes
@@ -198,7 +198,7 @@ export default function Hero3() {
         <div className="sticky top-16 z-[1] pt-14" style={textStyle}>
           <HeroCopy />
         </div>
-        <div className="sticky top-[164px] z-[2] mx-auto mt-16 w-full max-w-[900px] px-4" style={videoStyle}>
+        <div className="sticky top-[176px] z-[2] mx-auto mt-16 w-full max-w-[900px] px-4" style={videoStyle}>
           <VideoCard />
         </div>
       </section>
