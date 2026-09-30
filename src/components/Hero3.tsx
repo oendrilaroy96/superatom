@@ -1,16 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import {
-  MdArrowForward,
-  MdBolt,
-  MdTrendingDown,
-  MdTrendingUp,
-  MdShield,
-  MdPlayArrow,
-} from "react-icons/md";
-import type { IconType } from "react-icons";
+import { MdArrowForward, MdPlayArrow } from "react-icons/md";
 import Button from "./ui/Button";
-
-const FLUID_PAD = "px-[max(16px,5%)]";
 
 /** Extra scroll distance (px) beyond one viewport, sized so the pin releases at scrollY 680 and the next section scrolls up into view. */
 const SCROLL_EXTRA_PX = 439;
@@ -26,47 +16,6 @@ const ZOOM_MAX_SCALE = 1.35;
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const ease = (t: number) => t * t * (3 - 2 * t);
-
-function StatIcon({ Icon }: { Icon: IconType }) {
-  return (
-    <span className="grid h-[34px] w-[34px] shrink-0 place-items-center rounded-md bg-primary-100 text-primary-500">
-      <Icon size={18} />
-    </span>
-  );
-}
-
-function StatsRow() {
-  return (
-    <div
-      className={`relative z-[2] grid w-full grid-cols-2 gap-x-6 gap-y-6 border-t border-secondary-100 ${FLUID_PAD} pb-11 pt-9 sm:grid-cols-4 sm:gap-x-8`}
-    >
-      <div className="flex items-center gap-3">
-        <StatIcon Icon={MdBolt} />
-        <span className="text-[13.5px] font-semibold leading-tight text-body">
-          Faster decisions
-        </span>
-      </div>
-      <div className="flex items-center gap-3">
-        <StatIcon Icon={MdTrendingDown} />
-        <span className="text-[13.5px] font-semibold leading-tight text-body">
-          Lower costs
-        </span>
-      </div>
-      <div className="flex items-center gap-3">
-        <StatIcon Icon={MdTrendingUp} />
-        <span className="text-[13.5px] font-semibold leading-tight text-body">
-          Better service levels
-        </span>
-      </div>
-      <div className="flex items-center gap-3">
-        <StatIcon Icon={MdShield} />
-        <span className="text-[13.5px] font-semibold leading-tight text-body">
-          A more resilient supply chain
-        </span>
-      </div>
-    </div>
-  );
-}
 
 function HeroCopy() {
   return (
@@ -193,16 +142,13 @@ export default function Hero3() {
   };
 
   return (
-    <>
-      <section ref={sectionRef} className="relative" style={{ height: `calc(100vh + ${SCROLL_EXTRA_PX}px)` }}>
-        <div className="sticky top-16 z-[1] pt-14" style={textStyle}>
-          <HeroCopy />
-        </div>
-        <div className="sticky top-[176px] z-[2] mx-auto mt-16 w-full max-w-[900px] px-4" style={videoStyle}>
-          <VideoCard />
-        </div>
-      </section>
-      <StatsRow />
-    </>
+    <section ref={sectionRef} className="relative" style={{ height: `calc(100vh + ${SCROLL_EXTRA_PX}px)` }}>
+      <div className="sticky top-16 z-[1] pt-14" style={textStyle}>
+        <HeroCopy />
+      </div>
+      <div className="sticky top-[176px] z-[2] mx-auto mt-16 w-full max-w-[900px] px-4" style={videoStyle}>
+        <VideoCard />
+      </div>
+    </section>
   );
 }
