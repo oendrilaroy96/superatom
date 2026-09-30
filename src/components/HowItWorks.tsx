@@ -5,10 +5,7 @@ const HowItWorksDiagram = lazy(() => import("./HowItWorksDiagram"));
 
 function DiagramPlaceholder() {
   return (
-    <div
-      className="mx-auto w-full max-w-[1550px] animate-pulse rounded-2xl bg-page"
-      style={{ aspectRatio: "1550 / 560" }}
-    />
+    <div className="mx-auto min-h-[820px] w-full max-w-[1550px] animate-pulse rounded-2xl bg-page sm:min-h-[900px] xl:min-h-[520px]" />
   );
 }
 

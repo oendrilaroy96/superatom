@@ -1,59 +1,18 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 const NS = "http://www.w3.org/2000/svg";
 
-function svgEl<K extends keyof SVGElementTagNameMap>(
-  tag: K,
-  attrs: Record<string, string | number>,
-  parent: SVGElement,
-): SVGElementTagNameMap[K] {
-  const e = document.createElementNS(NS, tag) as SVGElementTagNameMap[K];
-  for (const k in attrs) e.setAttribute(k, String(attrs[k]));
-  parent.appendChild(e);
-  return e;
-}
-function svgText(
-  parent: SVGElement,
-  x: number,
-  y: number,
-  s: string,
-  cls?: string,
-  anchor?: string,
-): SVGTextElement {
-  const t = svgEl(
-    "text",
-    { x, y, class: cls || "", "text-anchor": anchor || "start" },
-    parent,
+function Icon({ paths, viewBox, size }: { paths: string; viewBox: string; size: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox={viewBox}
+      aria-hidden="true"
+      dangerouslySetInnerHTML={{ __html: paths }}
+    />
   );
-  t.textContent = s;
-  return t;
-}
-/** Icon + label mounted as HTML inside a foreignObject, so the label can wrap naturally. Returns the host div for bounding-box lookups (tooltip positioning). */
-function mountCard(
-  parent: SVGElement,
-  x: number,
-  y: number,
-  w: number,
-  h: number,
-  iconPaths: string,
-  iconViewBox: string,
-  label: string,
-  fontSize: number,
-  badged: boolean,
-): HTMLDivElement {
-  const fo = svgEl("foreignObject", { x, y, width: w, height: h }, parent);
-  const host = document.createElement("div");
-  host.className = "hiw-card-inner";
-  const iconSize = badged ? 26 : 22;
-  host.innerHTML = `
-    <span class="hiw-card-ico${badged ? " hiw-card-ico-badged" : ""}" style="width:${iconSize}px;height:${iconSize}px">
-      <svg viewBox="${iconViewBox}" fill="none" stroke="var(--color-primary-500)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${iconPaths}</svg>
-    </span>
-    <span class="hiw-card-label" style="font-size:${fontSize}px">${label}</span>
-  `;
-  fo.appendChild(host);
-  return host;
 }
 
 const SRC_ICON_VB = "-4 -4 32 32";
@@ -71,6 +30,20 @@ const MOD_ICONS: Record<string, string> = {
   sem: `<circle cx="12" cy="12" r="2.5"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M6.5 6.5l3.7 3.7M17.5 6.5l-3.7 3.7M6.5 17.5l3.7-3.7M17.5 17.5l-3.7-3.7"/>`,
 };
 
+const SOURCES: [string, string][] = [
+  ["erp", "ERPs"],
+  ["iot", "IoT"],
+  ["lake", "Data Lake"],
+  ["api", "APIs"],
+];
+
+const MODULES: [string, string, string][] = [
+  ["tribal", "Tribal Knowledge", "Captures the experience and judgment calls your best planners already know."],
+  ["opt", "Optimization Engine", "Runs analytics and simulation to evaluate every alternative."],
+  ["genui", "Generative UI", "Builds the right chart, table or view for each question, on the fly."],
+  ["sem", "Semantic Modeling", "Links entities and relationships across your enterprise data."],
+];
+
 /** Sample questions the scripted sequence types out and answers, one per loop. */
 const CHAT_QUESTIONS: string[] = [
   "Why did fulfillment cost spike in Q3?",
@@ -81,251 +54,137 @@ const CHAT_QUESTIONS: string[] = [
 
 const sleep = (ms: number) => new Promise<void>((r) => window.setTimeout(r, ms));
 
-type ChatRefs = {
-  frame: React.RefObject<HTMLDivElement | null>;
-  frameLabel: React.RefObject<HTMLDivElement | null>;
-  askText: React.RefObject<HTMLSpanElement | null>;
-  video: React.RefObject<HTMLVideoElement | null>;
-};
-
-/**
- * Video frame: a placeholder ("[Answer video plays here]") with the current
- * question typed into the pill near the bottom, both driven by the parent's
- * scripted play sequence via refs. No real clip is wired up yet — swap the
- * `<video src>` below for one and the placeholder label disappears
- * automatically once the video can play.
- */
-function ChatPanel({ frame, frameLabel, askText, video }: ChatRefs) {
-  return (
-    <div className="-mt-6 w-[660px] flex-none">
-      <div
-        ref={frame}
-        className="hiw-frame relative w-full overflow-hidden rounded-[16px] bg-secondary-500 shadow-[0_20px_50px_-20px_rgba(13,23,56,0.45)] transition-shadow duration-300"
-        style={{ aspectRatio: "588 / 440" }}
-      >
-        <video
-          ref={video}
-          className="absolute inset-0 h-full w-full object-cover opacity-0"
-          muted
-          playsInline
-          onCanPlay={(e) => {
-            e.currentTarget.classList.remove("opacity-0");
-            frameLabel.current?.classList.remove("hiw-show");
-          }}
-        />
-        <div
-          className="absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
-            backgroundSize: "36px 36px",
-          }}
-        />
-        <div
-          ref={frameLabel}
-          className="hiw-frame-label absolute inset-0 flex items-center justify-center gap-2 text-white/80"
-        >
-          <PlayArrowIcon style={{ fontSize: 20 }} />
-          <span className="font-sans text-sm font-semibold">[Answer video plays here]</span>
-        </div>
-        <div className="absolute inset-x-0 bottom-[26px] mx-auto flex w-[92%] items-center justify-center overflow-hidden rounded-[10px] bg-white px-5 py-3.5 font-sans text-base text-heading shadow-[0_16px_30px_-14px_rgba(13,23,56,0.25)]">
-          <span ref={askText} className="overflow-hidden text-ellipsis whitespace-nowrap" />
-          <span className="hiw-caret" aria-hidden="true" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const VW = 788;
-const VY0 = 244;
-const VH = 380;
-
-/** Natural (unscaled) width of the flow row: 880 (stage) + 8 (gap) + 660 (chat) + 48 (.hiw-flow's own padding). Kept in sync with the CSS below. */
-const FLOW_W = 1596;
+type Box = { l: number; t: number; r: number; b: number; cx: number; cy: number };
+type Geo = { src: number[][][]; out: number[][] };
 
 export default function HowItWorksDiagram() {
-  const rootDivRef = useRef<HTMLDivElement>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const tipRef = useRef<HTMLDivElement>(null);
+  const flowRef = useRef<HTMLElement>(null);
+  const wiresRef = useRef<SVGSVGElement>(null);
+  const sourceRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const coreRef = useRef<HTMLDivElement>(null);
+  const moduleRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const frameRef = useRef<HTMLDivElement>(null);
   const frameLabelRef = useRef<HTMLDivElement>(null);
   const askTextRef = useRef<HTMLSpanElement>(null);
+  const tipRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [visible, setVisible] = useState(false);
-  const [zoom, setZoom] = useState(1);
-
-  // Scale the whole flow row down to fit the available width instead of
-  // letting its fixed-width children overflow (the row never wraps or
-  // shrinks on its own, since the stage and chat panel are both flex-none).
-  useLayoutEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(([entry]) => {
-      setZoom(Math.min(1, entry.contentRect.width / FLOW_W));
-    });
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
 
   useEffect(() => {
-    const rootDiv = rootDivRef.current;
-    const svg = svgRef.current;
-    const stageEl = stageRef.current;
-    const tip = tipRef.current;
+    const flow = flowRef.current;
+    const wires = wiresRef.current;
+    const core = coreRef.current;
     const frame = frameRef.current;
     const frameLabel = frameLabelRef.current;
     const askText = askTextRef.current;
-    const video = videoRef.current;
-    if (!rootDiv || !svg || !stageEl || !tip || !frame || !frameLabel || !askText) return;
+    const tip = tipRef.current;
+    const sources = sourceRefs.current.filter((el): el is HTMLLIElement => el !== null);
+    const modules = moduleRefs.current.filter((el): el is HTMLButtonElement => el !== null);
+    if (!flow || !wires || !core || !frame || !frameLabel || !askText || !tip) return;
+    if (sources.length !== SOURCES.length || modules.length !== MODULES.length) return;
     if (!visible) return;
 
     // Re-bind as non-nullable so nested closures below don't lose the narrowing.
+    const flowEl: HTMLElement = flow;
+    const wiresEl: SVGSVGElement = wires;
+    const coreEl: HTMLDivElement = core;
     const frameEl: HTMLDivElement = frame;
     const frameLabelEl: HTMLDivElement = frameLabel;
     const askTextEl: HTMLSpanElement = askText;
-
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    let disposed = false;
     const tipEl: HTMLDivElement = tip;
+    const video = videoRef.current;
 
-    const defs = svgEl("defs", {}, svg);
-    const marker = svgEl(
-      "marker",
-      {
-        id: `hiw-arrow-${Math.random().toString(36).slice(2, 8)}`,
-        viewBox: "0 0 10 10",
-        refX: "9",
-        refY: "5",
-        markerWidth: "7",
-        markerHeight: "7",
-        orient: "auto-start-reverse",
-      },
-      defs,
-    );
-    svgEl("path", { d: "M0,0 L10,5 L0,10 z", class: "hiw-arrow" }, marker);
-    const markerUrl = `url(#${marker.id})`;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const desktop = window.matchMedia("(min-width: 1180px)");
+    let disposed = false;
 
-    const edgeLayer = svgEl("g", {}, svg);
-    const nodeLayer = svgEl("g", {}, svg);
-    const pulseLayer = svgEl("g", {}, svg);
-
-    svgText(nodeLayer, 64, 278, "Enterprise Systems", "hiw-t-title").style.cssText =
-      "font-size:15px;font-weight:700;fill:var(--color-body)";
-
-    const SRC_X = 64;
-    const SRC_W = 140;
-    const SRC_H = 56;
-    const SRC_TOPS = [304, 384, 464, 544];
-    const srcY = SRC_TOPS.map((y) => y + SRC_H / 2);
-    const sourceDefs: [string, string, string][] = [
-      ["erp", "ERPs", "Enterprise resource planning"],
-      ["iot", "IoT", "Sensor and device data from the field"],
-      ["lake", "Data Lake", "Raw and historical enterprise data"],
-      ["api", "APIs", "Direct integrations with your existing tools"],
-    ];
-    const sourceGs: SVGGElement[] = [];
-    const stubLines: SVGPathElement[] = [];
-    sourceDefs.forEach(([id, n], i) => {
-      const y = SRC_TOPS[i];
-      const g = svgEl("g", { class: "hiw-node hiw-src" }, nodeLayer);
-      svgEl("rect", { x: SRC_X, y, width: SRC_W, height: SRC_H, rx: 8, class: "hiw-b" }, g);
-      mountCard(g, SRC_X, y, SRC_W, SRC_H, SRC_ICONS[id], SRC_ICON_VB, n, 16, true);
-      sourceGs.push(g);
-      const stub = svgEl(
-        "path",
-        { d: `M${SRC_X + SRC_W},${srcY[i]} H244`, class: "hiw-edge" },
-        edgeLayer,
-      );
-      stubLines.push(stub);
-      g.addEventListener("mouseenter", () => {
-        if (!runningRef.current) lightSource(i, true);
-      });
-      g.addEventListener("mouseleave", () => {
-        if (!runningRef.current && !reduceMotion) lightSource(i, false);
-      });
-    });
-
-    const TRUNK_X = 244;
-    const trunkVertical = svgEl(
-      "path",
-      { d: `M${TRUNK_X},${srcY[0]} V${srcY[3]}`, class: "hiw-edge" },
-      edgeLayer,
-    );
-    const CORE_MID_Y = 444;
-    const coreEntry = svgEl(
-      "path",
-      { d: `M${TRUNK_X},${CORE_MID_Y} H298`, class: "hiw-edge", "marker-end": markerUrl },
-      edgeLayer,
-    );
-
-    const coreG = svgEl("g", { class: "hiw-core" }, nodeLayer);
-    svgEl("rect", { x: 300, y: 288, width: 424, height: 312, rx: 12, class: "hiw-core-frame" }, coreG);
-    svgText(coreG, 332, 322, "Superatom AI", "hiw-core-title");
-
-    const modDefs: [string, string, string, number, number][] = [
-      ["tribal", "Tribal Knowledge", "Captures the experience and judgment calls your best planners already know.", 332, 364],
-      ["opt", "Optimization Engine", "Runs analytics and simulation to evaluate every alternative.", 520, 364],
-      ["genui", "Generative UI", "Builds the right chart, table or view for each question, on the fly.", 332, 468],
-      ["sem", "Semantic Modeling", "Links entities and relationships across your enterprise data.", 520, 468],
-    ];
-    const MOD_W = 172;
-    const MOD_H = 88;
-    const moduleGs: SVGGElement[] = [];
-    modDefs.forEach(([id, n, d, x, y]) => {
-      const g = svgEl("g", { class: "hiw-node hiw-mod", tabindex: "0", role: "button", "aria-label": n }, nodeLayer);
-      svgEl("rect", { x, y, width: MOD_W, height: MOD_H, rx: 8, class: "hiw-b" }, g);
-      const host = mountCard(g, x, y, MOD_W, MOD_H, MOD_ICONS[id], MOD_ICON_VB, n, 15, false);
-      moduleGs.push(g);
-      const show = () => {
-        tipEl.innerHTML = "";
-        const b = document.createElement("b");
-        b.textContent = n;
-        tipEl.appendChild(b);
-        tipEl.appendChild(document.createTextNode(d));
-        tipEl.hidden = false;
-        const r = host.getBoundingClientRect();
-        const tipH = tipEl.offsetHeight;
-        let top = r.top - tipH - 12;
-        if (top < 8) top = r.bottom + 12;
-        const left = Math.max(8, Math.min(r.left, window.innerWidth - 266));
-        tipEl.style.left = `${left}px`;
-        tipEl.style.top = `${top}px`;
+    function box(el: Element): Box {
+      const f = flowEl.getBoundingClientRect();
+      const r = el.getBoundingClientRect();
+      return {
+        l: r.left - f.left,
+        t: r.top - f.top,
+        r: r.right - f.left,
+        b: r.bottom - f.top,
+        cx: (r.left + r.right) / 2 - f.left,
+        cy: (r.top + r.bottom) / 2 - f.top,
       };
-      const hide = () => {
-        tipEl.hidden = true;
-      };
-      g.addEventListener("mouseenter", show);
-      g.addEventListener("focus", show);
-      g.addEventListener("mouseleave", hide);
-      g.addEventListener("blur", hide);
-    });
-
-    const outLine = svgEl(
-      "path",
-      { d: `M724,${CORE_MID_Y} H786`, class: "hiw-edge hiw-out-e", "marker-end": markerUrl },
-      edgeLayer,
-    );
-
-    function lightSource(i: number, on: boolean) {
-      sourceGs[i].classList.toggle("hiw-on", on);
-      stubLines[i].classList.toggle("hiw-lit", on);
-      trunkVertical.classList.toggle("hiw-lit", on);
-      coreEntry.classList.toggle("hiw-lit", on);
     }
 
-    function pulse(points: number[][], duration: number, color: string): Promise<void> {
-      const dot = svgEl("circle", { r: 5, fill: color, class: "hiw-pulse-dot" }, pulseLayer);
+    const defs = document.createElementNS(NS, "defs");
+    const marker = document.createElementNS(NS, "marker");
+    marker.setAttribute("id", `hiw-arrow-${Math.random().toString(36).slice(2, 8)}`);
+    marker.setAttribute("orient", "auto");
+    marker.setAttribute("markerWidth", "5");
+    marker.setAttribute("markerHeight", "5");
+    marker.setAttribute("refX", "3.2");
+    marker.setAttribute("refY", "2");
+    marker.setAttribute("overflow", "visible");
+    const markerPath = document.createElementNS(NS, "path");
+    markerPath.setAttribute("d", "M0 0 L4 2 L0 4 Z");
+    markerPath.setAttribute("class", "hiw-arrow");
+    marker.appendChild(markerPath);
+    defs.appendChild(marker);
+    wiresEl.appendChild(defs);
+    const markerUrl = `url(#${marker.id})`;
+
+    const paths: Record<string, SVGPathElement> = {};
+    function setPath(key: string, pts: number[][], arrow?: boolean) {
+      let p = paths[key];
+      if (!p) {
+        p = document.createElementNS(NS, "path");
+        if (arrow) p.setAttribute("marker-end", markerUrl);
+        wiresEl.appendChild(p);
+        paths[key] = p;
+      }
+      p.setAttribute("d", pts.map((q, i) => (i ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1)).join(" "));
+    }
+
+    let geo: Geo | null = null;
+    function draw() {
+      const S = sources.map(box);
+      const C = box(coreEl);
+      const F = box(frameEl);
+      const g: Geo = { src: [], out: [[0, 0], [0, 0]] };
+      if (desktop.matches) {
+        const busX = (S[0].r + C.l) / 2;
+        S.forEach((s, i) => {
+          setPath(`s${i}`, [[s.r, s.cy], [busX, s.cy]]);
+          g.src.push([[s.r, s.cy], [busX, s.cy], [busX, C.cy], [C.l, C.cy]]);
+        });
+        setPath("bus", [[busX, S[0].cy], [busX, S[S.length - 1].cy]]);
+        setPath("in", [[busX, C.cy], [C.l - 2, C.cy]], true);
+        setPath("out", [[C.r, C.cy], [F.l - 2, C.cy]], true);
+        g.out = [[C.r, C.cy], [F.l, C.cy]];
+      } else {
+        const busY = (S[0].b + C.t) / 2;
+        S.forEach((s, i) => {
+          setPath(`s${i}`, [[s.cx, s.b], [s.cx, busY]]);
+          g.src.push([[s.cx, s.b], [s.cx, busY], [C.cx, busY], [C.cx, C.t]]);
+        });
+        setPath("bus", [[S[0].cx, busY], [S[S.length - 1].cx, busY]]);
+        setPath("in", [[C.cx, busY], [C.cx, C.t - 2]], true);
+        setPath("out", [[C.cx, C.b], [C.cx, F.t - 2]], true);
+        g.out = [[C.cx, C.b], [C.cx, F.t]];
+      }
+      geo = g;
+    }
+    const ro = new ResizeObserver(draw);
+    ro.observe(flowEl);
+    desktop.addEventListener("change", draw);
+    if (document.fonts) document.fonts.ready.then(draw);
+    draw();
+
+    function pulse(points: number[][], duration: number): Promise<void> {
+      const dot = document.createElement("div");
+      dot.className = "hiw-pulse";
+      flowEl.appendChild(dot);
       const lens = points.slice(1).map((p, i) => Math.hypot(p[0] - points[i][0], p[1] - points[i][1]));
       const total = lens.reduce((a, b) => a + b, 0) || 1;
       let acc = 0;
       const frames = points.map((p, i) => {
         if (i > 0) acc += lens[i - 1];
-        return { transform: `translate(${p[0]}px, ${p[1]}px)`, offset: acc / total };
+        return { left: `${p[0]}px`, top: `${p[1]}px`, offset: acc / total };
       });
       const anim = dot.animate(frames, { duration, easing: "linear" });
       return anim.finished.then(
@@ -334,23 +193,15 @@ export default function HowItWorksDiagram() {
       );
     }
 
-    const srcPath = (i: number) => [
-      [SRC_X + SRC_W, srcY[i]],
-      [TRUNK_X, srcY[i]],
-      [TRUNK_X, CORE_MID_Y],
-      [298, CORE_MID_Y],
-    ];
-    const outPath = [
-      [724, CORE_MID_Y],
-      [786, CORE_MID_Y],
-    ];
+    function light(i: number, on: boolean) {
+      sources[i].classList.toggle("hiw-on", on);
+      [`s${i}`, "bus", "in"].forEach((k) => paths[k]?.classList.toggle("hiw-lit", on));
+    }
 
     function reset() {
-      sourceGs.forEach((g) => g.classList.remove("hiw-on"));
-      moduleGs.forEach((g) => g.classList.remove("hiw-on"));
-      [...stubLines, trunkVertical, coreEntry, outLine].forEach((l) => l.classList.remove("hiw-lit"));
-      coreG.classList.remove("hiw-on");
-      frameEl.classList.remove("hiw-on");
+      sources.forEach((s) => s.classList.remove("hiw-on"));
+      modules.forEach((m) => m.classList.remove("hiw-on"));
+      Object.values(paths).forEach((p) => p.classList.remove("hiw-lit"));
       frameLabelEl.classList.remove("hiw-show");
       askTextEl.textContent = "";
       if (video) {
@@ -378,30 +229,30 @@ export default function HowItWorksDiagram() {
       await typeQuestion(CHAT_QUESTIONS[qIndex]);
       if (disposed) return;
       await sleep(300);
-      if (disposed) return;
+      if (disposed || !geo) return;
+      const g = geo;
 
-      const pulses = sourceGs.map((_, i) =>
-        sleep(i * 160).then(() => {
-          if (disposed) return;
-          lightSource(i, true);
-          return pulse(srcPath(i), 900, "var(--color-primary-500)");
-        }),
+      await Promise.all(
+        sources.map((_, i) =>
+          sleep(i * 160).then(() => {
+            if (disposed) return;
+            light(i, true);
+            return pulse(g.src[i], 900);
+          }),
+        ),
       );
-      await Promise.all(pulses);
       if (disposed) return;
-      coreG.classList.add("hiw-on");
 
-      for (const g of moduleGs) {
+      for (const m of modules) {
         if (disposed) return;
-        g.classList.add("hiw-on");
+        m.classList.add("hiw-on");
         await sleep(420);
       }
       if (disposed) return;
 
-      outLine.classList.add("hiw-lit");
-      await pulse(outPath, 450, "var(--color-accent-500)");
+      paths.out?.classList.add("hiw-lit");
+      await pulse(g.out, 450);
       if (disposed) return;
-      frameEl.classList.add("hiw-on");
       frameLabelEl.classList.add("hiw-show");
       if (video) {
         video.currentTime = 0;
@@ -415,11 +266,9 @@ export default function HowItWorksDiagram() {
     function showStatic() {
       reset();
       askTextEl.textContent = CHAT_QUESTIONS[0];
-      sourceGs.forEach((_, i) => lightSource(i, true));
-      moduleGs.forEach((g) => g.classList.add("hiw-on"));
-      outLine.classList.add("hiw-lit");
-      coreG.classList.add("hiw-on");
-      frameEl.classList.add("hiw-on");
+      sources.forEach((_, i) => light(i, true));
+      modules.forEach((m) => m.classList.add("hiw-on"));
+      paths.out?.classList.add("hiw-lit");
       frameLabelEl.classList.add("hiw-show");
     }
 
@@ -436,34 +285,138 @@ export default function HowItWorksDiagram() {
       })();
     }
 
+    const cleanups: (() => void)[] = [];
+    sources.forEach((s, i) => {
+      const onEnter = () => {
+        if (!runningRef.current) light(i, true);
+      };
+      const onLeave = () => {
+        if (!runningRef.current && !reduceMotion) light(i, false);
+      };
+      s.addEventListener("mouseenter", onEnter);
+      s.addEventListener("mouseleave", onLeave);
+      cleanups.push(() => {
+        s.removeEventListener("mouseenter", onEnter);
+        s.removeEventListener("mouseleave", onLeave);
+      });
+    });
+
+    function showTip(m: HTMLButtonElement, desc: string) {
+      tipEl.innerHTML = "";
+      const b = document.createElement("b");
+      b.textContent = m.textContent?.trim() ?? "";
+      tipEl.appendChild(b);
+      tipEl.appendChild(document.createTextNode(desc));
+      const r = box(m);
+      const w = Math.min(240, flowEl.clientWidth - 32);
+      tipEl.style.width = `${w}px`;
+      const left = Math.max(16, Math.min(r.cx - w / 2, flowEl.clientWidth - w - 16));
+      tipEl.style.left = `${left}px`;
+      tipEl.classList.add("hiw-show");
+      tipEl.style.top = `${r.t - tipEl.offsetHeight - 10}px`;
+    }
+    const hideTip = () => tipEl.classList.remove("hiw-show");
+    modules.forEach((m, i) => {
+      const desc = MODULES[i][2];
+      const onEnter = () => showTip(m, desc);
+      m.addEventListener("mouseenter", onEnter);
+      m.addEventListener("focus", onEnter);
+      m.addEventListener("mouseleave", hideTip);
+      m.addEventListener("blur", hideTip);
+      cleanups.push(() => {
+        m.removeEventListener("mouseenter", onEnter);
+        m.removeEventListener("focus", onEnter);
+        m.removeEventListener("mouseleave", hideTip);
+        m.removeEventListener("blur", hideTip);
+      });
+    });
+    const onKeydown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") hideTip();
+    };
+    document.addEventListener("keydown", onKeydown);
+    cleanups.push(() => document.removeEventListener("keydown", onKeydown));
+
     return () => {
       disposed = true;
-      svg.innerHTML = "";
+      ro.disconnect();
+      desktop.removeEventListener("change", draw);
+      cleanups.forEach((fn) => fn());
+      wiresEl.innerHTML = "";
     };
   }, [visible]);
 
   useEffect(() => {
-    const el = rootDivRef.current;
+    const el = flowRef.current;
     if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => setVisible(entry.isIntersecting),
-      { threshold: 0.2 },
-    );
+    const io = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { threshold: 0.3 });
     io.observe(el);
     return () => io.disconnect();
   }, []);
 
   return (
-    <div ref={rootDivRef} className="hiw-root">
-      <div ref={scrollRef} className="hiw-scroll">
-        <div className="hiw-flow" style={{ zoom }}>
-          <div ref={stageRef} className="hiw-stage">
-            <svg ref={svgRef} viewBox={`0 ${VY0} ${VW} ${VH}`} role="img" aria-label="Superatom AI architecture" />
-          </div>
-          <ChatPanel frame={frameRef} frameLabel={frameLabelRef} askText={askTextRef} video={videoRef} />
+    <section ref={flowRef} className="hiw-flow" aria-label="How Superatom AI works">
+      <svg ref={wiresRef} className="hiw-wires" aria-hidden="true" />
+
+      <div>
+        <p className="hiw-sources-label">Enterprise Systems</p>
+        <ul className="hiw-sources">
+          {SOURCES.map(([id, label], i) => (
+            <li
+              key={id}
+              ref={(el) => {
+                sourceRefs.current[i] = el;
+              }}
+              className="hiw-source"
+            >
+              <Icon paths={SRC_ICONS[id]} viewBox={SRC_ICON_VB} size={28} />
+              <span>{label}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div ref={coreRef} className="hiw-core">
+        <h3>Superatom AI</h3>
+        <div className="hiw-modules">
+          {MODULES.map(([id, label], i) => (
+            <button
+              key={id}
+              ref={(el) => {
+                moduleRefs.current[i] = el;
+              }}
+              type="button"
+              className="hiw-module"
+              aria-describedby="hiw-tip"
+            >
+              <Icon paths={MOD_ICONS[id]} viewBox={MOD_ICON_VB} size={22} />
+              <span>{label}</span>
+            </button>
+          ))}
         </div>
       </div>
-      <div ref={tipRef} className="hiw-tip" hidden />
-    </div>
+
+      <div ref={frameRef} className="hiw-vframe">
+        <video
+          ref={videoRef}
+          className="hiw-video"
+          muted
+          playsInline
+          onCanPlay={(e) => {
+            e.currentTarget.classList.add("hiw-video-visible");
+            frameLabelRef.current?.classList.remove("hiw-show");
+          }}
+        />
+        <div ref={frameLabelRef} className="hiw-frame-label">
+          <PlayArrowIcon style={{ fontSize: 20 }} />
+          <span>[Answer video plays here]</span>
+        </div>
+        <div className="hiw-ask">
+          <span ref={askTextRef} />
+          <span className="hiw-caret" aria-hidden="true" />
+        </div>
+      </div>
+
+      <div ref={tipRef} id="hiw-tip" className="hiw-tip" role="tooltip" />
+    </section>
   );
 }
