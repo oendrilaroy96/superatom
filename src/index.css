@@ -162,10 +162,10 @@ body {
 .hiw-flow {
   display: flex;
   align-items: flex-start;
-  justify-content: center;
   gap: 8px;
   padding: 32px 24px;
-  min-width: 1200px;
+  width: fit-content;
+  margin: 0 auto;
 }
 .hiw-stage {
   position: relative;

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 const NS = "http://www.w3.org/2000/svg";
@@ -141,8 +141,12 @@ const VW = 788;
 const VY0 = 244;
 const VH = 380;
 
+/** Natural (unscaled) width of the flow row: 880 (stage) + 8 (gap) + 660 (chat) + 48 (.hiw-flow's own padding). Kept in sync with the CSS below. */
+const FLOW_W = 1596;
+
 export default function HowItWorksDiagram() {
   const rootDivRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const tipRef = useRef<HTMLDivElement>(null);
@@ -151,6 +155,20 @@ export default function HowItWorksDiagram() {
   const askTextRef = useRef<HTMLSpanElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [visible, setVisible] = useState(false);
+  const [zoom, setZoom] = useState(1);
+
+  // Scale the whole flow row down to fit the available width instead of
+  // letting its fixed-width children overflow (the row never wraps or
+  // shrinks on its own, since the stage and chat panel are both flex-none).
+  useLayoutEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([entry]) => {
+      setZoom(Math.min(1, entry.contentRect.width / FLOW_W));
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   useEffect(() => {
     const rootDiv = rootDivRef.current;
@@ -437,8 +455,8 @@ export default function HowItWorksDiagram() {
 
   return (
     <div ref={rootDivRef} className="hiw-root">
-      <div className="hiw-scroll">
-        <div className="hiw-flow">
+      <div ref={scrollRef} className="hiw-scroll">
+        <div className="hiw-flow" style={{ zoom }}>
           <div ref={stageRef} className="hiw-stage">
             <svg ref={svgRef} viewBox={`0 ${VY0} ${VW} ${VH}`} role="img" aria-label="Superatom AI architecture" />
           </div>
