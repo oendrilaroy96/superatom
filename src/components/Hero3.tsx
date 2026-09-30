@@ -13,9 +13,15 @@ import Button from "./ui/Button";
 const FLUID_PAD = "px-[max(16px,5%)]";
 
 /** Extra scroll distance (in viewport heights) that drives the pin-and-zoom, on top of the initial 100vh. */
-const SCROLL_VH = 160;
-/** Text fades out over the first 42% of scroll progress through the pin. */
-const FADE_END = 0.42;
+const SCROLL_VH = 200;
+/** Text fades out over the first 26% of scroll progress through the pin. */
+const FADE_END = 0.26;
+/** The card grows from its initial card size to fill the viewport (edge-to-edge, no radius) by this point. */
+const FILL_END = 0.5;
+/** After filling the viewport, the card holds at that size until this point... */
+const HOLD_END = 0.7;
+/** ...then, from HOLD_END to 1, it zooms in further (scales past 100%, cropping inward). */
+const ZOOM_SCALE = 1.3;
 
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -181,12 +187,18 @@ function ZoomHero() {
     };
   }, []);
 
-  const eased = ease(progress);
   const fadeT = clamp01(progress / FADE_END);
   const textStyle: CSSProperties = {
     opacity: 1 - fadeT,
     transform: `translateY(${lerp(0, -28, fadeT)}px)`,
   };
+
+  // Phase 1 (0 -> FILL_END): card grows from its initial size to fill the viewport.
+  const fillT = ease(clamp01(progress / FILL_END));
+  // Phase 2 (FILL_END -> HOLD_END): holds at the filled size, no further change.
+  // Phase 3 (HOLD_END -> 1): zooms in further via transform scale, cropping inward.
+  const zoomT = ease(clamp01((progress - HOLD_END) / (1 - HOLD_END)));
+  const scale = lerp(1, ZOOM_SCALE, zoomT);
 
   const cardW0 = Math.min(1040, viewport.w * 0.86);
   const cardH0 = cardW0 * (10 / 16);
@@ -194,11 +206,13 @@ function ZoomHero() {
   const top0 = viewport.h * 0.64;
 
   const cardStyle: CSSProperties = {
-    left: lerp(left0, 0, eased),
-    top: lerp(top0, 0, eased),
-    width: lerp(cardW0, viewport.w, eased),
-    height: lerp(cardH0, viewport.h, eased),
-    borderRadius: lerp(20, 0, eased),
+    left: lerp(left0, 0, fillT),
+    top: lerp(top0, 0, fillT),
+    width: lerp(cardW0, viewport.w, fillT),
+    height: lerp(cardH0, viewport.h, fillT),
+    borderRadius: lerp(20, 0, fillT),
+    transform: scale > 1 ? `scale(${scale})` : undefined,
+    transformOrigin: "center center",
   };
 
   return (
