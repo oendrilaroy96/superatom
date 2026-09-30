@@ -16,6 +16,9 @@ const FLUID_PAD = "px-[max(16px,5%)]";
 const SCROLL_VH = 180;
 /** Text fades out over the first 28% of scroll progress through the pin. */
 const FADE_END = 0.28;
+/** The card finishes growing to full size by this point, then holds there (frozen, same size) for the
+ *  rest of the pin. Once the pin releases, further scrolling carries the same-size card straight up. */
+const GROW_END = 0.7;
 
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -188,10 +191,11 @@ function ZoomHero() {
   };
 
   // The card grows continuously from its initial small size to fill the
-  // viewport edge-to-edge over the full scroll progress — no hold, no
-  // overshoot past 100%. Once it reaches full size the pin releases and
-  // normal scrolling carries it away, revealing the next section.
-  const grow = ease(progress);
+  // viewport edge-to-edge by GROW_END, then holds there (frozen, same
+  // size) for the rest of the pin — no overshoot past 100%. Once the pin
+  // releases, normal scrolling carries the same-size card straight up,
+  // revealing the next section.
+  const grow = ease(clamp01(progress / GROW_END));
 
   const cardW0 = Math.min(1040, viewport.w * 0.86);
   const cardH0 = cardW0 * (10 / 16);
