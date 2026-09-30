@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap");
 
 /* Satoshi (variable font, weights 300–900) — self-hosted per the ITF Free
    Font License (see public/fonts/SATOSHI-LICENSE.txt), which permits
@@ -82,10 +82,10 @@
   --color-success-800: #074e33;
   --color-success-900: #042e1e;
 
-  --font-display: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Satoshi", ui-sans-serif, system-ui, sans-serif;
 
-  /* Type scale (Figma: Typography) — Instrument Sans H1–H4, Satoshi H5/p,
+  /* Type scale (Figma: Typography) — Archivo H1–H4, Satoshi H5/p,
      line-height = font-size × 1.618 (golden ratio), rounded to the pixel. */
   --text-h1: 2.5rem; /* 40px */
   --text-h1--line-height: 4.0625rem; /* 65px */
@@ -153,7 +153,7 @@ body {
 
 /* ================= Hero2 (video variant) heading ================= */
 .hero2-heading {
-  font-size: clamp(26px, 3.4vw, 44px);
+  font-size: 72px;
 }
 
 /* ================= How It Works architecture diagram ================= */

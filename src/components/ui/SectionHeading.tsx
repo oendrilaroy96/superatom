@@ -20,8 +20,8 @@ const eyebrowColors: Record<EyebrowColor, string> = {
 };
 
 const headingSizes: Record<HeadingSize, string> = {
-  default: "mt-3 text-[22px] sm:text-h2",
-  lg: "mt-4 text-[30px] leading-[1.15] sm:text-[34px]",
+  default: "mt-3 text-[58px] leading-[1.15]",
+  lg: "mt-4 text-[58px] leading-[1.15]",
 };
 
 /** Eyebrow + heading + description, used at the top of a page section. */
