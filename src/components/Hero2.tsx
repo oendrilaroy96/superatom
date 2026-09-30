@@ -1,0 +1,278 @@
+import { useState, type ReactNode } from "react";
+import {
+  MdArrowForward,
+  MdBolt,
+  MdTrendingDown,
+  MdTrendingUp,
+  MdShield,
+  MdPlayArrow,
+} from "react-icons/md";
+import type { IconType } from "react-icons";
+import Button from "./ui/Button";
+
+export type Hero2Variant = "side-by-side" | "full-width" | "video-first";
+
+function StatIcon({ Icon }: { Icon: IconType }) {
+  return (
+    <span className="grid h-[34px] w-[34px] shrink-0 place-items-center rounded-md bg-primary-100 text-primary-500">
+      <Icon size={18} />
+    </span>
+  );
+}
+
+function StatsRow() {
+  return (
+    <div className="relative z-[2] mx-auto mt-auto grid w-full max-w-[1440px] grid-cols-2 gap-x-6 gap-y-6 border-t border-secondary-100 px-4 pb-11 pt-9 sm:grid-cols-4 sm:gap-x-8 sm:px-10 xl:px-20">
+      <div className="flex items-center gap-3">
+        <StatIcon Icon={MdBolt} />
+        <span className="text-[13.5px] font-semibold leading-tight text-body">
+          Faster decisions
+        </span>
+      </div>
+      <div className="flex items-center gap-3">
+        <StatIcon Icon={MdTrendingDown} />
+        <span className="text-[13.5px] font-semibold leading-tight text-body">
+          Lower costs
+        </span>
+      </div>
+      <div className="flex items-center gap-3">
+        <StatIcon Icon={MdTrendingUp} />
+        <span className="text-[13.5px] font-semibold leading-tight text-body">
+          Better service levels
+        </span>
+      </div>
+      <div className="flex items-center gap-3">
+        <StatIcon Icon={MdShield} />
+        <span className="text-[13.5px] font-semibold leading-tight text-body">
+          A more resilient supply chain
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/** Eyebrow + heading + description, shared across all layout variants. */
+function HeroCopy({ align = "left" }: { align?: "left" | "center" }) {
+  const isCenter = align === "center";
+  return (
+    <div className={isCenter ? "flex flex-col items-center text-center" : "flex flex-col"}>
+      <p className="mb-3 font-display text-[13px] font-semibold uppercase tracking-[0.08em] text-primary-500">
+        Decision intelligence for enterprises
+      </p>
+      <h1 className="m-0 mb-4 font-display text-[clamp(32px,4.5vw,56px)] font-bold leading-[1.08] tracking-[-0.02em] text-heading">
+        <span className="block">Better decisions.</span>
+        <span className="block bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
+          Every day. Every time.
+        </span>
+      </h1>
+      <p
+        className={`mb-6 text-[18px] leading-[1.55] text-body ${isCenter ? "max-w-[560px]" : "max-w-[520px]"}`}
+      >
+        Turn enterprise data into real-time intelligence and make instant,
+        AI-powered decisions. Built for teams that move fast, without
+        compromising security, governance or existing integrations.
+      </p>
+      <div>
+        <Button
+          href="#"
+          variant="primary"
+          iconRight={<MdArrowForward size={18} />}
+          className="shadow-[0_10px_30px_-10px_rgba(83,58,253,0.35)] transition-transform hover:-translate-y-px"
+        >
+          Explore the Platform
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+/** Placeholder explanatory-video panel: thumbnail + play button, ready to wire up to a real source. */
+function VideoThumb({
+  aspect = "16/10",
+  size = "default",
+  showOverlay = true,
+}: {
+  aspect?: string;
+  size?: "default" | "large";
+  showOverlay?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label="Play explanatory video: How Superatom AI works"
+      className="group relative w-full overflow-hidden rounded-2xl border border-secondary-100 bg-secondary-500 text-left shadow-[0_30px_60px_-30px_rgba(13,23,56,0.35)]"
+      style={{ aspectRatio: aspect }}
+    >
+      {/* Thumbnail background */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage:
+            "radial-gradient(680px 420px at 20% 15%, rgba(83,58,253,0.55), transparent 60%), radial-gradient(560px 420px at 85% 90%, rgba(255,118,0,0.35), transparent 55%), linear-gradient(160deg, #0d1738 0%, #101d45 55%, #0d1738 100%)",
+        }}
+      />
+      <div
+        className="absolute inset-0 opacity-[0.08]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
+          backgroundSize: "36px 36px",
+        }}
+      />
+
+      {showOverlay && (
+        <>
+          {/* Play button */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span
+              className={`grid place-items-center rounded-full bg-white text-primary-500 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.5)] transition-transform duration-200 group-hover:scale-110 ${
+                size === "large" ? "h-20 w-20 sm:h-24 sm:w-24" : "h-16 w-16 sm:h-20 sm:w-20"
+              }`}
+            >
+              <MdPlayArrow size={size === "large" ? 40 : 32} className="translate-x-0.5" />
+            </span>
+          </div>
+
+          {/* Caption overlay */}
+          <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 bg-gradient-to-t from-black/55 to-transparent px-5 py-4 sm:px-6 sm:py-5">
+            <span className="font-display text-[14px] font-semibold text-white sm:text-[15px]">
+              See how Superatom AI works
+            </span>
+            <span className="shrink-0 rounded-md bg-black/35 px-2 py-1 font-display text-[11px] font-semibold tracking-wide text-white">
+              2:14
+            </span>
+          </div>
+        </>
+      )}
+    </button>
+  );
+}
+
+function SideBySide() {
+  return (
+    <section className="relative flex min-h-[calc(100vh-4rem)] flex-col justify-center overflow-hidden">
+      <div className="relative z-[2] mx-auto grid w-full max-w-[1440px] grid-cols-1 items-center gap-10 px-4 pb-4 pt-10 sm:px-10 sm:pt-14 lg:grid-cols-[1fr_1.15fr] lg:gap-14 xl:px-20">
+        <HeroCopy />
+        <VideoThumb aspect="4/3" />
+      </div>
+      <StatsRow />
+    </section>
+  );
+}
+
+function FullWidth() {
+  return (
+    <section className="relative flex flex-col justify-center overflow-hidden">
+      <div className="relative z-[2] mx-auto flex w-full max-w-[1440px] flex-col px-4 pb-4 pt-10 sm:px-10 sm:pt-14 xl:px-20">
+        <div className="mx-auto w-full max-w-2xl">
+          <HeroCopy align="center" />
+        </div>
+        <div className="mx-auto mt-10 w-full max-w-[820px]">
+          <VideoThumb aspect="16/9" size="large" />
+        </div>
+      </div>
+      <div className="mt-12">
+        <StatsRow />
+      </div>
+    </section>
+  );
+}
+
+function VideoFirst() {
+  return (
+    <section className="relative flex min-h-[calc(100vh-4rem)] flex-col justify-center overflow-hidden">
+      <div className="relative z-[2] mx-auto w-full max-w-[1440px] px-4 pb-4 pt-8 sm:px-10 sm:pt-10 xl:px-20">
+        <div
+          className="relative w-full overflow-hidden rounded-2xl border border-secondary-100"
+          style={{ aspectRatio: "21/11" }}
+        >
+          <VideoThumb aspect="21/11" size="large" showOverlay={false} />
+          <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-black/65 via-black/40 to-black/65 px-6 text-center">
+            <p className="mb-3 font-display text-[13px] font-semibold uppercase tracking-[0.08em] text-accent-400">
+              Decision intelligence for enterprises
+            </p>
+            <h1 className="m-0 mb-4 font-display text-[clamp(28px,4vw,48px)] font-bold leading-[1.1] tracking-[-0.02em] text-white">
+              <span className="block">Better decisions.</span>
+              <span className="block">Every day. Every time.</span>
+            </h1>
+            <p className="mb-7 max-w-[560px] text-[16px] leading-[1.55] text-white/80 sm:text-[18px]">
+              Turn enterprise data into real-time intelligence and make
+              instant, AI-powered decisions. Built for teams that move fast,
+              without compromising security, governance or existing
+              integrations.
+            </p>
+            <div className="pointer-events-auto flex flex-wrap items-center justify-center gap-4">
+              <Button
+                href="#"
+                variant="primary"
+                iconRight={<MdArrowForward size={18} />}
+                className="shadow-[0_10px_30px_-10px_rgba(83,58,253,0.45)] transition-transform hover:-translate-y-px"
+              >
+                Explore the Platform
+              </Button>
+              <button
+                type="button"
+                aria-label="Play explanatory video: How Superatom AI works"
+                className="group flex items-center gap-3 rounded-md py-4 pl-2 pr-4 text-white transition-colors hover:bg-white/10"
+              >
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white text-primary-500 shadow-[0_10px_24px_-8px_rgba(0,0,0,0.5)] transition-transform duration-200 group-hover:scale-110">
+                  <MdPlayArrow size={22} className="translate-x-0.5" />
+                </span>
+                <span className="font-display text-[14px] font-semibold">
+                  Watch the 2 min overview
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <StatsRow />
+    </section>
+  );
+}
+
+const variants: Record<Hero2Variant, ReactNode> = {
+  "side-by-side": <SideBySide />,
+  "full-width": <FullWidth />,
+  "video-first": <VideoFirst />,
+};
+
+const labels: Record<Hero2Variant, string> = {
+  "side-by-side": "A · Side-by-side",
+  "full-width": "B · Full-width below",
+  "video-first": "C · Video-first",
+};
+
+/**
+ * Alternate Hero with an explanatory-video section, built with the same copy
+ * and CTA as the primary Hero. Supports three layout options — pass a
+ * `variant` prop, or use the built-in switcher when none is given.
+ */
+export default function Hero2({ variant }: { variant?: Hero2Variant }) {
+  const [active, setActive] = useState<Hero2Variant>(variant ?? "side-by-side");
+  const controlled = variant !== undefined;
+
+  return (
+    <div>
+      {!controlled && (
+        <div className="sticky top-16 z-30 flex justify-center gap-2 border-b border-secondary-100 bg-white/90 py-2 backdrop-blur">
+          {(Object.keys(variants) as Hero2Variant[]).map((key) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setActive(key)}
+              className={`rounded-md px-3 py-1.5 font-display text-[12px] font-semibold transition-colors ${
+                active === key
+                  ? "bg-primary-500 text-white"
+                  : "bg-white text-caption ring-1 ring-inset ring-secondary-100 hover:bg-secondary-100/50"
+              }`}
+            >
+              {labels[key]}
+            </button>
+          ))}
+        </div>
+      )}
+      {variants[controlled ? (variant as Hero2Variant) : active]}
+    </div>
+  );
+}
