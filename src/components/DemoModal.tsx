@@ -84,7 +84,7 @@ export default function DemoModal({ open, onClose }: DemoModalProps) {
             <span className="mb-4 grid h-14 w-14 place-items-center rounded-full bg-primary-100 text-primary-500">
               <CheckCircleIcon style={{ fontSize: 30 }} />
             </span>
-            <h2 className="font-display text-h3 font-bold text-heading">
+            <h2 className="font-display text-h3 font-semibold text-heading">
               Thanks — we&apos;ll be in touch
             </h2>
             <p className="mt-2 max-w-xs text-sm text-body">
@@ -99,7 +99,7 @@ export default function DemoModal({ open, onClose }: DemoModalProps) {
           <>
             <h2
               id="demo-modal-title"
-              className="font-display text-h3 font-bold text-heading sm:text-h2"
+              className="font-display text-h3 font-semibold text-heading sm:text-h2"
             >
               Book a demo
             </h2>

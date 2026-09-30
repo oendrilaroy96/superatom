@@ -32,7 +32,7 @@ function HeroCopy() {
       <p className="mb-3 font-sans text-[13px] font-semibold uppercase tracking-[0.08em] text-secondary-300">
         Decision intelligence for enterprises
       </p>
-      <h1 className="hero2-heading m-0 mb-4 font-display font-bold leading-[1] tracking-[-0.02em] text-heading">
+      <h1 className="hero2-heading m-0 mb-4 font-display font-semibold leading-[1] tracking-[-0.02em] text-heading">
         <span className="block">Better decisions.</span>
         <span className="block whitespace-nowrap bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
           Every day. Every time.

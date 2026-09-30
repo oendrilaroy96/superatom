@@ -45,7 +45,7 @@ export default function SectionHeading({
         {eyebrow}
       </p>
       <h2
-        className={`font-display font-bold text-heading ${headingSizes[size]}`}
+        className={`font-display font-semibold text-heading ${headingSizes[size]}`}
       >
         {heading}
       </h2>
