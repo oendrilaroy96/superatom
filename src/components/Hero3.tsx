@@ -3,7 +3,7 @@ import { MdArrowForward, MdPlayArrow } from "react-icons/md";
 import Button from "./ui/Button";
 
 /** Extra scroll distance (px) beyond one viewport, controlling how far you scroll before the pin releases and the next section scrolls up into view. */
-const SCROLL_EXTRA_PX = 1500;
+const SCROLL_EXTRA_PX = 1159;
 /** Scroll distance (px) over which the pinned text fades out. */
 const TEXT_FADE_DISTANCE = 260;
 /** Once window.scrollY passes this, the video placeholder starts zooming in. */
