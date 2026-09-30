@@ -439,7 +439,7 @@ body {
 /* ---------- Tablet: roomier stacked layout ---------- */
 @media (min-width: 640px) {
   .hiw-flow {
-    padding: 64px clamp(24px, 5vw, 48px) 80px;
+    padding: 64px 40px 80px;
   }
   .hiw-source {
     flex-direction: row;
@@ -459,9 +459,9 @@ body {
 }
 
 /* ---------- Desktop: three columns, left to right ---------- */
-@media (min-width: 1180px) {
+@media (min-width: 1280px) {
   .hiw-flow {
-    padding: 96px clamp(32px, 4.5vw, 96px);
+    padding: 96px 80px;
     grid-template-columns: minmax(140px, 1fr) minmax(320px, 2.6fr) minmax(0, 3.6fr);
     column-gap: clamp(56px, 5.5vw, 120px);
     row-gap: 0;
