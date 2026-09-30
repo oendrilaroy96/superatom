@@ -1,11 +1,11 @@
 import Header from "./components/Header";
-import Hero2 from "./components/Hero2";
+import Hero3 from "./components/Hero3";
 import HowItWorks from "./components/HowItWorks";
 import Infrastructure from "./components/Infrastructure";
 
 function App() {
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-[linear-gradient(180deg,#f8fafd_0%,#ffffff_45%,#f8fafd_100%)]">
+    <div className="relative min-h-screen overflow-x-clip bg-[linear-gradient(180deg,#f8fafd_0%,#ffffff_45%,#f8fafd_100%)]">
       <div
         className="pointer-events-none absolute inset-0 z-0"
         style={{
@@ -29,7 +29,7 @@ function App() {
       />
       <Header />
       <main className="relative z-10">
-        <Hero2 />
+        <Hero3 />
         <HowItWorks />
         <Infrastructure />
       </main>
