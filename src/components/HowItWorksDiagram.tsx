@@ -1,0 +1,676 @@
+import { useEffect, useRef, useState } from "react";
+import { createRoot, type Root } from "react-dom/client";
+import {
+  MdForum,
+  MdPsychology,
+  MdBarChart,
+  MdHub,
+  MdRecommend,
+  MdFactCheck,
+  MdGroups,
+  MdSettings,
+} from "react-icons/md";
+import type { IconType } from "react-icons";
+
+const NS = "http://www.w3.org/2000/svg";
+
+function svgEl<K extends keyof SVGElementTagNameMap>(
+  tag: K,
+  attrs: Record<string, string | number>,
+  parent: SVGElement,
+): SVGElementTagNameMap[K] {
+  const e = document.createElementNS(NS, tag) as SVGElementTagNameMap[K];
+  for (const k in attrs) e.setAttribute(k, String(attrs[k]));
+  parent.appendChild(e);
+  return e;
+}
+function svgText(
+  parent: SVGElement,
+  x: number,
+  y: number,
+  s: string,
+  cls?: string,
+  anchor?: string,
+): SVGTextElement {
+  const t = svgEl(
+    "text",
+    { x, y, class: cls || "", "text-anchor": anchor || "start" },
+    parent,
+  );
+  t.textContent = s;
+  return t;
+}
+function mountIcon(
+  parent: SVGElement,
+  Icon: IconType,
+  cx: number,
+  cy: number,
+  size: number,
+  color: string,
+  roots: Root[],
+) {
+  const fo = svgEl(
+    "foreignObject",
+    { x: cx - size / 2, y: cy - size / 2, width: size, height: size },
+    parent,
+  );
+  fo.style.overflow = "visible";
+  const host = document.createElement("div");
+  host.style.cssText = `width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;color:${color};`;
+  fo.appendChild(host);
+  const root = createRoot(host);
+  root.render(<Icon size={Math.round(size * 0.72)} />);
+  roots.push(root);
+}
+
+type Step = { title: string; desc: string };
+
+const steps: Step[] = [
+  {
+    title: "Enterprise Data",
+    desc: "Connect data from your existing systems (ERP, APS, WMS, TMS, MES, CRM, IoT and data lakes).",
+  },
+  {
+    title: "Enterprise Context",
+    desc: "Enrich with business context, rules, policies, constraints and domain knowledge.",
+  },
+  {
+    title: "Decision Engine",
+    desc: "Apply AI, analytics, simulation and optimization to evaluate alternatives and identify the best course of action.",
+  },
+  {
+    title: "Recommendation",
+    desc: "Generate clear, explainable recommendations — what to do, where, when and why.",
+  },
+  {
+    title: "Human Approval",
+    desc: "Enable human-in-the-loop for oversight, judgment and governance.",
+  },
+  {
+    title: "Automation",
+    desc: "Execute approved decisions through workflows, agents and system integrations.",
+  },
+];
+
+const VW = 1230;
+const VH = 350;
+
+export default function HowItWorksDiagram() {
+  const rootDivRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const tipRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const rootDiv = rootDivRef.current;
+    const svg = svgRef.current;
+    const canvas = canvasRef.current;
+    const stageEl = stageRef.current;
+    const tip = tipRef.current;
+    if (!rootDiv || !svg || !canvas || !stageEl || !tip) return;
+    if (!visible) return;
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const iconRoots: Root[] = [];
+    const timers: number[] = [];
+    let rafId = 0;
+    let disposed = false;
+
+    const defs = svgEl("defs", {}, svg);
+    (
+      [
+        ["a", "hiw-arrow"],
+        ["al", "hiw-arrow-lit"],
+        ["ao", "hiw-arrow-out"],
+      ] as const
+    ).forEach(([id, c]) => {
+      const m = svgEl(
+        "marker",
+        {
+          id: `${id}-${Math.random().toString(36).slice(2, 8)}`,
+          viewBox: "0 0 10 10",
+          refX: "9",
+          refY: "5",
+          markerWidth: "7",
+          markerHeight: "7",
+          orient: "auto-start-reverse",
+        },
+        defs,
+      );
+      m.dataset.marker = id;
+      svgEl("path", { d: "M0,0 L10,5 L0,10 z", class: c }, m);
+    });
+    const markerUrl = (id: string) => {
+      const m = defs.querySelector<SVGMarkerElement>(`[data-marker="${id}"]`);
+      return `url(#${m!.id})`;
+    };
+
+    type NodeInfo = { name: string; desc: string; g: SVGGElement };
+    type Edge = {
+      from: string;
+      to: string;
+      el: SVGPathElement;
+      out: boolean;
+      both: boolean;
+      k: number;
+      tk: number;
+      fixed: boolean;
+    };
+    const N: Record<string, NodeInfo> = {};
+    const E: Edge[] = [];
+    const edgeLayer = svgEl("g", {}, svg);
+    const nodeLayer = svgEl("g", {}, svg);
+    type Mode = "auto" | "paused" | "hover" | "pinned";
+    let mode: Mode = "auto";
+    let pinned: string | null = null;
+    let hoverFrom: Mode | null = null;
+    const tipEl: HTMLDivElement = tip;
+
+    function addNode(
+      id: string,
+      name: string,
+      desc: string,
+      cls: string,
+      build: (g: SVGGElement) => void,
+    ) {
+      const g = svgEl(
+        "g",
+        { class: `hiw-node ${cls}`, tabindex: "0", role: "button", "aria-label": name },
+        nodeLayer,
+      );
+      build(g);
+      N[id] = { name, desc, g };
+      g.addEventListener("click", () => select(id));
+      g.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          select(id);
+        }
+      });
+      g.addEventListener("mouseenter", () => {
+        if (mode === "auto" || mode === "paused" || mode === "hover") {
+          timers.forEach((t) => window.clearTimeout(t));
+          hoverFrom = hoverFrom || mode;
+          mode = "hover";
+          const { ids, lit } = neighbours(id);
+          paint(ids, lit, new Set([id]));
+        }
+      });
+      g.addEventListener("mousemove", (ev) => {
+        tipEl.innerHTML = "";
+        const b = document.createElement("b");
+        b.textContent = name;
+        const span = document.createElement("span");
+        span.textContent = desc;
+        tipEl.appendChild(b);
+        tipEl.appendChild(span);
+        tipEl.hidden = false;
+        const x = Math.min(ev.clientX + 14, window.innerWidth - 266);
+        const y =
+          ev.clientY + 16 + tipEl.offsetHeight > window.innerHeight
+            ? ev.clientY - tipEl.offsetHeight - 10
+            : ev.clientY + 16;
+        tipEl.style.left = `${x}px`;
+        tipEl.style.top = `${y}px`;
+      });
+      g.addEventListener("mouseleave", () => {
+        tipEl.hidden = true;
+        if (mode === "hover") {
+          const was = hoverFrom;
+          hoverFrom = null;
+          if (was === "auto") play();
+          else if (was) {
+            mode = was;
+            showStep(step, false);
+          }
+        }
+      });
+    }
+    function edge(
+      from: string,
+      to: string,
+      d: string,
+      out?: boolean,
+      both?: boolean,
+    ): Edge {
+      const p = svgEl(
+        "path",
+        {
+          d,
+          class: `hiw-edge${out ? " hiw-out-e" : ""}`,
+          "marker-end": out ? markerUrl("ao") : markerUrl("a"),
+        },
+        edgeLayer,
+      );
+      if (both) p.setAttribute("marker-start", markerUrl("a"));
+      const e: Edge = { from, to, el: p, out: !!out, both: !!both, k: 0.5, tk: 0.5, fixed: false };
+      E.push(e);
+      return e;
+    }
+
+    svgText(nodeLayer, 20, 24, "Enterprise Systems", "hiw-t-title");
+    const sources: [string, string, string][] = [
+      ["erp", "ERP", "Enterprise resource planning"],
+      ["aps", "APS", "Advanced planning and scheduling"],
+      ["wms", "WMS", "Warehouse management system"],
+      ["tms", "TMS", "Transportation management system"],
+      ["mes", "MES", "Manufacturing execution system"],
+      ["crm", "CRM", "Customer relationship management"],
+      ["iot", "IoT", "Sensor and device data from the field"],
+      ["lake", "Data Lake", "Raw and historical enterprise data"],
+    ];
+    sources.forEach(([id, n, d], i) => {
+      const y = 36 + i * 34;
+      addNode(id, n, d, "hiw-src", (g) => {
+        svgEl("rect", { x: 20, y, width: 120, height: 28, rx: 6, class: "hiw-b" }, g);
+        svgText(g, 32, y + 19, n, "hiw-t-title");
+      });
+      edge(id, "core", `M140,${y + 14} H180 V${112 + i * 22} H228`);
+    });
+
+    addNode(
+      "team0",
+      "MIS Agent",
+      "Works with Superatom AI through the conversation agents.",
+      "hiw-team",
+      (g) => {
+        svgEl("rect", { x: 375, y: 18, width: 130, height: 36, rx: 18, class: "hiw-b" }, g);
+        svgText(g, 440, 41, "MIS Agent", "hiw-t-title", "middle").style.fill =
+          "var(--color-primary-600)";
+      },
+    );
+    const teamEdge = edge("team0", "agents", "M440,56 V88", false, true);
+    teamEdge.fixed = true;
+
+    const coreG = svgEl("g", {}, nodeLayer);
+    svgEl("rect", { x: 230, y: 90, width: 420, height: 190, rx: 12, class: "hiw-core-frame" }, coreG);
+    svgText(coreG, 250, 117, "Superatom AI", "hiw-core-title").style.fontSize = "14px";
+    svgEl("rect", { x: 240, y: 130, width: 400, height: 140, rx: 8, class: "hiw-core-inner" }, coreG);
+
+    const mods: [string, string, string, IconType, number, number, number][] = [
+      ["agents", "Conversation Agents", "Where the MIS Agent asks questions and receives answers, alerts and recommendations.", MdForum, 250, 139, 186],
+      ["ai", "AI & Domain Intelligence", "Adds business context, rules, policies, constraints and domain knowledge.", MdPsychology, 444, 139, 186],
+      ["ana", "Analytics & Optimization", "Applies analytics, simulation and optimization to evaluate alternatives.", MdBarChart, 250, 182, 186],
+      ["kg", "Knowledge Graph", "Links entities and relationships across your enterprise data.", MdHub, 444, 182, 186],
+      ["rec", "Recommendation Engine", "Generates clear, explainable recommendations.", MdRecommend, 250, 225, 380],
+    ];
+    mods.forEach(([id, n, d, Icon, x, y, w]) => {
+      addNode(id, n, d, "hiw-mod", (g) => {
+        svgEl("rect", { x, y, width: w, height: 36, rx: 6, class: "hiw-b" }, g);
+        svgEl("rect", { x: x + 8, y: y + 8, width: 20, height: 20, rx: 5, class: "hiw-ico" }, g);
+        mountIcon(g, Icon, x + 18, y + 18, 16, "var(--color-primary-500)", iconRoots);
+        const t = svgText(g, x + 36, y + 22, n, "hiw-t-small");
+        t.style.cssText = "fill:var(--color-heading);font-size:11.5px;font-weight:500";
+      });
+    });
+    const modIds = mods.map((m) => m[0]);
+
+    addNode(
+      "reco",
+      "Recommendations & Actions",
+      "What to do, where, when and why, ready for review.",
+      "hiw-out",
+      (g) => {
+        svgEl("rect", { x: 720, y: 134, width: 110, height: 112, rx: 8, class: "hiw-b" }, g);
+        const t1 = svgText(g, 775, 154, "Recommendations", "hiw-t-small", "middle");
+        t1.style.cssText = "fill:var(--color-heading);font-weight:500";
+        const t2 = svgText(g, 775, 168, "& Actions", "hiw-t-small", "middle");
+        t2.style.cssText = "fill:var(--color-heading);font-weight:500";
+        mountIcon(g, MdFactCheck, 775, 205, 30, "var(--color-accent-500)", iconRoots);
+      },
+    );
+    edge("core", "reco", "M650,190 H718", true);
+
+    addNode(
+      "dm",
+      "Decision Makers",
+      "Business, operations and IT teams approve, adjust or reject each recommendation.",
+      "hiw-out",
+      (g) => {
+        svgText(g, 945, 120, "Decision Makers", "hiw-t-title", "middle");
+        svgEl("rect", { x: 880, y: 132, width: 130, height: 116, rx: 8, class: "hiw-b" }, g);
+        mountIcon(g, MdGroups, 945, 178, 32, "var(--color-accent-500)", iconRoots);
+        svgText(g, 945, 214, "Business, Operations", "hiw-t-small", "middle");
+        svgText(g, 945, 228, "and IT Teams", "hiw-t-small", "middle");
+      },
+    );
+    edge("reco", "dm", "M830,190 H878", true);
+
+    addNode(
+      "auto",
+      "Automation Actions",
+      "Operation agents, workflow automation and system integration carry out approved decisions.",
+      "hiw-out",
+      (g) => {
+        svgEl("rect", { x: 1060, y: 132, width: 156, height: 116, rx: 8, class: "hiw-b" }, g);
+        svgEl("rect", { x: 1072, y: 144, width: 24, height: 24, rx: 6, class: "hiw-ico" }, g);
+        mountIcon(g, MdSettings, 1084, 156, 16, "var(--color-accent-500)", iconRoots);
+        const t1 = svgText(g, 1104, 154, "Automation", "hiw-t-title");
+        t1.style.fontSize = "12px";
+        const t2 = svgText(g, 1104, 168, "Actions", "hiw-t-title");
+        t2.style.fontSize = "12px";
+        ["Operation Agents", "Workflow Automation", "System Integration"].forEach((b, i) => {
+          svgEl(
+            "circle",
+            { cx: 1078, cy: 192 + i * 16, r: 1.8, fill: "var(--color-caption)" },
+            g,
+          );
+          svgText(g, 1086, 196 + i * 16, b, "hiw-t-small");
+        });
+      },
+    );
+    edge("dm", "auto", "M1010,190 H1058", true);
+
+    edge("auto", "lake", "M1138,248 V320 H80 V304", true);
+    svgText(nodeLayer, 610, 340, "Continuous Learning", "hiw-t-title", "middle").style.fill =
+      "var(--color-secondary-500)";
+
+    function neighbours(id: string) {
+      const ids = new Set([id]);
+      const lit = new Set<Edge>();
+      const key = modIds.includes(id) ? "core" : id;
+      E.forEach((e) => {
+        const hit = [e.from, e.to].includes(id) || [e.from, e.to].includes(key);
+        if (hit) {
+          lit.add(e);
+          ids.add(e.from);
+          ids.add(e.to);
+        }
+      });
+      if (id === "agents" || id.startsWith("team")) {
+        ["team0", "agents"].forEach((t) => ids.add(t));
+        lit.add(teamEdge);
+      }
+      if (key === "core") modIds.forEach((m) => ids.add(m));
+      return { ids, lit };
+    }
+    function setMarkers(e: Edge, on: boolean) {
+      const m = e.out ? markerUrl("ao") : on ? markerUrl("al") : markerUrl("a");
+      e.el.setAttribute("marker-end", m);
+      if (e.both) e.el.setAttribute("marker-start", m);
+    }
+    function paint(ids: Set<string>, lit: Set<Edge>, pulse?: Set<string>) {
+      svg!.classList.add("hiw-focus");
+      Object.entries(N).forEach(([k, n]) => {
+        n.g.classList.toggle("hiw-on", ids.has(k));
+        n.g.classList.toggle("hiw-pulse", !!pulse && pulse.has(k) && !reduceMotion);
+      });
+      E.forEach((e) => {
+        const on = lit.has(e);
+        e.el.classList.toggle("hiw-lit", on);
+        setMarkers(e, on);
+        e.tk = on ? 1 : e.fixed ? 0.35 : 0.06;
+      });
+    }
+
+    const srcIds = sources.map((s) => s[0]);
+    const stages: { ids: string[]; pulse: string[]; edges: (e: Edge) => boolean }[] = [
+      { ids: srcIds, pulse: srcIds, edges: (e) => e.to === "core" },
+      { ids: ["ai", "kg"], pulse: ["ai", "kg"], edges: () => false },
+      { ids: ["ana", "ai"], pulse: ["ana"], edges: () => false },
+      { ids: ["rec", "reco"], pulse: ["rec", "reco"], edges: (e) => e.to === "reco" },
+      { ids: ["dm"], pulse: ["dm"], edges: (e) => e.to === "dm" },
+      { ids: ["auto", "lake"], pulse: ["auto"], edges: (e) => e.from === "auto" || e.to === "auto" },
+    ];
+    const STEP_MS = reduceMotion ? 4500 : 3000;
+    const HOLD_MS = 2400;
+    let step = 0;
+    const cards = Array.from(rootDiv.querySelectorAll<HTMLElement>(".hiw-step"));
+
+    function showStep(i: number, animate: boolean) {
+      const ids = new Set(["team0", "agents"]);
+      const lit = new Set<Edge>([teamEdge]);
+      for (let s = 0; s <= i; s++) {
+        stages[s].ids.forEach((x) => ids.add(x));
+        E.filter(stages[s].edges).forEach((e) => lit.add(e));
+      }
+      paint(ids, lit, new Set(stages[i].pulse));
+      E.forEach((e) => {
+        if (lit.has(e) && !stages[i].edges(e)) e.tk = 0.45;
+      });
+      cards.forEach((c, k) => {
+        c.classList.toggle("hiw-now", k === i);
+        const b = c.querySelector<HTMLElement>(".hiw-bar-fill")!;
+        b.style.transition = "none";
+        b.style.width = k < i ? "100%" : "0";
+        if (k === i) {
+          if (animate) {
+            void b.offsetWidth;
+            b.style.transition = `width ${STEP_MS}ms linear`;
+            b.style.width = "100%";
+          } else {
+            b.style.width = "40%";
+          }
+        }
+      });
+    }
+    function schedule() {
+      timers.forEach((t) => window.clearTimeout(t));
+      const t = window.setTimeout(() => {
+        if (mode !== "auto") return;
+        if (step < 5) {
+          step++;
+          showStep(step, true);
+          schedule();
+        } else {
+          const t2 = window.setTimeout(() => {
+            if (mode !== "auto") return;
+            step = 0;
+            showStep(0, true);
+            schedule();
+          }, HOLD_MS);
+          timers.push(t2);
+        }
+      }, STEP_MS);
+      timers.push(t);
+    }
+    function play(from?: number) {
+      pinned = null;
+      Object.values(N).forEach((n) => n.g.classList.remove("hiw-active"));
+      if (typeof from === "number") step = from;
+      mode = "auto";
+      showStep(step, true);
+      schedule();
+    }
+    const PIN_MS = 6000;
+    function select(id: string) {
+      timers.forEach((t) => window.clearTimeout(t));
+      hoverFrom = null;
+      Object.values(N).forEach((n) => n.g.classList.remove("hiw-active"));
+      if (pinned === id) {
+        play();
+        return;
+      }
+      pinned = id;
+      mode = "pinned";
+      N[id].g.classList.add("hiw-active");
+      const { ids, lit } = neighbours(id);
+      paint(ids, lit, new Set([id]));
+      cards.forEach((c) => c.classList.remove("hiw-now"));
+      const t = window.setTimeout(() => {
+        if (mode === "pinned") play();
+      }, PIN_MS);
+      timers.push(t);
+    }
+    cards.forEach((c) => {
+      const go = () => play(Number(c.dataset.i));
+      c.addEventListener("click", go);
+      c.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          go();
+        }
+      });
+    });
+
+    const realEdges = () => E;
+    const tracks = realEdges().map((e) => {
+      const len = e.el.getTotalLength();
+      const pts: number[] = [];
+      for (let s = 0; s <= len; s += 3) {
+        const p = e.el.getPointAtLength(s);
+        pts.push(p.x, p.y);
+      }
+      return { e, len, pts, n: Math.max(2, Math.round(len / 70)), seed: Math.random() };
+    });
+    function sample(tr: (typeof tracks)[number], s: number): [number, number] {
+      s = Math.max(0, Math.min(tr.len, s));
+      const i = Math.min((s / 3) | 0, tr.pts.length / 2 - 2);
+      const f = (s - i * 3) / 3;
+      return [
+        tr.pts[i * 2] + (tr.pts[i * 2 + 2] - tr.pts[i * 2]) * f,
+        tr.pts[i * 2 + 1] + (tr.pts[i * 2 + 3] - tr.pts[i * 2 + 1]) * f,
+      ];
+    }
+    let resizeObserver: ResizeObserver | null = null;
+    const gl = canvas.getContext("webgl", { premultipliedAlpha: false, antialias: true, alpha: true });
+    if (gl && !reduceMotion) {
+      const vs = `attribute vec2 p;attribute float sz;attribute vec4 c;uniform float sc;varying vec4 vc;
+        void main(){gl_Position=vec4(p.x/${VW}.0*2.0-1.0,1.0-p.y/${VH}.0*2.0,0.0,1.0);gl_PointSize=sz*sc;vc=c;}`;
+      const fs = `precision mediump float;varying vec4 vc;
+        void main(){float d=length(gl_PointCoord-0.5);float a=smoothstep(0.5,0.0,d);a=a*a*(3.0-2.0*a);gl_FragColor=vec4(vc.rgb,vc.a*a);}`;
+      const sh = (t: number, src: string) => {
+        const s = gl.createShader(t)!;
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        return s;
+      };
+      const prog = gl.createProgram()!;
+      gl.attachShader(prog, sh(gl.VERTEX_SHADER, vs));
+      gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, fs));
+      gl.linkProgram(prog);
+      gl.useProgram(prog);
+      gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+      const ST = 28;
+      const aP = gl.getAttribLocation(prog, "p");
+      const aS = gl.getAttribLocation(prog, "sz");
+      const aC = gl.getAttribLocation(prog, "c");
+      const uS = gl.getUniformLocation(prog, "sc");
+      gl.enableVertexAttribArray(aP);
+      gl.vertexAttribPointer(aP, 2, gl.FLOAT, false, ST, 0);
+      gl.enableVertexAttribArray(aS);
+      gl.vertexAttribPointer(aS, 1, gl.FLOAT, false, ST, 8);
+      gl.enableVertexAttribArray(aC);
+      gl.vertexAttribPointer(aC, 4, gl.FLOAT, false, ST, 12);
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+      const PRIMARY: [number, number, number] = [0.325, 0.227, 0.992];
+      const ACCENT: [number, number, number] = [1, 0.463, 0];
+      const TRAIL = 9;
+      const data = new Float32Array(
+        tracks.reduce((a, t) => a + t.n, 0) * (TRAIL + 1) * 7,
+      );
+      function resize() {
+        const r = stageEl!.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas!.width = Math.round(r.width * dpr);
+        canvas!.height = Math.round(r.height * dpr);
+        gl!.viewport(0, 0, canvas!.width, canvas!.height);
+        gl!.uniform1f(uS, canvas!.width / VW);
+      }
+      resizeObserver = new ResizeObserver(resize);
+      resizeObserver.observe(stageEl);
+      resize();
+      let last = performance.now();
+      let clock = 0;
+      const frame = (now: number) => {
+        if (disposed) return;
+        const dt = Math.min(0.05, (now - last) / 1000);
+        last = now;
+        clock += dt;
+        let o = 0;
+        for (const tr of tracks) {
+          const e = tr.e;
+          e.k += (e.tk - e.k) * Math.min(1, dt * 3.2);
+          const k = e.k;
+          const col = e.out ? ACCENT : PRIMARY;
+          const speed = 60 + 90 * k;
+          for (let i = 0; i < tr.n; i++) {
+            const rev = e.both && i % 2 === 1;
+            const s = (clock * speed + (i / tr.n + tr.seed) * tr.len) % tr.len;
+            const fade = Math.min(1, s / 16, (tr.len - s) / 16);
+            const h = sample(tr, rev ? tr.len - s : s);
+            data.set([h[0], h[1], 15 + 10 * k, col[0], col[1], col[2], 0.16 * k * fade], o);
+            o += 7;
+            for (let j = 0; j < TRAIL; j++) {
+              const ss = s - j * 3;
+              const q = sample(tr, rev ? tr.len - ss : ss);
+              const f = 1 - j / TRAIL;
+              data.set(
+                [q[0], q[1], (2.6 + 4 * k) * (0.45 + 0.55 * f), col[0], col[1], col[2], (0.2 + 0.8 * k) * f * f * fade * (ss < 0 ? 0 : 1)],
+                o,
+              );
+              o += 7;
+            }
+          }
+        }
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.bufferData(gl.ARRAY_BUFFER, data.subarray(0, o), gl.DYNAMIC_DRAW);
+        gl.drawArrays(gl.POINTS, 0, o / 7);
+        rafId = requestAnimationFrame(frame);
+      };
+      rafId = requestAnimationFrame(frame);
+    }
+
+    play(0);
+
+    return () => {
+      disposed = true;
+      if (rafId) cancelAnimationFrame(rafId);
+      timers.forEach((t) => window.clearTimeout(t));
+      resizeObserver?.disconnect();
+      iconRoots.forEach((r) => r.unmount());
+      svg.innerHTML = "";
+    };
+  }, [visible]);
+
+  useEffect(() => {
+    const el = rootDivRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { threshold: 0.2 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <div ref={rootDivRef} className="hiw-root">
+      <div className="hiw-card">
+        <div className="hiw-scroll">
+          <div ref={stageRef} className="hiw-stage">
+            <svg ref={svgRef} viewBox={`0 0 ${VW} ${VH}`} role="img" aria-label="Superatom AI architecture" />
+            <canvas ref={canvasRef} aria-hidden="true" />
+          </div>
+        </div>
+      </div>
+      <div ref={tipRef} className="hiw-tip" hidden />
+
+      <ol className="hiw-steps">
+        {steps.map((s, i) => (
+          <li
+            key={s.title}
+            className="hiw-step"
+            data-i={i}
+            tabIndex={0}
+            role="button"
+            aria-label={`Jump to step ${i + 1}: ${s.title}`}
+          >
+            <div className="hiw-num">{i + 1}</div>
+            <p className="mt-3 font-display text-h4 font-semibold text-heading">{s.title}</p>
+            <p className="mt-1 text-xs leading-relaxed text-caption">{s.desc}</p>
+            <div className="hiw-bar">
+              <div className="hiw-bar-fill" />
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
