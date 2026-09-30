@@ -14,8 +14,8 @@ const FLUID_PAD = "px-[max(16px,5%)]";
 
 /** Extra scroll distance (in viewport heights) giving the video room to travel fully off-screen while the text stays pinned. */
 const SCROLL_VH = 120;
-/** The pinned text fades out over the first 30% of the scroll run, finishing before the video reaches it. */
-const FADE_END = 0.3;
+/** Scroll distance (px) over which the pinned text fades out, finishing just before the video (gap is now only 64px) reaches it. */
+const TEXT_FADE_DISTANCE = 55;
 /** Once window.scrollY passes this, the video placeholder starts zooming in. */
 const ZOOM_START_Y = 115;
 /** Scroll distance (px) over which the zoom ramps up to ZOOM_MAX_SCALE. */
@@ -154,15 +154,11 @@ export default function Hero3() {
   const [zoomScale, setZoomScale] = useState(1);
 
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
     let raf = 0;
     const update = () => {
       raf = 0;
-      const rect = section.getBoundingClientRect();
-      const total = rect.height - window.innerHeight;
-      const progress = total > 0 ? clamp01(-rect.top / total) : 0;
-      setFade(1 - clamp01(progress / FADE_END));
+      const fadeT = clamp01(window.scrollY / TEXT_FADE_DISTANCE);
+      setFade(1 - fadeT);
 
       const zoomT = clamp01((window.scrollY - ZOOM_START_Y) / ZOOM_RANGE);
       setZoomScale(lerp(1, ZOOM_MAX_SCALE, ease(zoomT)));
@@ -199,7 +195,7 @@ export default function Hero3() {
         <div className="sticky top-16 z-[1] pt-14" style={textStyle}>
           <HeroCopy />
         </div>
-        <div className="relative z-[2] mx-auto mt-[380px] w-full max-w-[900px] px-4" style={videoStyle}>
+        <div className="relative z-[2] mx-auto mt-16 w-full max-w-[900px] px-4" style={videoStyle}>
           <VideoCard />
         </div>
       </section>
