@@ -4,8 +4,8 @@ import Button from "./ui/Button";
 
 /** Extra scroll distance (px) beyond one viewport, sized so the pin releases at scrollY 680 and the next section scrolls up into view. */
 const SCROLL_EXTRA_PX = 439;
-/** Scroll distance (px) over which the pinned text fades out, finishing just before the video (gap is now only 64px) reaches it. */
-const TEXT_FADE_DISTANCE = 55;
+/** Scroll distance (px) over which the pinned text fades out. */
+const TEXT_FADE_DISTANCE = 260;
 /** Once window.scrollY passes this, the video placeholder starts zooming in. */
 const ZOOM_START_Y = 115;
 /** Scroll distance (px) over which the zoom ramps up to ZOOM_MAX_SCALE. */
