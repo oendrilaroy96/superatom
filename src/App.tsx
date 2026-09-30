@@ -2,6 +2,7 @@ import { ReactLenis } from "lenis/react";
 import Header from "./components/Header";
 import Hero3 from "./components/Hero3";
 import HowItWorks from "./components/HowItWorks";
+import Features from "./components/Features";
 import Infrastructure from "./components/Infrastructure";
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
         <main className="relative z-10">
           <Hero3 />
           <HowItWorks />
+          <Features />
           <Infrastructure />
         </main>
       </div>
