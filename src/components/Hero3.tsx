@@ -142,7 +142,7 @@ export default function Hero3() {
   };
 
   return (
-    <section ref={sectionRef} className="relative" style={{ height: `calc(100vh + ${SCROLL_EXTRA_PX}px)` }}>
+    <section ref={sectionRef} className="relative isolate" style={{ height: `calc(100vh + ${SCROLL_EXTRA_PX}px)` }}>
       <div className="sticky top-16 z-[1] pt-14" style={textStyle}>
         <HeroCopy />
       </div>
