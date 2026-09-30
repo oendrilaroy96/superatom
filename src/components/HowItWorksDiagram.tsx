@@ -57,19 +57,6 @@ function mountIcon(
   roots.push(root);
 }
 
-type Step = { title: string; desc: string };
-
-const steps: Step[] = [
-  {
-    title: "Enterprise Data",
-    desc: "Connect data from your existing systems — ERP, IoT, data lakes and APIs.",
-  },
-  {
-    title: "Superatom AI",
-    desc: "Tribal knowledge, optimization, generative UI and semantic modeling combine to power natural-language answers.",
-  },
-];
-
 /** Rotating headline + sample question shown beside the diagram, in front of the looping product video. */
 type ChatSlide = { heading: string; question: string };
 const CHAT_SLIDES: ChatSlide[] = [
@@ -286,7 +273,7 @@ export default function HowItWorksDiagram() {
           if (was === "auto") play();
           else if (was) {
             mode = was;
-            showStep(step, false);
+            showStep(step);
           }
         }
       });
@@ -425,9 +412,8 @@ export default function HowItWorksDiagram() {
     const STEP_MS = reduceMotion ? 4500 : 3000;
     const HOLD_MS = 2400;
     let step = 0;
-    const cards = Array.from(rootDiv.querySelectorAll<HTMLElement>(".hiw-step"));
 
-    function showStep(i: number, animate: boolean) {
+    function showStep(i: number) {
       const ids = new Set(["team0"]);
       const lit = new Set<Edge>([teamEdge]);
       for (let s = 0; s <= i; s++) {
@@ -438,21 +424,6 @@ export default function HowItWorksDiagram() {
       E.forEach((e) => {
         if (lit.has(e) && !stages[i].edges(e)) e.tk = 0.45;
       });
-      cards.forEach((c, k) => {
-        c.classList.toggle("hiw-now", k === i);
-        const b = c.querySelector<HTMLElement>(".hiw-bar-fill")!;
-        b.style.transition = "none";
-        b.style.width = k < i ? "100%" : "0";
-        if (k === i) {
-          if (animate) {
-            void b.offsetWidth;
-            b.style.transition = `width ${STEP_MS}ms linear`;
-            b.style.width = "100%";
-          } else {
-            b.style.width = "40%";
-          }
-        }
-      });
     }
     function schedule() {
       timers.forEach((t) => window.clearTimeout(t));
@@ -460,13 +431,13 @@ export default function HowItWorksDiagram() {
         if (mode !== "auto") return;
         if (step < stages.length - 1) {
           step++;
-          showStep(step, true);
+          showStep(step);
           schedule();
         } else {
           const t2 = window.setTimeout(() => {
             if (mode !== "auto") return;
             step = 0;
-            showStep(0, true);
+            showStep(0);
             schedule();
           }, HOLD_MS);
           timers.push(t2);
@@ -479,7 +450,7 @@ export default function HowItWorksDiagram() {
       Object.values(N).forEach((n) => n.g.classList.remove("hiw-active"));
       if (typeof from === "number") step = from;
       mode = "auto";
-      showStep(step, true);
+      showStep(step);
       schedule();
     }
     const PIN_MS = 6000;
@@ -496,22 +467,11 @@ export default function HowItWorksDiagram() {
       N[id].g.classList.add("hiw-active");
       const { ids, lit } = neighbours(id);
       paint(ids, lit, new Set([id]));
-      cards.forEach((c) => c.classList.remove("hiw-now"));
       const t = window.setTimeout(() => {
         if (mode === "pinned") play();
       }, PIN_MS);
       timers.push(t);
     }
-    cards.forEach((c) => {
-      const go = () => play(Number(c.dataset.i));
-      c.addEventListener("click", go);
-      c.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          go();
-        }
-      });
-    });
 
     const realEdges = () => E;
     const tracks = realEdges().map((e) => {
@@ -661,26 +621,6 @@ export default function HowItWorksDiagram() {
         </div>
       </div>
       <div ref={tipRef} className="hiw-tip" hidden />
-
-      <ol className="hiw-steps">
-        {steps.map((s, i) => (
-          <li
-            key={s.title}
-            className="hiw-step"
-            data-i={i}
-            tabIndex={0}
-            role="button"
-            aria-label={`Jump to step ${i + 1}: ${s.title}`}
-          >
-            <div className="hiw-num">{i + 1}</div>
-            <p className="mt-4 font-display text-base font-bold leading-[1.25] text-heading sm:text-[18px]">{s.title}</p>
-            <p className="mt-2 text-xs leading-relaxed text-caption">{s.desc}</p>
-            <div className="hiw-bar">
-              <div className="hiw-bar-fill" />
-            </div>
-          </li>
-        ))}
-      </ol>
     </div>
   );
 }
