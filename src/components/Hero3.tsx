@@ -177,11 +177,11 @@ export default function Hero3() {
   return (
     <>
       <section ref={sectionRef} className="relative" style={{ height: `calc(100vh + ${SCROLL_VH}vh)` }}>
-        <div className="sticky top-16 z-[2] mx-auto w-full max-w-[900px] px-4 pt-14">
-          <VideoCard />
-        </div>
-        <div className="relative z-[1] mt-10" style={textStyle}>
+        <div className="relative z-[1] pt-14" style={textStyle}>
           <HeroCopy />
+        </div>
+        <div className="sticky top-16 z-[2] mx-auto mt-10 w-full max-w-[900px] px-4">
+          <VideoCard />
         </div>
       </section>
       <StatsRow />
