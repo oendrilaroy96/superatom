@@ -12,6 +12,14 @@ const ZOOM_START_Y = 115;
 const ZOOM_RANGE = 400;
 /** Maximum scale the video placeholder zooms in to. */
 const ZOOM_MAX_SCALE = 1.35;
+/**
+ * Gap (px) between this section and the next. The zoomed-in video's painted
+ * box is taller than its layout box (CSS transform: scale() doesn't affect
+ * layout), so without this gap the next section's top edge scrolls up
+ * underneath the still-visible, still-zoomed video. This pushes the next
+ * section down by more than that overflow, closing the gap with room to spare.
+ */
+const SECTION_GAP_PX = 110;
 
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -142,13 +150,16 @@ export default function Hero3() {
   };
 
   return (
-    <section ref={sectionRef} className="relative isolate" style={{ height: `calc(100vh + ${SCROLL_EXTRA_PX}px)` }}>
-      <div className="sticky top-16 z-[1] pt-14" style={textStyle}>
-        <HeroCopy />
-      </div>
-      <div className="sticky top-[176px] z-[2] mx-auto mt-16 w-full max-w-[900px] px-4" style={videoStyle}>
-        <VideoCard />
-      </div>
-    </section>
+    <>
+      <section ref={sectionRef} className="relative isolate" style={{ height: `calc(100vh + ${SCROLL_EXTRA_PX}px)` }}>
+        <div className="sticky top-16 z-[1] pt-14" style={textStyle}>
+          <HeroCopy />
+        </div>
+        <div className="sticky top-[176px] z-[2] mx-auto mt-16 w-full max-w-[900px] px-4" style={videoStyle}>
+          <VideoCard />
+        </div>
+      </section>
+      <div aria-hidden="true" style={{ height: SECTION_GAP_PX }} />
+    </>
   );
 }
