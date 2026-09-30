@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent, type InputHTMLAttributes } from "react";
-import { MdClose, MdCheckCircle } from "react-icons/md";
+import CloseIcon from "@mui/icons-material/Close";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Button from "./ui/Button";
 import IconButton from "./ui/IconButton";
 
@@ -70,7 +71,7 @@ export default function DemoModal({ open, onClose }: DemoModalProps) {
         className="relative w-full max-w-lg rounded-2xl border border-secondary-100 bg-white p-6 shadow-2xl shadow-secondary-900/20 sm:p-8"
       >
         <IconButton
-          icon={MdClose}
+          icon={CloseIcon}
           aria-label="Close"
           variant="subtle"
           size="sm"
@@ -81,7 +82,7 @@ export default function DemoModal({ open, onClose }: DemoModalProps) {
         {submitted ? (
           <div className="flex flex-col items-center py-8 text-center">
             <span className="mb-4 grid h-14 w-14 place-items-center rounded-full bg-primary-100 text-primary-500">
-              <MdCheckCircle size={30} />
+              <CheckCircleIcon style={{ fontSize: 30 }} />
             </span>
             <h2 className="font-display text-h3 font-bold text-heading">
               Thanks — we&apos;ll be in touch

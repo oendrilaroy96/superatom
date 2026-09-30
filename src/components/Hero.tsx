@@ -1,6 +1,10 @@
 import { useEffect, useRef, type RefObject } from "react";
-import { MdArrowForward, MdBolt, MdTrendingDown, MdTrendingUp, MdShield } from "react-icons/md";
-import type { IconType } from "react-icons";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import BoltIcon from "@mui/icons-material/Bolt";
+import TrendingDownIcon from "@mui/icons-material/TrendingDown";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import ShieldIcon from "@mui/icons-material/Shield";
+import type { IconComponent } from "../types/icon";
 import Button from "./ui/Button";
 
 const NS = "http://www.w3.org/2000/svg";
@@ -49,10 +53,10 @@ const CAPTIONS = [
   "The decision is delivered, and every outcome feeds back",
 ];
 
-function StatIcon({ Icon }: { Icon: IconType }) {
+function StatIcon({ Icon }: { Icon: IconComponent }) {
   return (
     <span className="grid h-[34px] w-[34px] shrink-0 place-items-center rounded-md bg-primary-100 text-primary-500">
-      <Icon size={18} />
+      <Icon style={{ fontSize: 18 }} />
     </span>
   );
 }
@@ -505,7 +509,7 @@ export default function Hero() {
             <Button
               href="#"
               variant="primary"
-              iconRight={<MdArrowForward size={18} />}
+              iconRight={<ArrowForwardIcon style={{ fontSize: 18 }} />}
               className="shadow-[0_10px_30px_-10px_rgba(83,58,253,0.35)] transition-transform hover:-translate-y-px"
             >
               Explore the Platform
@@ -518,25 +522,25 @@ export default function Hero() {
 
       <div className="relative z-[2] mx-auto mt-auto grid w-full max-w-[1440px] grid-cols-2 gap-x-6 gap-y-6 border-t border-secondary-100 px-4 pb-11 pt-9 sm:grid-cols-4 sm:gap-x-8 sm:px-10 xl:px-20">
         <div className="flex items-center gap-3">
-          <StatIcon Icon={MdBolt} />
+          <StatIcon Icon={BoltIcon} />
           <span className="text-[13.5px] font-semibold leading-tight text-body">
             Faster decisions
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <StatIcon Icon={MdTrendingDown} />
+          <StatIcon Icon={TrendingDownIcon} />
           <span className="text-[13.5px] font-semibold leading-tight text-body">
             Lower costs
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <StatIcon Icon={MdTrendingUp} />
+          <StatIcon Icon={TrendingUpIcon} />
           <span className="text-[13.5px] font-semibold leading-tight text-body">
             Better service levels
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <StatIcon Icon={MdShield} />
+          <StatIcon Icon={ShieldIcon} />
           <span className="text-[13.5px] font-semibold leading-tight text-body">
             A more resilient supply chain
           </span>

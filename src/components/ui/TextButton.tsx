@@ -1,5 +1,5 @@
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
-import { MdRefresh } from "react-icons/md";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import { textButtonColors, type ButtonVariant } from "./buttonVariants";
 
 const base =
@@ -37,7 +37,7 @@ export default function TextButton({
   const classes = [base, c.text, c.hoverText, className].filter(Boolean).join(" ");
 
   const content = loading ? (
-    <MdRefresh size={16} className="animate-spin" aria-hidden="true" />
+    <RefreshIcon style={{ fontSize: 16 }} className="animate-spin" aria-hidden="true" />
   ) : (
     children
   );

@@ -1,21 +1,19 @@
-import {
-  MdArrowForward,
-  MdBolt,
-  MdTrendingDown,
-  MdTrendingUp,
-  MdShield,
-  MdPlayArrow,
-} from "react-icons/md";
-import type { IconType } from "react-icons";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import BoltIcon from "@mui/icons-material/Bolt";
+import TrendingDownIcon from "@mui/icons-material/TrendingDown";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import ShieldIcon from "@mui/icons-material/Shield";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import type { IconComponent } from "../types/icon";
 import Button from "./ui/Button";
 
 /** Horizontal gutter that scales continuously with the viewport instead of stepping at breakpoints or capping at a fixed max-width. */
 const FLUID_PAD = "px-[max(16px,5%)]";
 
-function StatIcon({ Icon }: { Icon: IconType }) {
+function StatIcon({ Icon }: { Icon: IconComponent }) {
   return (
     <span className="grid h-[34px] w-[34px] shrink-0 place-items-center rounded-md bg-primary-100 text-primary-500">
-      <Icon size={18} />
+      <Icon style={{ fontSize: 18 }} />
     </span>
   );
 }
@@ -26,25 +24,25 @@ function StatsRow() {
       className={`relative z-[2] mt-auto grid w-full grid-cols-2 gap-x-6 gap-y-6 border-t border-secondary-100 ${FLUID_PAD} pb-11 pt-9 sm:grid-cols-4 sm:gap-x-8`}
     >
       <div className="flex items-center gap-3">
-        <StatIcon Icon={MdBolt} />
+        <StatIcon Icon={BoltIcon} />
         <span className="text-[13.5px] font-semibold leading-tight text-body">
           Faster decisions
         </span>
       </div>
       <div className="flex items-center gap-3">
-        <StatIcon Icon={MdTrendingDown} />
+        <StatIcon Icon={TrendingDownIcon} />
         <span className="text-[13.5px] font-semibold leading-tight text-body">
           Lower costs
         </span>
       </div>
       <div className="flex items-center gap-3">
-        <StatIcon Icon={MdTrendingUp} />
+        <StatIcon Icon={TrendingUpIcon} />
         <span className="text-[13.5px] font-semibold leading-tight text-body">
           Better service levels
         </span>
       </div>
       <div className="flex items-center gap-3">
-        <StatIcon Icon={MdShield} />
+        <StatIcon Icon={ShieldIcon} />
         <span className="text-[13.5px] font-semibold leading-tight text-body">
           A more resilient supply chain
         </span>
@@ -74,7 +72,7 @@ function HeroCopy() {
         <Button
           href="#"
           variant="primary"
-          iconRight={<MdArrowForward size={18} />}
+          iconRight={<ArrowForwardIcon style={{ fontSize: 18 }} />}
           className="shadow-[0_10px_30px_-10px_rgba(83,58,253,0.35)] transition-transform hover:-translate-y-px"
         >
           Explore the Platform
@@ -113,7 +111,7 @@ function VideoThumb() {
       {/* Play button */}
       <div className="absolute inset-0 flex items-center justify-center">
         <span className="grid h-16 w-16 place-items-center rounded-full bg-white text-primary-500 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.5)] transition-transform duration-200 group-hover:scale-110 sm:h-20 sm:w-20">
-          <MdPlayArrow size={32} className="translate-x-0.5" />
+          <PlayArrowIcon style={{ fontSize: 32 }} className="translate-x-0.5" />
         </span>
       </div>
 

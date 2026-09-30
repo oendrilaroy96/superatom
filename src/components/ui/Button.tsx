@@ -1,5 +1,5 @@
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
-import { MdRefresh } from "react-icons/md";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import { buttonVariants, type ButtonVariant } from "./buttonVariants";
 
 export type { ButtonVariant };
@@ -51,7 +51,7 @@ export default function Button({
     .join(" ");
 
   const content = loading ? (
-    <MdRefresh size={18} className="animate-spin" aria-hidden="true" />
+    <RefreshIcon style={{ fontSize: 18 }} className="animate-spin" aria-hidden="true" />
   ) : (
     <>
       {iconLeft}

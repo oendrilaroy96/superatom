@@ -1,43 +1,41 @@
 import { useEffect, useState } from "react";
-import {
-  MdClose,
-  MdMenu,
-  MdInventory2,
-  MdShowChart,
-  MdShoppingCart,
-  MdLocalShipping,
-  MdPrecisionManufacturing,
-  MdSell,
-  MdArticle,
-  MdInsights,
-  MdMenuBook,
-  MdKeyboardArrowDown,
-} from "react-icons/md";
-import type { IconType } from "react-icons";
+import CloseIcon from "@mui/icons-material/Close";
+import MenuIcon from "@mui/icons-material/Menu";
+import Inventory2Icon from "@mui/icons-material/Inventory2";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
+import SellIcon from "@mui/icons-material/Sell";
+import ArticleIcon from "@mui/icons-material/Article";
+import InsightsIcon from "@mui/icons-material/Insights";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import type { IconComponent } from "../types/icon";
 import logo from "../assets/superatom-logo.png";
 import Button from "./ui/Button";
 import IconButton from "./ui/IconButton";
 import DemoModal from "./DemoModal";
 
-const solutions: { name: string; blurb: string; Icon: IconType }[] = [
-  { name: "Inventory Intelligence", blurb: "Optimize, rebalance, prevent.", Icon: MdInventory2 },
-  { name: "Demand Intelligence", blurb: "Sense, predict, respond.", Icon: MdShowChart },
-  { name: "Procurement Intelligence", blurb: "Source, plan, mitigate.", Icon: MdShoppingCart },
-  { name: "Logistics Intelligence", blurb: "Move, optimize, deliver.", Icon: MdLocalShipping },
-  { name: "Manufacturing Intelligence", blurb: "Plan, produce, adapt.", Icon: MdPrecisionManufacturing },
-  { name: "Pricing Intelligence", blurb: "Price, position, grow.", Icon: MdSell },
+const solutions: { name: string; blurb: string; Icon: IconComponent }[] = [
+  { name: "Inventory Intelligence", blurb: "Optimize, rebalance, prevent.", Icon: Inventory2Icon },
+  { name: "Demand Intelligence", blurb: "Sense, predict, respond.", Icon: ShowChartIcon },
+  { name: "Procurement Intelligence", blurb: "Source, plan, mitigate.", Icon: ShoppingCartIcon },
+  { name: "Logistics Intelligence", blurb: "Move, optimize, deliver.", Icon: LocalShippingIcon },
+  { name: "Manufacturing Intelligence", blurb: "Plan, produce, adapt.", Icon: PrecisionManufacturingIcon },
+  { name: "Pricing Intelligence", blurb: "Price, position, grow.", Icon: SellIcon },
 ];
 
-const resources: { name: string; blurb: string; Icon: IconType }[] = [
-  { name: "Blog", blurb: "Insights on decision intelligence.", Icon: MdArticle },
-  { name: "Case Studies", blurb: "How enterprises use Superatom.", Icon: MdInsights },
-  { name: "Docs", blurb: "Platform & integration guides.", Icon: MdMenuBook },
+const resources: { name: string; blurb: string; Icon: IconComponent }[] = [
+  { name: "Blog", blurb: "Insights on decision intelligence.", Icon: ArticleIcon },
+  { name: "Case Studies", blurb: "How enterprises use Superatom.", Icon: InsightsIcon },
+  { name: "Docs", blurb: "Platform & integration guides.", Icon: MenuBookIcon },
 ];
 
 function ChevronDown() {
   return (
-    <MdKeyboardArrowDown
-      size={16}
+    <KeyboardArrowDownIcon
+      style={{ fontSize: 16 }}
       className="transition-transform duration-200 group-hover:rotate-180"
     />
   );
@@ -57,7 +55,7 @@ function DropdownNavItem({
   columns = 1,
 }: {
   label: string;
-  items: { name: string; blurb: string; Icon: IconType }[];
+  items: { name: string; blurb: string; Icon: IconComponent }[];
   columns?: 1 | 2;
 }) {
   return (
@@ -83,7 +81,7 @@ function DropdownNavItem({
               className="flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-primary-100/40"
             >
               <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary-100 text-primary-500">
-                <item.Icon size={18} />
+                <item.Icon style={{ fontSize: 18 }} />
               </span>
               <span>
                 <p className="font-display text-sm font-semibold text-heading">
@@ -151,7 +149,7 @@ export default function Header() {
         </div>
 
         <IconButton
-          icon={mobileOpen ? MdClose : MdMenu}
+          icon={mobileOpen ? CloseIcon : MenuIcon}
           aria-label="Toggle menu"
           variant="subtle"
           onClick={() => setMobileOpen((v) => !v)}

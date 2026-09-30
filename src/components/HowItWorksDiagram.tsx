@@ -1,16 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import {
-  MdForum,
-  MdPsychology,
-  MdBarChart,
-  MdHub,
-  MdRecommend,
-  MdFactCheck,
-  MdGroups,
-  MdSettings,
-} from "react-icons/md";
-import type { IconType } from "react-icons";
+import ForumIcon from "@mui/icons-material/Forum";
+import PsychologyIcon from "@mui/icons-material/Psychology";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import HubIcon from "@mui/icons-material/Hub";
+import RecommendIcon from "@mui/icons-material/Recommend";
+import FactCheckIcon from "@mui/icons-material/FactCheck";
+import GroupsIcon from "@mui/icons-material/Groups";
+import SettingsIcon from "@mui/icons-material/Settings";
+import type { IconComponent } from "../types/icon";
 
 const NS = "http://www.w3.org/2000/svg";
 
@@ -42,7 +40,7 @@ function svgText(
 }
 function mountIcon(
   parent: SVGElement,
-  Icon: IconType,
+  Icon: IconComponent,
   cx: number,
   cy: number,
   size: number,
@@ -59,7 +57,7 @@ function mountIcon(
   host.style.cssText = `width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;color:${color};`;
   fo.appendChild(host);
   const root = createRoot(host);
-  root.render(<Icon size={Math.round(size * 0.72)} />);
+  root.render(<Icon style={{ fontSize: Math.round(size * 0.72) }} />);
   roots.push(root);
 }
 
@@ -291,12 +289,12 @@ export default function HowItWorksDiagram() {
     svgText(coreG, 250, 117, "Superatom AI", "hiw-core-title").style.fontSize = "14px";
     svgEl("rect", { x: 240, y: 130, width: 400, height: 140, rx: 8, class: "hiw-core-inner" }, coreG);
 
-    const mods: [string, string, string, IconType, number, number, number][] = [
-      ["agents", "Conversation Agents", "Where the MIS Agent asks questions and receives answers, alerts and recommendations.", MdForum, 250, 139, 186],
-      ["ai", "AI & Domain Intelligence", "Adds business context, rules, policies, constraints and domain knowledge.", MdPsychology, 444, 139, 186],
-      ["ana", "Analytics & Optimization", "Applies analytics, simulation and optimization to evaluate alternatives.", MdBarChart, 250, 182, 186],
-      ["kg", "Knowledge Graph", "Links entities and relationships across your enterprise data.", MdHub, 444, 182, 186],
-      ["rec", "Recommendation Engine", "Generates clear, explainable recommendations.", MdRecommend, 250, 225, 380],
+    const mods: [string, string, string, IconComponent, number, number, number][] = [
+      ["agents", "Conversation Agents", "Where the MIS Agent asks questions and receives answers, alerts and recommendations.", ForumIcon, 250, 139, 186],
+      ["ai", "AI & Domain Intelligence", "Adds business context, rules, policies, constraints and domain knowledge.", PsychologyIcon, 444, 139, 186],
+      ["ana", "Analytics & Optimization", "Applies analytics, simulation and optimization to evaluate alternatives.", BarChartIcon, 250, 182, 186],
+      ["kg", "Knowledge Graph", "Links entities and relationships across your enterprise data.", HubIcon, 444, 182, 186],
+      ["rec", "Recommendation Engine", "Generates clear, explainable recommendations.", RecommendIcon, 250, 225, 380],
     ];
     mods.forEach(([id, n, d, Icon, x, y, w]) => {
       addNode(id, n, d, "hiw-mod", (g) => {
@@ -320,7 +318,7 @@ export default function HowItWorksDiagram() {
         t1.style.cssText = "fill:var(--color-heading);font-weight:500";
         const t2 = svgText(g, 775, 168, "& Actions", "hiw-t-small", "middle");
         t2.style.cssText = "fill:var(--color-heading);font-weight:500";
-        mountIcon(g, MdFactCheck, 775, 205, 30, "var(--color-accent-500)", iconRoots);
+        mountIcon(g, FactCheckIcon, 775, 205, 30, "var(--color-accent-500)", iconRoots);
       },
     );
     edge("core", "reco", "M650,190 H718", true);
@@ -333,7 +331,7 @@ export default function HowItWorksDiagram() {
       (g) => {
         svgText(g, 945, 120, "Decision Makers", "hiw-t-title", "middle");
         svgEl("rect", { x: 880, y: 132, width: 130, height: 116, rx: 8, class: "hiw-b" }, g);
-        mountIcon(g, MdGroups, 945, 178, 32, "var(--color-accent-500)", iconRoots);
+        mountIcon(g, GroupsIcon, 945, 178, 32, "var(--color-accent-500)", iconRoots);
         svgText(g, 945, 214, "Business, Operations", "hiw-t-small", "middle");
         svgText(g, 945, 228, "and IT Teams", "hiw-t-small", "middle");
       },
@@ -348,7 +346,7 @@ export default function HowItWorksDiagram() {
       (g) => {
         svgEl("rect", { x: 1060, y: 132, width: 156, height: 116, rx: 8, class: "hiw-b" }, g);
         svgEl("rect", { x: 1072, y: 144, width: 24, height: 24, rx: 6, class: "hiw-ico" }, g);
-        mountIcon(g, MdSettings, 1084, 156, 16, "var(--color-accent-500)", iconRoots);
+        mountIcon(g, SettingsIcon, 1084, 156, 16, "var(--color-accent-500)", iconRoots);
         const t1 = svgText(g, 1104, 154, "Automation", "hiw-t-title");
         t1.style.fontSize = "12px";
         const t2 = svgText(g, 1104, 168, "Actions", "hiw-t-title");

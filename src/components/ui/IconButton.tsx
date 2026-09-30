@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes } from "react";
-import { MdRefresh } from "react-icons/md";
-import type { IconType } from "react-icons";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import type { IconComponent } from "../../types/icon";
 import { buttonVariants, type ButtonVariant } from "./buttonVariants";
 
 export type IconButtonSize = "sm" | "md" | "lg";
@@ -17,7 +17,7 @@ type IconButtonProps = Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,
   "children"
 > & {
-  icon: IconType;
+  icon: IconComponent;
   "aria-label": string;
   variant?: ButtonVariant;
   size?: IconButtonSize;
@@ -62,9 +62,9 @@ export default function IconButton({
       {...props}
     >
       {loading ? (
-        <MdRefresh size={s.icon} className="animate-spin" aria-hidden="true" />
+        <RefreshIcon style={{ fontSize: s.icon }} className="animate-spin" aria-hidden="true" />
       ) : (
-        <Icon size={s.icon} aria-hidden="true" />
+        <Icon style={{ fontSize: s.icon }} aria-hidden="true" />
       )}
     </button>
   );

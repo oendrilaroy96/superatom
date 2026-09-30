@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { MdArrowForward, MdPlayArrow } from "react-icons/md";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Button from "./ui/Button";
 
 /** Extra scroll distance (px) beyond one viewport, controlling how far you scroll before the pin releases and the next section scrolls up into view. */
@@ -45,7 +46,7 @@ function HeroCopy() {
       <Button
         href="#"
         variant="primary"
-        iconRight={<MdArrowForward size={18} />}
+        iconRight={<ArrowForwardIcon style={{ fontSize: 18 }} />}
         className="shadow-[0_10px_30px_-10px_rgba(83,58,253,0.35)] transition-transform hover:-translate-y-px"
       >
         Explore the Platform
@@ -80,7 +81,7 @@ function VideoCard() {
       />
       <div className="absolute inset-0 flex items-center justify-center">
         <span className="grid h-16 w-16 place-items-center rounded-full bg-white text-primary-500 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.5)] transition-transform duration-200 group-hover:scale-110 sm:h-20 sm:w-20">
-          <MdPlayArrow size={32} className="translate-x-0.5" />
+          <PlayArrowIcon style={{ fontSize: 32 }} className="translate-x-0.5" />
         </span>
       </div>
       <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 bg-gradient-to-t from-black/55 to-transparent px-5 py-4 sm:px-6 sm:py-5">
