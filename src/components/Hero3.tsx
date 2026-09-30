@@ -28,7 +28,7 @@ const ease = (t: number) => t * t * (3 - 2 * t);
 function HeroCopy() {
   return (
     <div className="mx-auto flex max-w-4xl flex-col items-center px-4 text-center">
-      <p className="mb-3 font-display text-[13px] font-semibold uppercase tracking-[0.08em] text-caption">
+      <p className="mb-3 font-sans text-[13px] font-semibold uppercase tracking-[0.08em] text-secondary-300">
         Decision intelligence for enterprises
       </p>
       <h1 className="hero2-heading m-0 mb-4 font-display font-bold leading-[1] tracking-[-0.02em] text-heading">
