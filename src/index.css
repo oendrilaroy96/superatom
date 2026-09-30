@@ -159,14 +159,6 @@ body {
 .hiw-root {
   --hiw-dim: 0.3;
 }
-.hiw-card {
-  background: #fff;
-  border-radius: 14px;
-  box-shadow:
-    0 13px 27px -5px rgba(13, 23, 56, 0.14),
-    0 8px 16px -8px rgba(0, 0, 0, 0.16);
-  overflow: hidden;
-}
 .hiw-scroll {
   overflow-x: auto;
 }
@@ -175,12 +167,12 @@ body {
   align-items: flex-start;
   justify-content: center;
   padding: 32px 24px;
-  min-width: 920px;
+  min-width: 1100px;
 }
 .hiw-stage {
   position: relative;
   flex: none;
-  width: 620px;
+  width: 760px;
 }
 .hiw-stage svg {
   display: block;
@@ -189,9 +181,9 @@ body {
 }
 .hiw-connector {
   flex: none;
-  width: 48px;
+  width: 56px;
   height: 3px;
-  margin-top: 167px;
+  margin-top: 205px;
   border-radius: 3px;
   background: linear-gradient(90deg, var(--color-secondary-200), var(--color-primary-300));
   position: relative;

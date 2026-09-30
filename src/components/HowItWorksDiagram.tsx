@@ -100,7 +100,7 @@ function ChatPanel() {
   };
 
   return (
-    <div className="flex w-[380px] flex-none flex-col items-center">
+    <div className="flex w-[460px] flex-none flex-col items-center">
       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[28px] bg-secondary-500 shadow-[0_20px_50px_-20px_rgba(13,23,56,0.45)]">
         <video
           className="absolute inset-0 h-full w-full object-cover opacity-0"
@@ -123,13 +123,13 @@ function ChatPanel() {
         />
         {!videoReady && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-white/70">
-            <PlayArrowIcon style={{ fontSize: 22 }} />
-            <span className="font-sans text-sm">[Answer video plays here]</span>
+            <PlayArrowIcon style={{ fontSize: 26 }} />
+            <span className="font-sans text-base">[Answer video plays here]</span>
           </div>
         )}
       </div>
       <div
-        className="-mt-5 w-[94%] overflow-hidden text-ellipsis whitespace-nowrap rounded-full bg-white px-5 py-3.5 text-center font-sans text-sm text-heading shadow-[0_16px_30px_-14px_rgba(13,23,56,0.25)]"
+        className="-mt-5 w-[94%] overflow-hidden text-ellipsis whitespace-nowrap rounded-full bg-white px-6 py-4 text-center font-sans text-base text-heading shadow-[0_16px_30px_-14px_rgba(13,23,56,0.25)]"
         style={textStyle}
       >
         {CHAT_QUESTIONS[i]}
