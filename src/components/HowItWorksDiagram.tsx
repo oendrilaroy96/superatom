@@ -216,6 +216,7 @@ export default function HowItWorksDiagram() {
       el: SVGPathElement;
       out: boolean;
       both: boolean;
+      noMarker: boolean;
       k: number;
       tk: number;
       fixed: boolean;
@@ -296,18 +297,26 @@ export default function HowItWorksDiagram() {
       d: string,
       out?: boolean,
       both?: boolean,
+      noMarker?: boolean,
     ): Edge {
-      const p = svgEl(
-        "path",
-        {
-          d,
-          class: `hiw-edge${out ? " hiw-out-e" : ""}`,
-          "marker-end": out ? markerUrl("ao") : markerUrl("a"),
-        },
-        edgeLayer,
-      );
-      if (both) p.setAttribute("marker-start", markerUrl("a"));
-      const e: Edge = { from, to, el: p, out: !!out, both: !!both, k: 0.5, tk: 0.5, fixed: false };
+      const attrs: Record<string, string | number> = {
+        d,
+        class: `hiw-edge${out ? " hiw-out-e" : ""}`,
+      };
+      if (!noMarker) attrs["marker-end"] = out ? markerUrl("ao") : markerUrl("a");
+      const p = svgEl("path", attrs, edgeLayer);
+      if (both && !noMarker) p.setAttribute("marker-start", markerUrl("a"));
+      const e: Edge = {
+        from,
+        to,
+        el: p,
+        out: !!out,
+        both: !!both,
+        noMarker: !!noMarker,
+        k: 0.5,
+        tk: 0.5,
+        fixed: false,
+      };
       E.push(e);
       return e;
     }
@@ -325,9 +334,11 @@ export default function HowItWorksDiagram() {
         svgEl("rect", { x: 20, y, width: 120, height: 28, rx: 6, class: "hiw-b" }, g);
         svgText(g, 32, y + 19, n, "hiw-t-title");
       });
-      const targetY = [150, 180, 210, 240][i];
-      edge(id, "core", `M140,${y + 14} H180 V${targetY} H228`);
+      edge(id, "trunk", `M140,${y + 14} H180`, false, false, true);
     });
+    const CORE_ENTRY_Y = 200;
+    const trunkEdge = edge("trunk", "core", `M180,50 V${CORE_ENTRY_Y} H228`);
+    trunkEdge.fixed = true;
 
     addNode(
       "team0",
@@ -367,6 +378,7 @@ export default function HowItWorksDiagram() {
     });
     const modIds = mods.map((m) => m[0]);
 
+    const srcIds = sources.map((s) => s[0]);
     function neighbours(id: string) {
       const ids = new Set([id]);
       const lit = new Set<Edge>();
@@ -380,9 +392,14 @@ export default function HowItWorksDiagram() {
         }
       });
       if (key === "core") modIds.forEach((m) => ids.add(m));
+      if (srcIds.includes(id) || id === "trunk") {
+        lit.add(trunkEdge);
+        ids.add("trunk");
+      }
       return { ids, lit };
     }
     function setMarkers(e: Edge, on: boolean) {
+      if (e.noMarker) return;
       const m = e.out ? markerUrl("ao") : on ? markerUrl("al") : markerUrl("a");
       e.el.setAttribute("marker-end", m);
       if (e.both) e.el.setAttribute("marker-start", m);
@@ -401,9 +418,8 @@ export default function HowItWorksDiagram() {
       });
     }
 
-    const srcIds = sources.map((s) => s[0]);
     const stages: { ids: string[]; pulse: string[]; edges: (e: Edge) => boolean }[] = [
-      { ids: srcIds, pulse: srcIds, edges: (e) => e.to === "core" && e.from !== "team0" },
+      { ids: srcIds, pulse: srcIds, edges: (e) => e.to === "trunk" || (e.from === "trunk" && e.to === "core") },
       { ids: modIds, pulse: modIds, edges: (e) => e.from === "team0" },
     ];
     const STEP_MS = reduceMotion ? 4500 : 3000;
