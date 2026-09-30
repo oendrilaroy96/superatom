@@ -1,15 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { createRoot, type Root } from "react-dom/client";
-import PsychologyIcon from "@mui/icons-material/Psychology";
-import TuneIcon from "@mui/icons-material/Tune";
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import HubIcon from "@mui/icons-material/Hub";
-import StorageIcon from "@mui/icons-material/Storage";
-import SensorsIcon from "@mui/icons-material/Sensors";
-import LayersIcon from "@mui/icons-material/Layers";
-import ApiIcon from "@mui/icons-material/Api";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import type { IconComponent } from "../types/icon";
 
 const NS = "http://www.w3.org/2000/svg";
 
@@ -39,30 +29,48 @@ function svgText(
   t.textContent = s;
   return t;
 }
-function mountIcon(
+/** Icon + label mounted as HTML inside a foreignObject, so the label can wrap naturally like the reference design. */
+function mountCard(
   parent: SVGElement,
-  Icon: IconComponent,
-  cx: number,
-  cy: number,
-  size: number,
-  color: string,
-  roots: Root[],
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  iconPaths: string,
+  iconViewBox: string,
+  label: string,
+  fontSize: number,
+  badged: boolean,
 ) {
-  const fo = svgEl(
-    "foreignObject",
-    { x: cx - size / 2, y: cy - size / 2, width: size, height: size },
-    parent,
-  );
-  fo.style.overflow = "visible";
+  const fo = svgEl("foreignObject", { x, y, width: w, height: h }, parent);
   const host = document.createElement("div");
-  host.style.cssText = `width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;color:${color};`;
+  host.className = "hiw-card-inner";
+  const iconSize = badged ? 26 : 22;
+  host.innerHTML = `
+    <span class="hiw-card-ico${badged ? " hiw-card-ico-badged" : ""}" style="width:${iconSize}px;height:${iconSize}px">
+      <svg viewBox="${iconViewBox}" fill="none" stroke="var(--color-primary-500)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${iconPaths}</svg>
+    </span>
+    <span class="hiw-card-label" style="font-size:${fontSize}px">${label}</span>
+  `;
   fo.appendChild(host);
-  const root = createRoot(host);
-  root.render(<Icon style={{ fontSize: Math.round(size * 0.72) }} />);
-  roots.push(root);
 }
 
-/** Sample questions rotated through the pill below the video placeholder. */
+const SRC_ICON_VB = "-4 -4 32 32";
+const SRC_ICONS: Record<string, string> = {
+  erp: `<ellipse cx="12" cy="5.5" rx="7" ry="2.5"/><path d="M5 5.5v13c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-13M5 12c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5"/>`,
+  iot: `<rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4"/>`,
+  lake: `<path d="M12 3l9 5-9 5-9-5Z"/><path d="M3 13l9 5 9-5"/>`,
+  api: `<path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/>`,
+};
+const MOD_ICON_VB = "0 0 24 24";
+const MOD_ICONS: Record<string, string> = {
+  tribal: `<path d="M4 19V6a2 2 0 0 1 2-2h13v13H6a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h13"/>`,
+  opt: `<path d="M4 7h10M18 7h2M4 17h4M12 17h8M14 4v6M8 14v6"/>`,
+  genui: `<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8Z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8Z"/>`,
+  sem: `<circle cx="12" cy="12" r="2.5"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M6.5 6.5l3.7 3.7M17.5 6.5l-3.7 3.7M6.5 17.5l3.7-3.7M17.5 17.5l-3.7-3.7"/>`,
+};
+
+/** Sample questions rotated through the pill inside the video frame. */
 const CHAT_QUESTIONS: string[] = [
   "What is the revenue impact of vendor delay?",
   "Which suppliers are at risk this quarter?",
@@ -73,8 +81,8 @@ const CHAT_SLIDE_MS = 4200;
 const CHAT_FADE_MS = 220;
 
 /**
- * Right-hand panel: a video placeholder ("[Answer video plays here]") with a
- * rotating sample question below it. No real clip is wired up yet — swap
+ * Video frame: a placeholder ("[Answer video plays here]") with a rotating
+ * sample question pill near the bottom. No real clip is wired up yet — swap
  * the `<video src>` below for one and the placeholder label disappears
  * automatically once the video can play.
  */
@@ -100,8 +108,11 @@ function ChatPanel() {
   };
 
   return (
-    <div className="flex w-[460px] flex-none flex-col items-center">
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[28px] bg-secondary-500 shadow-[0_20px_50px_-20px_rgba(13,23,56,0.45)]">
+    <div className="-mt-6 w-[660px] flex-none">
+      <div
+        className="relative w-full overflow-hidden rounded-[16px] bg-secondary-500 shadow-[0_20px_50px_-20px_rgba(13,23,56,0.45)]"
+        style={{ aspectRatio: "588 / 440" }}
+      >
         <video
           className="absolute inset-0 h-full w-full object-cover opacity-0"
           autoPlay
@@ -114,7 +125,7 @@ function ChatPanel() {
           }}
         />
         <div
-          className="absolute inset-0 opacity-[0.1]"
+          className="absolute inset-0 opacity-[0.06]"
           style={{
             backgroundImage:
               "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
@@ -122,24 +133,25 @@ function ChatPanel() {
           }}
         />
         {!videoReady && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-white/70">
-            <PlayArrowIcon style={{ fontSize: 26 }} />
-            <span className="font-sans text-base">[Answer video plays here]</span>
+          <div className="absolute inset-0 flex items-center justify-center gap-2 text-white/80">
+            <PlayArrowIcon style={{ fontSize: 20 }} />
+            <span className="font-sans text-sm font-semibold">[Answer video plays here]</span>
           </div>
         )}
-      </div>
-      <div
-        className="-mt-5 w-[94%] overflow-hidden text-ellipsis whitespace-nowrap rounded-full bg-white px-6 py-4 text-center font-sans text-base text-heading shadow-[0_16px_30px_-14px_rgba(13,23,56,0.25)]"
-        style={textStyle}
-      >
-        {CHAT_QUESTIONS[i]}
+        <div
+          className="absolute inset-x-0 bottom-[26px] mx-auto w-[92%] overflow-hidden text-ellipsis whitespace-nowrap rounded-[10px] bg-white px-5 py-3.5 text-center font-sans text-base text-heading shadow-[0_16px_30px_-14px_rgba(13,23,56,0.25)]"
+          style={textStyle}
+        >
+          {CHAT_QUESTIONS[i]}
+        </div>
       </div>
     </div>
   );
 }
 
-const VW = 680;
-const VH = 310;
+const VW = 788;
+const VY0 = 244;
+const VH = 380;
 
 export default function HowItWorksDiagram() {
   const rootDivRef = useRef<HTMLDivElement>(null);
@@ -161,7 +173,6 @@ export default function HowItWorksDiagram() {
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    const iconRoots: Root[] = [];
     const timers: number[] = [];
     let rafId = 0;
     let disposed = false;
@@ -307,67 +318,64 @@ export default function HowItWorksDiagram() {
       return e;
     }
 
-    svgText(nodeLayer, 20, 24, "Enterprise Systems", "hiw-t-title");
-    const SRC_W = 140;
-    const SRC_H = 44;
-    const SRC_GAP = 16;
-    const sources: [string, string, string, IconComponent][] = [
-      ["erp", "ERPs", "Enterprise resource planning", StorageIcon],
-      ["iot", "IoT", "Sensor and device data from the field", SensorsIcon],
-      ["lake", "Data Lake", "Raw and historical enterprise data", LayersIcon],
-      ["api", "APIs", "Direct integrations with your existing tools", ApiIcon],
-    ];
-    sources.forEach(([id, n, d, Icon], i) => {
-      const y = 30 + i * (SRC_H + SRC_GAP);
-      addNode(id, n, d, "hiw-src", (g) => {
-        svgEl("rect", { x: 20, y, width: SRC_W, height: SRC_H, rx: 10, class: "hiw-b" }, g);
-        svgEl("rect", { x: 30, y: y + 12, width: 20, height: 20, rx: 5, class: "hiw-ico" }, g);
-        mountIcon(g, Icon, 40, y + 22, 16, "var(--color-primary-500)", iconRoots);
-        svgText(g, 60, y + 27, n, "hiw-t-title");
-      });
-      edge(id, "trunk", `M160,${y + SRC_H / 2} H180`, false, false, true);
-    });
-    const firstSrcCy = 30 + SRC_H / 2;
-    const CORE_ENTRY_Y = 185;
-    const trunkEdge = edge("trunk", "core", `M180,${firstSrcCy} V${CORE_ENTRY_Y} H228`);
-    trunkEdge.fixed = true;
+    svgText(nodeLayer, 64, 278, "Enterprise Systems", "hiw-t-title").style.cssText =
+      "font-size:15px;font-weight:700;fill:var(--color-body)";
 
-    addNode(
-      "team0",
-      "MIS Agent",
-      "Works with Superatom AI through natural-language conversation.",
-      "hiw-team",
-      (g) => {
-        svgEl("rect", { x: 375, y: 18, width: 130, height: 36, rx: 18, class: "hiw-b" }, g);
-        svgText(g, 440, 41, "MIS Agent", "hiw-t-title", "middle").style.fill =
-          "var(--color-primary-600)";
-      },
+    const SRC_X = 64;
+    const SRC_W = 140;
+    const SRC_H = 56;
+    const SRC_TOPS = [304, 384, 464, 544];
+    const sources: [string, string, string][] = [
+      ["erp", "ERPs", "Enterprise resource planning"],
+      ["iot", "IoT", "Sensor and device data from the field"],
+      ["lake", "Data Lake", "Raw and historical enterprise data"],
+      ["api", "APIs", "Direct integrations with your existing tools"],
+    ];
+    sources.forEach(([id, n, d], i) => {
+      const y = SRC_TOPS[i];
+      addNode(id, n, d, "hiw-src", (g) => {
+        svgEl("rect", { x: SRC_X, y, width: SRC_W, height: SRC_H, rx: 8, class: "hiw-b" }, g);
+        mountCard(g, SRC_X, y, SRC_W, SRC_H, SRC_ICONS[id], SRC_ICON_VB, n, 16, true);
+      });
+      edge(id, "trunk", `M${SRC_X + SRC_W},${y + SRC_H / 2} H244`, false, false, true);
+    });
+
+    const TRUNK_X = 244;
+    const trunkVertical = edge(
+      "trunk",
+      "trunk",
+      `M${TRUNK_X},${SRC_TOPS[0] + SRC_H / 2} V${SRC_TOPS[3] + SRC_H / 2}`,
+      false,
+      false,
+      true,
     );
-    const teamEdge = edge("team0", "core", "M440,56 V88", false, true);
-    teamEdge.fixed = true;
+    trunkVertical.fixed = true;
+    const CORE_MID_Y = 444;
+    const coreEntry = edge("trunk", "core", `M${TRUNK_X},${CORE_MID_Y} H298`);
+    coreEntry.fixed = true;
 
     const coreG = svgEl("g", {}, nodeLayer);
-    svgEl("rect", { x: 230, y: 90, width: 420, height: 190, rx: 12, class: "hiw-core-frame" }, coreG);
-    svgText(coreG, 250, 117, "Superatom AI", "hiw-core-title").style.fontSize = "15px";
+    svgEl("rect", { x: 300, y: 288, width: 424, height: 312, rx: 12, class: "hiw-core-frame" }, coreG);
+    svgText(coreG, 332, 322, "Superatom AI", "hiw-core-title");
 
-    const mods: [string, string, string, IconComponent, number, number][] = [
-      ["tribal", "Tribal Knowledge", "Captures the experience and judgment calls your best planners already know.", PsychologyIcon, 250, 140],
-      ["opt", "Optimization Engine", "Runs analytics and simulation to evaluate every alternative.", TuneIcon, 446, 140],
-      ["genui", "Generative UI", "Builds the right chart, table or view for each question, on the fly.", AutoAwesomeIcon, 250, 206],
-      ["sem", "Semantic Modeling", "Links entities and relationships across your enterprise data.", HubIcon, 446, 206],
+    const mods: [string, string, string, number, number][] = [
+      ["tribal", "Tribal Knowledge", "Captures the experience and judgment calls your best planners already know.", 332, 364],
+      ["opt", "Optimization Engine", "Runs analytics and simulation to evaluate every alternative.", 520, 364],
+      ["genui", "Generative UI", "Builds the right chart, table or view for each question, on the fly.", 332, 468],
+      ["sem", "Semantic Modeling", "Links entities and relationships across your enterprise data.", 520, 468],
     ];
-    const MOD_W = 184;
-    const MOD_H = 54;
-    mods.forEach(([id, n, d, Icon, x, y]) => {
+    const MOD_W = 172;
+    const MOD_H = 88;
+    mods.forEach(([id, n, d, x, y]) => {
       addNode(id, n, d, "hiw-mod", (g) => {
         svgEl("rect", { x, y, width: MOD_W, height: MOD_H, rx: 8, class: "hiw-b" }, g);
-        svgEl("rect", { x: x + 8, y: y + 17, width: 20, height: 20, rx: 5, class: "hiw-ico" }, g);
-        mountIcon(g, Icon, x + 18, y + 27, 16, "var(--color-primary-500)", iconRoots);
-        const t = svgText(g, x + 36, y + 31, n, "hiw-t-small");
-        t.style.cssText = "fill:var(--color-heading);font-size:11.5px;font-weight:500";
+        mountCard(g, x, y, MOD_W, MOD_H, MOD_ICONS[id], MOD_ICON_VB, n, 15, false);
       });
     });
     const modIds = mods.map((m) => m[0]);
+
+    const outEdge = edge("core", "panel", `M724,${CORE_MID_Y} H786`, true);
+    outEdge.fixed = true;
 
     const srcIds = sources.map((s) => s[0]);
     function neighbours(id: string) {
@@ -382,9 +390,17 @@ export default function HowItWorksDiagram() {
           ids.add(e.to);
         }
       });
-      if (key === "core") modIds.forEach((m) => ids.add(m));
+      if (key === "core") {
+        modIds.forEach((m) => ids.add(m));
+        lit.add(trunkVertical);
+        lit.add(coreEntry);
+        lit.add(outEdge);
+        ids.add("trunk");
+        ids.add("panel");
+      }
       if (srcIds.includes(id) || id === "trunk") {
-        lit.add(trunkEdge);
+        lit.add(trunkVertical);
+        lit.add(coreEntry);
         ids.add("trunk");
       }
       return { ids, lit };
@@ -410,16 +426,16 @@ export default function HowItWorksDiagram() {
     }
 
     const stages: { ids: string[]; pulse: string[]; edges: (e: Edge) => boolean }[] = [
-      { ids: srcIds, pulse: srcIds, edges: (e) => e.to === "trunk" || (e.from === "trunk" && e.to === "core") },
-      { ids: modIds, pulse: modIds, edges: (e) => e.from === "team0" },
+      { ids: srcIds, pulse: srcIds, edges: (e) => e === trunkVertical || e === coreEntry },
+      { ids: modIds, pulse: modIds, edges: (e) => e === outEdge },
     ];
     const STEP_MS = reduceMotion ? 4500 : 3000;
     const HOLD_MS = 2400;
     let step = 0;
 
     function showStep(i: number) {
-      const ids = new Set(["team0"]);
-      const lit = new Set<Edge>([teamEdge]);
+      const ids = new Set<string>();
+      const lit = new Set<Edge>();
       for (let s = 0; s <= i; s++) {
         stages[s].ids.forEach((x) => ids.add(x));
         E.filter(stages[s].edges).forEach((e) => lit.add(e));
@@ -500,7 +516,7 @@ export default function HowItWorksDiagram() {
     const gl = canvas.getContext("webgl", { premultipliedAlpha: false, antialias: true, alpha: true });
     if (gl && !reduceMotion) {
       const vs = `attribute vec2 p;attribute float sz;attribute vec4 c;uniform float sc;varying vec4 vc;
-        void main(){gl_Position=vec4(p.x/${VW}.0*2.0-1.0,1.0-p.y/${VH}.0*2.0,0.0,1.0);gl_PointSize=sz*sc;vc=c;}`;
+        void main(){gl_Position=vec4(p.x/${VW}.0*2.0-1.0,1.0-(p.y-${VY0}.0)/${VH}.0*2.0,0.0,1.0);gl_PointSize=sz*sc;vc=c;}`;
       const fs = `precision mediump float;varying vec4 vc;
         void main(){float d=length(gl_PointCoord-0.5);float a=smoothstep(0.5,0.0,d);a=a*a*(3.0-2.0*a);gl_FragColor=vec4(vc.rgb,vc.a*a);}`;
       const sh = (t: number, src: string) => {
@@ -594,7 +610,6 @@ export default function HowItWorksDiagram() {
       if (rafId) cancelAnimationFrame(rafId);
       timers.forEach((t) => window.clearTimeout(t));
       resizeObserver?.disconnect();
-      iconRoots.forEach((r) => r.unmount());
       svg.innerHTML = "";
     };
   }, [visible]);
@@ -612,16 +627,13 @@ export default function HowItWorksDiagram() {
 
   return (
     <div ref={rootDivRef} className="hiw-root">
-      <div className="hiw-card">
-        <div className="hiw-scroll">
-          <div className="hiw-flow">
-            <div ref={stageRef} className="hiw-stage">
-              <svg ref={svgRef} viewBox={`0 0 ${VW} ${VH}`} role="img" aria-label="Superatom AI architecture" />
-              <canvas ref={canvasRef} aria-hidden="true" />
-            </div>
-            <div className="hiw-connector" aria-hidden="true" />
-            <ChatPanel />
+      <div className="hiw-scroll">
+        <div className="hiw-flow">
+          <div ref={stageRef} className="hiw-stage">
+            <svg ref={svgRef} viewBox={`0 ${VY0} ${VW} ${VH}`} role="img" aria-label="Superatom AI architecture" />
+            <canvas ref={canvasRef} aria-hidden="true" />
           </div>
+          <ChatPanel />
         </div>
       </div>
       <div ref={tipRef} className="hiw-tip" hidden />

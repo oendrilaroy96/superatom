@@ -6,8 +6,8 @@ const HowItWorksDiagram = lazy(() => import("./HowItWorksDiagram"));
 function DiagramPlaceholder() {
   return (
     <div
-      className="mx-auto w-full max-w-[1320px] animate-pulse rounded-2xl bg-page"
-      style={{ aspectRatio: "1320 / 420" }}
+      className="mx-auto w-full max-w-[1550px] animate-pulse rounded-2xl bg-page"
+      style={{ aspectRatio: "1550 / 560" }}
     />
   );
 }
