@@ -16,8 +16,16 @@ const FLUID_PAD = "px-[max(16px,5%)]";
 const SCROLL_VH = 120;
 /** The pinned text fades out over the first 30% of the scroll run, finishing before the video reaches it. */
 const FADE_END = 0.3;
+/** Once window.scrollY passes this, the video placeholder starts zooming in. */
+const ZOOM_START_Y = 115;
+/** Scroll distance (px) over which the zoom ramps up to ZOOM_MAX_SCALE. */
+const ZOOM_RANGE = 400;
+/** Maximum scale the video placeholder zooms in to. */
+const ZOOM_MAX_SCALE = 1.35;
 
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+const ease = (t: number) => t * t * (3 - 2 * t);
 
 function StatIcon({ Icon }: { Icon: IconType }) {
   return (
@@ -134,13 +142,16 @@ function VideoCard() {
  * Hero with an explanatory-video section: the copy stays pinned in place
  * (position: sticky) and fades out slowly as you scroll, while the video
  * card — plain document-flow content below it, starting right where it
- * looks now — scrolls up in front of it (higher z-index) at a constant
- * size. A scroll listener logs the raw window.scrollY to the console for
+ * looks now — scrolls up in front of it (higher z-index). Once
+ * window.scrollY passes ZOOM_START_Y, the card also starts zooming in,
+ * scaling up to ZOOM_MAX_SCALE over the next ZOOM_RANGE px of scroll. A
+ * scroll listener logs the raw window.scrollY to the console for
  * debugging/tuning reference.
  */
 export default function Hero3() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [fade, setFade] = useState(1);
+  const [zoomScale, setZoomScale] = useState(1);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -152,6 +163,10 @@ export default function Hero3() {
       const total = rect.height - window.innerHeight;
       const progress = total > 0 ? clamp01(-rect.top / total) : 0;
       setFade(1 - clamp01(progress / FADE_END));
+
+      const zoomT = clamp01((window.scrollY - ZOOM_START_Y) / ZOOM_RANGE);
+      setZoomScale(lerp(1, ZOOM_MAX_SCALE, ease(zoomT)));
+
       // eslint-disable-next-line no-console
       console.log("scrollY:", window.scrollY);
     };
@@ -173,6 +188,10 @@ export default function Hero3() {
     opacity: fade,
     pointerEvents: fade < 0.05 ? "none" : undefined,
   };
+  const videoStyle: CSSProperties = {
+    transform: zoomScale > 1 ? `scale(${zoomScale})` : undefined,
+    transformOrigin: "center center",
+  };
 
   return (
     <>
@@ -180,7 +199,7 @@ export default function Hero3() {
         <div className="sticky top-16 z-[1] pt-14" style={textStyle}>
           <HeroCopy />
         </div>
-        <div className="relative z-[2] mx-auto mt-[380px] w-full max-w-[900px] px-4">
+        <div className="relative z-[2] mx-auto mt-[380px] w-full max-w-[900px] px-4" style={videoStyle}>
           <VideoCard />
         </div>
       </section>
