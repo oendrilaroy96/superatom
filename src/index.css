@@ -614,6 +614,53 @@ body {
   }
 }
 
+/* ================= Customers marquee ================= */
+.customers-marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 40px,
+    #000 calc(100% - 40px),
+    transparent
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 40px,
+    #000 calc(100% - 40px),
+    transparent
+  );
+}
+.customers-marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  width: max-content;
+  animation: customers-scroll 24s linear infinite;
+}
+.customers-marquee:hover .customers-marquee-track {
+  animation-play-state: paused;
+}
+@keyframes customers-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (min-width: 640px) {
+  .customers-marquee-track {
+    gap: 40px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .customers-marquee-track {
+    animation: none;
+  }
+}
+
 .hero-viz {
   position: relative;
 }
