@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 const NS = "http://www.w3.org/2000/svg";
 
@@ -44,18 +43,33 @@ const MODULES: [string, string, string][] = [
   ["sem", "Semantic Modeling", "Links entities and relationships across your enterprise data."],
 ];
 
-/** Sample questions the scripted sequence types out and answers, one per loop. */
-const CHAT_QUESTIONS: string[] = [
-  "Why did fulfillment cost spike in Q3?",
-  "What is the revenue impact of vendor delay?",
-  "Which suppliers are at risk this quarter?",
-  "Show me the top 5 delayed shipments",
+type Screen = { heading: string; question: string; video: string; poster: string };
+
+/** The four demo screens the frame cycles through. Set `video` (and
+ * optionally `poster`) once a real clip exists for that screen — until
+ * then it shows the placeholder label. */
+const SCREENS: Screen[] = [
+  { heading: "Natural language chat interface", question: "What is the revenue impact of vendor delay?", video: "", poster: "" },
+  { heading: "SuperBI and automated reports", question: "", video: "", poster: "" },
+  { heading: "Data app's field data ingestion", question: "", video: "", poster: "" },
+  { heading: "Workflows that close the decision loop", question: "", video: "", poster: "" },
+];
+
+const SHIMMER_STOPS: [string, string][] = [
+  ["0", "#7A73FF"],
+  ["0.3", "#00D4FF"],
+  ["0.55", "#635BFF"],
+  ["0.8", "#A960EE"],
+  ["1", "#7A73FF"],
 ];
 
 const sleep = (ms: number) => new Promise<void>((r) => window.setTimeout(r, ms));
+const toD = (pts: number[][]) =>
+  pts.map((q, i) => (i ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1)).join(" ");
 
 type Box = { l: number; t: number; r: number; b: number; cx: number; cy: number };
 type Geo = { src: number[][][]; out: number[][] };
+const CANCELLED = Symbol("cancelled");
 
 export default function HowItWorksDiagram() {
   const flowRef = useRef<HTMLElement>(null);
@@ -64,10 +78,14 @@ export default function HowItWorksDiagram() {
   const coreRef = useRef<HTMLDivElement>(null);
   const moduleRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const frameRef = useRef<HTMLDivElement>(null);
+  const frameHeadingRef = useRef<HTMLHeadingElement>(null);
   const frameLabelRef = useRef<HTMLDivElement>(null);
+  const frameLabelTextRef = useRef<HTMLSpanElement>(null);
+  const askRef = useRef<HTMLDivElement>(null);
   const askTextRef = useRef<HTMLSpanElement>(null);
   const tipRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -75,13 +93,18 @@ export default function HowItWorksDiagram() {
     const wires = wiresRef.current;
     const core = coreRef.current;
     const frame = frameRef.current;
+    const frameHeading = frameHeadingRef.current;
     const frameLabel = frameLabelRef.current;
+    const frameLabelText = frameLabelTextRef.current;
+    const ask = askRef.current;
     const askText = askTextRef.current;
     const tip = tipRef.current;
     const sources = sourceRefs.current.filter((el): el is HTMLLIElement => el !== null);
     const modules = moduleRefs.current.filter((el): el is HTMLButtonElement => el !== null);
-    if (!flow || !wires || !core || !frame || !frameLabel || !askText || !tip) return;
-    if (sources.length !== SOURCES.length || modules.length !== MODULES.length) return;
+    const tabs = tabRefs.current.filter((el): el is HTMLButtonElement => el !== null);
+    if (!flow || !wires || !core || !frame || !frameHeading || !frameLabel || !frameLabelText || !ask || !askText || !tip)
+      return;
+    if (sources.length !== SOURCES.length || modules.length !== MODULES.length || tabs.length !== SCREENS.length) return;
     if (!visible) return;
 
     // Re-bind as non-nullable so nested closures below don't lose the narrowing.
@@ -89,7 +112,10 @@ export default function HowItWorksDiagram() {
     const wiresEl: SVGSVGElement = wires;
     const coreEl: HTMLDivElement = core;
     const frameEl: HTMLDivElement = frame;
+    const frameHeadingEl: HTMLHeadingElement = frameHeading;
     const frameLabelEl: HTMLDivElement = frameLabel;
+    const frameLabelTextEl: HTMLSpanElement = frameLabelText;
+    const askEl: HTMLDivElement = ask;
     const askTextEl: HTMLSpanElement = askText;
     const tipEl: HTMLDivElement = tip;
     const video = videoRef.current;
@@ -112,6 +138,36 @@ export default function HowItWorksDiagram() {
     }
 
     const defs = document.createElementNS(NS, "defs");
+
+    // Shimmer gradient: a repeating multi-hue band that keeps sliding along a
+    // lit route for as long as it stays active, layered on top of the plain
+    // static "wire" rail underneath it.
+    const gradient = document.createElementNS(NS, "linearGradient");
+    const gradientId = `hiw-shimmer-${Math.random().toString(36).slice(2, 8)}`;
+    gradient.setAttribute("id", gradientId);
+    gradient.setAttribute("gradientUnits", "userSpaceOnUse");
+    gradient.setAttribute("spreadMethod", "repeat");
+    gradient.setAttribute("x1", "0");
+    gradient.setAttribute("y1", "0");
+    gradient.setAttribute("x2", "220");
+    gradient.setAttribute("y2", "0");
+    SHIMMER_STOPS.forEach(([offset, color]) => {
+      const stop = document.createElementNS(NS, "stop");
+      stop.setAttribute("offset", offset);
+      stop.setAttribute("stop-color", color);
+      gradient.appendChild(stop);
+    });
+    const shimmerMove = document.createElementNS(NS, "animateTransform");
+    shimmerMove.setAttribute("attributeName", "gradientTransform");
+    shimmerMove.setAttribute("type", "translate");
+    shimmerMove.setAttribute("from", "0 0");
+    shimmerMove.setAttribute("to", "220 0");
+    shimmerMove.setAttribute("dur", "1.6s");
+    shimmerMove.setAttribute("repeatCount", "indefinite");
+    if (!reduceMotion) gradient.appendChild(shimmerMove);
+    defs.appendChild(gradient);
+    const gradientUrl = `url(#${gradientId})`;
+
     const marker = document.createElementNS(NS, "marker");
     marker.setAttribute("id", `hiw-arrow-${Math.random().toString(36).slice(2, 8)}`);
     marker.setAttribute("orient", "auto");
@@ -128,6 +184,12 @@ export default function HowItWorksDiagram() {
     wiresEl.appendChild(defs);
     const markerUrl = `url(#${marker.id})`;
 
+    function setGradientOrientation(horizontal: boolean) {
+      gradient.setAttribute("x2", horizontal ? "220" : "0");
+      gradient.setAttribute("y2", horizontal ? "0" : "220");
+      shimmerMove.setAttribute("to", horizontal ? "220 0" : "0 220");
+    }
+
     const paths: Record<string, SVGPathElement> = {};
     function setPath(key: string, pts: number[][], arrow?: boolean) {
       let p = paths[key];
@@ -137,7 +199,30 @@ export default function HowItWorksDiagram() {
         wiresEl.appendChild(p);
         paths[key] = p;
       }
-      p.setAttribute("d", pts.map((q, i) => (i ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1)).join(" "));
+      p.setAttribute("d", toD(pts));
+    }
+
+    const routes: Record<string, SVGGElement> = {};
+    function setStreak(key: string, pts: number[][]) {
+      let g = routes[key];
+      if (!g) {
+        g = document.createElementNS(NS, "g");
+        g.setAttribute("class", "hiw-route");
+        const line = document.createElementNS(NS, "path");
+        line.setAttribute("class", "hiw-flowline");
+        line.setAttribute("pathLength", "100");
+        line.setAttribute("stroke", gradientUrl);
+        g.appendChild(line);
+        wiresEl.appendChild(g);
+        routes[key] = g;
+      }
+      g.querySelectorAll("path").forEach((p) => p.setAttribute("d", toD(pts)));
+    }
+    function toggleRoute(key: string, on: boolean) {
+      routes[key]?.classList.toggle("hiw-lit", on);
+    }
+    function togglePath(key: string, on: boolean) {
+      paths[key]?.classList.toggle("hiw-lit", on);
     }
 
     let geo: Geo | null = null;
@@ -152,21 +237,27 @@ export default function HowItWorksDiagram() {
           setPath(`s${i}`, [[s.r, s.cy], [busX, s.cy]]);
           g.src.push([[s.r, s.cy], [busX, s.cy], [busX, C.cy], [C.l, C.cy]]);
         });
-        setPath("bus", [[busX, S[0].cy], [busX, S[S.length - 1].cy]]);
+        setPath("busA", [[busX, S[0].cy], [busX, C.cy]]);
+        setPath("busB", [[busX, S[S.length - 1].cy], [busX, C.cy]]);
         setPath("in", [[busX, C.cy], [C.l - 2, C.cy]], true);
         setPath("out", [[C.r, C.cy], [F.l - 2, C.cy]], true);
         g.out = [[C.r, C.cy], [F.l, C.cy]];
+        setGradientOrientation(true);
       } else {
         const busY = (S[0].b + C.t) / 2;
         S.forEach((s, i) => {
           setPath(`s${i}`, [[s.cx, s.b], [s.cx, busY]]);
           g.src.push([[s.cx, s.b], [s.cx, busY], [C.cx, busY], [C.cx, C.t]]);
         });
-        setPath("bus", [[S[0].cx, busY], [S[S.length - 1].cx, busY]]);
+        setPath("busA", [[S[0].cx, busY], [C.cx, busY]]);
+        setPath("busB", [[S[S.length - 1].cx, busY], [C.cx, busY]]);
         setPath("in", [[C.cx, busY], [C.cx, C.t - 2]], true);
         setPath("out", [[C.cx, C.b], [C.cx, F.t - 2]], true);
         g.out = [[C.cx, C.b], [C.cx, F.t]];
+        setGradientOrientation(false);
       }
+      g.src.forEach((pts, i) => setStreak(`r${i}`, pts));
+      setStreak("rOut", g.out);
       geo = g;
     }
     const ro = new ResizeObserver(draw);
@@ -175,34 +266,46 @@ export default function HowItWorksDiagram() {
     if (document.fonts) document.fonts.ready.then(draw);
     draw();
 
-    function pulse(points: number[][], duration: number): Promise<void> {
-      const dot = document.createElement("div");
-      dot.className = "hiw-pulse";
-      flowEl.appendChild(dot);
-      const lens = points.slice(1).map((p, i) => Math.hypot(p[0] - points[i][0], p[1] - points[i][1]));
-      const total = lens.reduce((a, b) => a + b, 0) || 1;
-      let acc = 0;
-      const frames = points.map((p, i) => {
-        if (i > 0) acc += lens[i - 1];
-        return { left: `${p[0]}px`, top: `${p[1]}px`, offset: acc / total };
-      });
-      const anim = dot.animate(frames, { duration, easing: "linear" });
-      return anim.finished.then(
-        () => dot.remove(),
-        () => dot.remove(),
-      );
-    }
-
     function light(i: number, on: boolean) {
       sources[i].classList.toggle("hiw-on", on);
-      [`s${i}`, "bus", "in"].forEach((k) => paths[k]?.classList.toggle("hiw-lit", on));
+      const half = i < sources.length / 2 ? "busA" : "busB";
+      [`s${i}`, half, "in"].forEach((k) => togglePath(k, on));
+      toggleRoute(`r${i}`, on);
+    }
+
+    let current = 0;
+
+    function setScreen(n: number) {
+      current = n;
+      tabs.forEach((t, i) => {
+        t.setAttribute("aria-selected", i === n ? "true" : "false");
+        t.tabIndex = i === n ? 0 : -1;
+      });
+      const sc = SCREENS[n];
+      frameHeadingEl.textContent = sc.heading;
+      frameLabelTextEl.textContent = sc.video ? "" : `[Answer video for screen ${n + 1}]`;
+      askEl.hidden = !sc.question;
+      if (video) {
+        video.pause();
+        video.currentTime = 0;
+        if (sc.video) {
+          video.src = sc.video;
+          video.classList.add("hiw-video-visible");
+        } else {
+          video.removeAttribute("src");
+          video.classList.remove("hiw-video-visible");
+        }
+      }
     }
 
     function reset() {
       sources.forEach((s) => s.classList.remove("hiw-on"));
       modules.forEach((m) => m.classList.remove("hiw-on"));
-      Object.values(paths).forEach((p) => p.classList.remove("hiw-lit"));
+      Object.keys(paths).forEach((k) => togglePath(k, false));
+      Object.keys(routes).forEach((k) => toggleRoute(k, false));
       frameLabelEl.classList.remove("hiw-show");
+      frameHeadingEl.classList.remove("hiw-show");
+      flowEl.classList.remove("hiw-running");
       askTextEl.textContent = "";
       if (video) {
         video.pause();
@@ -210,88 +313,111 @@ export default function HowItWorksDiagram() {
       }
     }
 
-    const runningRef = { current: false };
-    let qIndex = 0;
-
-    async function typeQuestion(text: string) {
-      askTextEl.textContent = "";
-      for (const ch of text) {
-        if (disposed) return;
-        askTextEl.textContent += ch;
-        await sleep(32);
-      }
-    }
-
-    async function playOnce() {
-      if (runningRef.current) return;
-      runningRef.current = true;
-      reset();
-      await typeQuestion(CHAT_QUESTIONS[qIndex]);
-      if (disposed) return;
-      await sleep(300);
-      if (disposed || !geo) return;
-      const g = geo;
-
-      await Promise.all(
-        sources.map((_, i) =>
-          sleep(i * 160).then(() => {
-            if (disposed) return;
-            light(i, true);
-            return pulse(g.src[i], 900);
-          }),
-        ),
-      );
-      if (disposed) return;
-
-      for (const m of modules) {
-        if (disposed) return;
-        m.classList.add("hiw-on");
-        await sleep(420);
-      }
-      if (disposed) return;
-
-      paths.out?.classList.add("hiw-lit");
-      await pulse(g.out, 450);
-      if (disposed) return;
-      frameLabelEl.classList.add("hiw-show");
-      if (video) {
-        video.currentTime = 0;
-        video.play().catch(() => {});
-      }
-
-      await sleep(4500);
-      runningRef.current = false;
-    }
-
     function showStatic() {
       reset();
-      askTextEl.textContent = CHAT_QUESTIONS[0];
+      askTextEl.textContent = SCREENS[current].question;
+      frameHeadingEl.classList.add("hiw-show");
       sources.forEach((_, i) => light(i, true));
       modules.forEach((m) => m.classList.add("hiw-on"));
-      paths.out?.classList.add("hiw-lit");
+      togglePath("out", true);
+      toggleRoute("rOut", true);
       frameLabelEl.classList.add("hiw-show");
     }
 
+    let runId = 0;
+    let running = false;
+    function wait(id: number, ms: number): Promise<void> {
+      return sleep(ms).then(() => {
+        if (disposed || id !== runId) throw CANCELLED;
+      });
+    }
+
+    async function play(hold: number): Promise<void> {
+      const id = ++runId;
+      running = true;
+      reset();
+      try {
+        if (reduceMotion) {
+          showStatic();
+          await wait(id, hold);
+          return;
+        }
+        flowEl.classList.add("hiw-running");
+        frameHeadingEl.classList.add("hiw-show");
+        await wait(id, 350);
+
+        const q = SCREENS[current].question;
+        if (q) {
+          for (const ch of q) {
+            askTextEl.textContent += ch;
+            await wait(id, 32);
+          }
+          await wait(id, 300);
+        }
+
+        if (!geo) return;
+        await Promise.all(
+          sources.map((_, i) =>
+            wait(id, i * 160).then(() => {
+              light(i, true);
+              return wait(id, 900);
+            }),
+          ),
+        );
+        await wait(id, 0);
+
+        for (const m of modules) {
+          m.classList.add("hiw-on");
+          await wait(id, 420);
+        }
+
+        togglePath("out", true);
+        toggleRoute("rOut", true);
+        await wait(id, 700);
+        frameLabelEl.classList.add("hiw-show");
+        if (video && SCREENS[current].video) {
+          video.currentTime = 0;
+          video.play().catch(() => {});
+        }
+
+        await wait(id, hold);
+      } catch (e) {
+        if (e !== CANCELLED) throw e;
+      } finally {
+        if (id === runId) running = false;
+      }
+    }
+
+    let auto = true;
+    async function loop() {
+      while (!disposed && auto) {
+        await play(4500);
+        if (disposed || !auto) return;
+        setScreen((current + 1) % SCREENS.length);
+        await sleep(600);
+      }
+    }
+
+    function choose(n: number) {
+      auto = false;
+      setScreen(n);
+      play(0);
+    }
+
+    setScreen(0);
     if (reduceMotion) {
       showStatic();
     } else {
-      (async () => {
-        while (!disposed) {
-          await playOnce();
-          if (disposed) return;
-          qIndex = (qIndex + 1) % CHAT_QUESTIONS.length;
-          await sleep(800);
-        }
-      })();
+      loop();
     }
 
     const cleanups: (() => void)[] = [];
     sources.forEach((s, i) => {
       const onEnter = () => {
-        if (!runningRef.current) light(i, true);
+        if (!running) light(i, true);
       };
       const onLeave = () => {
-        if (!runningRef.current && !reduceMotion) light(i, false);
+        if (!running && !reduceMotion) light(i, false);
       };
       s.addEventListener("mouseenter", onEnter);
       s.addEventListener("mouseleave", onLeave);
@@ -330,11 +456,32 @@ export default function HowItWorksDiagram() {
         m.removeEventListener("blur", hideTip);
       });
     });
-    const onKeydown = (e: KeyboardEvent) => {
+    const onTipEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") hideTip();
     };
-    document.addEventListener("keydown", onKeydown);
-    cleanups.push(() => document.removeEventListener("keydown", onKeydown));
+    document.addEventListener("keydown", onTipEscape);
+    cleanups.push(() => document.removeEventListener("keydown", onTipEscape));
+
+    tabs.forEach((t, i) => {
+      const onClick = () => choose(i);
+      const onKeydown = (e: KeyboardEvent) => {
+        let n: number | null = null;
+        if (e.key === "ArrowRight") n = (i + 1) % tabs.length;
+        else if (e.key === "ArrowLeft") n = (i - 1 + tabs.length) % tabs.length;
+        else if (e.key === "Home") n = 0;
+        else if (e.key === "End") n = tabs.length - 1;
+        if (n === null) return;
+        e.preventDefault();
+        tabs[n].focus();
+        choose(n);
+      };
+      t.addEventListener("click", onClick);
+      t.addEventListener("keydown", onKeydown);
+      cleanups.push(() => {
+        t.removeEventListener("click", onClick);
+        t.removeEventListener("keydown", onKeydown);
+      });
+    });
 
     return () => {
       disposed = true;
@@ -395,24 +542,38 @@ export default function HowItWorksDiagram() {
         </div>
       </div>
 
-      <div ref={frameRef} className="hiw-vframe">
-        <video
-          ref={videoRef}
-          className="hiw-video"
-          muted
-          playsInline
-          onCanPlay={(e) => {
-            e.currentTarget.classList.add("hiw-video-visible");
-            frameLabelRef.current?.classList.remove("hiw-show");
-          }}
-        />
-        <div ref={frameLabelRef} className="hiw-frame-label">
-          <PlayArrowIcon style={{ fontSize: 20 }} />
-          <span>[Answer video plays here]</span>
+      <div className="hiw-frame-col">
+        <div ref={frameRef} className="hiw-vframe">
+          <h4 ref={frameHeadingRef} className="hiw-frame-heading" />
+          <video ref={videoRef} className="hiw-video" muted playsInline />
+          <div ref={frameLabelRef} className="hiw-frame-label">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="#fff">
+              <path d="M8 5v14l11-7Z" />
+            </svg>
+            <span ref={frameLabelTextRef} />
+          </div>
+          <div ref={askRef} className="hiw-ask">
+            <span ref={askTextRef} />
+            <span className="hiw-caret" aria-hidden="true" />
+          </div>
         </div>
-        <div className="hiw-ask">
-          <span ref={askTextRef} />
-          <span className="hiw-caret" aria-hidden="true" />
+        <div className="hiw-screens" role="tablist" aria-label="Example answers">
+          {SCREENS.map((_, i) => (
+            <button
+              key={i}
+              ref={(el) => {
+                tabRefs.current[i] = el;
+              }}
+              type="button"
+              className="hiw-screen-btn"
+              role="tab"
+              aria-selected={i === 0}
+              aria-label={`Screen ${i + 1}`}
+              tabIndex={i === 0 ? 0 : -1}
+            >
+              {i + 1}
+            </button>
+          ))}
         </div>
       </div>
 

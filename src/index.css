@@ -157,9 +157,10 @@ body {
 
 /* ================= How It Works architecture diagram ================= */
 .hiw-flow {
-  --hiw-shadow-sm: 0 2px 5px -1px rgba(50, 50, 93, 0.25), 0 1px 3px -1px rgba(0, 0, 0, 0.3);
-  --hiw-shadow-md: 0 13px 27px -5px rgba(50, 50, 93, 0.25), 0 8px 16px -8px rgba(0, 0, 0, 0.3);
-  --hiw-shadow-lg: 0 30px 60px -12px rgba(50, 50, 93, 0.25), 0 18px 36px -18px rgba(0, 0, 0, 0.3);
+  --hiw-shadow-sm: 0 1px 2px rgba(10, 37, 64, 0.04);
+  --hiw-shadow-md: 0 2px 6px rgba(10, 37, 64, 0.06);
+  --hiw-shadow-lg: 0 4px 14px rgba(10, 37, 64, 0.05);
+  --hiw-shadow-tip: 0 8px 24px rgba(10, 37, 64, 0.18);
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -186,10 +187,31 @@ body {
   transition: stroke 0.25s;
 }
 .hiw-wires path.hiw-lit {
-  stroke: var(--color-primary-500);
+  stroke: var(--color-primary-200);
 }
 .hiw-arrow {
   fill: var(--color-secondary-200);
+}
+.hiw-route {
+  pointer-events: none;
+}
+.hiw-flowline {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+  transition: stroke 0.25s;
+}
+.hiw-route.hiw-lit .hiw-flowline {
+  opacity: 1;
+  animation: hiw-draw 0.9s cubic-bezier(0.3, 0, 0.2, 1) forwards;
+}
+@keyframes hiw-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 .hiw-flow > :not(.hiw-wires):not(.hiw-tip) {
   position: relative;
@@ -222,6 +244,7 @@ body {
   padding: 12px 4px;
   text-align: center;
   background: #fff;
+  border: 1px solid var(--color-secondary-100);
   border-radius: 8px;
   box-shadow: var(--hiw-shadow-sm);
   font-size: 13px;
@@ -229,9 +252,7 @@ body {
   font-weight: 500;
   font-family: var(--font-sans);
   color: var(--color-heading);
-  transition:
-    box-shadow 0.25s,
-    transform 0.25s;
+  transition: background 0.25s;
 }
 .hiw-source svg {
   flex-shrink: 0;
@@ -243,10 +264,13 @@ body {
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
+  transition: background 0.25s;
 }
 .hiw-source.hiw-on {
-  box-shadow: var(--hiw-shadow-md);
-  transform: translateY(-2px);
+  background: var(--color-primary-100);
+}
+.hiw-source.hiw-on svg {
+  background: #fff;
 }
 
 .hiw-core {
@@ -277,7 +301,7 @@ body {
   margin: 0;
   text-align: left;
   background: var(--color-page);
-  border: 0;
+  border: 1px solid var(--color-secondary-100);
   border-radius: 8px;
   font: 500 14px/18px var(--font-sans);
   color: var(--color-heading);
@@ -285,7 +309,7 @@ body {
   transition:
     background 0.25s,
     box-shadow 0.25s,
-    transform 0.25s;
+    opacity 0.3s;
 }
 .hiw-module svg {
   flex-shrink: 0;
@@ -298,17 +322,19 @@ body {
 .hiw-module.hiw-on,
 .hiw-module:hover {
   background: #fff;
-  box-shadow: var(--hiw-shadow-md);
-  transform: translateY(-2px);
+  box-shadow: var(--hiw-shadow-sm);
 }
 .hiw-module:focus {
   outline: none;
 }
 .hiw-module:focus-visible {
   background: #fff;
-  box-shadow: var(--hiw-shadow-md);
+  box-shadow: var(--hiw-shadow-sm);
   outline: 2px solid var(--color-heading);
   outline-offset: 3px;
+}
+.hiw-flow.hiw-running .hiw-module:not(.hiw-on) {
+  opacity: 0.4;
 }
 
 .hiw-tip {
@@ -320,7 +346,7 @@ body {
   background: var(--color-heading);
   color: #fff;
   border-radius: 8px;
-  box-shadow: var(--hiw-shadow-lg);
+  box-shadow: var(--hiw-shadow-tip);
   font-size: 13px;
   line-height: 18px;
   font-weight: 500;
@@ -387,6 +413,29 @@ body {
 .hiw-frame-label.hiw-show {
   opacity: 1;
 }
+.hiw-frame-heading {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  z-index: 2;
+  margin: 0;
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-family: var(--font-display);
+  color: #fff;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity 0.35s,
+    transform 0.35s;
+}
+.hiw-frame-heading.hiw-show {
+  opacity: 1;
+  transform: none;
+}
 .hiw-ask {
   position: absolute;
   left: 16px;
@@ -407,6 +456,9 @@ body {
   font-family: var(--font-sans);
   color: var(--color-heading);
 }
+.hiw-ask[hidden] {
+  display: none;
+}
 .hiw-caret {
   display: inline-block;
   width: 2px;
@@ -422,18 +474,51 @@ body {
   }
 }
 
-.hiw-pulse {
-  position: absolute;
-  z-index: 4;
-  width: 10px;
-  height: 10px;
-  margin: -5px 0 0 -5px;
-  border-radius: 50%;
-  background: var(--color-primary-500);
-  box-shadow:
-    0 0 0 4px rgba(83, 58, 253, 0.18),
-    0 0 12px 2px rgba(83, 58, 253, 0.55);
-  pointer-events: none;
+.hiw-frame-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+.hiw-screens {
+  align-self: flex-end;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: #fff;
+  border: 1px solid var(--color-secondary-100);
+  border-radius: 10px;
+  box-shadow: var(--hiw-shadow-sm);
+}
+.hiw-screen-btn {
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--color-caption);
+  font: 600 14px/1 var(--font-sans);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.hiw-screen-btn:hover {
+  background: var(--color-page);
+  color: var(--color-heading);
+}
+.hiw-screen-btn[aria-selected="true"] {
+  background: var(--color-heading);
+  color: #fff;
+}
+.hiw-screen-btn:focus {
+  outline: none;
+}
+.hiw-screen-btn:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
 }
 
 /* ---------- Tablet: roomier stacked layout ---------- */
@@ -449,6 +534,13 @@ body {
   }
   .hiw-core {
     padding: 28px;
+  }
+  .hiw-frame-heading {
+    top: 24px;
+    left: 24px;
+    right: 24px;
+    font-size: 20px;
+    line-height: 28px;
   }
   .hiw-ask {
     left: 24px;
@@ -492,6 +584,15 @@ body {
   .hiw-vframe {
     background-size: 72px 72px;
   }
+  .hiw-frame-col {
+    position: relative;
+  }
+  .hiw-screens {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 16px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -502,8 +603,14 @@ body {
   .hiw-module,
   .hiw-wires path,
   .hiw-frame-label,
+  .hiw-frame-heading,
+  .hiw-screen-btn,
   .hiw-tip {
     transition: none;
+  }
+  .hiw-route.hiw-lit .hiw-flowline {
+    animation: none;
+    stroke-dashoffset: 0;
   }
 }
 
