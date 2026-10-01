@@ -38,9 +38,9 @@ function App() {
           <Hero3 />
           <HowItWorks />
           {/* <Infrastructure /> */}
+          <Customers />
           <Testimonial />
           <Achievements />
-          <Customers />
         </main>
       </div>
     </ReactLenis>
