@@ -635,7 +635,7 @@ body {
 .customers-marquee-track {
   display: flex;
   align-items: center;
-  gap: 56px;
+  gap: 80px;
   width: max-content;
   animation: customers-scroll 24s linear infinite;
 }
@@ -652,7 +652,7 @@ body {
 }
 @media (min-width: 640px) {
   .customers-marquee-track {
-    gap: 72px;
+    gap: 112px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
