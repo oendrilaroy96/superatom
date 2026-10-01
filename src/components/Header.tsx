@@ -143,7 +143,7 @@ export default function Header() {
         </nav>
 
         <div className="hidden lg:block">
-          <Button variant="secondary" className="px-5 py-2.5 text-[13px]" onClick={openDemo}>
+          <Button variant="accentOutline" className="px-5 py-2.5 text-[13px]" onClick={openDemo}>
             Book a demo
           </Button>
         </div>
@@ -172,7 +172,7 @@ export default function Header() {
             <a href="#" className="text-sm font-medium text-body">
               About us
             </a>
-            <Button variant="secondary" className="mt-2 w-full justify-center" onClick={openDemo}>
+            <Button variant="accentOutline" className="mt-2 w-full justify-center" onClick={openDemo}>
               Book a demo
             </Button>
           </nav>

@@ -1,6 +1,7 @@
 export type ButtonVariant =
   | "primary"
   | "secondary"
+  | "accentOutline"
   | "accent"
   | "default"
   | "subtle"
@@ -38,6 +39,16 @@ export const buttonVariants: Record<ButtonVariant, VariantTokens> = {
     selectedBg: "bg-secondary-100/60",
     selectedBorder: "border-2",
     ring: "ring-heading",
+  },
+  // White pill with an accent-colored label, used for the "Book a demo" CTA.
+  // Border and text both flip to the secondary (dark navy) color on hover.
+  accentOutline: {
+    text: "text-accent-500",
+    border: "border border-secondary-200",
+    restBg: "bg-white",
+    hoverClass: "hover:border-secondary-500 hover:text-secondary-500",
+    selectedBg: "bg-white",
+    ring: "ring-secondary-500",
   },
   accent: {
     text: "text-heading",
@@ -98,6 +109,7 @@ export const textButtonColors: Record<
 > = {
   primary: { text: "text-primary-500", hoverText: "hover:text-primary-600" },
   secondary: { text: "text-heading", hoverText: "hover:text-secondary-600" },
+  accentOutline: { text: "text-accent-500", hoverText: "hover:text-secondary-600" },
   accent: { text: "text-accent-700", hoverText: "hover:text-accent-800" },
   default: { text: "text-body", hoverText: "hover:text-heading" },
   subtle: { text: "text-muted", hoverText: "hover:text-body" },
