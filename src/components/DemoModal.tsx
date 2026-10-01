@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent, type InputHTMLAttributes } from "react";
+import { createPortal } from "react-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Button from "./ui/Button";
@@ -57,9 +58,9 @@ export default function DemoModal({ open, onClose }: DemoModalProps) {
     setSubmitted(true);
   }
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-secondary-900/50 px-4 py-8 backdrop-blur-sm"
+      className="fixed inset-0 z-[1000] flex items-center justify-center overflow-y-auto bg-secondary-900/50 px-4 py-8 backdrop-blur-sm"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -159,6 +160,7 @@ export default function DemoModal({ open, onClose }: DemoModalProps) {
           </>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
