@@ -6,6 +6,7 @@ import HowItWorks from "./components/HowItWorks";
 // import Infrastructure from "./components/Infrastructure";
 import Testimonial from "./components/Testimonial";
 import Customers from "./components/Customers";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Customers />
           <Testimonial />
         </main>
+        <Footer />
       </div>
     </ReactLenis>
   );
