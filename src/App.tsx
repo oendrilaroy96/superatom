@@ -2,7 +2,6 @@ import { ReactLenis } from "lenis/react";
 import Header from "./components/Header";
 import Hero3 from "./components/Hero3";
 import HowItWorks from "./components/HowItWorks";
-import Features from "./components/Features";
 // Infrastructure section temporarily hidden from the page.
 // import Infrastructure from "./components/Infrastructure";
 import Testimonial from "./components/Testimonial";
@@ -38,7 +37,6 @@ function App() {
         <main className="relative z-10">
           <Hero3 />
           <HowItWorks />
-          <Features />
           {/* <Infrastructure /> */}
           <Testimonial />
           <Achievements />
