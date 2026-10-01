@@ -83,11 +83,11 @@ export default function HowItWorks() {
       </div>
 
       <div className="mx-auto mt-20 max-w-[1920px] px-4 sm:px-10 xl:px-20">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="flex flex-wrap justify-center gap-6">
           {points.map((p) => (
             <div
               key={p.title}
-              className="rounded-lg border border-secondary-100 bg-white p-6"
+              className="w-full rounded-lg border border-secondary-100 bg-white p-6 sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
             >
               <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
                 <p.Icon style={{ fontSize: 22 }} />
