@@ -49,6 +49,22 @@ const features: { title: string; desc: string; Icon: IconComponent }[] = [
 
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
+function FeaturesHeading({ inView }: { inView: boolean }) {
+  return (
+    <div className="relative z-[2] mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+      <SectionHeading
+        align="center"
+        className="max-w-2xl"
+        theme={inView ? "dark" : "light"}
+        eyebrow="Features"
+        eyebrowColor="accent"
+        heading="Everything the platform brings together"
+        description="From secure, on-premise deployment to the AI modules that turn enterprise data into decisions — all built in."
+      />
+    </div>
+  );
+}
+
 function FeatureItem({ f, inView }: { f: (typeof features)[number]; inView: boolean }) {
   return (
     <div className="flex w-[280px] flex-none flex-col items-start sm:w-[320px]">
@@ -73,11 +89,12 @@ function FeatureItem({ f, inView }: { f: (typeof features)[number]; inView: bool
  * The section's own background eases from the page's light background to
  * the site's dark navy as it scrolls into view (and back on the way out),
  * so the theme change reads as automatic rather than a hard cut at the
- * section boundary. Below that, the feature row is pinned (position:
- * sticky) while its own tall wrapper scrolls underneath, and translateX
- * tracks that scroll 1:1 so the items travel horizontally along a fixed
- * connecting line as you scroll down — released back into normal
- * document flow once the row has fully passed.
+ * section boundary. Below that, the heading and the feature row are
+ * pinned together (position: sticky) while their shared tall wrapper
+ * scrolls underneath, and translateX tracks that scroll 1:1 so only the
+ * items travel horizontally along a fixed connecting line as you scroll
+ * down — released back into normal document flow once the row has fully
+ * passed.
  */
 export default function Features() {
   const bgSectionRef = useRef<HTMLElement>(null);
@@ -170,29 +187,18 @@ export default function Features() {
         inView ? "bg-secondary-500" : "bg-page"
       }`}
     >
-      <div className="relative z-[2] mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-        <SectionHeading
-          align="center"
-          className="max-w-2xl"
-          theme={inView ? "dark" : "light"}
-          eyebrow="Features"
-          eyebrowColor="accent"
-          heading="Everything the platform brings together"
-          description="From secure, on-premise deployment to the AI modules that turn enterprise data into decisions — all built in."
-        />
-      </div>
-
       {scrollJack ? (
         <div
           ref={pinRef}
-          className="relative mt-16"
+          className="relative"
           style={{ height: `calc(100vh + ${scrollExtra}px)` }}
         >
           <div
             ref={containerRef}
             className="sticky top-16 overflow-hidden py-10"
           >
-            <div className="relative">
+            <FeaturesHeading inView={inView} />
+            <div className="relative mt-16">
               <div
                 className={`pointer-events-none absolute left-0 right-0 top-7 h-px transition-colors duration-700 ${inView ? "bg-white/15" : "bg-secondary-100"}`}
               />
@@ -209,16 +215,19 @@ export default function Features() {
           </div>
         </div>
       ) : (
-        <div className="mt-16 overflow-x-auto px-4 sm:px-10 xl:px-20">
-          <div className="relative flex w-fit items-start gap-16 pb-2">
-            <div
-              className={`pointer-events-none absolute left-0 right-0 top-7 h-px transition-colors duration-700 ${inView ? "bg-white/15" : "bg-secondary-100"}`}
-            />
-            {features.map((f) => (
-              <FeatureItem key={f.title} f={f} inView={inView} />
-            ))}
+        <>
+          <FeaturesHeading inView={inView} />
+          <div className="mt-16 overflow-x-auto px-4 sm:px-10 xl:px-20">
+            <div className="relative flex w-fit items-start gap-16 pb-2">
+              <div
+                className={`pointer-events-none absolute left-0 right-0 top-7 h-px transition-colors duration-700 ${inView ? "bg-white/15" : "bg-secondary-100"}`}
+              />
+              {features.map((f) => (
+                <FeatureItem key={f.title} f={f} inView={inView} />
+              ))}
+            </div>
           </div>
-        </div>
+        </>
       )}
     </section>
   );
