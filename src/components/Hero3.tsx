@@ -39,9 +39,11 @@ function HeroCopy() {
         </span>
       </h1>
       <p className="mb-6 max-w-3xl text-[18px] leading-[1.55] text-body">
-        Turn enterprise data into real-time intelligence and make instant,
-        AI-powered decisions. Built for teams that move fast, without
-        compromising security, governance or existing integrations.
+        Superatom AI connects and synchronizes data across enterprise
+        Systems of Record (ERP&rsquo;s) and Data systems, to create a
+        unified intelligence layer. It delivers actionable insights and
+        intelligence, and enables you to execute the decisions through
+        workflows.
       </p>
       <Button
         href="#"
