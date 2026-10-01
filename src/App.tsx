@@ -3,7 +3,8 @@ import Header from "./components/Header";
 import Hero3 from "./components/Hero3";
 import HowItWorks from "./components/HowItWorks";
 import Features from "./components/Features";
-import Infrastructure from "./components/Infrastructure";
+// Infrastructure section temporarily hidden from the page.
+// import Infrastructure from "./components/Infrastructure";
 import Testimonial from "./components/Testimonial";
 import Achievements from "./components/Achievements";
 import Customers from "./components/Customers";
@@ -38,7 +39,7 @@ function App() {
           <Hero3 />
           <HowItWorks />
           <Features />
-          <Infrastructure />
+          {/* <Infrastructure /> */}
           <Testimonial />
           <Achievements />
           <Customers />
