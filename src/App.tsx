@@ -4,6 +4,8 @@ import Hero3 from "./components/Hero3";
 import HowItWorks from "./components/HowItWorks";
 import Features from "./components/Features";
 import Infrastructure from "./components/Infrastructure";
+import Testimonial from "./components/Testimonial";
+import Customers from "./components/Customers";
 
 function App() {
   return (
@@ -36,6 +38,8 @@ function App() {
           <HowItWorks />
           <Features />
           <Infrastructure />
+          <Testimonial />
+          <Customers />
         </main>
       </div>
     </ReactLenis>
