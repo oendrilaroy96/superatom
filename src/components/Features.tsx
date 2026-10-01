@@ -54,10 +54,8 @@ function FeatureItem({ f }: { f: (typeof features)[number] }) {
       <span className="relative z-[1] mb-6 grid h-14 w-14 shrink-0 place-items-center rounded-full bg-white text-primary-500 shadow-[0_10px_25px_-8px_rgba(0,0,0,0.4)]">
         <f.Icon style={{ fontSize: 24 }} />
       </span>
-      <p className="font-display text-[26px] font-semibold leading-tight text-white sm:text-[32px]">
-        {f.title}
-      </p>
-      <p className="mt-2 text-sm leading-relaxed text-white/65">{f.desc}</p>
+      <p className="text-h4 font-display font-semibold text-white">{f.title}</p>
+      <p className="mt-1.5 text-xs leading-relaxed text-white/65">{f.desc}</p>
     </div>
   );
 }
