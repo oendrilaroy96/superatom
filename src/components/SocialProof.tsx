@@ -1,17 +1,19 @@
+import SectionHeading from "./ui/SectionHeading";
+
 const ecosystem = ["SAP", "Microsoft Azure", "AWS"];
 
 export default function SocialProof() {
   return (
     <section className="bg-secondary-500 py-16 sm:py-20">
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-h5 font-semibold uppercase tracking-[0.5px] text-accent-400">
-            Customers
-          </p>
-          <h2 className="mt-3 font-display text-[22px] font-bold text-white sm:text-h2">
-            Trusted by enterprise supply chain teams
-          </h2>
-        </div>
+        <SectionHeading
+          align="center"
+          className="max-w-2xl"
+          theme="dark"
+          eyebrow="Customers"
+          eyebrowColor="accent"
+          heading="Trusted by enterprise supply chain teams"
+        />
 
         <div className="mx-auto mt-10 max-w-2xl rounded-lg border border-white/10 bg-secondary-600 p-8 text-center">
           <p className="text-lg italic text-white/75">

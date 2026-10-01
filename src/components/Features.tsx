@@ -7,6 +7,7 @@ import TimelineIcon from "@mui/icons-material/Timeline";
 import TuneIcon from "@mui/icons-material/Tune";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import type { IconComponent } from "../types/icon";
+import SectionHeading from "./ui/SectionHeading";
 
 const features: { title: string; desc: string; Icon: IconComponent }[] = [
   {
@@ -162,18 +163,15 @@ export default function Features() {
       }`}
     >
       <div className="relative z-[2] mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-h5 font-semibold uppercase tracking-[0.5px] text-accent-400">
-            Features
-          </p>
-          <h2 className="mt-3 font-display text-[28px] font-semibold text-white sm:text-h2">
-            Everything the platform brings together
-          </h2>
-          <p className="text-p mt-4 text-white/65">
-            From secure, on-premise deployment to the AI modules that turn
-            enterprise data into decisions — all built in.
-          </p>
-        </div>
+        <SectionHeading
+          align="center"
+          className="max-w-2xl"
+          theme="dark"
+          eyebrow="Features"
+          eyebrowColor="accent"
+          heading="Everything the platform brings together"
+          description="From secure, on-premise deployment to the AI modules that turn enterprise data into decisions — all built in."
+        />
       </div>
 
       {scrollJack ? (
