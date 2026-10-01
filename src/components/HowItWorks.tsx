@@ -16,11 +16,10 @@ export default function HowItWorks() {
         <SectionHeading
           align="center"
           className="max-w-2xl"
-          eyebrow="Beyond BI Tools"
           heading={
             <>
-              From enterprise data to{" "}
-              <span className="text-primary-500">better decisions.</span>
+              Beyond BI Tools to{" "}
+              <span className="text-primary-500">Super Intelligence.</span>
             </>
           }
           description="Superatom AI brings together your enterprise data, business context, rules and AI to help teams make, execute and continuously improve thousands of decisions — every day."

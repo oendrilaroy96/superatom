@@ -5,7 +5,7 @@ type HeadingSize = "default" | "lg";
 type Theme = "light" | "dark";
 
 type SectionHeadingProps = {
-  eyebrow: ReactNode;
+  eyebrow?: ReactNode;
   heading: ReactNode;
   description?: ReactNode;
   eyebrowColor?: EyebrowColor;
@@ -58,11 +58,13 @@ export default function SectionHeading({
     <div
       className={`${align === "center" ? "mx-auto text-center" : ""} ${className}`}
     >
-      <p
-        className={`text-h5 font-semibold uppercase tracking-[0.5px] transition-colors duration-700 ${eyebrowColors[theme][eyebrowColor]}`}
-      >
-        {eyebrow}
-      </p>
+      {eyebrow && (
+        <p
+          className={`text-h5 font-semibold uppercase tracking-[0.5px] transition-colors duration-700 ${eyebrowColors[theme][eyebrowColor]}`}
+        >
+          {eyebrow}
+        </p>
+      )}
       <h2
         className={`font-display font-semibold transition-colors duration-700 ${headingColors[theme]} ${headingSizes[size]}`}
       >
