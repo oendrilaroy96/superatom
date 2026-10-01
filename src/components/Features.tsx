@@ -190,7 +190,7 @@ export default function Features() {
         >
           <div
             ref={containerRef}
-            className="sticky top-16 flex h-[calc(100vh-4rem)] flex-col justify-center overflow-hidden"
+            className="sticky top-16 overflow-hidden py-10"
           >
             <div className="relative">
               <div
