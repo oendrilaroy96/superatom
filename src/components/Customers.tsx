@@ -47,7 +47,7 @@ export default function Customers() {
   }, []);
 
   return (
-    <section className="py-20 sm:py-24">
+    <section className="py-16 sm:py-20">
       <div className="mx-auto flex max-w-[1920px] items-center gap-x-8 px-4 sm:gap-x-10 sm:px-10 xl:px-20">
         <span className="shrink-0 border-r border-secondary-200 pr-8 text-xl font-semibold text-heading sm:pr-10 sm:text-2xl">
           Trusted by

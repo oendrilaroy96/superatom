@@ -2,7 +2,7 @@ import SectionHeading from "./ui/SectionHeading";
 
 export default function Testimonial() {
   return (
-    <section className="py-20 sm:py-24">
+    <section className="py-16 sm:py-20">
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
         <SectionHeading
           align="center"
