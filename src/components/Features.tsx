@@ -49,14 +49,22 @@ const features: { title: string; desc: string; Icon: IconComponent }[] = [
 
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
-function FeatureItem({ f }: { f: (typeof features)[number] }) {
+function FeatureItem({ f, inView }: { f: (typeof features)[number]; inView: boolean }) {
   return (
     <div className="flex w-[280px] flex-none flex-col items-start sm:w-[320px]">
       <span className="relative z-[1] mb-6 grid h-14 w-14 shrink-0 place-items-center rounded-full bg-white text-primary-500 shadow-[0_10px_25px_-8px_rgba(0,0,0,0.4)]">
         <f.Icon style={{ fontSize: 24 }} />
       </span>
-      <p className="text-h4 font-display font-semibold text-white">{f.title}</p>
-      <p className="mt-1.5 text-xs leading-relaxed text-white/65">{f.desc}</p>
+      <p
+        className={`text-h4 font-display font-semibold transition-colors duration-700 ${inView ? "text-white" : "text-heading"}`}
+      >
+        {f.title}
+      </p>
+      <p
+        className={`mt-1.5 text-xs leading-relaxed transition-colors duration-700 ${inView ? "text-white/65" : "text-caption"}`}
+      >
+        {f.desc}
+      </p>
     </div>
   );
 }
@@ -166,7 +174,7 @@ export default function Features() {
         <SectionHeading
           align="center"
           className="max-w-2xl"
-          theme="dark"
+          theme={inView ? "dark" : "light"}
           eyebrow="Features"
           eyebrowColor="accent"
           heading="Everything the platform brings together"
@@ -185,14 +193,16 @@ export default function Features() {
             className="sticky top-16 flex h-[calc(100vh-4rem)] flex-col justify-center overflow-hidden"
           >
             <div className="relative">
-              <div className="pointer-events-none absolute left-0 right-0 top-7 h-px bg-white/15" />
+              <div
+                className={`pointer-events-none absolute left-0 right-0 top-7 h-px transition-colors duration-700 ${inView ? "bg-white/15" : "bg-secondary-100"}`}
+              />
               <div
                 ref={rowRef}
                 className="flex items-start gap-16 px-4 will-change-transform sm:px-10 xl:px-20"
                 style={{ transform: `translateX(-${offsetX}px)` }}
               >
                 {features.map((f) => (
-                  <FeatureItem key={f.title} f={f} />
+                  <FeatureItem key={f.title} f={f} inView={inView} />
                 ))}
               </div>
             </div>
@@ -201,9 +211,11 @@ export default function Features() {
       ) : (
         <div className="mt-16 overflow-x-auto px-4 sm:px-10 xl:px-20">
           <div className="relative flex w-fit items-start gap-16 pb-2">
-            <div className="pointer-events-none absolute left-0 right-0 top-7 h-px bg-white/15" />
+            <div
+              className={`pointer-events-none absolute left-0 right-0 top-7 h-px transition-colors duration-700 ${inView ? "bg-white/15" : "bg-secondary-100"}`}
+            />
             {features.map((f) => (
-              <FeatureItem key={f.title} f={f} />
+              <FeatureItem key={f.title} f={f} inView={inView} />
             ))}
           </div>
         </div>

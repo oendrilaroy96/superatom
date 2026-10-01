@@ -59,18 +59,18 @@ export default function SectionHeading({
       className={`${align === "center" ? "mx-auto text-center" : ""} ${className}`}
     >
       <p
-        className={`text-h5 font-semibold uppercase tracking-[0.5px] ${eyebrowColors[theme][eyebrowColor]}`}
+        className={`text-h5 font-semibold uppercase tracking-[0.5px] transition-colors duration-700 ${eyebrowColors[theme][eyebrowColor]}`}
       >
         {eyebrow}
       </p>
       <h2
-        className={`font-display font-semibold ${headingColors[theme]} ${headingSizes[size]}`}
+        className={`font-display font-semibold transition-colors duration-700 ${headingColors[theme]} ${headingSizes[size]}`}
       >
         {heading}
       </h2>
       {description && (
         <p
-          className={`text-p mt-4 ${descriptionColors[theme]} ${descriptionClassName}`}
+          className={`text-p mt-4 transition-colors duration-700 ${descriptionColors[theme]} ${descriptionClassName}`}
         >
           {description}
         </p>
