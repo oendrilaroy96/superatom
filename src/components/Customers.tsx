@@ -1,13 +1,21 @@
-const customers = ["Customer A", "Customer B", "Customer C", "Customer D", "Customer E"];
+import bluelinx from "../assets/logos/bluelinx.png";
+import mindlabs from "../assets/logos/mindlabs.png";
+import seshaasai from "../assets/logos/seshaasai.png";
 
-function CustomerName({ name, hidden }: { name: string; hidden?: boolean }) {
+const customers: { name: string; logo: string }[] = [
+  { name: "BlueLinx", logo: bluelinx },
+  { name: "mindlabs.cloud", logo: mindlabs },
+  { name: "Seshaasai", logo: seshaasai },
+];
+
+function CustomerLogo({ name, logo, hidden }: { name: string; logo: string; hidden?: boolean }) {
   return (
-    <span
-      className="shrink-0 text-xl font-semibold tracking-tight text-caption/70"
+    <img
+      src={logo}
+      alt={name}
       aria-hidden={hidden || undefined}
-    >
-      {name}
-    </span>
+      className="h-7 w-auto shrink-0 object-contain opacity-60 grayscale transition duration-200 hover:opacity-100 hover:grayscale-0 sm:h-8"
+    />
   );
 }
 
@@ -20,11 +28,11 @@ export default function Customers() {
         </span>
         <div className="customers-marquee min-w-0 flex-1">
           <div className="customers-marquee-track">
-            {customers.map((name) => (
-              <CustomerName key={name} name={name} />
+            {customers.map((c) => (
+              <CustomerLogo key={c.name} name={c.name} logo={c.logo} />
             ))}
-            {customers.map((name) => (
-              <CustomerName key={`${name}-dup`} name={name} hidden />
+            {customers.map((c) => (
+              <CustomerLogo key={`${c.name}-dup`} name={c.name} logo={c.logo} hidden />
             ))}
           </div>
         </div>
