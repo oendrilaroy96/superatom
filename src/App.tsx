@@ -5,6 +5,7 @@ import HowItWorks from "./components/HowItWorks";
 import Features from "./components/Features";
 import Infrastructure from "./components/Infrastructure";
 import Testimonial from "./components/Testimonial";
+import Achievements from "./components/Achievements";
 import Customers from "./components/Customers";
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
           <Features />
           <Infrastructure />
           <Testimonial />
+          <Achievements />
           <Customers />
         </main>
       </div>
