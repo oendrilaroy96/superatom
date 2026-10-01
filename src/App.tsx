@@ -5,7 +5,6 @@ import HowItWorks from "./components/HowItWorks";
 // Infrastructure section temporarily hidden from the page.
 // import Infrastructure from "./components/Infrastructure";
 import Testimonial from "./components/Testimonial";
-import Achievements from "./components/Achievements";
 import Customers from "./components/Customers";
 
 function App() {
@@ -40,7 +39,6 @@ function App() {
           {/* <Infrastructure /> */}
           <Customers />
           <Testimonial />
-          <Achievements />
         </main>
       </div>
     </ReactLenis>
