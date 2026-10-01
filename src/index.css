@@ -191,7 +191,7 @@ body {
 .hiw-arrow {
   fill: var(--color-secondary-200);
 }
-.hiw-flow > :not(.hiw-wires) {
+.hiw-flow > :not(.hiw-wires):not(.hiw-tip) {
   position: relative;
   z-index: 1;
 }
