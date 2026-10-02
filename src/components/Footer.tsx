@@ -27,11 +27,11 @@ const columns: { heading: string; links: string[] }[] = [
   },
 ];
 
-const socials: { label: string; Icon: IconComponent }[] = [
-  { label: "Email", Icon: EmailIcon },
-  { label: "LinkedIn", Icon: LinkedInIcon },
-  { label: "Twitter", Icon: TwitterIcon },
-  { label: "YouTube", Icon: YouTubeIcon },
+const socials: { label: string; Icon: IconComponent; href: string }[] = [
+  { label: "Email", Icon: EmailIcon, href: "#" },
+  { label: "LinkedIn", Icon: LinkedInIcon, href: "https://www.linkedin.com/company/superatom-0ai/posts/" },
+  { label: "Twitter", Icon: TwitterIcon, href: "#" },
+  { label: "YouTube", Icon: YouTubeIcon, href: "https://www.youtube.com/@SuperatomAI" },
 ];
 
 export default function Footer() {
@@ -46,11 +46,12 @@ export default function Footer() {
               execute the decisions.
             </p>
             <div className="mt-5 flex items-center gap-2">
-              {socials.map(({ label, Icon }) => (
+              {socials.map(({ label, Icon, href }) => (
                 <a
                   key={label}
-                  href="#"
+                  href={href}
                   aria-label={label}
+                  {...(href !== "#" ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                   className="flex h-9 w-9 items-center justify-center rounded-md border border-secondary-100 bg-white text-caption transition-colors hover:border-secondary-200 hover:text-heading"
                 >
                   <Icon style={{ fontSize: 18 }} aria-hidden="true" />
