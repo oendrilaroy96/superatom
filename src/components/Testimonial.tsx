@@ -13,7 +13,7 @@ export default function Testimonial() {
           heading="Trusted by enterprise supply chain teams"
         />
 
-        <div className="mx-auto mt-10 max-w-2xl rounded-lg border border-secondary-100 bg-white p-8 text-center shadow-sm">
+        <div className="mx-auto mt-16 max-w-2xl rounded-lg border border-secondary-100 bg-white p-8 text-center shadow-sm">
           <p className="text-lg italic text-body">
             "[Customer testimonial placeholder — replace with a real quote
             once available.]"
