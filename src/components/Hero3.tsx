@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Button from "./ui/Button";
 
@@ -26,6 +27,22 @@ const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const ease = (t: number) => t * t * (3 - 2 * t);
 
+/** Chevron at rest; morphs into a full arrow (shaft + head) on the button's hover. */
+function HoverArrowIcon() {
+  return (
+    <span className="relative inline-flex h-[18px] w-[18px] shrink-0 items-center justify-center">
+      <ChevronRightIcon
+        style={{ fontSize: 18 }}
+        className="absolute transition-all duration-200 group-hover:-translate-x-1.5 group-hover:opacity-0"
+      />
+      <ArrowForwardIcon
+        style={{ fontSize: 18 }}
+        className="absolute translate-x-1.5 opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100"
+      />
+    </span>
+  );
+}
+
 function HeroCopy() {
   return (
     <div className="mx-auto flex max-w-4xl flex-col items-center px-4 text-center">
@@ -48,8 +65,8 @@ function HeroCopy() {
       <Button
         href="#"
         variant="primary"
-        iconRight={<ArrowForwardIcon style={{ fontSize: 18 }} />}
-        className="shadow-[0_10px_30px_-10px_rgba(83,58,253,0.35)] transition-transform hover:-translate-y-px"
+        iconRight={<HoverArrowIcon />}
+        className="group shadow-[0_10px_30px_-10px_rgba(83,58,253,0.35)] transition-transform hover:-translate-y-px"
       >
         Explore the Platform
       </Button>
