@@ -33,9 +33,9 @@ function HeroCopy() {
         Decision intelligence for enterprises
       </p>
       <h1 className="hero2-heading m-0 mb-4 font-display font-semibold leading-[1.08] tracking-[-0.02em] text-heading">
-        <span className="block">Better decisions.</span>
-        <span className="block whitespace-nowrap bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
-          Every day. Every time.
+        <span className="block">Decide Fast, Decide Right,</span>
+        <span className="block bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
+          Every time
         </span>
       </h1>
       <p className="mb-6 max-w-3xl text-[18px] leading-[1.55] text-body">
