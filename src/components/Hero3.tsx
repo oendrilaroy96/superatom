@@ -40,7 +40,7 @@ function HeroCopy() {
       </h1>
       <p className="mb-6 max-w-3xl text-[18px] leading-[1.55] text-body">
         Superatom AI connects and synchronizes data across enterprise
-        Systems of Record (ERP&rsquo;s) and Data systems, to create a
+        system of records (ERP&rsquo;s) and Data systems, to create a
         unified intelligence layer. It delivers actionable insights and
         intelligence, and enables you to execute the decisions through
         workflows.
