@@ -61,7 +61,7 @@ export default function Footer() {
           </div>
 
           {columns.map((col) => (
-            <div key={col.heading}>
+            <div key={col.heading} className="text-right">
               <p className="font-display text-xs font-bold uppercase tracking-wide text-heading">
                 {col.heading}
               </p>
