@@ -3,8 +3,11 @@ import bluelinx from "../assets/logos/bluelinx.png";
 import mindlabs from "../assets/logos/mindlabs.png";
 import seshaasai from "../assets/logos/seshaasai.png";
 
-const customers: { name: string; logo: string }[] = [
-  { name: "BlueLinx", logo: bluelinx },
+// BlueLinx's wordmark is much wider per unit height than the other two, so
+// at a shared height it visually dominates the row — sized down here so its
+// rendered width lines up with the others instead.
+const customers: { name: string; logo: string; heightClass?: string }[] = [
+  { name: "BlueLinx", logo: bluelinx, heightClass: "h-5 sm:h-6 xl:h-7" },
   { name: "mindlabs.cloud", logo: mindlabs },
   { name: "Seshaasai", logo: seshaasai },
 ];
@@ -19,12 +22,20 @@ const SPEED_PX_PER_SEC = 55;
 const LAPS = 6;
 const lap = Array.from({ length: LAPS }, () => customers).flat();
 
-function CustomerLogo({ name, logo }: { name: string; logo: string }) {
+function CustomerLogo({
+  name,
+  logo,
+  heightClass = "h-8 sm:h-9 xl:h-11",
+}: {
+  name: string;
+  logo: string;
+  heightClass?: string;
+}) {
   return (
     <img
       src={logo}
       alt={name}
-      className="h-8 w-auto shrink-0 object-contain opacity-60 grayscale transition duration-200 hover:opacity-100 hover:grayscale-0 sm:h-9 xl:h-11"
+      className={`w-auto shrink-0 object-contain opacity-60 grayscale transition duration-200 hover:opacity-100 hover:grayscale-0 ${heightClass}`}
     />
   );
 }
@@ -61,10 +72,10 @@ export default function Customers() {
             style={{ animationDuration: `${duration}s` }}
           >
             {lap.map((c, i) => (
-              <CustomerLogo key={`a-${i}-${c.name}`} name={c.name} logo={c.logo} />
+              <CustomerLogo key={`a-${i}-${c.name}`} name={c.name} logo={c.logo} heightClass={c.heightClass} />
             ))}
             {lap.map((c, i) => (
-              <CustomerLogo key={`b-${i}-${c.name}`} name={c.name} logo={c.logo} />
+              <CustomerLogo key={`b-${i}-${c.name}`} name={c.name} logo={c.logo} heightClass={c.heightClass} />
             ))}
           </div>
         </div>
