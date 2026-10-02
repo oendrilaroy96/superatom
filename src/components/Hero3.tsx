@@ -32,12 +32,12 @@ function HoverArrowIcon() {
   return (
     <span className="relative inline-flex h-[18px] w-[18px] shrink-0 items-center justify-center">
       <ChevronRightIcon
-        style={{ fontSize: 18 }}
-        className="absolute transition-all duration-200 group-hover:-translate-x-1.5 group-hover:opacity-0"
+        style={{ fontSize: 18, transition: "transform 500ms cubic-bezier(0.22,1,0.36,1), opacity 500ms cubic-bezier(0.22,1,0.36,1)" }}
+        className="absolute group-hover:-translate-x-2 group-hover:opacity-0"
       />
       <ArrowForwardIcon
-        style={{ fontSize: 18 }}
-        className="absolute translate-x-1.5 opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100"
+        style={{ fontSize: 18, transition: "transform 500ms cubic-bezier(0.22,1,0.36,1), opacity 500ms cubic-bezier(0.22,1,0.36,1)" }}
+        className="absolute translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100"
       />
     </span>
   );
