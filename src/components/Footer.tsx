@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import EmailIcon from "@mui/icons-material/Email";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import TwitterIcon from "@mui/icons-material/Twitter";
@@ -5,25 +6,31 @@ import YouTubeIcon from "@mui/icons-material/YouTube";
 import type { IconComponent } from "../types/icon";
 import logo from "../assets/superatom-logo.png";
 
-const columns: { heading: string; links: string[] }[] = [
+const columns: { heading: string; links: { name: string; path?: string }[] }[] = [
   {
     heading: "Solutions",
     links: [
-      "Inventory Intelligence",
-      "Demand Intelligence",
-      "Procurement Intelligence",
-      "Logistics Intelligence",
-      "Manufacturing Intelligence",
-      "Pricing Intelligence",
+      { name: "Inventory Intelligence", path: "/solutions/inventory-intelligence" },
+      { name: "Demand Intelligence" },
+      { name: "Procurement Intelligence", path: "/solutions/procurement-intelligence" },
+      { name: "Logistics Intelligence" },
+      { name: "Manufacturing Intelligence" },
+      { name: "Pricing Intelligence" },
     ],
   },
   {
     heading: "Resources",
-    links: ["Blog", "Case Studies", "Docs"],
+    links: [{ name: "Blog" }, { name: "Case Studies" }, { name: "Docs" }],
   },
   {
     heading: "Company",
-    links: ["About us", "Careers", "Contact", "Privacy Policy", "Terms of Service"],
+    links: [
+      { name: "About us", path: "/about" },
+      { name: "Careers" },
+      { name: "Contact" },
+      { name: "Privacy Policy" },
+      { name: "Terms of Service" },
+    ],
   },
 ];
 
@@ -67,13 +74,22 @@ export default function Footer() {
               </p>
               <ul className="mt-4 space-y-3">
                 {col.links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
-                      className="text-sm text-caption transition-colors hover:text-heading"
-                    >
-                      {link}
-                    </a>
+                  <li key={link.name}>
+                    {link.path ? (
+                      <Link
+                        to={link.path}
+                        className="text-sm text-caption transition-colors hover:text-heading"
+                      >
+                        {link.name}
+                      </Link>
+                    ) : (
+                      <a
+                        href="#"
+                        className="text-sm text-caption transition-colors hover:text-heading"
+                      >
+                        {link.name}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>

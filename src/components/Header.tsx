@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
@@ -17,16 +18,16 @@ import Button from "./ui/Button";
 import IconButton from "./ui/IconButton";
 import DemoModal from "./DemoModal";
 
-const solutions: { name: string; blurb: string; Icon: IconComponent }[] = [
-  { name: "Inventory Intelligence", blurb: "Optimize, rebalance, prevent.", Icon: Inventory2Icon },
+const solutions: { name: string; blurb: string; Icon: IconComponent; path?: string }[] = [
+  { name: "Inventory Intelligence", blurb: "Optimize, rebalance, prevent.", Icon: Inventory2Icon, path: "/solutions/inventory-intelligence" },
   { name: "Demand Intelligence", blurb: "Sense, predict, respond.", Icon: ShowChartIcon },
-  { name: "Procurement Intelligence", blurb: "Source, plan, mitigate.", Icon: ShoppingCartIcon },
+  { name: "Procurement Intelligence", blurb: "Source, plan, mitigate.", Icon: ShoppingCartIcon, path: "/solutions/procurement-intelligence" },
   { name: "Logistics Intelligence", blurb: "Move, optimize, deliver.", Icon: LocalShippingIcon },
   { name: "Manufacturing Intelligence", blurb: "Plan, produce, adapt.", Icon: PrecisionManufacturingIcon },
   { name: "Pricing Intelligence", blurb: "Price, position, grow.", Icon: SellIcon },
 ];
 
-const resources: { name: string; blurb: string; Icon: IconComponent }[] = [
+const resources: { name: string; blurb: string; Icon: IconComponent; path?: string }[] = [
   { name: "Blog", blurb: "Insights on decision intelligence.", Icon: ArticleIcon },
   { name: "Case Studies", blurb: "How enterprises use Superatom.", Icon: InsightsIcon },
   { name: "Docs", blurb: "Platform & integration guides.", Icon: MenuBookIcon },
@@ -43,9 +44,9 @@ function ChevronDown() {
 
 function Logo() {
   return (
-    <a href="/" className="flex shrink-0 items-center">
+    <Link to="/" className="flex shrink-0 items-center">
       <img src={logo} alt="Superatom AI" className="h-6 w-auto" />
-    </a>
+    </Link>
   );
 }
 
@@ -55,7 +56,7 @@ function DropdownNavItem({
   columns = 1,
 }: {
   label: string;
-  items: { name: string; blurb: string; Icon: IconComponent }[];
+  items: { name: string; blurb: string; Icon: IconComponent; path?: string }[];
   columns?: 1 | 2;
 }) {
   return (
@@ -74,23 +75,32 @@ function DropdownNavItem({
             columns === 2 ? "grid grid-cols-2 gap-1" : "space-y-0.5"
           }`}
         >
-          {items.map((item) => (
-            <a
-              key={item.name}
-              href="#"
-              className="flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-primary-100/40"
-            >
-              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary-100 text-primary-500">
-                <item.Icon style={{ fontSize: 18 }} />
-              </span>
-              <span>
-                <p className="font-display text-sm font-semibold text-heading">
-                  {item.name}
-                </p>
-                <p className="mt-0.5 text-xs text-caption">{item.blurb}</p>
-              </span>
-            </a>
-          ))}
+          {items.map((item) => {
+            const content = (
+              <>
+                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary-100 text-primary-500">
+                  <item.Icon style={{ fontSize: 18 }} />
+                </span>
+                <span>
+                  <p className="font-display text-sm font-semibold text-heading">
+                    {item.name}
+                  </p>
+                  <p className="mt-0.5 text-xs text-caption">{item.blurb}</p>
+                </span>
+              </>
+            );
+            const className =
+              "flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-primary-100/40";
+            return item.path ? (
+              <Link key={item.name} to={item.path} className={className}>
+                {content}
+              </Link>
+            ) : (
+              <a key={item.name} href="#" className={className}>
+                {content}
+              </a>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -134,12 +144,12 @@ export default function Header() {
           </a>
           <DropdownNavItem label="Solutions" items={solutions} columns={2} />
           <DropdownNavItem label="Resources" items={resources} />
-          <a
-            href="#"
+          <Link
+            to="/about"
             className="text-[13.5px] text-body transition-colors hover:text-heading"
           >
             About us
-          </a>
+          </Link>
         </nav>
 
         <div className="hidden lg:block">
@@ -169,9 +179,13 @@ export default function Header() {
             <a href="#" className="text-sm font-medium text-body">
               Resources
             </a>
-            <a href="#" className="text-sm font-medium text-body">
+            <Link
+              to="/about"
+              className="text-sm font-medium text-body"
+              onClick={() => setMobileOpen(false)}
+            >
               About us
-            </a>
+            </Link>
             <Button variant="accentOutline" className="mt-2 w-full justify-center font-semibold" onClick={openDemo}>
               Book a demo
             </Button>
