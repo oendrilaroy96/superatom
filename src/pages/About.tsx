@@ -39,15 +39,53 @@ export default function About() {
     <>
       <section className="py-16 sm:py-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <SectionHeading
-            align="center"
-            className="mx-auto max-w-2xl"
-            theme="light"
-            eyebrow="About us"
-            eyebrowColor="accent"
-            heading="Decision intelligence for enterprise supply chains"
-            description="Superatom AI connects and synchronizes data across enterprise systems of record and data systems, to create a unified intelligence layer — turning data into decisions your team can actually execute."
-          />
+          <div className="mx-auto max-w-3xl">
+            <SectionHeading
+              align="left"
+              theme="light"
+              eyebrow="About Superatom AI"
+              eyebrowColor="accent"
+              heading={
+                <>
+                  Every great outcome starts with{" "}
+                  <span className="text-primary-500">a better decision.</span>
+                </>
+              }
+            />
+
+            <div className="mt-6 space-y-4 text-p text-body">
+              <p>
+                The world around us is built from fundamental building
+                blocks. Atoms combine to create molecules, molecules combine
+                to create more complex structures, and together they create
+                everything we see.
+              </p>
+              <p>We believe enterprises work the same way.</p>
+              <p>
+                Behind every supply chain, every operation and every
+                business outcome are thousands of individual decisions:
+                what to buy, what to produce, where to position inventory,
+                which supplier to choose, how much to ship, what price to
+                offer and what action to take next.
+              </p>
+              <p className="font-semibold text-heading">
+                Superatom AI is built to make those decisions smarter.
+              </p>
+              <p>
+                We bring together the data, context, intelligence and
+                actions needed to make each decision better, and connect
+                thousands of those decisions into a smarter, more
+                responsive enterprise.
+              </p>
+            </div>
+
+            <p className="mt-6 font-display text-h3 font-semibold text-primary-500">
+              Decide Fast. Decide Right. Every Time.
+            </p>
+            <p className="mt-2 text-h5 font-semibold uppercase tracking-[0.5px] text-caption">
+              That&rsquo;s the idea behind Superatom.
+            </p>
+          </div>
 
           <div className="mx-auto mt-16 flex max-w-6xl flex-wrap justify-center gap-6 sm:mt-20">
             {values.map((v) => (
