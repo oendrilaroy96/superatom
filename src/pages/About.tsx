@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import HubIcon from "@mui/icons-material/Hub";
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import GroupsIcon from "@mui/icons-material/Groups";
@@ -39,52 +40,68 @@ export default function About() {
     <>
       <section className="py-16 sm:py-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="mx-auto max-w-3xl">
-            <SectionHeading
-              align="left"
-              theme="light"
-              eyebrow="About Superatom AI"
-              eyebrowColor="accent"
-              heading={
-                <>
-                  Every great outcome starts with{" "}
-                  <span className="text-primary-500">a better decision.</span>
-                </>
-              }
-            />
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
+            <div>
+              <SectionHeading
+                align="left"
+                theme="light"
+                eyebrow="About Superatom AI"
+                eyebrowColor="accent"
+                heading={
+                  <>
+                    Every great outcome starts with{" "}
+                    <span className="text-primary-500">a better decision.</span>
+                  </>
+                }
+              />
 
-            <div className="mt-6 space-y-4 text-p text-body">
-              <p>
-                The world around us is built from fundamental building
-                blocks. Atoms combine to create molecules, molecules combine
-                to create more complex structures, and together they create
-                everything we see.
+              <div className="mt-6 space-y-4 text-p text-body">
+                <p>
+                  The world around us is built from fundamental building
+                  blocks. Atoms combine to create molecules, molecules
+                  combine to create more complex structures, and together
+                  they create everything we see.
+                </p>
+                <p>We believe enterprises work the same way.</p>
+                <p>
+                  Behind every supply chain, every operation and every
+                  business outcome are thousands of individual decisions:
+                  what to buy, what to produce, where to position
+                  inventory, which supplier to choose, how much to ship,
+                  what price to offer and what action to take next.
+                </p>
+                <p className="font-semibold text-heading">
+                  Superatom AI is built to make those decisions smarter.
+                </p>
+                <p>
+                  We bring together the data, context, intelligence and
+                  actions needed to make each decision better, and connect
+                  thousands of those decisions into a smarter, more
+                  responsive enterprise.
+                </p>
+              </div>
+
+              <p className="mt-6 font-display text-h3 font-semibold text-primary-500">
+                Decide Fast. Decide Right. Every Time.
               </p>
-              <p>We believe enterprises work the same way.</p>
-              <p>
-                Behind every supply chain, every operation and every
-                business outcome are thousands of individual decisions:
-                what to buy, what to produce, where to position inventory,
-                which supplier to choose, how much to ship, what price to
-                offer and what action to take next.
-              </p>
-              <p className="font-semibold text-heading">
-                Superatom AI is built to make those decisions smarter.
-              </p>
-              <p>
-                We bring together the data, context, intelligence and
-                actions needed to make each decision better, and connect
-                thousands of those decisions into a smarter, more
-                responsive enterprise.
+              <p className="mt-2 text-h5 font-semibold uppercase tracking-[0.5px] text-caption">
+                That&rsquo;s the idea behind Superatom.
               </p>
             </div>
 
-            <p className="mt-6 font-display text-h3 font-semibold text-primary-500">
-              Decide Fast. Decide Right. Every Time.
-            </p>
-            <p className="mt-2 text-h5 font-semibold uppercase tracking-[0.5px] text-caption">
-              That&rsquo;s the idea behind Superatom.
-            </p>
+            {/* Placeholder for the dynamic atoms-to-enterprise diagram from
+                the reference design — swap for the real illustration or
+                animation once it's built. */}
+            <div className="flex aspect-square w-full items-center justify-center rounded-2xl border border-dashed border-secondary-200 bg-page">
+              <div className="flex flex-col items-center gap-3 px-6 text-center">
+                <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary-100 text-primary-500">
+                  <AccountTreeIcon style={{ fontSize: 28 }} />
+                </span>
+                <p className="text-sm font-medium text-caption">
+                  Dynamic diagram placeholder
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="mx-auto mt-16 flex max-w-6xl flex-wrap justify-center gap-6 sm:mt-20">
