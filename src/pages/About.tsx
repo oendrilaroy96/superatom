@@ -104,6 +104,49 @@ export default function About() {
             </div>
           </div>
 
+          <div className="mx-auto mt-24 max-w-3xl sm:mt-32">
+            <SectionHeading
+              align="left"
+              theme="light"
+              eyebrow="Our Team"
+              eyebrowColor="primary"
+              heading={
+                <>
+                  Experience that understands{" "}
+                  <span className="text-primary-500">enterprise.</span>
+                </>
+              }
+            />
+
+            <p className="mt-6 text-p font-semibold text-heading">
+              We bring years of enterprise systems building expertise to
+              you through Superatom AI.
+            </p>
+
+            <div className="mt-4 space-y-4 text-p text-body">
+              <p>
+                Superatom AI is built by people from successful, large
+                scale enterprises such as Blue Yonder, Pine Labs and DHL.
+                Together, we bring serial entrepreneurs, product
+                innovators, industry experts and proven operators under
+                one roof.
+              </p>
+              <p>
+                Our advisory board adds further depth through experienced
+                CIOs, CTOs, entrepreneurs and industry leaders.
+              </p>
+            </div>
+
+            <div className="mt-6 h-0.5 w-24 bg-primary-500" />
+
+            <p className="mt-6 font-display text-h3 font-semibold text-heading">
+              Deep experience. Diverse perspectives.
+            </p>
+            <p className="font-display text-h3 font-semibold text-primary-500">
+              One mission: faster decisions at scale.
+            </p>
+          </div>
+
           <div className="mx-auto mt-16 flex max-w-6xl flex-wrap justify-center gap-6 sm:mt-20">
             {values.map((v) => (
               <div
