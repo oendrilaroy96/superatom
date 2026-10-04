@@ -2,6 +2,7 @@ import { useState } from "react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import HubIcon from "@mui/icons-material/Hub";
+import PersonIcon from "@mui/icons-material/Person";
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import GroupsIcon from "@mui/icons-material/Groups";
 import AutoAwesomeMotionIcon from "@mui/icons-material/AutoAwesomeMotion";
@@ -32,6 +33,12 @@ const values: { title: string; desc: string; Icon: IconComponent }[] = [
     Icon: GroupsIcon,
   },
 ];
+
+const teamMembers = Array.from({ length: 4 }, (_, i) => ({
+  name: `Team member ${i + 1}`,
+  role: "[Role placeholder]",
+  bio: "[Short bio — add once available.]",
+}));
 
 export default function About() {
   const [demoOpen, setDemoOpen] = useState(false);
@@ -145,6 +152,28 @@ export default function About() {
             <p className="font-display text-h3 font-semibold text-primary-500">
               One mission: faster decisions at scale.
             </p>
+          </div>
+
+          <div className="mx-auto mt-16 flex max-w-6xl flex-wrap justify-center gap-6 sm:mt-20">
+            {teamMembers.map((member) => (
+              <div
+                key={member.name}
+                className="w-full rounded-lg border border-secondary-100 bg-white p-6 text-center sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
+              >
+                <div className="mx-auto flex aspect-square w-full max-w-[140px] items-center justify-center rounded-full border border-dashed border-secondary-200 bg-page text-caption">
+                  <PersonIcon style={{ fontSize: 40 }} />
+                </div>
+                <p className="text-h4 mt-4 font-display font-semibold text-heading">
+                  {member.name}
+                </p>
+                <p className="mt-0.5 text-xs font-medium text-caption">
+                  {member.role}
+                </p>
+                <p className="mt-2 text-xs italic leading-relaxed text-caption">
+                  {member.bio}
+                </p>
+              </div>
+            ))}
           </div>
 
           <div className="mx-auto mt-16 flex max-w-6xl flex-wrap justify-center gap-6 sm:mt-20">
