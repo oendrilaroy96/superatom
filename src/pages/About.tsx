@@ -1,38 +1,10 @@
 import { useState } from "react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
-import HubIcon from "@mui/icons-material/Hub";
 import PersonIcon from "@mui/icons-material/Person";
-import PsychologyIcon from "@mui/icons-material/Psychology";
-import GroupsIcon from "@mui/icons-material/Groups";
-import AutoAwesomeMotionIcon from "@mui/icons-material/AutoAwesomeMotion";
-import type { IconComponent } from "../types/icon";
 import Button from "../components/ui/Button";
 import SectionHeading from "../components/ui/SectionHeading";
 import DemoModal from "../components/DemoModal";
-
-const values: { title: string; desc: string; Icon: IconComponent }[] = [
-  {
-    title: "Decisions over dashboards",
-    desc: "We build tools that help teams act on their data, not just look at it.",
-    Icon: AutoAwesomeMotionIcon,
-  },
-  {
-    title: "Context is everything",
-    desc: "A good decision depends on the context behind it — the tribal knowledge, rules and relationships that live outside the ERP.",
-    Icon: PsychologyIcon,
-  },
-  {
-    title: "Built for real complexity",
-    desc: "Enterprise supply chains aren't generic. We connect to the systems of record you already run, not a simplified version of them.",
-    Icon: HubIcon,
-  },
-  {
-    title: "People stay in the loop",
-    desc: "The platform recommends and automates — your team still decides. We design for trust, not black boxes.",
-    Icon: GroupsIcon,
-  },
-];
 
 const teamMembers = Array.from({ length: 4 }, (_, i) => ({
   name: `Team member ${i + 1}`,
@@ -171,25 +143,6 @@ export default function About() {
                 </p>
                 <p className="mt-2 text-xs italic leading-relaxed text-caption">
                   {member.bio}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mx-auto mt-16 flex max-w-6xl flex-wrap justify-center gap-6 sm:mt-20">
-            {values.map((v) => (
-              <div
-                key={v.title}
-                className="w-full rounded-lg border border-secondary-100 bg-white p-6 sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
-              >
-                <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
-                  <v.Icon style={{ fontSize: 22 }} />
-                </span>
-                <p className="text-h4 mt-4 font-display font-semibold text-heading">
-                  {v.title}
-                </p>
-                <p className="mt-1.5 text-xs leading-relaxed text-caption">
-                  {v.desc}
                 </p>
               </div>
             ))}
