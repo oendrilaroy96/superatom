@@ -23,8 +23,6 @@ export default function CtaSection() {
           <SectionHeading
             align="center"
             theme="dark"
-            eyebrow="Book a demo"
-            eyebrowColor="accent"
             heading="See how your data can drive faster, smarter decisions."
             description="Get a personalised walkthrough of Superatom AI built around your business, your data and the decisions that matter most to you."
           />
