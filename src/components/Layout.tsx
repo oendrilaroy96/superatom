@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
+import CtaSection from "./CtaSection";
 import Footer from "./Footer";
 
 /** Shared chrome (header, background decoration, footer) around every routed page. */
@@ -31,6 +32,7 @@ export default function Layout() {
       <main className="relative z-10">
         <Outlet />
       </main>
+      <CtaSection />
       <Footer />
     </div>
   );
