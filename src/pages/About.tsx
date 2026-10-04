@@ -83,69 +83,82 @@ export default function About() {
             </div>
           </div>
 
-          <div className="mx-auto mt-24 max-w-3xl sm:mt-32">
-            <SectionHeading
-              align="left"
-              theme="light"
-              eyebrow="Our Team"
-              eyebrowColor="primary"
-              heading={
-                <>
-                  Experience that understands{" "}
-                  <span className="text-primary-500">enterprise.</span>
-                </>
-              }
-            />
+          <div className="mx-auto mt-24 max-w-6xl sm:mt-32">
+            {/* Editorial split: heading anchored on the left, the
+                supporting copy reads alongside it on the right, rather
+                than one long centered column of text. */}
+            <div className="grid grid-cols-1 gap-10 lg:grid-cols-[380px_1fr] lg:gap-16">
+              <SectionHeading
+                align="left"
+                theme="light"
+                eyebrow="Our Team"
+                eyebrowColor="primary"
+                heading={
+                  <>
+                    Experience that understands{" "}
+                    <span className="text-primary-500">enterprise.</span>
+                  </>
+                }
+              />
 
-            <p className="mt-6 text-p font-semibold text-heading">
-              We bring years of enterprise systems building expertise to
-              you through Superatom AI.
-            </p>
+              <div>
+                <p className="text-p font-semibold text-heading">
+                  We bring years of enterprise systems building expertise
+                  to you through Superatom AI.
+                </p>
 
-            <div className="mt-4 space-y-4 text-p text-body">
-              <p>
-                Superatom AI is built by people from successful, large
-                scale enterprises such as Blue Yonder, Pine Labs and DHL.
-                Together, we bring serial entrepreneurs, product
-                innovators, industry experts and proven operators under
-                one roof.
-              </p>
-              <p>
-                Our advisory board adds further depth through experienced
-                CIOs, CTOs, entrepreneurs and industry leaders.
-              </p>
-            </div>
-
-            <div className="mt-6 h-0.5 w-24 bg-primary-500" />
-
-            <p className="mt-6 font-display text-h3 font-semibold text-heading">
-              Deep experience. Diverse perspectives.
-            </p>
-            <p className="font-display text-h3 font-semibold text-primary-500">
-              One mission: faster decisions at scale.
-            </p>
-          </div>
-
-          <div className="mx-auto mt-16 flex max-w-6xl flex-wrap justify-center gap-6 sm:mt-20">
-            {teamMembers.map((member) => (
-              <div
-                key={member.name}
-                className="w-full rounded-lg border border-secondary-100 bg-white p-6 text-center sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
-              >
-                <div className="mx-auto flex aspect-square w-full max-w-[140px] items-center justify-center rounded-full border border-dashed border-secondary-200 bg-page text-caption">
-                  <PersonIcon style={{ fontSize: 40 }} />
+                <div className="mt-4 space-y-4 text-p text-body">
+                  <p>
+                    Superatom AI is built by people from successful, large
+                    scale enterprises such as Blue Yonder, Pine Labs and
+                    DHL. Together, we bring serial entrepreneurs, product
+                    innovators, industry experts and proven operators
+                    under one roof.
+                  </p>
+                  <p>
+                    Our advisory board adds further depth through
+                    experienced CIOs, CTOs, entrepreneurs and industry
+                    leaders.
+                  </p>
                 </div>
-                <p className="text-h4 mt-4 font-display font-semibold text-heading">
-                  {member.name}
+
+                <div className="mt-6 h-0.5 w-24 bg-primary-500" />
+
+                <p className="mt-6 font-display text-h3 font-semibold text-heading">
+                  Deep experience. Diverse perspectives.
                 </p>
-                <p className="mt-0.5 text-xs font-medium text-caption">
-                  {member.role}
-                </p>
-                <p className="mt-2 text-xs italic leading-relaxed text-caption">
-                  {member.bio}
+                <p className="font-display text-h3 font-semibold text-primary-500">
+                  One mission: faster decisions at scale.
                 </p>
               </div>
-            ))}
+            </div>
+
+            {/* Team directory: full-bleed photo placeholder up top, like
+                real headshot cards, instead of a small avatar floating in
+                a mostly-empty card. */}
+            <div className="mt-16 grid grid-cols-2 gap-6 lg:grid-cols-4">
+              {teamMembers.map((member) => (
+                <div
+                  key={member.name}
+                  className="overflow-hidden rounded-2xl border border-secondary-100 bg-white"
+                >
+                  <div className="flex aspect-[4/5] w-full items-center justify-center border-b border-dashed border-secondary-200 bg-page text-caption">
+                    <PersonIcon style={{ fontSize: 48 }} />
+                  </div>
+                  <div className="p-5">
+                    <p className="font-display text-h4 font-semibold text-heading">
+                      {member.name}
+                    </p>
+                    <p className="mt-0.5 text-xs font-medium text-caption">
+                      {member.role}
+                    </p>
+                    <p className="mt-2 text-xs italic leading-relaxed text-caption">
+                      {member.bio}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="mx-auto mt-16 max-w-2xl rounded-2xl border border-secondary-100 bg-white p-10 text-center shadow-sm sm:mt-20">
