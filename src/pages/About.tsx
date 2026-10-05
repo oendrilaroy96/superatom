@@ -33,7 +33,7 @@ export default function About() {
               heading={
                 <>
                   Every great outcome starts with{" "}
-                  <span className="text-primary-500">a better decision.</span>
+                  <span className="text-primary-500">an informed decision.</span>
                 </>
               }
             />
