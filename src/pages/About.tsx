@@ -77,11 +77,11 @@ export default function About() {
           </Suspense>
         </div>
 
-        <div className="mx-auto mt-24 max-w-6xl sm:mt-32">
-          {/* Editorial split: heading anchored on the left, the
-              supporting copy reads alongside it on the right, rather
-              than one long centered column of text. */}
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[380px_1fr] lg:gap-16">
+        <div className="mt-24 sm:mt-32">
+          {/* Matches the hero's 2-column split above (same width, same
+              gap) instead of a separately centered, narrower container —
+              keeps this section flush with the page's own padding. */}
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
             <SectionHeading
               align="left"
               theme="light"
