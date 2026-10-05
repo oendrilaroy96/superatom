@@ -19,12 +19,19 @@ export default function CtaSection() {
         aria-hidden="true"
       />
       <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="mx-auto max-w-[1300px] text-center">
           <SectionHeading
             align="center"
             theme="dark"
-            heading="See how your data can drive faster, smarter decisions."
+            heading={
+              <>
+                See how your data can drive faster,
+                <br />
+                smarter decisions.
+              </>
+            }
             description="Get a personalised walkthrough of Superatom AI built around your business, your data and the decisions that matter most to you."
+            descriptionClassName="mx-auto max-w-xl"
           />
 
           <Button
