@@ -13,7 +13,7 @@ function DiagramPlaceholder() {
   );
 }
 
-const teamMembers = Array.from({ length: 4 }, (_, i) => ({
+const teamMembers = Array.from({ length: 3 }, (_, i) => ({
   name: `Team member ${i + 1}`,
   role: "[Role placeholder]",
   bio: "[Short bio — add once available.]",
