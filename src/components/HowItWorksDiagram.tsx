@@ -1,47 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef } from "react";
 
 const NS = "http://www.w3.org/2000/svg";
-
-function Icon({ paths, viewBox, size }: { paths: string; viewBox: string; size: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox={viewBox}
-      aria-hidden="true"
-      dangerouslySetInnerHTML={{ __html: paths }}
-    />
-  );
-}
-
-const SRC_ICON_VB = "-4 -4 32 32";
-const SRC_ICONS: Record<string, string> = {
-  erp: `<ellipse cx="12" cy="5.5" rx="7" ry="2.5"/><path d="M5 5.5v13c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-13M5 12c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5"/>`,
-  iot: `<rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4"/>`,
-  lake: `<path d="M12 3l9 5-9 5-9-5Z"/><path d="M3 13l9 5 9-5"/>`,
-  api: `<path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/>`,
-};
-const MOD_ICON_VB = "0 0 24 24";
-const MOD_ICONS: Record<string, string> = {
-  tribal: `<path d="M4 19V6a2 2 0 0 1 2-2h13v13H6a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h13"/>`,
-  opt: `<path d="M4 7h10M18 7h2M4 17h4M12 17h8M14 4v6M8 14v6"/>`,
-  genui: `<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8Z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8Z"/>`,
-  sem: `<circle cx="12" cy="12" r="2.5"/><circle cx="5" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M6.5 6.5l3.7 3.7M17.5 6.5l-3.7 3.7M6.5 17.5l3.7-3.7M17.5 17.5l-3.7-3.7"/>`,
-};
-
-const SOURCES: [string, string][] = [
-  ["erp", "ERPs"],
-  ["iot", "IoT"],
-  ["lake", "Data Lake"],
-  ["api", "APIs"],
-];
-
-const MODULES: [string, string, string][] = [
-  ["tribal", "Tribal Knowledge", "Captures the experience and judgment calls your best planners already know."],
-  ["opt", "Optimization Engine", "Runs analytics and simulation to evaluate every alternative."],
-  ["genui", "Generative UI", "Builds the right chart, table or view for each question, on the fly."],
-  ["sem", "Semantic Modeling", "Links entities and relationships across your enterprise data."],
-];
 
 type Screen = { heading: string; question: string; video: string; poster: string };
 
@@ -49,232 +8,422 @@ type Screen = { heading: string; question: string; video: string; poster: string
  * optionally `poster`) once a real clip exists for that screen — until
  * then it shows the placeholder label. */
 const SCREENS: Screen[] = [
-  { heading: "Natural language chat interface", question: "What is the revenue impact of vendor delay?", video: "", poster: "" },
-  { heading: "SuperBI and automated reports", question: "", video: "", poster: "" },
-  { heading: "Data app's field data ingestion", question: "", video: "", poster: "" },
-  { heading: "Workflows that close the decision loop", question: "", video: "", poster: "" },
+  { heading: "Natural language chat interface", question: "What is the Revenue impact of Vendor delay", video: "", poster: "" },
+  { heading: "SuperBI and Automated Reports", question: "", video: "", poster: "" },
+  { heading: "Data App’s Field data ingestion", question: "", video: "", poster: "" },
+  { heading: "Workflows that closes the decision loop", question: "", video: "", poster: "" },
 ];
 
-const SHIMMER_STOPS: [string, string][] = [
-  ["0", "#7A73FF"],
-  ["0.3", "#00D4FF"],
-  ["0.55", "#635BFF"],
-  ["0.8", "#A960EE"],
-  ["1", "#7A73FF"],
+const C = { x: 290, y: 240 };
+const ORBIT = 70;
+const ATOMS = [
+  { l: "Tribal Knowledge", sx: 150, sy: 118, ang: -120 },
+  { l: "Optimization Engine", sx: 205, sy: 185, ang: -60 },
+  { l: "Semantic Modeling", sx: 205, sy: 300, ang: 60 },
+  { l: "Generative UI", sx: 150, sy: 362, ang: 120 },
+];
+const SOURCES = [
+  { l: "ERPs", y: 150 },
+  { l: "IoT", y: 210 },
+  { l: "Data Lake", y: 270 },
+  { l: "APIs", y: 330 },
 ];
 
-const sleep = (ms: number) => new Promise<void>((r) => window.setTimeout(r, ms));
-const toD = (pts: number[][]) =>
-  pts.map((q, i) => (i ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1)).join(" ");
+const HOLD = 1.5;
+const LINK = 3.0;
+const ANSWER = 3.8;
+const ANSWER_HOLD = 6.2;
+const LOOP = 5.6;
+const LOOP_END = 7.2;
+const END = ANSWER + ANSWER_HOLD;
+const SCREEN_LEN = END + 1.1 + HOLD;
+const HOLD_CAPTION = "Data from across your enterprise systems";
+const CAPTIONS = [
+  "Everything connects in Superatom AI",
+  "The decision is delivered",
+  "Every outcome feeds back into your systems",
+];
 
-type Box = { l: number; t: number; r: number; b: number; cx: number; cy: number };
-type Geo = { src: number[][][]; out: number[][] };
-const CANCELLED = Symbol("cancelled");
+const clamp = (v: number) => Math.max(0, Math.min(1, v));
+const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+const p = (t: number, a: number, b: number) => ease(clamp((t - a) / (b - a)));
+const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
 
+function mk<K extends keyof SVGElementTagNameMap>(
+  tag: K,
+  attrs: Record<string, string | number>,
+  parent: Element,
+): SVGElementTagNameMap[K] {
+  const el = document.createElementNS(NS, tag) as SVGElementTagNameMap[K];
+  for (const k in attrs) el.setAttribute(k, String(attrs[k]));
+  parent.appendChild(el);
+  return el;
+}
+
+/**
+ * Animated "how it works" diagram (Option A): enterprise sources converge
+ * into an orbiting cluster of Superatom AI modules around a glowing core,
+ * which links to a video frame showing the delivered answer, then loops
+ * back to show the outcome feeding into the source systems. Ported 1:1
+ * from a standalone interactive prototype — same structure, timings and
+ * styling, adapted into this component's lifecycle (refs + a single setup
+ * effect) rather than a raw DOM script.
+ */
 export default function HowItWorksDiagram() {
+  const uid = useId().replace(/:/g, "");
   const flowRef = useRef<HTMLElement>(null);
-  const wiresRef = useRef<SVGSVGElement>(null);
-  const sourceRefs = useRef<(HTMLLIElement | null)[]>([]);
-  const coreRef = useRef<HTMLDivElement>(null);
-  const moduleRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const vizRef = useRef<SVGSVGElement>(null);
+  const worldRef = useRef<SVGGElement>(null);
+  const flowsGroupRef = useRef<SVGGElement>(null);
+  const sourcesGroupRef = useRef<SVGGElement>(null);
+  const bondsGroupRef = useRef<SVGGElement>(null);
+  const atomsGroupRef = useRef<SVGGElement>(null);
+  const coreRef = useRef<SVGCircleElement>(null);
+  const semLabelRef = useRef<SVGTextElement>(null);
+  const captionRef = useRef<HTMLParagraphElement>(null);
+
+  const outLineRef = useRef<SVGPathElement>(null);
+  const outRevealRef = useRef<SVGPathElement>(null);
+  const outPortRef = useRef<SVGCircleElement>(null);
+  const outDotRefs = useRef<(SVGCircleElement | null)[]>([]);
+  const outGradRef = useRef<SVGLinearGradientElement>(null);
+  const loopLineRef = useRef<SVGPathElement>(null);
+  const loopRevealRef = useRef<SVGPathElement>(null);
+  const particleRef = useRef<SVGCircleElement>(null);
+  const loopLabelRef = useRef<SVGTextElement>(null);
+  const loopGradRef = useRef<SVGLinearGradientElement>(null);
+
   const frameRef = useRef<HTMLDivElement>(null);
   const frameHeadingRef = useRef<HTMLHeadingElement>(null);
   const frameLabelRef = useRef<HTMLDivElement>(null);
   const frameLabelTextRef = useRef<HTMLSpanElement>(null);
   const askRef = useRef<HTMLDivElement>(null);
   const askTextRef = useRef<HTMLSpanElement>(null);
-  const tipRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const flow = flowRef.current;
-    const wires = wiresRef.current;
-    const core = coreRef.current;
-    const frame = frameRef.current;
-    const frameHeading = frameHeadingRef.current;
-    const frameLabel = frameLabelRef.current;
-    const frameLabelText = frameLabelTextRef.current;
-    const ask = askRef.current;
-    const askText = askTextRef.current;
-    const tip = tipRef.current;
-    const sources = sourceRefs.current.filter((el): el is HTMLLIElement => el !== null);
-    const modules = moduleRefs.current.filter((el): el is HTMLButtonElement => el !== null);
-    const tabs = tabRefs.current.filter((el): el is HTMLButtonElement => el !== null);
-    if (!flow || !wires || !core || !frame || !frameHeading || !frameLabel || !frameLabelText || !ask || !askText || !tip)
-      return;
-    if (sources.length !== SOURCES.length || modules.length !== MODULES.length || tabs.length !== SCREENS.length) return;
-    if (!visible) return;
-
-    // Re-bind as non-nullable so nested closures below don't lose the narrowing.
-    const flowEl: HTMLElement = flow;
-    const wiresEl: SVGSVGElement = wires;
-    const coreEl: HTMLDivElement = core;
-    const frameEl: HTMLDivElement = frame;
-    const frameHeadingEl: HTMLHeadingElement = frameHeading;
-    const frameLabelEl: HTMLDivElement = frameLabel;
-    const frameLabelTextEl: HTMLSpanElement = frameLabelText;
-    const askEl: HTMLDivElement = ask;
-    const askTextEl: HTMLSpanElement = askText;
-    const tipEl: HTMLDivElement = tip;
+    const flowEl = flowRef.current;
+    const vizEl = vizRef.current;
+    const worldEl = worldRef.current;
+    const flowsGroup = flowsGroupRef.current;
+    const sourcesGroup = sourcesGroupRef.current;
+    const bondsGroup = bondsGroupRef.current;
+    const atomsGroup = atomsGroupRef.current;
+    const coreEl = coreRef.current;
+    const semLabelEl = semLabelRef.current;
+    const captionEl = captionRef.current;
+    const outLine = outLineRef.current;
+    const outReveal = outRevealRef.current;
+    const outPort = outPortRef.current;
+    const outGrad = outGradRef.current;
+    const loopLine = loopLineRef.current;
+    const loopReveal = loopRevealRef.current;
+    const particle = particleRef.current;
+    const loopLabel = loopLabelRef.current;
+    const loopGrad = loopGradRef.current;
+    const frameEl = frameRef.current;
+    const frameHeadingEl = frameHeadingRef.current;
+    const frameLabelEl = frameLabelRef.current;
+    const frameLabelTextEl = frameLabelTextRef.current;
+    const askEl = askRef.current;
+    const askTextEl = askTextRef.current;
     const video = videoRef.current;
+    const outDots = outDotRefs.current.filter((el): el is SVGCircleElement => el !== null);
+    const tabs = tabRefs.current.filter((el): el is HTMLButtonElement => el !== null);
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const desktop = window.matchMedia("(min-width: 1280px)");
-    let disposed = false;
+    if (
+      !flowEl || !vizEl || !worldEl || !flowsGroup || !sourcesGroup || !bondsGroup || !atomsGroup ||
+      !coreEl || !semLabelEl || !captionEl || !outLine || !outReveal || !outPort || !outGrad ||
+      !loopLine || !loopReveal || !particle || !loopLabel || !loopGrad ||
+      !frameEl || !frameHeadingEl || !frameLabelEl || !frameLabelTextEl || !askEl || !askTextEl
+    ) {
+      return;
+    }
+    if (outDots.length !== 2 || tabs.length !== SCREENS.length) return;
 
-    function box(el: Element): Box {
-      const f = flowEl.getBoundingClientRect();
-      const r = el.getBoundingClientRect();
-      return {
+    const loopHeadUrl = `url(#${uid}-loopHead)`;
+
+    // ---------- Build the atoms, settling on an orbit around the core like electrons ----------
+    const atoms = ATOMS.map((a, i) => {
+      const ang = (a.ang * Math.PI) / 180;
+      const left = Math.cos(ang) < 0;
+      const top = Math.sin(ang) < 0;
+      const mx = C.x + ORBIT * Math.cos(ang);
+      const my = C.y + ORBIT * Math.sin(ang);
+      const c = mk("circle", { r: 7, fill: "#533AFD" }, atomsGroup);
+      const t = mk("text", { fill: "#50617A", "font-size": 12 }, atomsGroup);
+      t.textContent = a.l;
+      const n = mk(
+        "text",
+        {
+          x: mx + (left ? -4 : 4),
+          y: top ? my - 14 : my + 22,
+          "text-anchor": left ? "end" : "start",
+          fill: "#061B31",
+          "font-size": 12,
+          "font-weight": 500,
+          opacity: 0,
+        },
+        atomsGroup,
+      );
+      n.textContent = a.l;
+      return { ...a, mx, my, ph: i * 1.3, c, t, n };
+    });
+
+    // ---------- Enterprise systems, each with a live dotted flow into the core ----------
+    const sources = SOURCES.map((o) => {
+      const g = mk("g", { opacity: 0 }, sourcesGroup);
+      const rect = mk(
+        "rect",
+        { x: 6, y: o.y - 15, width: 100, height: 30, rx: 8, fill: "#F6F9FC", stroke: "#E5EDF5" },
+        g,
+      );
+      const text = mk(
+        "text",
+        { x: 56, y: o.y + 4, "text-anchor": "middle", fill: "#50617A", "font-size": 12, "font-weight": 600 },
+        g,
+      );
+      text.textContent = o.l;
+      const f = mk(
+        "path",
+        {
+          d: `M106 ${o.y} C 160 ${o.y}, 165 240, 212 240`,
+          fill: "none",
+          stroke: "#B9B9F9",
+          "stroke-width": 1.5,
+          "stroke-dasharray": "3 5",
+          opacity: 0,
+        },
+        flowsGroup,
+      );
+      const len = f.getTotalLength();
+      const dots = [0, 0.5].map((k) => ({ k, c: mk("circle", { r: 3, fill: "#533AFD", opacity: 0 }, flowsGroup) }));
+      return { ...o, g, rect, f, len, dots };
+    });
+    const erpRect = sources[0].rect;
+
+    // ---------- Orbit ring, inner ring, spokes to the core, and a circling light ----------
+    const bonds: SVGElement[] = [];
+    bonds.push(
+      mk(
+        "circle",
+        {
+          cx: C.x, cy: C.y, r: ORBIT, fill: "none", stroke: "#533AFD", "stroke-width": 1.5,
+          pathLength: 1, "stroke-dasharray": 1, "stroke-dashoffset": 1, opacity: 0.55,
+          transform: `rotate(-90 ${C.x} ${C.y})`,
+        },
+        bondsGroup,
+      ),
+    );
+    bonds.push(
+      mk(
+        "circle",
+        {
+          cx: C.x, cy: C.y, r: ORBIT - 26, fill: "none", stroke: "#7F7DFC", "stroke-width": 1,
+          pathLength: 1, "stroke-dasharray": 1, "stroke-dashoffset": 1, opacity: 0.25,
+          transform: `rotate(90 ${C.x} ${C.y})`,
+        },
+        bondsGroup,
+      ),
+    );
+    atoms.forEach((a) => {
+      bonds.push(
+        mk(
+          "line",
+          {
+            x1: a.mx, y1: a.my, x2: C.x, y2: C.y, stroke: "#533AFD", "stroke-width": 1,
+            pathLength: 1, "stroke-dasharray": 1, "stroke-dashoffset": 1, opacity: 0.22,
+          },
+          bondsGroup,
+        ),
+      );
+    });
+    const electron = mk(
+      "circle",
+      { r: 3, fill: "#7F7DFC", opacity: 0, filter: `url(#${uid}-glow)` },
+      bondsGroup,
+    );
+
+    // ---------- Line from the core to the video frame, and the feedback loop back ----------
+    const desktop = window.matchMedia("(min-width: 1180px)");
+    let outLen = 0;
+    let loopLen = 0;
+
+    function toPage(x: number, y: number) {
+      const pt = vizEl!.createSVGPoint();
+      pt.x = x;
+      pt.y = y;
+      const q = pt.matrixTransform(vizEl!.getScreenCTM()!);
+      const f = flowEl!.getBoundingClientRect();
+      return { x: q.x - f.left, y: q.y - f.top };
+    }
+
+    function drawLink() {
+      const f = flowEl!.getBoundingClientRect();
+      const r = frameEl!.getBoundingClientRect();
+      let a: { x: number; y: number };
+      let b: { x: number; y: number };
+      if (desktop.matches) {
+        a = toPage(368, 240);
+        const y = Math.max(r.top - f.top + 28, Math.min(a.y, r.bottom - f.top - 28));
+        a = { x: a.x, y };
+        b = { x: r.left - f.left, y };
+      } else {
+        a = toPage(290, 316);
+        b = { x: a.x, y: r.top - f.top };
+      }
+      const d = `M${a.x} ${a.y} L ${b.x} ${b.y}`;
+      outGrad!.setAttribute("x1", String(a.x));
+      outGrad!.setAttribute("y1", String(a.y));
+      outGrad!.setAttribute("x2", String(b.x));
+      outGrad!.setAttribute("y2", String(b.y));
+      outLine!.setAttribute("d", d);
+      outReveal!.setAttribute("d", d);
+      outLen = outLine!.getTotalLength();
+      outPort!.setAttribute("cx", String(b.x));
+      outPort!.setAttribute("cy", String(b.y));
+
+      const F = {
         l: r.left - f.left,
         t: r.top - f.top,
-        r: r.right - f.left,
-        b: r.bottom - f.top,
         cx: (r.left + r.right) / 2 - f.left,
         cy: (r.top + r.bottom) / 2 - f.top,
       };
-    }
-
-    const defs = document.createElementNS(NS, "defs");
-
-    // Shimmer gradient: a repeating multi-hue band that keeps sliding along a
-    // lit route for as long as it stays active, layered on top of the plain
-    // static "wire" rail underneath it.
-    const gradient = document.createElementNS(NS, "linearGradient");
-    const gradientId = `hiw-shimmer-${Math.random().toString(36).slice(2, 8)}`;
-    gradient.setAttribute("id", gradientId);
-    gradient.setAttribute("gradientUnits", "userSpaceOnUse");
-    gradient.setAttribute("spreadMethod", "repeat");
-    gradient.setAttribute("x1", "0");
-    gradient.setAttribute("y1", "0");
-    gradient.setAttribute("x2", "220");
-    gradient.setAttribute("y2", "0");
-    SHIMMER_STOPS.forEach(([offset, color]) => {
-      const stop = document.createElementNS(NS, "stop");
-      stop.setAttribute("offset", offset);
-      stop.setAttribute("stop-color", color);
-      gradient.appendChild(stop);
-    });
-    const shimmerMove = document.createElementNS(NS, "animateTransform");
-    shimmerMove.setAttribute("attributeName", "gradientTransform");
-    shimmerMove.setAttribute("type", "translate");
-    shimmerMove.setAttribute("from", "0 0");
-    shimmerMove.setAttribute("to", "220 0");
-    shimmerMove.setAttribute("dur", "1.6s");
-    shimmerMove.setAttribute("repeatCount", "indefinite");
-    if (!reduceMotion) gradient.appendChild(shimmerMove);
-    defs.appendChild(gradient);
-    const gradientUrl = `url(#${gradientId})`;
-
-    const marker = document.createElementNS(NS, "marker");
-    marker.setAttribute("id", `hiw-arrow-${Math.random().toString(36).slice(2, 8)}`);
-    marker.setAttribute("orient", "auto");
-    marker.setAttribute("markerWidth", "5");
-    marker.setAttribute("markerHeight", "5");
-    marker.setAttribute("refX", "3.2");
-    marker.setAttribute("refY", "2");
-    marker.setAttribute("overflow", "visible");
-    const markerPath = document.createElementNS(NS, "path");
-    markerPath.setAttribute("d", "M0 0 L4 2 L0 4 Z");
-    markerPath.setAttribute("class", "hiw-arrow");
-    marker.appendChild(markerPath);
-    defs.appendChild(marker);
-    wiresEl.appendChild(defs);
-    const markerUrl = `url(#${marker.id})`;
-
-    function setGradientOrientation(horizontal: boolean) {
-      gradient.setAttribute("x2", horizontal ? "220" : "0");
-      gradient.setAttribute("y2", horizontal ? "0" : "220");
-      shimmerMove.setAttribute("to", horizontal ? "220 0" : "0 220");
-    }
-
-    const paths: Record<string, SVGPathElement> = {};
-    function setPath(key: string, pts: number[][], arrow?: boolean) {
-      let p = paths[key];
-      if (!p) {
-        p = document.createElementNS(NS, "path");
-        if (arrow) p.setAttribute("marker-end", markerUrl);
-        wiresEl.appendChild(p);
-        paths[key] = p;
-      }
-      p.setAttribute("d", toD(pts));
-    }
-
-    const routes: Record<string, SVGGElement> = {};
-    function setStreak(key: string, pts: number[][]) {
-      let g = routes[key];
-      if (!g) {
-        g = document.createElementNS(NS, "g");
-        g.setAttribute("class", "hiw-route");
-        const line = document.createElementNS(NS, "path");
-        line.setAttribute("class", "hiw-flowline");
-        line.setAttribute("pathLength", "100");
-        line.setAttribute("stroke", gradientUrl);
-        g.appendChild(line);
-        wiresEl.appendChild(g);
-        routes[key] = g;
-      }
-      g.querySelectorAll("path").forEach((p) => p.setAttribute("d", toD(pts)));
-    }
-    function toggleRoute(key: string, on: boolean) {
-      routes[key]?.classList.toggle("hiw-lit", on);
-    }
-    function togglePath(key: string, on: boolean) {
-      paths[key]?.classList.toggle("hiw-lit", on);
-    }
-
-    let geo: Geo | null = null;
-    function draw() {
-      const S = sources.map(box);
-      const C = box(coreEl);
-      const F = box(frameEl);
-      const g: Geo = { src: [], out: [[0, 0], [0, 0]] };
+      let s: { x: number; y: number };
+      let e: { x: number; y: number };
+      let ld: string;
       if (desktop.matches) {
-        const busX = (S[0].r + C.l) / 2;
-        S.forEach((s, i) => {
-          setPath(`s${i}`, [[s.r, s.cy], [busX, s.cy]]);
-          g.src.push([[s.r, s.cy], [busX, s.cy], [busX, C.cy], [C.l, C.cy]]);
-        });
-        setPath("busA", [[busX, S[0].cy], [busX, C.cy]]);
-        setPath("busB", [[busX, S[S.length - 1].cy], [busX, C.cy]]);
-        setPath("in", [[busX, C.cy], [C.l - 2, C.cy]], true);
-        setPath("out", [[C.r, C.cy], [F.l - 2, C.cy]], true);
-        g.out = [[C.r, C.cy], [F.l, C.cy]];
-        setGradientOrientation(true);
+        s = { x: F.l + 40, y: F.t - 2 };
+        e = toPage(56, 135 - 3);
+        const y0 = Math.min(F.t, e.y) - 30;
+        const rad = 14;
+        ld = `M${s.x} ${s.y} V ${y0 + rad} Q ${s.x} ${y0} ${s.x - rad} ${y0} H ${e.x + rad} Q ${e.x} ${y0} ${e.x} ${y0 + rad} V ${e.y}`;
+        loopLabel!.setAttribute("x", String((s.x + e.x) / 2));
+        loopLabel!.setAttribute("y", String(y0 - 10));
+        loopLabel!.setAttribute("text-anchor", "middle");
+        loopLabel!.style.display = "";
       } else {
-        const busY = (S[0].b + C.t) / 2;
-        S.forEach((s, i) => {
-          setPath(`s${i}`, [[s.cx, s.b], [s.cx, busY]]);
-          g.src.push([[s.cx, s.b], [s.cx, busY], [C.cx, busY], [C.cx, C.t]]);
-        });
-        setPath("busA", [[S[0].cx, busY], [C.cx, busY]]);
-        setPath("busB", [[S[S.length - 1].cx, busY], [C.cx, busY]]);
-        setPath("in", [[C.cx, busY], [C.cx, C.t - 2]], true);
-        setPath("out", [[C.cx, C.b], [C.cx, F.t - 2]], true);
-        g.out = [[C.cx, C.b], [C.cx, F.t]];
-        setGradientOrientation(false);
+        s = { x: F.l - 2, y: F.cy };
+        e = toPage(6 - 2, 150);
+        const x0 = Math.max(4, Math.min(e.x - 8, F.l - 10));
+        const rad = 10;
+        ld = `M${s.x} ${s.y} H ${x0 + rad} Q ${x0} ${s.y} ${x0} ${s.y - rad} V ${e.y + rad} Q ${x0} ${e.y} ${x0 + rad} ${e.y} H ${e.x}`;
+        loopLabel!.style.display = "none";
       }
-      g.src.forEach((pts, i) => setStreak(`r${i}`, pts));
-      setStreak("rOut", g.out);
-      geo = g;
+      loopLine!.setAttribute("d", ld);
+      loopReveal!.setAttribute("d", ld);
+      loopGrad!.setAttribute("x1", String(s.x));
+      loopGrad!.setAttribute("y1", String(s.y));
+      loopGrad!.setAttribute("x2", String(e.x));
+      loopGrad!.setAttribute("y2", String(e.y));
+      loopLen = loopLine!.getTotalLength();
     }
-    const ro = new ResizeObserver(draw);
+    const ro = new ResizeObserver(drawLink);
     ro.observe(flowEl);
-    desktop.addEventListener("change", draw);
-    if (document.fonts) document.fonts.ready.then(draw);
-    draw();
+    desktop.addEventListener("change", drawLink);
+    if (document.fonts) document.fonts.ready.then(drawLink);
+    drawLink();
 
-    function light(i: number, on: boolean) {
-      sources[i].classList.toggle("hiw-on", on);
-      const half = i < sources.length / 2 ? "busA" : "busB";
-      [`s${i}`, half, "in"].forEach((k) => togglePath(k, on));
-      toggleRoute(`r${i}`, on);
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function render(t: number, staticMode: boolean, rt = t, holding = false, endless = false) {
+      const k = t < 0.4 || holding ? -1 : t < 2.8 ? 0 : t >= LOOP ? 2 : t >= LINK ? 1 : -1;
+      if (staticMode) {
+        captionEl!.textContent = CAPTIONS[2];
+        captionEl!.style.opacity = "1";
+      } else if (holding) {
+        captionEl!.textContent = HOLD_CAPTION;
+        captionEl!.style.opacity = "1";
+      } else {
+        captionEl!.textContent = k >= 0 ? CAPTIONS[k] : "";
+        captionEl!.style.opacity = k >= 0 ? "1" : "0";
+      }
+
+      const fade = staticMode || endless ? 0 : p(t, END, END + 0.7);
+      worldEl!.setAttribute("opacity", String(1 - fade));
+
+      sources.forEach((o, i) => {
+        o.g.setAttribute("opacity", String(p(t, 0, 0.4)));
+        const fl = staticMode ? 1 : p(t, 2.0 + i * 0.1, 2.6 + i * 0.1);
+        o.f.setAttribute("opacity", String(fl * 0.9));
+        o.dots.forEach((d) => {
+          const u = (rt * 0.45 + d.k + i * 0.17) % 1;
+          const pt = o.f.getPointAtLength(o.len * u);
+          d.c.setAttribute("cx", String(pt.x));
+          d.c.setAttribute("cy", String(pt.y));
+          d.c.setAttribute("opacity", String(staticMode ? (d.k ? 0 : 1) : fl * Math.sin(Math.PI * u)));
+        });
+      });
+
+      const conv = p(t, 0.6, 2.0);
+      atoms.forEach((a) => {
+        const dx = Math.sin(rt * 1.4 + a.ph) * 4 * (1 - conv);
+        const dy = Math.cos(rt * 1.1 + a.ph) * 4 * (1 - conv);
+        const x = lerp(a.sx, a.mx, conv) + dx;
+        const y = lerp(a.sy, a.my, conv) + dy;
+        a.c.setAttribute("cx", String(x));
+        a.c.setAttribute("cy", String(y));
+        a.c.setAttribute("opacity", String(p(t, 0, 0.6)));
+        a.t.setAttribute("x", String(x + 13));
+        a.t.setAttribute("y", String(y + 4));
+        a.t.setAttribute("opacity", String(p(t, 0.1, 0.6) * (1 - p(t, 0.8, 1.4))));
+        a.n.setAttribute("opacity", String(staticMode ? 1 : p(t, 2.1, 2.6)));
+      });
+
+      const bp = p(t, 1.8, 2.8);
+      bonds.forEach((b) => b.setAttribute("stroke-dashoffset", String(1 - bp)));
+      const ea = -Math.PI / 2 + rt * 0.9;
+      electron.setAttribute("cx", String(C.x + ORBIT * Math.cos(ea)));
+      electron.setAttribute("cy", String(C.y + ORBIT * Math.sin(ea)));
+      electron.setAttribute("opacity", String(staticMode ? 0 : p(t, 2.6, 3.0)));
+      semLabelEl!.setAttribute("opacity", String(p(t, 2.1, 2.6)));
+      coreEl!.setAttribute("r", String(14 * p(t, 1.9, 2.4)));
+
+      const link = staticMode ? 1 : p(t, LINK, ANSWER) * (1 - fade);
+      outReveal!.setAttribute("stroke-dasharray", `${outLen * link} ${outLen + 10}`);
+      outLine!.style.opacity = String(1 - fade);
+      outPort!.setAttribute("opacity", String(link > 0.98 ? 1 - fade : 0));
+      outDots.forEach((dot, i) => {
+        if (!outLen) return;
+        const u = (rt * 0.55 + i * 0.5) % 1;
+        const pt = outLine!.getPointAtLength(outLen * u);
+        dot.setAttribute("cx", String(pt.x));
+        dot.setAttribute("cy", String(pt.y));
+        dot.setAttribute(
+          "opacity",
+          String(staticMode ? (i ? 0 : 1) : link > 0.98 ? Math.sin(Math.PI * u) * (1 - fade) : 0),
+        );
+      });
+      frameLabelEl!.classList.toggle("hiw-show", staticMode || (t >= ANSWER && fade < 0.5));
+
+      const lp = staticMode ? 1 : p(t, LOOP, LOOP_END);
+      loopLine!.setAttribute("opacity", String(lp > 0 ? 0.85 * (1 - fade) : 0));
+      loopReveal!.setAttribute("stroke-dasharray", `${loopLen * lp} ${loopLen + 10}`);
+      if (lp >= 1) loopLine!.setAttribute("marker-end", loopHeadUrl);
+      else loopLine!.removeAttribute("marker-end");
+      loopLabel!.setAttribute(
+        "opacity",
+        String((staticMode ? 1 : p(t, LOOP_END - 0.2, LOOP_END + 0.3)) * (1 - fade)),
+      );
+      if (lp > 0 && lp < 1 && !staticMode && loopLen) {
+        const pt = loopLine!.getPointAtLength(loopLen * lp);
+        particle!.setAttribute("cx", String(pt.x));
+        particle!.setAttribute("cy", String(pt.y));
+        particle!.setAttribute("opacity", "1");
+      } else {
+        particle!.setAttribute("opacity", "0");
+      }
+      const flash = !staticMode && t > LOOP_END && t < LOOP_END + 0.8;
+      erpRect.setAttribute("stroke", flash ? "#FF6118" : "#E5EDF5");
+      erpRect.setAttribute("fill", flash ? "#FFF4EE" : "#F6F9FC");
+      frameHeadingEl!.classList.toggle("hiw-show", staticMode || fade < 0.5);
+      const q = SCREENS[current].question;
+      askTextEl!.textContent = staticMode ? q : q.slice(0, Math.round(q.length * clamp((t - 0.2) / 1.4)));
     }
 
+    // ---------- Screens ----------
     let current = 0;
-
     function setScreen(n: number) {
       current = n;
       tabs.forEach((t, i) => {
@@ -282,9 +431,6 @@ export default function HowItWorksDiagram() {
         t.tabIndex = i === n ? 0 : -1;
       });
       const sc = SCREENS[n];
-      frameHeadingEl.textContent = sc.heading;
-      frameLabelTextEl.textContent = sc.video ? "" : `[Answer video for screen ${n + 1}]`;
-      askEl.hidden = !sc.question;
       if (video) {
         video.pause();
         video.currentTime = 0;
@@ -296,172 +442,59 @@ export default function HowItWorksDiagram() {
           video.classList.remove("hiw-video-visible");
         }
       }
+      frameLabelTextEl!.textContent = sc.video ? "" : `[Answer video for screen ${n + 1}]`;
+      frameHeadingEl!.textContent = sc.heading;
+      askEl!.hidden = !sc.question;
     }
 
-    function reset() {
-      sources.forEach((s) => s.classList.remove("hiw-on"));
-      modules.forEach((m) => m.classList.remove("hiw-on"));
-      Object.keys(paths).forEach((k) => togglePath(k, false));
-      Object.keys(routes).forEach((k) => toggleRoute(k, false));
-      frameLabelEl.classList.remove("hiw-show");
-      frameHeadingEl.classList.remove("hiw-show");
-      flowEl.classList.remove("hiw-running");
-      askTextEl.textContent = "";
+    // ---------- Auto-cycling timeline driven by requestAnimationFrame ----------
+    let disposed = false;
+    let visible = false;
+    let auto = true;
+    let start = performance.now();
+    let videoStarted = false;
+    let rafId = 0;
+
+    function restart() {
+      start = performance.now();
+      videoStarted = false;
       if (video) {
         video.pause();
         video.currentTime = 0;
       }
     }
 
-    function showStatic() {
-      reset();
-      askTextEl.textContent = SCREENS[current].question;
-      frameHeadingEl.classList.add("hiw-show");
-      sources.forEach((_, i) => light(i, true));
-      modules.forEach((m) => m.classList.add("hiw-on"));
-      togglePath("out", true);
-      toggleRoute("rOut", true);
-      frameLabelEl.classList.add("hiw-show");
-    }
-
-    let runId = 0;
-    let running = false;
-    function wait(id: number, ms: number): Promise<void> {
-      return sleep(ms).then(() => {
-        if (disposed || id !== runId) throw CANCELLED;
-      });
-    }
-
-    async function play(hold: number): Promise<void> {
-      const id = ++runId;
-      running = true;
-      reset();
-      try {
-        if (reduceMotion) {
-          showStatic();
-          await wait(id, hold);
-          return;
+    function frameTick(now: number) {
+      if (disposed) return;
+      if (reduceMotion) {
+        render(ANSWER + 1, true);
+      } else if (visible) {
+        let raw = (now - start) / 1000;
+        if (auto && raw >= SCREEN_LEN) {
+          setScreen((current + 1) % SCREENS.length);
+          restart();
+          raw = 0;
         }
-        flowEl.classList.add("hiw-running");
-        frameHeadingEl.classList.add("hiw-show");
-        await wait(id, 350);
-
-        const q = SCREENS[current].question;
-        if (q) {
-          for (const ch of q) {
-            askTextEl.textContent += ch;
-            await wait(id, 32);
-          }
-          await wait(id, 300);
-        }
-
-        if (!geo) return;
-        await Promise.all(
-          sources.map((_, i) =>
-            wait(id, i * 160).then(() => {
-              light(i, true);
-              return wait(id, 900);
-            }),
-          ),
-        );
-        await wait(id, 0);
-
-        for (const m of modules) {
-          m.classList.add("hiw-on");
-          await wait(id, 420);
-        }
-
-        togglePath("out", true);
-        toggleRoute("rOut", true);
-        await wait(id, 700);
-        frameLabelEl.classList.add("hiw-show");
-        if (video && SCREENS[current].video) {
+        const holding = raw >= 0.6 && raw < 0.6 + HOLD;
+        let t = raw < 0.6 ? raw : holding ? 0.6 : raw - HOLD;
+        if (!auto) t = Math.min(t, END - 0.01);
+        render(t, false, raw, holding, !auto);
+        if (video && t >= ANSWER && !videoStarted) {
+          videoStarted = true;
           video.currentTime = 0;
           video.play().catch(() => {});
         }
-
-        await wait(id, hold);
-      } catch (e) {
-        if (e !== CANCELLED) throw e;
-      } finally {
-        if (id === runId) running = false;
       }
-    }
-
-    let auto = true;
-    async function loop() {
-      while (!disposed && auto) {
-        await play(4500);
-        if (disposed || !auto) return;
-        setScreen((current + 1) % SCREENS.length);
-        await sleep(600);
-      }
+      rafId = requestAnimationFrame(frameTick);
     }
 
     function choose(n: number) {
       auto = false;
       setScreen(n);
-      play(0);
-    }
-
-    setScreen(0);
-    if (reduceMotion) {
-      showStatic();
-    } else {
-      loop();
+      restart();
     }
 
     const cleanups: (() => void)[] = [];
-    sources.forEach((s, i) => {
-      const onEnter = () => {
-        if (!running) light(i, true);
-      };
-      const onLeave = () => {
-        if (!running && !reduceMotion) light(i, false);
-      };
-      s.addEventListener("mouseenter", onEnter);
-      s.addEventListener("mouseleave", onLeave);
-      cleanups.push(() => {
-        s.removeEventListener("mouseenter", onEnter);
-        s.removeEventListener("mouseleave", onLeave);
-      });
-    });
-
-    function showTip(m: HTMLButtonElement, desc: string) {
-      tipEl.innerHTML = "";
-      const b = document.createElement("b");
-      b.textContent = m.textContent?.trim() ?? "";
-      tipEl.appendChild(b);
-      tipEl.appendChild(document.createTextNode(desc));
-      const r = box(m);
-      const w = Math.min(240, flowEl.clientWidth - 32);
-      tipEl.style.width = `${w}px`;
-      const left = Math.max(16, Math.min(r.cx - w / 2, flowEl.clientWidth - w - 16));
-      tipEl.style.left = `${left}px`;
-      tipEl.classList.add("hiw-show");
-      tipEl.style.top = `${r.t - tipEl.offsetHeight - 10}px`;
-    }
-    const hideTip = () => tipEl.classList.remove("hiw-show");
-    modules.forEach((m, i) => {
-      const desc = MODULES[i][2];
-      const onEnter = () => showTip(m, desc);
-      m.addEventListener("mouseenter", onEnter);
-      m.addEventListener("focus", onEnter);
-      m.addEventListener("mouseleave", hideTip);
-      m.addEventListener("blur", hideTip);
-      cleanups.push(() => {
-        m.removeEventListener("mouseenter", onEnter);
-        m.removeEventListener("focus", onEnter);
-        m.removeEventListener("mouseleave", hideTip);
-        m.removeEventListener("blur", hideTip);
-      });
-    });
-    const onTipEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") hideTip();
-    };
-    document.addEventListener("keydown", onTipEscape);
-    cleanups.push(() => document.removeEventListener("keydown", onTipEscape));
-
     tabs.forEach((t, i) => {
       const onClick = () => choose(i);
       const onKeydown = (e: KeyboardEvent) => {
@@ -483,71 +516,141 @@ export default function HowItWorksDiagram() {
       });
     });
 
+    setScreen(0);
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        const was = visible;
+        visible = entry.isIntersecting;
+        if (visible && !was && auto) restart();
+      },
+      { threshold: 0.3 },
+    );
+    io.observe(flowEl);
+    rafId = requestAnimationFrame(frameTick);
+
     return () => {
       disposed = true;
+      cancelAnimationFrame(rafId);
+      io.disconnect();
       ro.disconnect();
-      desktop.removeEventListener("change", draw);
+      desktop.removeEventListener("change", drawLink);
       cleanups.forEach((fn) => fn());
-      wiresEl.innerHTML = "";
+      flowsGroup.replaceChildren();
+      sourcesGroup.replaceChildren();
+      bondsGroup.replaceChildren();
+      atomsGroup.replaceChildren();
     };
-  }, [visible]);
-
-  useEffect(() => {
-    const el = flowRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { threshold: 0.3 });
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
+  }, [uid]);
 
   return (
     <section ref={flowRef} className="hiw-flow" aria-label="How Superatom AI works">
-      <svg ref={wiresRef} className="hiw-wires" aria-hidden="true" />
+      <svg className="hiw-wires" aria-hidden="true">
+        <defs>
+          <linearGradient ref={outGradRef} id={`${uid}-outGrad`} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="100" y2="0">
+            <stop offset="0" stopColor="#B9B9F9" />
+            <stop offset="1" stopColor="#FFB894" />
+          </linearGradient>
+          <marker id={`${uid}-head`} orient="auto" markerWidth="5" markerHeight="5" refX="3.2" refY="2" overflow="visible">
+            <path d="M0 0 L4 2 L0 4 Z" style={{ fill: "#FF6118", stroke: "none" }} />
+          </marker>
+        </defs>
+        <defs>
+          <mask id={`${uid}-outMask`} maskUnits="userSpaceOnUse" x="-50" y="-50" width="4000" height="4000">
+            <path ref={outRevealRef} fill="none" stroke="#fff" strokeWidth="10" />
+          </mask>
+        </defs>
+        <path
+          ref={outLineRef}
+          className="hiw-out-line"
+          stroke={`url(#${uid}-outGrad)`}
+          mask={`url(#${uid}-outMask)`}
+        />
+        <circle ref={(el) => { outDotRefs.current[0] = el; }} r="3" fill="#FF6118" opacity="0" />
+        <circle ref={(el) => { outDotRefs.current[1] = el; }} r="3" fill="#FF6118" opacity="0" />
+        <circle ref={outPortRef} r="4.5" fill="#FFFFFF" stroke="#FF6118" strokeWidth="1.5" opacity="0" />
+        <defs>
+          <linearGradient ref={loopGradRef} id={`${uid}-loopGrad`} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="100" y2="0">
+            <stop offset="0" stopColor="#FF6118" />
+            <stop offset="1" stopColor="#533AFD" />
+          </linearGradient>
+          <filter id={`${uid}-pglow`} x="-150%" y="-150%" width="400%" height="400%">
+            <feGaussianBlur stdDeviation="4" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <marker id={`${uid}-loopHead`} orient="auto" markerWidth="5" markerHeight="5" refX="3.2" refY="2" overflow="visible">
+            <path d="M0 0 L4 2 L0 4 Z" style={{ fill: "#533AFD", stroke: "none" }} />
+          </marker>
+          <mask id={`${uid}-loopMask`} maskUnits="userSpaceOnUse" x="-50" y="-50" width="4000" height="4000">
+            <path ref={loopRevealRef} fill="none" stroke="#fff" strokeWidth="10" />
+          </mask>
+        </defs>
+        <path
+          ref={loopLineRef}
+          mask={`url(#${uid}-loopMask)`}
+          fill="none"
+          stroke={`url(#${uid}-loopGrad)`}
+          strokeWidth="1.5"
+          strokeDasharray="4 6"
+          strokeLinecap="round"
+          opacity="0"
+        />
+        <circle ref={particleRef} r="5" fill="#FF6118" filter={`url(#${uid}-pglow)`} opacity="0" />
+        <text
+          ref={loopLabelRef}
+          fill="#FF6118"
+          fontFamily="Inter, system-ui, sans-serif"
+          fontSize="11"
+          fontWeight="600"
+          letterSpacing="1"
+          opacity="0"
+        >
+          OUTCOME LEARNED
+        </text>
+      </svg>
 
-      <div>
-        <p className="hiw-sources-label">Enterprise Systems</p>
-        <ul className="hiw-sources">
-          {SOURCES.map(([id, label], i) => (
-            <li
-              key={id}
-              ref={(el) => {
-                sourceRefs.current[i] = el;
-              }}
-              className="hiw-source"
-            >
-              <Icon paths={SRC_ICONS[id]} viewBox={SRC_ICON_VB} size={28} />
-              <span>{label}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div ref={coreRef} className="hiw-core">
-        <h3>Superatom AI</h3>
-        <div className="hiw-modules">
-          {MODULES.map(([id, label], i) => (
-            <button
-              key={id}
-              ref={(el) => {
-                moduleRefs.current[i] = el;
-              }}
-              type="button"
-              className="hiw-module"
-              aria-describedby="hiw-tip"
-            >
-              <Icon paths={MOD_ICONS[id]} viewBox={MOD_ICON_VB} size={22} />
-              <span>{label}</span>
-            </button>
-          ))}
-        </div>
+      <div className="hiw-viz">
+        <svg
+          ref={vizRef}
+          viewBox="0 96 456 294"
+          role="img"
+          aria-label="ERPs, IoT, Data Lake and APIs flow into Superatom AI, where Tribal Knowledge, Optimization Engine, Semantic Modeling and Generative UI connect, and the decision is delivered."
+        >
+          <defs>
+            <filter id={`${uid}-glow`} x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="6" result="b" />
+              <feMerge>
+                <feMergeNode in="b" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <radialGradient id={`${uid}-coreGrad`} cx="40%" cy="35%" r="70%">
+              <stop offset="0" stopColor="#7F7DFC" />
+              <stop offset="1" stopColor="#533AFD" />
+            </radialGradient>
+          </defs>
+          <g ref={worldRef}>
+            <g ref={flowsGroupRef} />
+            <g ref={sourcesGroupRef} />
+            <g ref={bondsGroupRef} />
+            <g ref={atomsGroupRef} />
+            <circle ref={coreRef} cx="290" cy="240" r="0" fill={`url(#${uid}-coreGrad)`} filter={`url(#${uid}-glow)`} />
+            <text ref={semLabelRef} x="290" y="130" textAnchor="middle" fill="#50617A" fontSize="12" fontWeight="600" letterSpacing="1" opacity="0">
+              SUPERATOM AI
+            </text>
+          </g>
+        </svg>
+        <p ref={captionRef} className="hiw-caption" />
       </div>
 
       <div className="hiw-frame-col">
-        <div ref={frameRef} className="hiw-vframe">
+        <div ref={frameRef} className="hiw-frame">
           <h4 ref={frameHeadingRef} className="hiw-frame-heading" />
           <video ref={videoRef} className="hiw-video" muted playsInline />
           <div ref={frameLabelRef} className="hiw-frame-label">
-            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="#fff">
+            <svg width="20" height="20" viewBox="0 0 24 24" style={{ fill: "#FFFFFF" }} aria-hidden="true">
               <path d="M8 5v14l11-7Z" />
             </svg>
             <span ref={frameLabelTextRef} />
@@ -576,8 +679,6 @@ export default function HowItWorksDiagram() {
           ))}
         </div>
       </div>
-
-      <div ref={tipRef} id="hiw-tip" className="hiw-tip" role="tooltip" />
     </section>
   );
 }

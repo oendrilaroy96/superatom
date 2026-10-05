@@ -2,6 +2,10 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap");
 
+/* Inter + Manrope: used only by the How It Works diagram below, which was
+   ported from a standalone prototype built against this exact pairing. */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap");
+
 /* Satoshi (variable font, weights 300–900) — self-hosted per the ITF Free
    Font License (see public/fonts/SATOSHI-LICENSE.txt), which permits
    self-hosting. Source: Fontshare (https://www.fontshare.com/fonts/satoshi). */
@@ -155,19 +159,25 @@ body {
   font-size: 72px;
 }
 
-/* ================= How It Works architecture diagram ================= */
+/* ================= How It Works architecture diagram =================
+   Ported 1:1 from a standalone interactive prototype (colors, fonts and
+   layout kept exactly as designed there, not remapped to site tokens). */
 .hiw-flow {
-  --hiw-shadow-sm: 0 1px 2px rgba(10, 37, 64, 0.04);
-  --hiw-shadow-md: 0 2px 6px rgba(10, 37, 64, 0.06);
-  --hiw-shadow-lg: 0 4px 14px rgba(10, 37, 64, 0.05);
-  --hiw-shadow-tip: 0 8px 24px rgba(10, 37, 64, 0.18);
+  --hiw-shadow-sm: 0 1px 2px rgba(6, 27, 49, 0.04);
+  --hiw-shadow-lg: 0 4px 14px rgba(6, 27, 49, 0.05);
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  row-gap: 64px;
+  row-gap: 56px;
   width: 100%;
   margin: 0;
-  padding: 48px 16px 64px;
+  padding: 40px 16px 64px;
+  font-family: "Manrope", system-ui, sans-serif;
+  color: #061b31;
+}
+.hiw-flow > :not(.hiw-wires) {
+  position: relative;
+  z-index: 1;
 }
 .hiw-wires {
   position: absolute;
@@ -178,202 +188,52 @@ body {
   pointer-events: none;
   z-index: 0;
 }
-.hiw-wires path {
+.hiw-out-line {
   fill: none;
-  stroke: var(--color-secondary-200);
-  stroke-width: 2;
+  stroke-width: 1.5;
   stroke-linecap: round;
-  stroke-linejoin: round;
-  transition: stroke 0.25s;
+  stroke-dasharray: 3 5;
 }
-.hiw-wires path.hiw-lit {
-  stroke: var(--color-primary-200);
-}
-.hiw-arrow {
-  fill: var(--color-secondary-200);
-}
-.hiw-route {
-  pointer-events: none;
-}
-.hiw-flowline {
-  fill: none;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-dasharray: 100 100;
-  stroke-dashoffset: 100;
-  opacity: 0;
-  transition: stroke 0.25s;
-}
-.hiw-route.hiw-lit .hiw-flowline {
-  opacity: 1;
-  animation: hiw-draw 0.9s cubic-bezier(0.3, 0, 0.2, 1) forwards;
-}
-@keyframes hiw-draw {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-.hiw-flow > :not(.hiw-wires):not(.hiw-tip) {
+
+.hiw-viz {
   position: relative;
-  z-index: 1;
-}
-
-.hiw-sources-label {
-  margin: 0 0 12px;
-  font-size: 14px;
-  line-height: 18px;
-  font-weight: 700;
-  color: var(--color-body);
-  font-family: var(--font-sans);
-}
-.hiw-sources {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.hiw-source {
+  isolation: isolate;
+  font-family: "Inter", system-ui, sans-serif;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 84px;
-  padding: 12px 4px;
-  text-align: center;
-  background: #fff;
-  border: 1px solid var(--color-secondary-100);
-  border-radius: 8px;
-  box-shadow: var(--hiw-shadow-sm);
-  font-size: 13px;
-  line-height: 16px;
-  font-weight: 500;
-  font-family: var(--font-sans);
-  color: var(--color-heading);
-  transition: background 0.25s;
+  flex-direction: column-reverse;
 }
-.hiw-source svg {
-  flex-shrink: 0;
-  padding: 3px;
-  background: var(--color-primary-100);
-  border-radius: 6px;
-  fill: none;
-  stroke: var(--color-primary-500);
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transition: background 0.25s;
-}
-.hiw-source.hiw-on {
-  background: var(--color-primary-100);
-}
-.hiw-source.hiw-on svg {
-  background: #fff;
-}
-
-.hiw-core {
-  padding: 20px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: var(--hiw-shadow-lg);
-}
-.hiw-core h3 {
-  margin: 0 0 16px;
-  font-size: 18px;
-  line-height: 24px;
-  font-weight: 600;
-  font-family: var(--font-display);
-  color: var(--color-heading);
-}
-.hiw-modules {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-.hiw-module {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 72px;
-  padding: 12px;
-  margin: 0;
-  text-align: left;
-  background: var(--color-page);
-  border: 1px solid var(--color-secondary-100);
-  border-radius: 8px;
-  font: 500 14px/18px var(--font-sans);
-  color: var(--color-heading);
-  cursor: pointer;
-  transition:
-    background 0.25s,
-    box-shadow 0.25s,
-    opacity 0.3s;
-}
-.hiw-module svg {
-  flex-shrink: 0;
-  fill: none;
-  stroke: var(--color-primary-500);
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.hiw-module.hiw-on,
-.hiw-module:hover {
-  background: #fff;
-  box-shadow: var(--hiw-shadow-sm);
-}
-.hiw-module:focus {
-  outline: none;
-}
-.hiw-module:focus-visible {
-  background: #fff;
-  box-shadow: var(--hiw-shadow-sm);
-  outline: 2px solid var(--color-heading);
-  outline-offset: 3px;
-}
-.hiw-flow.hiw-running .hiw-module:not(.hiw-on) {
-  opacity: 0.4;
-}
-
-.hiw-tip {
+.hiw-viz::before {
+  content: "";
   position: absolute;
-  z-index: 5;
-  width: 240px;
-  padding: 12px 14px;
-  pointer-events: none;
-  background: var(--color-heading);
-  color: #fff;
-  border-radius: 8px;
-  box-shadow: var(--hiw-shadow-tip);
-  font-size: 13px;
-  line-height: 18px;
-  font-weight: 500;
-  font-family: var(--font-sans);
-  opacity: 0;
-  transform: translateY(4px);
-  transition:
-    opacity 0.2s,
-    transform 0.2s;
+  inset: -6% -4%;
+  z-index: -1;
+  border-radius: 40px;
+  background:
+    radial-gradient(40% 45% at 35% 45%, rgba(127, 125, 252, 0.16), transparent 70%),
+    radial-gradient(35% 40% at 80% 55%, rgba(255, 97, 24, 0.12), transparent 70%);
 }
-.hiw-tip.hiw-show {
-  opacity: 1;
-  transform: none;
-}
-.hiw-tip b {
+.hiw-viz svg {
+  width: 100%;
+  height: auto;
+  max-height: 440px;
   display: block;
-  margin-bottom: 2px;
-  font-weight: 700;
+}
+.hiw-caption {
+  text-align: center;
+  color: #50617a;
+  font-size: 14px;
+  min-height: 22px;
+  margin: 0 0 8px;
+  transition: opacity 0.4s;
 }
 
-.hiw-vframe {
+.hiw-frame {
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 3;
   border-radius: 16px;
   overflow: hidden;
-  background-color: var(--color-secondary-500);
+  background-color: #0a2540;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
@@ -405,7 +265,6 @@ body {
   padding: 0 16px;
   font-size: 14px;
   font-weight: 600;
-  font-family: var(--font-sans);
   color: rgba(255, 255, 255, 0.78);
   opacity: 0;
   transition: opacity 0.4s;
@@ -424,7 +283,6 @@ body {
   line-height: 24px;
   font-weight: 600;
   letter-spacing: -0.01em;
-  font-family: var(--font-display);
   color: #fff;
   opacity: 0;
   transform: translateY(-4px);
@@ -453,8 +311,7 @@ body {
   font-size: 14px;
   line-height: 20px;
   font-weight: 500;
-  font-family: var(--font-sans);
-  color: var(--color-heading);
+  color: #061b31;
 }
 .hiw-ask[hidden] {
   display: none;
@@ -464,7 +321,7 @@ body {
   width: 2px;
   height: 16px;
   margin-left: 2px;
-  background: var(--color-primary-500);
+  background: #533afd;
   vertical-align: -3px;
   animation: hiw-blink 1s steps(1) infinite;
 }
@@ -486,7 +343,7 @@ body {
   gap: 4px;
   padding: 4px;
   background: #fff;
-  border: 1px solid var(--color-secondary-100);
+  border: 1px solid #e5edf5;
   border-radius: 10px;
   box-shadow: var(--hiw-shadow-sm);
 }
@@ -498,42 +355,39 @@ body {
   border: 0;
   border-radius: 7px;
   background: transparent;
-  color: var(--color-caption);
-  font: 600 14px/1 var(--font-sans);
+  color: #50617a;
+  font: 600 14px/1 "Manrope", system-ui, sans-serif;
   cursor: pointer;
   transition:
     background 0.2s,
     color 0.2s;
 }
 .hiw-screen-btn:hover {
-  background: var(--color-page);
-  color: var(--color-heading);
+  background: #f6f9fc;
+  color: #061b31;
 }
 .hiw-screen-btn[aria-selected="true"] {
-  background: var(--color-heading);
+  background: #0a2540;
   color: #fff;
 }
 .hiw-screen-btn:focus {
   outline: none;
 }
 .hiw-screen-btn:focus-visible {
-  outline: 2px solid var(--color-primary-500);
+  outline: 2px solid #533afd;
   outline-offset: 2px;
 }
 
-/* ---------- Tablet: roomier stacked layout ---------- */
+/* ---------- Tablet ---------- */
 @media (min-width: 640px) {
   .hiw-flow {
-    padding: 64px 40px 80px;
+    padding: 56px clamp(24px, 5vw, 48px) 80px;
   }
-  .hiw-source {
-    flex-direction: row;
-    min-height: 56px;
-    gap: 10px;
-    font-size: 15px;
-  }
-  .hiw-core {
-    padding: 28px;
+  .hiw-ask {
+    left: 24px;
+    right: 24px;
+    bottom: 24px;
+    font-size: 16px;
   }
   .hiw-frame-heading {
     top: 24px;
@@ -542,46 +396,27 @@ body {
     font-size: 20px;
     line-height: 28px;
   }
-  .hiw-ask {
-    left: 24px;
-    right: 24px;
-    bottom: 24px;
-    font-size: 16px;
-  }
 }
 
-/* ---------- Desktop: three columns, left to right ---------- */
-@media (min-width: 1280px) {
+/* ---------- Desktop: diagram and video side by side ---------- */
+@media (min-width: 1180px) {
   .hiw-flow {
-    padding: 96px 80px;
-    grid-template-columns: minmax(140px, 1fr) minmax(320px, 2.6fr) minmax(0, 3.6fr);
-    column-gap: clamp(56px, 5.5vw, 120px);
+    padding: 96px clamp(32px, 4.5vw, 96px);
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+    column-gap: clamp(40px, 5vw, 110px);
     row-gap: 0;
     align-items: center;
   }
-  .hiw-sources {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 24px;
+  .hiw-viz {
+    flex-direction: column;
   }
-  .hiw-source {
-    justify-content: flex-start;
-    padding: 0 12px;
-    font-size: 16px;
+  .hiw-viz svg {
+    max-height: none;
   }
-  .hiw-core h3 {
-    font-size: 20px;
-    margin-bottom: 20px;
+  .hiw-caption {
+    margin: 8px 0 0;
   }
-  .hiw-modules {
-    gap: 16px;
-  }
-  .hiw-module {
-    min-height: 88px;
-    padding: 12px 14px;
-    font-size: 15px;
-    line-height: 20px;
-  }
-  .hiw-vframe {
+  .hiw-frame {
     background-size: 72px 72px;
   }
   .hiw-frame-col {
@@ -599,18 +434,11 @@ body {
   .hiw-caret {
     animation: none;
   }
-  .hiw-source,
-  .hiw-module,
-  .hiw-wires path,
   .hiw-frame-label,
   .hiw-frame-heading,
   .hiw-screen-btn,
-  .hiw-tip {
+  .hiw-caption {
     transition: none;
-  }
-  .hiw-route.hiw-lit .hiw-flowline {
-    animation: none;
-    stroke-dashoffset: 0;
   }
 }
 
