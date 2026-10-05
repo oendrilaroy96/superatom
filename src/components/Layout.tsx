@@ -1,10 +1,38 @@
+import { useEffect, useRef } from "react";
 import { Outlet } from "react-router-dom";
+import { useLenis } from "lenis/react";
 import Header from "./Header";
 import CtaSection from "./CtaSection";
 import Footer from "./Footer";
 
+// Matches the page background (#f8fafd) and --color-secondary-500 (#0d1738).
+const LIGHT_RGB: [number, number, number] = [248, 250, 253];
+const DARK_RGB: [number, number, number] = [13, 23, 56];
+// How much scroll distance (px) the light-to-dark fade plays out over, once
+// the dark block's top edge reaches the bottom of the viewport.
+const TRANSITION_DISTANCE = 400;
+
 /** Shared chrome (header, background decoration, footer) around every routed page. */
 export default function Layout() {
+  const darkBlockRef = useRef<HTMLDivElement>(null);
+
+  const updateDarkBlockBackground = () => {
+    const el = darkBlockRef.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top;
+    const t = Math.min(1, Math.max(0, (window.innerHeight - top) / TRANSITION_DISTANCE));
+    const [r, g, b] = LIGHT_RGB.map((c, i) => Math.round(c + (DARK_RGB[i] - c) * t));
+    el.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+  };
+
+  useEffect(() => {
+    updateDarkBlockBackground();
+    window.addEventListener("resize", updateDarkBlockBackground);
+    return () => window.removeEventListener("resize", updateDarkBlockBackground);
+  }, []);
+
+  useLenis(() => updateDarkBlockBackground());
+
   return (
     <div className="relative min-h-screen overflow-x-clip bg-[linear-gradient(180deg,#f8fafd_0%,#ffffff_45%,#f8fafd_100%)]">
       <div
@@ -34,8 +62,10 @@ export default function Layout() {
       </main>
 
       {/* CTA + footer share one dark block so the glow fades across both
-          instead of being hard-clipped at the CTA section's own edge. */}
-      <div className="relative overflow-hidden bg-secondary-500">
+          instead of being hard-clipped at the CTA section's own edge. Its
+          background color is driven by scroll position (see above) so the
+          page fades from light to dark as it comes into view. */}
+      <div ref={darkBlockRef} className="relative overflow-hidden">
         <div
           className="pointer-events-none absolute inset-0 z-0"
           style={{
