@@ -33,17 +33,9 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      {/* CTA + footer share one dark block. The top fades in from
-          transparent (over the light page background) rather than
-          cutting straight to navy, so scrolling into it reads as a
-          smooth light-to-dark transition instead of a hard edge. */}
-      <div
-        className="relative overflow-hidden"
-        style={{
-          backgroundImage:
-            "linear-gradient(180deg, transparent 0, var(--color-secondary-500) 320px, var(--color-secondary-500) 100%)",
-        }}
-      >
+      {/* CTA + footer share one dark block so the glow fades across both
+          instead of being hard-clipped at the CTA section's own edge. */}
+      <div className="relative overflow-hidden bg-secondary-500">
         <div
           className="pointer-events-none absolute inset-0 z-0"
           style={{
