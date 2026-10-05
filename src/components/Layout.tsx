@@ -5,33 +5,34 @@ import Header from "./Header";
 import CtaSection from "./CtaSection";
 import Footer from "./Footer";
 
-// Matches the page background (#f8fafd) and --color-secondary-500 (#0d1738).
-const LIGHT_RGB: [number, number, number] = [248, 250, 253];
-const DARK_RGB: [number, number, number] = [13, 23, 56];
-// How much scroll distance (px) the light-to-dark fade plays out over, once
-// the dark block's top edge reaches the bottom of the viewport.
+// How much scroll distance (px) the reveal plays out over, once the dark
+// block's top edge reaches the bottom of the viewport.
 const TRANSITION_DISTANCE = 400;
 
 /** Shared chrome (header, background decoration, footer) around every routed page. */
 export default function Layout() {
   const darkBlockRef = useRef<HTMLDivElement>(null);
+  const darkFillRef = useRef<HTMLDivElement>(null);
 
-  const updateDarkBlockBackground = () => {
-    const el = darkBlockRef.current;
-    if (!el) return;
-    const top = el.getBoundingClientRect().top;
+  // The fill keeps its full, un-blended secondary-500 color at all times;
+  // scrolling only reveals more of it (a wipe from the top down), so there's
+  // never a washed-out in-between tone the way a color cross-fade would give.
+  const updateDarkBlockReveal = () => {
+    const block = darkBlockRef.current;
+    const fill = darkFillRef.current;
+    if (!block || !fill) return;
+    const top = block.getBoundingClientRect().top;
     const t = Math.min(1, Math.max(0, (window.innerHeight - top) / TRANSITION_DISTANCE));
-    const [r, g, b] = LIGHT_RGB.map((c, i) => Math.round(c + (DARK_RGB[i] - c) * t));
-    el.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+    fill.style.clipPath = `inset(0 0 ${(1 - t) * 100}% 0)`;
   };
 
   useEffect(() => {
-    updateDarkBlockBackground();
-    window.addEventListener("resize", updateDarkBlockBackground);
-    return () => window.removeEventListener("resize", updateDarkBlockBackground);
+    updateDarkBlockReveal();
+    window.addEventListener("resize", updateDarkBlockReveal);
+    return () => window.removeEventListener("resize", updateDarkBlockReveal);
   }, []);
 
-  useLenis(() => updateDarkBlockBackground());
+  useLenis(() => updateDarkBlockReveal());
 
   return (
     <div className="relative min-h-screen overflow-x-clip bg-[linear-gradient(180deg,#f8fafd_0%,#ffffff_45%,#f8fafd_100%)]">
@@ -61,19 +62,25 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      {/* CTA + footer share one dark block so the glow fades across both
-          instead of being hard-clipped at the CTA section's own edge. Its
-          background color is driven by scroll position (see above) so the
-          page fades from light to dark as it comes into view. */}
+      {/* CTA + footer share one dark block. The solid secondary-500 fill
+          (plus its glow) is wiped into view from the top down as the block
+          scrolls in (see updateDarkBlockReveal above), instead of fading
+          through blended in-between colors. */}
       <div ref={darkBlockRef} className="relative overflow-hidden">
         <div
-          className="pointer-events-none absolute inset-0 z-0"
-          style={{
-            backgroundImage:
-              "radial-gradient(640px 420px at 15% 12%, rgba(83,58,253,0.3), transparent 55%), radial-gradient(640px 480px at 85% 48%, rgba(255,118,0,0.18), transparent 55%)",
-          }}
-          aria-hidden="true"
-        />
+          ref={darkFillRef}
+          className="absolute inset-0 bg-secondary-500"
+          style={{ clipPath: "inset(0 0 100% 0)" }}
+        >
+          <div
+            className="pointer-events-none absolute inset-0 z-0"
+            style={{
+              backgroundImage:
+                "radial-gradient(640px 420px at 15% 12%, rgba(83,58,253,0.3), transparent 55%), radial-gradient(640px 480px at 85% 48%, rgba(255,118,0,0.18), transparent 55%)",
+            }}
+            aria-hidden="true"
+          />
+        </div>
         <div className="relative z-10">
           <CtaSection />
           <Footer />
