@@ -33,14 +33,30 @@ const VH = 1000;
 const px = (x: number) => `${((x - VX) / VW) * 100}%`;
 const py = (y: number) => `${((y - VY) / VH) * 100}%`;
 
+// Every color below is a literal value from the brand palette (src/index.css
+// @theme) — no off-brand blues/greys, so the diagram reads as the same
+// system as the rest of the site rather than its own standalone palette.
+const BRAND = {
+  primary200: 0xc7bdff,
+  primary300: 0xa899ff,
+  primary400: 0x8a75ff,
+  primary500: 0x533afd,
+  primary600: 0x4630ca,
+  secondary100: 0xdee4f7,
+  secondary300: 0x8d9ec9,
+  secondary600: 0x0b1330,
+  accent200: 0xffcea3,
+  page: 0xf8fafd,
+};
+
 const COL: Record<Palette, number> = {
-  deep: 0x533afd,
-  cyan: 0x7389ff,
-  white: 0xf4f6fb,
-  purple: 0xb9b9f9,
-  amethyst: 0x7f71e6,
-  violet: 0x182659,
-  smoke: 0x839bc8,
+  deep: BRAND.primary500,
+  cyan: BRAND.primary300,
+  white: BRAND.page,
+  purple: BRAND.primary200,
+  amethyst: BRAND.primary600,
+  violet: BRAND.secondary600,
+  smoke: BRAND.secondary300,
 };
 
 /**
@@ -92,11 +108,11 @@ export default function DecisionFlowDiagram() {
     ro.observe(sceneEl);
     resize();
 
-    world.add(new THREE.HemisphereLight(0xffffff, 0xb9b9f9, 0.75));
+    world.add(new THREE.HemisphereLight(0xffffff, BRAND.primary200, 0.75));
     const key = new THREE.DirectionalLight(0xffffff, 0.75);
     key.position.set(-0.6, 0.8, 1);
     world.add(key);
-    const rim = new THREE.DirectionalLight(0xb9b9f9, 0.45);
+    const rim = new THREE.DirectionalLight(BRAND.primary200, 0.45);
     rim.position.set(0.8, -0.4, 0.6);
     world.add(rim);
 
@@ -154,11 +170,13 @@ export default function DecisionFlowDiagram() {
       world.add(s);
       return s;
     };
-    const gSphere = glow(1100, 415, 760, 0xd6d9fc);
-    const gSphere2 = glow(1230, 520, 440, 0xe8e9ff);
-    const gSphere3 = glow(980, 300, 400, 0xd6d9fc);
-    const gCluster = glow(665, 600, 360, 0xb9b9f9);
-    const gAtom = glow(348, 805, 250, 0xd6d9fc);
+    const gSphere = glow(1100, 415, 760, BRAND.primary200);
+    // A touch of accent orange on the payoff glow, echoing the same
+    // purple+orange glow pairing used behind the CTA section and footer.
+    const gSphere2 = glow(1230, 520, 440, BRAND.accent200);
+    const gSphere3 = glow(980, 300, 400, BRAND.primary200);
+    const gCluster = glow(665, 600, 360, BRAND.primary300);
+    const gAtom = glow(348, 805, 250, BRAND.primary200);
 
     // paths
     const main = new THREE.CurvePath<THREE.Vector3>();
@@ -187,7 +205,7 @@ export default function DecisionFlowDiagram() {
 
     function faintLine(curve: THREE.Curve<THREE.Vector3>, n: number) {
       const geo = track(new THREE.BufferGeometry().setFromPoints(curve.getSpacedPoints(n)));
-      const material = track(new THREE.LineBasicMaterial({ color: 0xe5edf5 }));
+      const material = track(new THREE.LineBasicMaterial({ color: BRAND.secondary100 }));
       const line = new THREE.Line(geo, material);
       line.position.z = -300;
       world.add(line);
@@ -198,10 +216,10 @@ export default function DecisionFlowDiagram() {
 
     const GAP = 23;
     const ramp: [number, THREE.Color][] = [
-      [0, new THREE.Color(0x839bc8)],
-      [0.35, new THREE.Color(0x7389ff)],
-      [0.65, new THREE.Color(0x533afd)],
-      [1, new THREE.Color(0x7f71e6)],
+      [0, new THREE.Color(BRAND.secondary300)],
+      [0.35, new THREE.Color(BRAND.primary300)],
+      [0.65, new THREE.Color(BRAND.primary500)],
+      [1, new THREE.Color(BRAND.primary600)],
     ];
     const rampAt = (f: number) => {
       for (let i = 1; i < ramp.length; i++) {
@@ -218,7 +236,7 @@ export default function DecisionFlowDiagram() {
       const material = track(new THREE.MeshBasicMaterial({ color: 0xffffff }));
       const m = new THREE.InstancedMesh(geo, material, n);
       m.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-      for (let i = 0; i < n; i++) m.setColorAt(i, new THREE.Color(0x7389ff));
+      for (let i = 0; i < n; i++) m.setColorAt(i, new THREE.Color(BRAND.primary400));
       m.position.z = -280;
       world.add(m);
       return m;
@@ -274,7 +292,7 @@ export default function DecisionFlowDiagram() {
     atom.add(ball("deep", 35));
     const ringMat = track(
       new THREE.MeshBasicMaterial({
-        color: 0xd6d9fc,
+        color: BRAND.primary200,
         transparent: true,
         opacity: 0.9,
         side: THREE.DoubleSide,
@@ -283,7 +301,7 @@ export default function DecisionFlowDiagram() {
     );
     const disc = new THREE.Mesh(
       track(new THREE.CircleGeometry(85, 64)),
-      track(new THREE.MeshBasicMaterial({ color: 0xf6f6ff, transparent: true, opacity: 0.8, depthWrite: false })),
+      track(new THREE.MeshBasicMaterial({ color: BRAND.page, transparent: true, opacity: 0.8, depthWrite: false })),
     );
     disc.position.z = -120;
     atom.add(disc);
@@ -295,7 +313,7 @@ export default function DecisionFlowDiagram() {
     atom.add(ring2);
     const pulse = new THREE.Mesh(
       track(new THREE.RingGeometry(49, 51, 96)),
-      track(new THREE.MeshBasicMaterial({ color: 0xd6d9fc, transparent: true, opacity: 0, depthWrite: false })),
+      track(new THREE.MeshBasicMaterial({ color: BRAND.primary200, transparent: true, opacity: 0, depthWrite: false })),
     );
     pulse.position.z = -100;
     atom.add(pulse);
@@ -305,7 +323,7 @@ export default function DecisionFlowDiagram() {
     orbit.add(
       new THREE.Mesh(
         track(new THREE.TorusGeometry(72, 1.1, 8, 120)),
-        track(new THREE.MeshBasicMaterial({ color: 0xd6d9fc })),
+        track(new THREE.MeshBasicMaterial({ color: BRAND.primary200 })),
       ),
     );
     const electron = ball("amethyst", 7);
@@ -387,7 +405,7 @@ export default function DecisionFlowDiagram() {
       if (type === "ring") {
         m = new THREE.Mesh(
           track(new THREE.TorusGeometry(1, 0.2, 8, 24)),
-          track(new THREE.MeshBasicMaterial({ color: 0x7389ff })),
+          track(new THREE.MeshBasicMaterial({ color: BRAND.primary400 })),
         );
       } else {
         m = new THREE.Mesh(sphereGeo, mat(type === "tiny" ? "purple" : type));
@@ -444,7 +462,7 @@ export default function DecisionFlowDiagram() {
     edgeGeo.setAttribute("position", new THREE.BufferAttribute(edgePos, 3));
     const edgeLines = new THREE.LineSegments(
       edgeGeo,
-      track(new THREE.LineBasicMaterial({ color: 0x9fa3f2, transparent: true, opacity: 0.7 })),
+      track(new THREE.LineBasicMaterial({ color: BRAND.primary300, transparent: true, opacity: 0.7 })),
     );
     spin.add(edgeLines);
 
@@ -626,7 +644,7 @@ export default function DecisionFlowDiagram() {
                   left: px(label.tick[0]),
                   top: py(label.tick[1]),
                   height: `${((label.tick[2] - label.tick[1]) / VH) * 100}%`,
-                  backgroundColor: "#64748d",
+                  backgroundColor: "var(--color-secondary-400)",
                 }}
               />
             )}
