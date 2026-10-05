@@ -41,7 +41,7 @@ const socials: { label: string; Icon: IconComponent; href: string }[] = [
 
 export default function Footer() {
   return (
-    <footer className="bg-secondary-500">
+    <footer>
       <div className="mx-auto max-w-[1920px] px-4 pb-10 pt-20 sm:px-10 sm:pt-[120px] xl:px-20">
         <div className="grid grid-cols-2 gap-x-8 gap-y-12 sm:grid-cols-3 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div className="col-span-2 sm:col-span-3 lg:col-span-1">

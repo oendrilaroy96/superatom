@@ -32,8 +32,23 @@ export default function Layout() {
       <main className="relative z-10">
         <Outlet />
       </main>
-      <CtaSection />
-      <Footer />
+
+      {/* CTA + footer share one dark block so the glow fades across both
+          instead of being hard-clipped at the CTA section's own edge. */}
+      <div className="relative overflow-hidden bg-secondary-500">
+        <div
+          className="pointer-events-none absolute inset-0 z-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(640px 420px at 15% 12%, rgba(83,58,253,0.3), transparent 55%), radial-gradient(640px 480px at 85% 48%, rgba(255,118,0,0.18), transparent 55%)",
+          }}
+          aria-hidden="true"
+        />
+        <div className="relative z-10">
+          <CtaSection />
+          <Footer />
+        </div>
+      </div>
     </div>
   );
 }

@@ -9,15 +9,7 @@ export default function CtaSection() {
   const [demoOpen, setDemoOpen] = useState(false);
 
   return (
-    <section className="relative overflow-hidden bg-secondary-500 py-16 sm:py-24">
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          backgroundImage:
-            "radial-gradient(640px 420px at 15% 20%, rgba(83,58,253,0.3), transparent 60%), radial-gradient(560px 420px at 85% 85%, rgba(255,118,0,0.18), transparent 55%)",
-        }}
-        aria-hidden="true"
-      />
+    <section className="py-16 sm:py-24">
       <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
         <div className="mx-auto max-w-[1300px] text-center">
           <SectionHeading
