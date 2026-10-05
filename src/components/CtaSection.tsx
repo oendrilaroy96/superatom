@@ -35,10 +35,6 @@ export default function CtaSection() {
           >
             Book your demo
           </Button>
-
-          <p className="mt-6 text-sm text-white/50">
-            Decide Fast. Decide Right. Every Time.
-          </p>
         </div>
       </div>
 
