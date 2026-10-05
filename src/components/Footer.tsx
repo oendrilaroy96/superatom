@@ -4,7 +4,7 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import type { IconComponent } from "../types/icon";
-import logo from "../assets/superatom-logo.png";
+import logo from "../assets/logo-white.png";
 
 const columns: { heading: string; links: { name: string; path?: string }[] }[] = [
   {
@@ -43,12 +43,12 @@ const socials: { label: string; Icon: IconComponent; href: string }[] = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-secondary-100 bg-page">
+    <footer className="bg-secondary-500">
       <div className="mx-auto max-w-[1920px] px-4 pb-10 pt-20 sm:px-10 sm:pt-[120px] xl:px-20">
         <div className="grid grid-cols-2 gap-x-8 gap-y-12 sm:grid-cols-3 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div className="col-span-2 sm:col-span-3 lg:col-span-1">
             <img src={logo} alt="Superatom AI" className="h-6 w-auto" />
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-caption">
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
               Decision intelligence for enterprises. Connect your data,
               execute the decisions.
             </p>
@@ -59,7 +59,7 @@ export default function Footer() {
                   href={href}
                   aria-label={label}
                   {...(href !== "#" ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  className="flex h-9 w-9 items-center justify-center rounded-md border border-secondary-100 bg-white text-caption transition-colors hover:border-secondary-200 hover:text-heading"
+                  className="flex h-9 w-9 items-center justify-center rounded-md border border-white/10 bg-white/5 text-white/70 transition-colors hover:border-white/20 hover:text-white"
                 >
                   <Icon style={{ fontSize: 18 }} aria-hidden="true" />
                 </a>
@@ -69,7 +69,7 @@ export default function Footer() {
 
           {columns.map((col) => (
             <div key={col.heading} className="text-right">
-              <p className="font-display text-xs font-bold uppercase tracking-wide text-heading">
+              <p className="font-display text-xs font-bold uppercase tracking-wide text-white">
                 {col.heading}
               </p>
               <ul className="mt-4 space-y-3">
@@ -78,14 +78,14 @@ export default function Footer() {
                     {link.path ? (
                       <Link
                         to={link.path}
-                        className="text-sm text-caption transition-colors hover:text-heading"
+                        className="text-sm text-white/60 transition-colors hover:text-white"
                       >
                         {link.name}
                       </Link>
                     ) : (
                       <a
                         href="#"
-                        className="text-sm text-caption transition-colors hover:text-heading"
+                        className="text-sm text-white/60 transition-colors hover:text-white"
                       >
                         {link.name}
                       </a>
@@ -97,8 +97,8 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-14 border-t border-secondary-100 pt-6">
-          <p className="text-center text-sm text-caption sm:text-left">
+        <div className="mt-14 border-t border-white/10 pt-6">
+          <p className="text-center text-sm text-white/50 sm:text-left">
             &copy; {new Date().getFullYear()} Superatom AI. All rights reserved.
           </p>
         </div>
