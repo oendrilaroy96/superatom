@@ -13,7 +13,7 @@ function DiagramPlaceholder() {
   );
 }
 
-const teamMembers = Array.from({ length: 3 }, (_, i) => ({
+const teamMembers = Array.from({ length: 5 }, (_, i) => ({
   name: `Team member ${i + 1}`,
   role: "[Role placeholder]",
   bio: "[Short bio — add once available.]",
@@ -130,7 +130,7 @@ export default function About() {
           {/* Team directory: full-bleed photo placeholder up top, like
               real headshot cards, instead of a small avatar floating in
               a mostly-empty card. */}
-          <div className="mt-16 grid grid-cols-2 gap-6 lg:grid-cols-4">
+          <div className="mt-16 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
             {teamMembers.map((member) => (
               <div
                 key={member.name}
