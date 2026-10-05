@@ -28,9 +28,9 @@ export default function CtaSection() {
           />
 
           <Button
-            variant="accent"
+            variant="accentOutline"
             iconRight={<ArrowForwardIcon style={{ fontSize: 18 }} />}
-            className="mx-auto mt-8"
+            className="mx-auto mt-8 font-semibold"
             onClick={() => setDemoOpen(true)}
           >
             Book your demo
