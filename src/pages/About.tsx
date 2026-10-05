@@ -1,6 +1,17 @@
-import AccountTreeIcon from "@mui/icons-material/AccountTree";
+import { lazy, Suspense } from "react";
 import PersonIcon from "@mui/icons-material/Person";
 import SectionHeading from "../components/ui/SectionHeading";
+
+const DecisionFlowDiagram = lazy(() => import("../components/DecisionFlowDiagram"));
+
+function DiagramPlaceholder() {
+  return (
+    <div
+      className="w-full animate-pulse rounded-2xl border border-secondary-100 bg-page"
+      style={{ aspectRatio: "1450 / 1000" }}
+    />
+  );
+}
 
 const teamMembers = Array.from({ length: 4 }, (_, i) => ({
   name: `Team member ${i + 1}`,
@@ -61,19 +72,9 @@ export default function About() {
             </p>
           </div>
 
-          {/* Placeholder for the dynamic atoms-to-enterprise diagram from
-              the reference design — swap for the real illustration or
-              animation once it's built. */}
-          <div className="flex aspect-square w-full items-center justify-center rounded-2xl border border-dashed border-secondary-200 bg-page">
-            <div className="flex flex-col items-center gap-3 px-6 text-center">
-              <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary-100 text-primary-500">
-                <AccountTreeIcon style={{ fontSize: 28 }} />
-              </span>
-              <p className="text-sm font-medium text-caption">
-                Dynamic diagram placeholder
-              </p>
-            </div>
-          </div>
+          <Suspense fallback={<DiagramPlaceholder />}>
+            <DecisionFlowDiagram />
+          </Suspense>
         </div>
 
         <div className="mx-auto mt-24 max-w-6xl sm:mt-32">
