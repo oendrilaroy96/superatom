@@ -92,15 +92,21 @@ export default function HowItWorks() {
                 e.currentTarget.style.setProperty("--x", `${e.clientX - rect.left}px`);
                 e.currentTarget.style.setProperty("--y", `${e.clientY - rect.top}px`);
               }}
-              className="group relative w-full overflow-hidden rounded-lg border border-secondary-100 bg-white p-6 transition-colors duration-300 hover:border-primary-200 sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
+              className="group relative w-full rounded-lg border border-secondary-100 bg-white p-6 sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
             >
-              {/* Gradient spotlight that follows the cursor, confined to
-                  this card via its own --x/--y tracked in onMouseMove. */}
+              {/* Gradient spotlight that follows the cursor, masked down to
+                  just the 1px border ring (not a fill) via the padding +
+                  mask-composite:exclude trick, so only the outline glows. */}
               <div
-                className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                className="pointer-events-none absolute inset-0 z-0 rounded-lg opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                 style={{
+                  padding: 1,
                   background:
-                    "radial-gradient(220px circle at var(--x, 50%) var(--y, 50%), rgba(83,58,253,0.14), transparent 70%)",
+                    "radial-gradient(180px circle at var(--x, 50%) var(--y, 50%), #533afd, #ff7600 55%, transparent 75%)",
+                  WebkitMask:
+                    "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                  WebkitMaskComposite: "xor",
+                  maskComposite: "exclude",
                 }}
               />
               <div className="relative z-10">
