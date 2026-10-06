@@ -405,6 +405,18 @@ export default function Features() {
           </div>
         </div>
       </div>
+
+      {/* Fades the page-wide decorative grid (rendered behind everything in
+          Layout.tsx) out to the Customers section's background color across
+          this section's own bottom padding, so it disappears gradually
+          right as Features ends instead of being hard-covered the instant
+          Customers' opaque background begins. Sized to the bottom py-[120px]
+          padding only, so it never overlaps any card. */}
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[120px]"
+        style={{ background: "linear-gradient(to bottom, transparent, #f5f5ff)" }}
+        aria-hidden="true"
+      />
     </section>
   );
 }
