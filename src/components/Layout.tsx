@@ -7,7 +7,7 @@ import Footer from "./Footer";
 
 // How much scroll distance (px) the reveal plays out over, once the dark
 // block's top edge reaches the bottom of the viewport.
-const TRANSITION_DISTANCE = 400;
+const TRANSITION_DISTANCE = 800;
 
 /** Shared chrome (header, background decoration, footer) around every routed page. */
 export default function Layout() {
