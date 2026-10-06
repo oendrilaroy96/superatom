@@ -1,34 +1,25 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useLenis } from "lenis/react";
 import Header from "./Header";
 import CtaSection from "./CtaSection";
 import Footer from "./Footer";
 
-// Scroll position (px from the top of the page) where the light-to-dark
-// reveal starts. Tuned to the homepage's current content height — if the
+// Scroll position (px from the top of the page) where the background
+// switches to dark. Tuned to the homepage's current content height — if the
 // content above the CTA section grows or shrinks substantially, this will
 // need to be adjusted to match where the dark block actually scrolls in.
 const TRANSITION_START_SCROLL = 4700;
-// How much additional scroll distance (px) the reveal plays out over, once
-// TRANSITION_START_SCROLL is reached.
-const TRANSITION_DISTANCE = 800;
 
 /** Shared chrome (header, background decoration, footer) around every routed page. */
 export default function Layout() {
-  const darkFillRef = useRef<HTMLDivElement>(null);
+  const [isDark, setIsDark] = useState(false);
 
-  // The fill keeps its full, un-blended secondary-500 color at all times;
-  // scrolling only reveals more of it (a wipe from the top down), so there's
-  // never a washed-out in-between tone the way a color cross-fade would give.
+  // Below the threshold the fill is fully transparent; at the threshold it
+  // crossfades to full opacity all at once (like a light switch), rather
+  // than wiping into view progressively as you scroll further.
   const updateDarkBlockReveal = () => {
-    const fill = darkFillRef.current;
-    if (!fill) return;
-    const t = Math.min(
-      1,
-      Math.max(0, (window.scrollY - TRANSITION_START_SCROLL) / TRANSITION_DISTANCE)
-    );
-    fill.style.clipPath = `inset(0 0 ${(1 - t) * 100}% 0)`;
+    setIsDark(window.scrollY >= TRANSITION_START_SCROLL);
   };
 
   useEffect(() => {
@@ -68,14 +59,14 @@ export default function Layout() {
       </main>
 
       {/* CTA + footer share one dark block. The solid secondary-500 fill
-          (plus its glow) is wiped into view from the top down as the block
-          scrolls in (see updateDarkBlockReveal above), instead of fading
-          through blended in-between colors. */}
+          (plus its glow) crossfades smoothly in once isDark flips true (see
+          updateDarkBlockReveal above), like a light switching on, rather
+          than wiping into view progressively as you scroll further. */}
       <div className="relative overflow-hidden">
         <div
-          ref={darkFillRef}
-          className="absolute inset-0 bg-secondary-500"
-          style={{ clipPath: "inset(0 0 100% 0)" }}
+          className={`absolute inset-0 bg-secondary-500 transition-opacity duration-700 ease-in-out ${
+            isDark ? "opacity-100" : "opacity-0"
+          }`}
         >
           <div
             className="pointer-events-none absolute inset-0 z-0"
