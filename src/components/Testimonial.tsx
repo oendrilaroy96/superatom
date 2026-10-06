@@ -2,6 +2,7 @@ import { useState } from "react";
 import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { useDarkTransition } from "../context/DarkTransitionContext";
 
 type Slide = {
   quote: string;
@@ -25,9 +26,14 @@ const slides: Slide[] = Array.from({ length: 4 }, () => ({
 export default function Testimonial() {
   const [index, setIndex] = useState(0);
   const slide = slides[index];
+  const isDark = useDarkTransition();
 
   return (
-    <section className="bg-[#f5f5ff] py-[120px]">
+    <section
+      className={`py-[120px] transition-colors duration-700 ease-in-out ${
+        isDark ? "bg-secondary-500" : "bg-[#f5f5ff]"
+      }`}
+    >
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
         <div className="mx-auto max-w-5xl rounded-2xl border border-secondary-100 bg-[#fcfcff] p-8 shadow-[0_30px_60px_-30px_rgba(13,23,56,0.15)] sm:p-12">
           <div className="flex items-center justify-between">

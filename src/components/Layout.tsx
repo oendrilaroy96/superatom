@@ -4,6 +4,7 @@ import { useLenis } from "lenis/react";
 import Header from "./Header";
 import CtaSection from "./CtaSection";
 import Footer from "./Footer";
+import { DarkTransitionContext } from "../context/DarkTransitionContext";
 
 // Scroll position (px from the top of the page) where the background
 // switches to dark. Tuned to the homepage's current content height — if the
@@ -55,7 +56,9 @@ export default function Layout() {
       />
       <Header />
       <main className="relative z-10">
-        <Outlet />
+        <DarkTransitionContext.Provider value={isDark}>
+          <Outlet />
+        </DarkTransitionContext.Provider>
       </main>
 
       {/* CTA + footer share one dark block. The solid secondary-500 fill
