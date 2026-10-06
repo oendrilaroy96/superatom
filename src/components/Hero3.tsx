@@ -38,7 +38,7 @@ function HeroCopy() {
           className="block bg-clip-text text-transparent"
           style={{
             backgroundImage:
-              "linear-gradient(90deg in oklch, var(--color-primary-500), var(--color-accent-500))",
+              "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)",
           }}
         >
           Every time
