@@ -198,7 +198,7 @@ export default function InventoryIntelligence() {
             descriptionClassName="mx-auto"
           />
 
-          <div className="mx-auto mt-12 flex max-w-4xl flex-wrap justify-center gap-4">
+          <div className="mx-auto mt-12 flex flex-wrap justify-center gap-4">
             {industries.map(({ label, Icon }) => (
               <div
                 key={label}
