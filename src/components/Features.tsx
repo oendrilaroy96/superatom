@@ -133,7 +133,16 @@ export default function Features() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden py-[120px]">
+    // Transparent through the first 70% (so the page-wide decorative grid
+    // from Layout.tsx stays visible behind the cards), then transitions to
+    // the Customers section's background color by the bottom, so the grid
+    // fades out gradually instead of being hard-covered.
+    <section
+      className="relative overflow-hidden py-[120px]"
+      style={{
+        backgroundImage: "linear-gradient(to bottom, transparent 70%, #f5f5ff 100%)",
+      }}
+    >
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
         <div className="grid grid-cols-1 gap-[18px] sm:grid-cols-2 lg:grid-cols-4">
           {/* 1. SOC 2 & ISO Ready — dark hero card */}
@@ -405,18 +414,6 @@ export default function Features() {
           </div>
         </div>
       </div>
-
-      {/* Fades the page-wide decorative grid (rendered behind everything in
-          Layout.tsx) out to the Customers section's background color across
-          this section's own bottom padding, so it disappears gradually
-          right as Features ends instead of being hard-covered the instant
-          Customers' opaque background begins. Sized to the bottom py-[120px]
-          padding only, so it never overlaps any card. */}
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[120px]"
-        style={{ background: "linear-gradient(to bottom, transparent, #f5f5ff)" }}
-        aria-hidden="true"
-      />
     </section>
   );
 }
