@@ -87,17 +87,33 @@ export default function HowItWorks() {
           {points.map((p) => (
             <div
               key={p.title}
-              className="w-full rounded-lg border border-secondary-100 bg-white p-6 sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                e.currentTarget.style.setProperty("--x", `${e.clientX - rect.left}px`);
+                e.currentTarget.style.setProperty("--y", `${e.clientY - rect.top}px`);
+              }}
+              className="group relative w-full overflow-hidden rounded-lg border border-secondary-100 bg-white p-6 transition-colors duration-300 hover:border-primary-200 sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
             >
-              <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
-                <p.Icon style={{ fontSize: 22 }} />
-              </span>
-              <p className="text-h4 mt-4 font-display font-semibold text-heading">
-                {p.title}
-              </p>
-              <p className="mt-1.5 text-xs leading-relaxed text-caption">
-                {p.desc}
-              </p>
+              {/* Gradient spotlight that follows the cursor, confined to
+                  this card via its own --x/--y tracked in onMouseMove. */}
+              <div
+                className="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                style={{
+                  background:
+                    "radial-gradient(220px circle at var(--x, 50%) var(--y, 50%), rgba(83,58,253,0.14), transparent 70%)",
+                }}
+              />
+              <div className="relative z-10">
+                <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
+                  <p.Icon style={{ fontSize: 22 }} />
+                </span>
+                <p className="text-h4 mt-4 font-display font-semibold text-heading">
+                  {p.title}
+                </p>
+                <p className="mt-1.5 text-xs leading-relaxed text-caption">
+                  {p.desc}
+                </p>
+              </div>
             </div>
           ))}
         </div>
