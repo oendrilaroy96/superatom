@@ -1,5 +1,6 @@
 import Hero3 from "../components/Hero3";
 import HowItWorks from "../components/HowItWorks";
+import Features from "../components/Features";
 // Infrastructure section temporarily hidden from the page.
 // import Infrastructure from "../components/Infrastructure";
 import Testimonial from "../components/Testimonial";
@@ -10,6 +11,7 @@ export default function Home() {
     <>
       <Hero3 />
       <HowItWorks />
+      <Features />
       {/* <Infrastructure /> */}
       <Customers />
       <Testimonial />
