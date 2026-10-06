@@ -102,7 +102,7 @@ export default function HowItWorks() {
                 style={{
                   padding: 1,
                   background:
-                    "radial-gradient(110px circle at var(--x, 50%) var(--y, 50%), #7fd5d6 0%, #91a9fe 20%, #9889fe 40%, #b78bff 60%, #ffb2d0 80%, #ffad66 100%, transparent 100%)",
+                    "radial-gradient(110px circle at var(--x, 50%) var(--y, 50%), #7fd5d6 0%, #91a9fe 18%, #9889fe 36%, #b78bff 54%, #ffb2d0 72%, #ffad66 86%, transparent 100%)",
                   WebkitMask:
                     "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
                   WebkitMaskComposite: "xor",
