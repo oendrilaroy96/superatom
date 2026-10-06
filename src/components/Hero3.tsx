@@ -34,7 +34,13 @@ function HeroCopy() {
       </p>
       <h1 className="hero2-heading m-0 mb-4 font-display font-semibold leading-[1.08] tracking-[-0.02em] text-heading">
         <span className="block">Decide Fast, Decide Right,</span>
-        <span className="block bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
+        <span
+          className="block bg-clip-text text-transparent"
+          style={{
+            backgroundImage:
+              "linear-gradient(90deg in oklch, var(--color-primary-500), var(--color-accent-500))",
+          }}
+        >
           Every time
         </span>
       </h1>
