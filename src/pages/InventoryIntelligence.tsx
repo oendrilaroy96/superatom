@@ -10,6 +10,11 @@ import ShieldIcon from "@mui/icons-material/Shield";
 import TuneIcon from "@mui/icons-material/Tune";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
+import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
 import type { IconComponent } from "../types/icon";
 import Button from "../components/ui/Button";
 import SectionHeading from "../components/ui/SectionHeading";
@@ -59,6 +64,14 @@ const capabilities: { title: string; desc: string; Icon: IconComponent }[] = [
   },
 ];
 
+const industries: { label: string; Icon: IconComponent }[] = [
+  { label: "Supply Chain & Logistics", Icon: LocalShippingIcon },
+  { label: "Retail & E-Commerce", Icon: StorefrontIcon },
+  { label: "Financial Services", Icon: AccountBalanceIcon },
+  { label: "Healthcare", Icon: LocalHospitalIcon },
+  { label: "Manufacturing", Icon: PrecisionManufacturingIcon },
+];
+
 const outcomes: { label: string; dir: "up" | "down" }[] = [
   { label: "Lower Working Capital", dir: "down" },
   { label: "Higher Service Levels", dir: "up" },
@@ -84,7 +97,7 @@ export default function InventoryIntelligence() {
               <SectionHeading
                 align="left"
                 theme="light"
-                eyebrow="Solutions"
+                eyebrow="Inventory Intelligence"
                 eyebrowColor="primary"
                 heading={
                   <>
@@ -165,6 +178,36 @@ export default function InventoryIntelligence() {
                 </span>
                 <p className="text-h4 mt-4 font-display font-semibold text-heading">{c.title}</p>
                 <p className="mt-1.5 text-xs leading-relaxed text-caption">{c.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Industries */}
+      <section className="py-16 sm:py-24">
+        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+          <SectionHeading
+            align="center"
+            theme="light"
+            eyebrow="Industries"
+            eyebrowColor="primary"
+            heading="Built for every inventory-driven industry"
+            description="Inventory Intelligence adapts to the demands of your sector, wherever stock needs to move."
+            className="mx-auto max-w-2xl"
+            descriptionClassName="mx-auto"
+          />
+
+          <div className="mx-auto mt-12 flex max-w-4xl flex-wrap justify-center gap-4">
+            {industries.map(({ label, Icon }) => (
+              <div
+                key={label}
+                className="flex items-center gap-2.5 rounded-full border border-secondary-100 bg-white px-5 py-3"
+              >
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-500">
+                  <Icon style={{ fontSize: 16 }} />
+                </span>
+                <span className="text-sm font-medium text-heading">{label}</span>
               </div>
             ))}
           </div>
