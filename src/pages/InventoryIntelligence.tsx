@@ -142,8 +142,23 @@ export default function InventoryIntelligence() {
             descriptionClassName="mx-auto"
           />
 
+          {/* Two rows of 4 and 3 (rather than one 4-col grid, which left
+              the last row's 3 cards sitting left-aligned with an empty
+              slot) so the bottom row's cards spread evenly across the
+              full width instead. */}
           <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {capabilities.map((c) => (
+            {capabilities.slice(0, 4).map((c) => (
+              <div key={c.title} className="rounded-lg border border-secondary-100 bg-white p-6">
+                <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
+                  <c.Icon style={{ fontSize: 22 }} />
+                </span>
+                <p className="text-h4 mt-4 font-display font-semibold text-heading">{c.title}</p>
+                <p className="mt-1.5 text-xs leading-relaxed text-caption">{c.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {capabilities.slice(4).map((c) => (
               <div key={c.title} className="rounded-lg border border-secondary-100 bg-white p-6">
                 <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
                   <c.Icon style={{ fontSize: 22 }} />
