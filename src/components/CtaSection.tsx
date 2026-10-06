@@ -17,6 +17,7 @@ export default function CtaSection() {
             theme="dark"
             eyebrow="Get Started"
             eyebrowColor="accent"
+            className="mx-auto max-w-[960px]"
             heading={
               <>
                 See how your data can drive faster,
