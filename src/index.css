@@ -569,3 +569,30 @@ body {
     opacity: 0;
   }
 }
+
+/* On-Premise Deployment card: placeholder rows fill in and reset on a loop,
+   like data continuously syncing, instead of only animating on hover. */
+.hiw-bar-fill {
+  transform-origin: left;
+  animation: hiwBarFill 3.2s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+@keyframes hiwBarFill {
+  0%,
+  10% {
+    transform: scaleX(0);
+  }
+  45%,
+  80% {
+    transform: scaleX(1);
+  }
+  100% {
+    transform: scaleX(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hiw-bar-fill {
+    animation: none;
+    transform: scaleX(1);
+  }
+}

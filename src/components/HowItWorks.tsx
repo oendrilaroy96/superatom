@@ -240,8 +240,8 @@ export default function HowItWorks() {
                       style={{ background: row.color }}
                     />
                     <span
-                      className={`h-2 origin-left scale-x-0 rounded-full bg-secondary-100 transition-transform duration-500 group-hover/card:scale-x-100 ${row.w}`}
-                      style={{ transitionDelay: `${i * 90}ms` }}
+                      className={`hiw-bar-fill h-2 rounded-full bg-secondary-100 ${row.w}`}
+                      style={{ "--delay": `${i * 0.35}s` } as CSSProperties}
                     />
                   </div>
                 ))}
