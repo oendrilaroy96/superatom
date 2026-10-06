@@ -8,7 +8,6 @@ import AddIcon from "@mui/icons-material/Add";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import GlowCard from "./ui/GlowCard";
-import SectionHeading from "./ui/SectionHeading";
 
 /** Lift + shadow a card gets on hover, shared by every tile in the grid below. */
 const HOVER_LIFT =
@@ -135,24 +134,7 @@ export default function Features() {
 
   return (
     <section className="relative overflow-hidden py-[120px]">
-      <div className="px-4 sm:px-10 xl:px-20">
-        <SectionHeading
-          align="center"
-          className="max-w-2xl"
-          eyebrow="Platform Features"
-          heading={
-            <>
-              <span style={{ overflowWrap: "break-word", hyphens: "auto" }}>
-                Everything enterprises need,
-              </span>{" "}
-              <span className="text-primary-500">built in.</span>
-            </>
-          }
-          description="From compliance to captured context, workflows to generative UI — Superatom AI ships ready for how enterprises actually run."
-        />
-      </div>
-
-      <div className="mx-auto mt-16 max-w-[1920px] px-4 sm:px-10 xl:px-20">
+      <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
         <div className="grid grid-cols-1 gap-[18px] sm:grid-cols-2 lg:grid-cols-4">
           {/* 1. SOC 2 & ISO Ready — dark hero card */}
           <div
