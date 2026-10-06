@@ -127,8 +127,8 @@ export default function About() {
                 key={member.name}
                 className="overflow-hidden rounded-2xl border border-secondary-100 bg-white"
               >
-                <div className="flex aspect-[4/5] w-full items-center justify-center border-b border-dashed border-secondary-200 bg-page text-caption">
-                  <PersonIcon style={{ fontSize: 48 }} />
+                <div className="flex aspect-square w-full items-center justify-center border-b border-dashed border-secondary-200 bg-page text-caption">
+                  <PersonIcon style={{ fontSize: 40 }} />
                 </div>
                 <div className="p-5">
                   <p className="font-display text-h4 font-semibold text-heading">
