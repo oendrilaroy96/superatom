@@ -29,7 +29,7 @@ export default function Testimonial() {
   return (
     <section className="bg-[#f5f5ff] py-[120px]">
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-        <div className="mx-auto max-w-5xl rounded-2xl border border-secondary-100 bg-white p-8 shadow-[0_30px_60px_-30px_rgba(13,23,56,0.15)] sm:p-12">
+        <div className="mx-auto max-w-5xl rounded-2xl border border-secondary-100 bg-[#fcfcff] p-8 shadow-[0_30px_60px_-30px_rgba(13,23,56,0.15)] sm:p-12">
           <div className="flex items-center justify-between">
             <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-primary-500">
               What Teams Say
