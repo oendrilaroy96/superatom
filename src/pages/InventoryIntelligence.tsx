@@ -190,17 +190,22 @@ export default function InventoryIntelligence() {
             descriptionClassName="mx-auto max-w-xl"
           />
 
-          <div className="mx-auto mt-14 grid max-w-5xl grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-6">
+          {/* Same bordered-card shape as the Capabilities grid above,
+              rather than bare icon circles floating in a row. */}
+          <div className="mx-auto mt-14 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {outcomes.map((o) => (
-              <div key={o.label} className="flex flex-col items-center gap-2 text-center">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100 text-primary-500">
+              <div
+                key={o.label}
+                className="flex items-center gap-4 rounded-lg border border-secondary-100 bg-white p-6"
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-primary-100 text-primary-500">
                   {o.dir === "up" ? (
-                    <ArrowUpwardIcon style={{ fontSize: 18 }} />
+                    <ArrowUpwardIcon style={{ fontSize: 22 }} />
                   ) : (
-                    <ArrowDownwardIcon style={{ fontSize: 18 }} />
+                    <ArrowDownwardIcon style={{ fontSize: 22 }} />
                   )}
                 </span>
-                <p className="text-xs font-semibold text-heading">{o.label}</p>
+                <p className="font-display text-h4 font-semibold text-heading">{o.label}</p>
               </div>
             ))}
           </div>
