@@ -1,17 +1,5 @@
-import { lazy, Suspense } from "react";
 import PersonIcon from "@mui/icons-material/Person";
 import SectionHeading from "../components/ui/SectionHeading";
-
-const DecisionFlowDiagram = lazy(() => import("../components/DecisionFlowDiagram"));
-
-function DiagramPlaceholder() {
-  return (
-    <div
-      className="w-full animate-pulse rounded-2xl border border-secondary-100 bg-page"
-      style={{ aspectRatio: "1450 / 1000" }}
-    />
-  );
-}
 
 const teamMembers = [
   "Ashish Charan Tandi",
@@ -29,49 +17,43 @@ export default function About() {
   return (
     <section className="py-16 sm:py-[120px]">
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <div>
-            <SectionHeading
-              align="left"
-              theme="light"
-              eyebrow="About Superatom AI"
-              eyebrowColor="accent"
-              heading={
-                <>
-                  Every great outcome starts with{" "}
-                  <span className="text-primary-500">an informed decision.</span>
-                </>
-              }
-            />
+        <div className="max-w-2xl">
+          <SectionHeading
+            align="left"
+            theme="light"
+            eyebrow="About Superatom AI"
+            eyebrowColor="accent"
+            heading={
+              <>
+                Every great outcome starts with{" "}
+                <span className="text-primary-500">an informed decision.</span>
+              </>
+            }
+          />
 
-            <div className="mt-6 space-y-4 text-p text-body">
-              <p>
-                Just as atoms combine to build everything we see,
-                enterprises are built from thousands of decisions —
-                what to buy, where to ship, who to trust.
-              </p>
-              <p className="font-semibold text-heading">
-                Superatom AI is built to make those decisions smarter.
-              </p>
-              <p>
-                We bring together the data, context, intelligence and
-                actions needed to make each decision better, and connect
-                thousands of those decisions into a smarter, more
-                responsive enterprise.
-              </p>
-            </div>
-
-            <p className="mt-6 font-display text-h3 font-semibold text-primary-500">
-              Decide Fast. Decide Right. Every Time.
+          <div className="mt-6 space-y-4 text-p text-body">
+            <p>
+              Just as atoms combine to build everything we see,
+              enterprises are built from thousands of decisions —
+              what to buy, where to ship, who to trust.
             </p>
-            <p className="mt-2 text-h5 font-semibold uppercase tracking-[0.5px] text-caption">
-              That&rsquo;s the idea behind Superatom.
+            <p className="font-semibold text-heading">
+              Superatom AI is built to make those decisions smarter.
+            </p>
+            <p>
+              We bring together the data, context, intelligence and
+              actions needed to make each decision better, and connect
+              thousands of those decisions into a smarter, more
+              responsive enterprise.
             </p>
           </div>
 
-          <Suspense fallback={<DiagramPlaceholder />}>
-            <DecisionFlowDiagram />
-          </Suspense>
+          <p className="mt-6 font-display text-h3 font-semibold text-primary-500">
+            Decide Fast. Decide Right. Every Time.
+          </p>
+          <p className="mt-2 text-h5 font-semibold uppercase tracking-[0.5px] text-caption">
+            That&rsquo;s the idea behind Superatom.
+          </p>
         </div>
 
         <div className="mt-24 sm:mt-32">
