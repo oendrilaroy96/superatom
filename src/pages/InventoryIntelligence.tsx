@@ -149,7 +149,11 @@ export default function InventoryIntelligence() {
             theme="light"
             eyebrow="Capabilities"
             eyebrowColor="primary"
-            heading="End-to-end inventory intelligence"
+            heading={
+              <span style={{ overflowWrap: "break-word", hyphens: "auto" }}>
+                End-to-end inventory intelligence
+              </span>
+            }
             description="From planning to execution, Superatom helps you make and automate better inventory decisions across your network."
             className="mx-auto max-w-2xl"
             descriptionClassName="mx-auto"
