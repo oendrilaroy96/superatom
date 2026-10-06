@@ -20,9 +20,9 @@ export default function CtaSection() {
             className="mx-auto max-w-[960px]"
             heading={
               <>
-                See how your data can drive faster,
+                See how your data can drive
                 <br />
-                smarter decisions.
+                faster, smarter decisions.
               </>
             }
             description="Get a personalised walkthrough of Superatom AI built around your business, your data and the decisions that matter most to you."
