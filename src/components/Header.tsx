@@ -128,12 +128,6 @@ export default function Header() {
         <Logo />
 
         <nav className="hidden items-center gap-[30px] lg:flex">
-          <a
-            href="#"
-            className="text-[13.5px] text-body transition-colors hover:text-heading"
-          >
-            Platform
-          </a>
           <DropdownNavItem label="Solutions" items={solutions} />
           <DropdownNavItem label="Resources" items={resources} />
           <Link
@@ -162,9 +156,6 @@ export default function Header() {
       {mobileOpen && (
         <div className="border-t border-secondary-100 bg-white px-4 py-4 sm:px-10 lg:hidden">
           <nav className="flex flex-col gap-4">
-            <a href="#" className="text-sm font-medium text-body">
-              Platform
-            </a>
             <a href="#" className="text-sm font-medium text-body">
               Solutions
             </a>

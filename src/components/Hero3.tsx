@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Button from "./ui/Button";
+import DemoModal from "./DemoModal";
 
 /** Extra scroll distance (px) beyond one viewport, controlling how far you scroll before the pin releases and the next section scrolls up into view. */
 const SCROLL_EXTRA_PX = 959;
@@ -26,7 +27,7 @@ const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const ease = (t: number) => t * t * (3 - 2 * t);
 
-function HeroCopy() {
+function HeroCopy({ onBookDemo }: { onBookDemo: () => void }) {
   return (
     <div className="mx-auto flex max-w-4xl flex-col items-center px-4 text-center">
       <p className="mb-3 font-sans text-[13px] font-semibold uppercase tracking-[0.08em] text-secondary-300">
@@ -54,12 +55,12 @@ function HeroCopy() {
         workflows.
       </p>
       <Button
-        href="#"
         variant="primary"
         iconRight={<ArrowForwardIcon style={{ fontSize: 18 }} />}
         className="shadow-[0_10px_30px_-10px_rgba(83,58,253,0.35)] transition-transform hover:-translate-y-px"
+        onClick={onBookDemo}
       >
-        Explore the Platform
+        Book a demo
       </Button>
     </div>
   );
@@ -123,6 +124,7 @@ export default function Hero3() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [fade, setFade] = useState(1);
   const [zoomScale, setZoomScale] = useState(1);
+  const [demoOpen, setDemoOpen] = useState(false);
 
   useEffect(() => {
     let raf = 0;
@@ -164,13 +166,14 @@ export default function Hero3() {
     <>
       <section ref={sectionRef} className="relative isolate" style={{ height: `calc(100vh + ${SCROLL_EXTRA_PX}px)` }}>
         <div className="sticky top-16 z-[1] pt-14" style={textStyle}>
-          <HeroCopy />
+          <HeroCopy onBookDemo={() => setDemoOpen(true)} />
         </div>
         <div className="sticky top-[176px] z-[2] mx-auto mt-16 w-full max-w-[900px] px-4" style={videoStyle}>
           <VideoCard />
         </div>
       </section>
       <div aria-hidden="true" style={{ height: SECTION_GAP_PX }} />
+      <DemoModal open={demoOpen} onClose={() => setDemoOpen(false)} />
     </>
   );
 }

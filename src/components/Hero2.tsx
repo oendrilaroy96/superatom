@@ -75,7 +75,7 @@ function HeroCopy() {
           iconRight={<ArrowForwardIcon style={{ fontSize: 18 }} />}
           className="shadow-[0_10px_30px_-10px_rgba(83,58,253,0.35)] transition-transform hover:-translate-y-px"
         >
-          Explore the Platform
+          Book a demo
         </Button>
       </div>
     </div>
