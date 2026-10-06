@@ -9,19 +9,11 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import ShieldIcon from "@mui/icons-material/Shield";
 import TuneIcon from "@mui/icons-material/Tune";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
-import AutorenewIcon from "@mui/icons-material/Autorenew";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import type { IconComponent } from "../types/icon";
 import Button from "../components/ui/Button";
 import SectionHeading from "../components/ui/SectionHeading";
 import DemoModal from "../components/DemoModal";
-
-const heroPreview: { label: string; Icon: IconComponent }[] = [
-  { label: "Predict excess", Icon: TrendingUpIcon },
-  { label: "Rebalance inventory", Icon: SwapHorizIcon },
-  { label: "Prevent stockouts", Icon: ShieldIcon },
-  { label: "Optimize replenishment", Icon: AutorenewIcon },
-];
 
 const heroStats: { label: string; Icon: IconComponent }[] = [
   { label: "Make faster, smarter decisions", Icon: InsightsIcon },
@@ -76,127 +68,61 @@ const outcomes: { label: string; dir: "up" | "down" }[] = [
   { label: "Better Inventory Turns", dir: "up" },
 ];
 
-function InventoryHealthCard() {
-  return (
-    <div className="w-full max-w-[260px] rounded-xl border border-secondary-100 bg-white p-4 shadow-[0_20px_40px_-15px_rgba(13,23,56,0.35)]">
-      <p className="text-xs font-semibold text-caption">Inventory Health</p>
-      <div className="mt-2 flex items-center gap-1.5">
-        <span className="h-2 w-2 rounded-full bg-success-500" aria-hidden="true" />
-        <span className="font-display text-sm font-semibold text-heading">On Track</span>
-      </div>
-      <svg viewBox="0 0 160 40" className="mt-3 h-10 w-full" fill="none" aria-hidden="true">
-        <polyline
-          points="0,28 20,24 40,30 60,18 80,22 100,10 120,16 140,6 160,12"
-          stroke="var(--color-primary-500)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </div>
-  );
-}
-
-function PreviewListCard() {
-  return (
-    <div className="w-full max-w-[240px] rounded-xl border border-secondary-100 bg-white p-4 shadow-[0_20px_40px_-15px_rgba(13,23,56,0.35)]">
-      <ul className="space-y-3">
-        {heroPreview.map(({ label, Icon }) => (
-          <li key={label} className="flex items-center gap-2.5">
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary-100 text-primary-500">
-              <Icon style={{ fontSize: 15 }} />
-            </span>
-            <span className="text-xs font-medium text-heading">{label}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
+/**
+ * Same hero/feature-card shape as SolutionPage.tsx (icon tile, centered
+ * SectionHeading, single primary CTA, white bordered cards) so this page
+ * reads as the same site as Procurement's, rather than its own one-off
+ * design — it just carries more content (a stat row, then a second
+ * Business Outcomes section) than the shared template does.
+ */
 export default function InventoryIntelligence() {
   const [demoOpen, setDemoOpen] = useState(false);
 
   return (
     <>
-      {/* Hero: same dark gradient + grid-pattern treatment used by Hero3's
-          video card, in place of the reference's warehouse photograph. */}
-      <section className="relative overflow-hidden bg-secondary-500 py-16 sm:py-24">
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            backgroundImage:
-              "radial-gradient(900px 560px at 12% 8%, rgba(83,58,253,0.4), transparent 60%), radial-gradient(700px 520px at 90% 95%, rgba(255,118,0,0.22), transparent 55%)",
-          }}
-          aria-hidden="true"
-        />
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.07]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
-            backgroundSize: "40px 40px",
-          }}
-          aria-hidden="true"
-        />
+      <section className="py-16 sm:py-[120px]">
+        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+          <div className="mx-auto max-w-3xl text-center">
+            <span className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary-100 text-primary-500">
+              <Inventory2Icon style={{ fontSize: 28 }} />
+            </span>
+            <SectionHeading
+              align="center"
+              theme="light"
+              eyebrow="Solutions"
+              eyebrowColor="primary"
+              heading={
+                <>
+                  End-to-End{" "}
+                  <span
+                    className="text-primary-500"
+                    style={{ overflowWrap: "break-word", hyphens: "auto" }}
+                  >
+                    Inventory Intelligence.
+                  </span>
+                </>
+              }
+              description="Superatom brings together your data, business context, rules and policies to help you optimize, rebalance and proactively manage inventory across your entire supply chain."
+            />
+            <Button
+              variant="primary"
+              iconRight={<ArrowForwardIcon style={{ fontSize: 18 }} />}
+              className="mx-auto mt-8 shadow-[0_10px_30px_-10px_rgba(83,58,253,0.35)]"
+              onClick={() => setDemoOpen(true)}
+            >
+              Book a demo
+            </Button>
+          </div>
 
-        <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
-            <div>
-              <SectionHeading
-                align="left"
-                theme="dark"
-                eyebrow="Inventory Intelligence"
-                eyebrowColor="accent"
-                heading={
-                  <>
-                    End-to-End
-                    <br />
-                    <span
-                      className="bg-gradient-to-r from-primary-300 to-accent-400 bg-clip-text text-transparent"
-                      style={{ overflowWrap: "break-word", hyphens: "auto" }}
-                    >
-                      Inventory Intelligence.
-                    </span>
-                  </>
-                }
-                description="Superatom brings together your data, business context, rules, policies to help you optimize, rebalance and proactively manage inventory across your entire supply chain."
-                descriptionClassName="max-w-xl"
-              />
-
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Button
-                  variant="accent"
-                  iconRight={<ArrowForwardIcon style={{ fontSize: 18 }} />}
-                  onClick={() => setDemoOpen(true)}
-                >
-                  Book a Demo
-                </Button>
-                <Button
-                  href="#"
-                  variant="secondary"
-                  className="!border-white/30 !bg-transparent !text-white hover:!border-white/60 hover:!bg-white/10"
-                >
-                  Explore the Platform
-                </Button>
+          <div className="mx-auto mt-14 flex max-w-4xl flex-col gap-6 border-t border-secondary-100 pt-10 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-10 sm:gap-y-4">
+            {heroStats.map(({ label, Icon }) => (
+              <div key={label} className="flex items-center gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary-100 text-primary-500">
+                  <Icon style={{ fontSize: 18 }} />
+                </span>
+                <span className="text-sm font-medium text-heading">{label}</span>
               </div>
-
-              <div className="mt-12 flex flex-col gap-6 border-t border-white/10 pt-8 sm:flex-row sm:gap-0 sm:divide-x sm:divide-white/10">
-                {heroStats.map(({ label, Icon }) => (
-                  <div key={label} className="flex items-center gap-3 sm:flex-1 sm:px-6 sm:first:pl-0">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white/10 text-accent-400">
-                      <Icon style={{ fontSize: 18 }} />
-                    </span>
-                    <span className="text-sm font-medium text-white/85">{label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex flex-col items-center gap-5 lg:items-end">
-              <InventoryHealthCard />
-              <PreviewListCard />
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -230,7 +156,7 @@ export default function InventoryIntelligence() {
       </section>
 
       {/* Business outcomes */}
-      <section className="bg-primary-100/40 py-16 sm:py-24">
+      <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <SectionHeading
             align="center"
