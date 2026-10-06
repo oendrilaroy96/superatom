@@ -3,11 +3,7 @@ import { Link } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
-import ShowChartIcon from "@mui/icons-material/ShowChart";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
-import SellIcon from "@mui/icons-material/Sell";
 import ArticleIcon from "@mui/icons-material/Article";
 import InsightsIcon from "@mui/icons-material/Insights";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
@@ -20,11 +16,7 @@ import DemoModal from "./DemoModal";
 
 const solutions: { name: string; blurb: string; Icon: IconComponent; path?: string }[] = [
   { name: "Inventory Intelligence", blurb: "Optimize, rebalance, prevent.", Icon: Inventory2Icon, path: "/solutions/inventory-intelligence" },
-  { name: "Demand Intelligence", blurb: "Sense, predict, respond.", Icon: ShowChartIcon },
   { name: "Procurement Intelligence", blurb: "Source, plan, mitigate.", Icon: ShoppingCartIcon, path: "/solutions/procurement-intelligence" },
-  { name: "Logistics Intelligence", blurb: "Move, optimize, deliver.", Icon: LocalShippingIcon },
-  { name: "Manufacturing Intelligence", blurb: "Plan, produce, adapt.", Icon: PrecisionManufacturingIcon },
-  { name: "Pricing Intelligence", blurb: "Price, position, grow.", Icon: SellIcon },
 ];
 
 const resources: { name: string; blurb: string; Icon: IconComponent; path?: string }[] = [
@@ -142,7 +134,7 @@ export default function Header() {
           >
             Platform
           </a>
-          <DropdownNavItem label="Solutions" items={solutions} columns={2} />
+          <DropdownNavItem label="Solutions" items={solutions} />
           <DropdownNavItem label="Resources" items={resources} />
           <Link
             to="/about"

@@ -10,11 +10,7 @@ const columns: { heading: string; links: { name: string; path?: string }[] }[] =
     heading: "Solutions",
     links: [
       { name: "Inventory Intelligence", path: "/solutions/inventory-intelligence" },
-      { name: "Demand Intelligence" },
       { name: "Procurement Intelligence", path: "/solutions/procurement-intelligence" },
-      { name: "Logistics Intelligence" },
-      { name: "Manufacturing Intelligence" },
-      { name: "Pricing Intelligence" },
     ],
   },
   {
