@@ -5,24 +5,29 @@ import Header from "./Header";
 import CtaSection from "./CtaSection";
 import Footer from "./Footer";
 
-// How much scroll distance (px) the reveal plays out over, once the dark
-// block's top edge reaches the bottom of the viewport.
+// Scroll position (px from the top of the page) where the light-to-dark
+// reveal starts. Tuned to the homepage's current content height — if the
+// content above the CTA section grows or shrinks substantially, this will
+// need to be adjusted to match where the dark block actually scrolls in.
+const TRANSITION_START_SCROLL = 4700;
+// How much additional scroll distance (px) the reveal plays out over, once
+// TRANSITION_START_SCROLL is reached.
 const TRANSITION_DISTANCE = 800;
 
 /** Shared chrome (header, background decoration, footer) around every routed page. */
 export default function Layout() {
-  const darkBlockRef = useRef<HTMLDivElement>(null);
   const darkFillRef = useRef<HTMLDivElement>(null);
 
   // The fill keeps its full, un-blended secondary-500 color at all times;
   // scrolling only reveals more of it (a wipe from the top down), so there's
   // never a washed-out in-between tone the way a color cross-fade would give.
   const updateDarkBlockReveal = () => {
-    const block = darkBlockRef.current;
     const fill = darkFillRef.current;
-    if (!block || !fill) return;
-    const top = block.getBoundingClientRect().top;
-    const t = Math.min(1, Math.max(0, (window.innerHeight - top) / TRANSITION_DISTANCE));
+    if (!fill) return;
+    const t = Math.min(
+      1,
+      Math.max(0, (window.scrollY - TRANSITION_START_SCROLL) / TRANSITION_DISTANCE)
+    );
     fill.style.clipPath = `inset(0 0 ${(1 - t) * 100}% 0)`;
   };
 
@@ -66,7 +71,7 @@ export default function Layout() {
           (plus its glow) is wiped into view from the top down as the block
           scrolls in (see updateDarkBlockReveal above), instead of fading
           through blended in-between colors. */}
-      <div ref={darkBlockRef} className="relative overflow-hidden">
+      <div className="relative overflow-hidden">
         <div
           ref={darkFillRef}
           className="absolute inset-0 bg-secondary-500"
