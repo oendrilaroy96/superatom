@@ -1,4 +1,4 @@
-import { lazy, Suspense, type ReactNode } from "react";
+import { lazy, Suspense, useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import ShieldIcon from "@mui/icons-material/Shield";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import HubIcon from "@mui/icons-material/Hub";
@@ -9,6 +9,10 @@ import GlowCard from "./ui/GlowCard";
 import SectionHeading from "./ui/SectionHeading";
 
 const HowItWorksDiagram = lazy(() => import("./HowItWorksDiagram"));
+
+/** Lift + shadow a card gets on hover, shared by every tile in the grid below. */
+const HOVER_LIFT =
+  "transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_-24px_rgba(13,23,56,0.25)]";
 
 function DiagramPlaceholder() {
   return (
@@ -37,7 +41,7 @@ function DashedBox({
   );
 }
 
-/** A labeled dot chip, absolutely positioned around DashedBox's hub in the Semantic Modeling card. */
+/** A labeled dot chip, absolutely positioned around DashedBox's hub in the Semantic Modeling card. Scales up slightly on hover. */
 function Node({
   className,
   color,
@@ -49,7 +53,7 @@ function Node({
 }) {
   return (
     <div
-      className={`absolute flex items-center gap-1.5 rounded-full border border-secondary-100 bg-white px-2.5 py-1.5 shadow-sm ${className}`}
+      className={`absolute flex items-center gap-1.5 rounded-full border border-secondary-100 bg-white px-2.5 py-1.5 shadow-sm transition-transform duration-300 hover:z-10 hover:scale-110 hover:shadow-md ${className}`}
     >
       <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: color }} />
       <span className="text-xs font-medium text-heading">{label}</span>
@@ -57,34 +61,74 @@ function Node({
   );
 }
 
+/** A dot traveling from the hub to a node along a given direction; purely CSS-driven (see .hiw-node-pulse in index.css) so it animates continuously without JS. */
+function PulseDot({ tx, ty, delay }: { tx: string; ty: string; delay: string }) {
+  return (
+    <span
+      className="hiw-node-pulse"
+      style={{ "--tx": tx, "--ty": ty, "--delay": delay } as CSSProperties}
+    />
+  );
+}
+
 function FlowStep({
   tag,
   tagClassName,
   label,
-  dark = false,
+  active = false,
 }: {
   tag: string;
   tagClassName: string;
   label: string;
-  dark?: boolean;
+  active?: boolean;
 }) {
   return (
     <div
-      className={`flex items-center gap-2.5 rounded-lg border px-3 py-2 ${
-        dark ? "border-secondary-500 bg-secondary-500" : "border-secondary-100 bg-white"
+      className={`flex items-center gap-2.5 rounded-lg border px-3 py-2 transition-all duration-500 ${
+        active
+          ? "scale-[1.03] border-secondary-500 bg-secondary-500 shadow-[0_10px_24px_-10px_rgba(13,23,56,0.4)]"
+          : "border-secondary-100 bg-white"
       }`}
     >
       <span className={`shrink-0 rounded px-2 py-0.5 text-[10px] font-bold ${tagClassName}`}>
         {tag}
       </span>
-      <span className={`text-xs font-medium ${dark ? "text-white" : "text-heading"}`}>
+      <span className={`text-xs font-medium ${active ? "text-white" : "text-heading"}`}>
         {label}
       </span>
     </div>
   );
 }
 
+const WORKFLOW_STEPS = [
+  { tag: "RUN", label: "Repeatable analysis" },
+  { tag: "ACT", label: "Automated actions" },
+  { tag: "SEND", label: "Right people, right time" },
+];
+
+const GENERATIVE_BAR_COUNT = 5;
+
 export default function HowItWorks() {
+  const [activeStep, setActiveStep] = useState(0);
+  const [activeBar, setActiveBar] = useState(3);
+
+  // Cycle which workflow step is "running" and which generated-UI panel is
+  // "active", so the two cards that literally describe automation and
+  // dynamic generation visibly demonstrate it rather than sitting static.
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const stepTimer = setInterval(() => {
+      setActiveStep((s) => (s + 1) % WORKFLOW_STEPS.length);
+    }, 1600);
+    const barTimer = setInterval(() => {
+      setActiveBar((b) => (b + 1) % GENERATIVE_BAR_COUNT);
+    }, 1100);
+    return () => {
+      clearInterval(stepTimer);
+      clearInterval(barTimer);
+    };
+  }, []);
+
   return (
     <section className="relative overflow-hidden py-[120px]">
       <div className="px-4 sm:px-10 xl:px-20">
@@ -121,24 +165,30 @@ export default function HowItWorks() {
       <div className="mx-auto mt-20 max-w-[1920px] px-4 sm:px-10 xl:px-20">
         <div className="grid grid-cols-1 gap-[18px] sm:grid-cols-2 lg:grid-cols-4">
           {/* 1. SOC 2 & ISO Ready — dark hero card */}
-          <div className="relative overflow-hidden rounded-2xl bg-secondary-500 p-8 sm:col-span-2 lg:col-span-2">
+          <div
+            className={`group relative overflow-hidden rounded-2xl bg-secondary-500 p-8 sm:col-span-2 lg:col-span-2 ${HOVER_LIFT}`}
+          >
             <div
-              className="absolute inset-x-0 top-0 h-1"
+              className="absolute inset-x-0 top-0 h-1 bg-[length:200%_100%] transition-[background-position] duration-700 group-hover:bg-right"
               style={{
-                background:
+                backgroundImage:
                   "linear-gradient(90deg, #ff7600 0%, #533afd 35%, #873eff 55%, #ff7eb0 75%, #ff7600 100%)",
+                backgroundPosition: "left",
               }}
             />
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
               <div>
-                <span className="flex h-11 w-11 items-center justify-center rounded-md border border-white/15">
+                <span className="flex h-11 w-11 items-center justify-center rounded-md border border-white/15 transition-transform duration-300 group-hover:scale-110 group-hover:border-accent-400">
                   <ShieldIcon style={{ fontSize: 20 }} className="text-accent-400" />
                 </span>
                 <p className="mt-4 text-[13px] font-semibold uppercase tracking-[0.08em] text-accent-400">
                   Security &amp; Compliance
                 </p>
                 <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#29b9bb]" />
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#29b9bb] opacity-75" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#29b9bb]" />
+                  </span>
                   <span className="text-xs font-medium text-white/80">
                     Continuous testing &amp; monitoring
                   </span>
@@ -152,7 +202,7 @@ export default function HowItWorks() {
                 </p>
               </div>
               <div className="flex flex-col justify-center gap-6 border-t border-white/10 pt-6 sm:border-l sm:border-t-0 sm:pl-8 sm:pt-0">
-                <div>
+                <div className="transition-transform duration-300 group-hover:translate-x-1">
                   <p className="font-display text-[34px] font-bold leading-none text-white">
                     SOC 2
                   </p>
@@ -160,7 +210,7 @@ export default function HowItWorks() {
                     Type I Compliance
                   </p>
                 </div>
-                <div>
+                <div className="transition-transform delay-75 duration-300 group-hover:translate-x-1">
                   <p className="font-display text-[34px] font-bold leading-none text-white">
                     27001
                   </p>
@@ -172,10 +222,10 @@ export default function HowItWorks() {
             </div>
           </div>
 
-          {/* 2. On-Premise Deployment */}
-          <GlowCard>
+          {/* 2. On-Premise Deployment — placeholder rows fill in on hover */}
+          <GlowCard className={HOVER_LIFT} contentClassName="group/card p-6">
             <DashedBox className="h-[132px]">
-              <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-md bg-accent-500 text-white shadow-sm">
+              <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-md bg-accent-500 text-white shadow-sm transition-transform duration-300 group-hover/card:-rotate-6 group-hover/card:scale-110">
                 <LockIcon style={{ fontSize: 15 }} />
               </span>
               <div className="mx-auto flex h-full max-w-[220px] flex-col justify-center gap-2.5 px-4">
@@ -189,7 +239,10 @@ export default function HowItWorks() {
                       className="h-1.5 w-1.5 shrink-0 rounded-full"
                       style={{ background: row.color }}
                     />
-                    <span className={`h-2 rounded-full bg-secondary-100 ${row.w}`} />
+                    <span
+                      className={`h-2 origin-left scale-x-0 rounded-full bg-secondary-100 transition-transform duration-500 group-hover/card:scale-x-100 ${row.w}`}
+                      style={{ transitionDelay: `${i * 90}ms` }}
+                    />
                   </div>
                 ))}
               </div>
@@ -203,8 +256,8 @@ export default function HowItWorks() {
             </p>
           </GlowCard>
 
-          {/* 3. Tribal Knowledge */}
-          <GlowCard>
+          {/* 3. Tribal Knowledge — each row highlights on its own hover */}
+          <GlowCard className={HOVER_LIFT}>
             <div className="flex items-start justify-between">
               <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-accent-500">
                 Captured Context
@@ -217,14 +270,12 @@ export default function HowItWorks() {
             <div className="mt-4 divide-y divide-secondary-100 rounded-lg border border-secondary-100">
               {[
                 { n: "01", label: "Unwritten rules" },
-                { n: "02", label: "Past lessons", active: true },
+                { n: "02", label: "Past lessons" },
                 { n: "03", label: "Operational realities" },
               ].map((item) => (
                 <div
                   key={item.n}
-                  className={`flex items-center gap-3 px-3 py-2.5 ${
-                    item.active ? "bg-primary-100" : ""
-                  }`}
+                  className="flex items-center gap-3 px-3 py-2.5 transition-colors duration-200 hover:bg-primary-100"
                 >
                   <span className="font-display text-[11px] font-semibold text-primary-400">
                     {item.n}
@@ -238,12 +289,17 @@ export default function HowItWorks() {
             </p>
           </GlowCard>
 
-          {/* 4. Semantic Modeling — spans 2 cols, 2 rows */}
-          <GlowCard className="sm:col-span-2 lg:col-span-2 lg:row-span-2">
-            <DashedBox className="relative h-[260px] lg:h-[300px]">
+          {/* 4. Semantic Modeling — spans 2 cols, 2 rows. Dots continuously
+              travel from the hub to each node to suggest live data flow. */}
+          <GlowCard className={`sm:col-span-2 lg:col-span-2 lg:row-span-2 ${HOVER_LIFT}`}>
+            <DashedBox className="group/diagram relative h-[260px] lg:h-[300px]">
               <div className="absolute left-1/2 top-[48px] h-[calc(100%-96px)] w-px -translate-x-1/2 border-l border-dashed border-secondary-300" />
               <div className="absolute left-[90px] right-[90px] top-1/2 h-px -translate-y-1/2 border-t border-dashed border-secondary-300" />
-              <span className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl bg-primary-500 text-white shadow-[0_12px_30px_-8px_rgba(83,58,253,0.6)]">
+              <PulseDot tx="0px" ty="-76px" delay="0s" />
+              <PulseDot tx="-130px" ty="0px" delay="0.6s" />
+              <PulseDot tx="130px" ty="0px" delay="1.2s" />
+              <PulseDot tx="0px" ty="76px" delay="1.8s" />
+              <span className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl bg-primary-500 text-white shadow-[0_12px_30px_-8px_rgba(83,58,253,0.6)] transition-transform duration-500 group-hover/diagram:scale-110 group-hover/diagram:rotate-12">
                 <HubIcon style={{ fontSize: 24 }} />
               </span>
               <Node className="left-1/2 top-[22px] -translate-x-1/2" color="#29b9bb" label="CRM" />
@@ -271,9 +327,10 @@ export default function HowItWorks() {
             </p>
           </GlowCard>
 
-          {/* 5. Workflows — spans 2 cols */}
+          {/* 5. Workflows — spans 2 cols. Steps auto-cycle to show the
+              pipeline actually running. */}
           <GlowCard
-            className="sm:col-span-2 lg:col-span-2"
+            className={`sm:col-span-2 lg:col-span-2 ${HOVER_LIFT}`}
             contentClassName="flex flex-col gap-6 p-6 sm:flex-row sm:items-center"
           >
             <div className="sm:flex-1">
@@ -290,35 +347,38 @@ export default function HowItWorks() {
             </div>
             <DashedBox className="p-4 sm:w-[260px]">
               <div className="flex flex-col gap-3">
-                <FlowStep
-                  tag="RUN"
-                  tagClassName="bg-primary-100 text-primary-500"
-                  label="Repeatable analysis"
-                />
-                <FlowStep
-                  tag="ACT"
-                  tagClassName="bg-secondary-100 text-secondary-400"
-                  label="Automated actions"
-                />
-                <FlowStep
-                  tag="SEND"
-                  tagClassName="bg-accent-500 text-white"
-                  label="Right people, right time"
-                  dark
-                />
+                {WORKFLOW_STEPS.map((step, i) => (
+                  <FlowStep
+                    key={step.tag}
+                    tag={step.tag}
+                    label={step.label}
+                    active={i === activeStep}
+                    tagClassName={
+                      i === activeStep
+                        ? "bg-accent-500 text-white"
+                        : "bg-primary-100 text-primary-500"
+                    }
+                  />
+                ))}
               </div>
             </DashedBox>
           </GlowCard>
 
-          {/* 6. Optimization Engine */}
-          <GlowCard>
+          {/* 6. Optimization Engine — nodes pulse continuously */}
+          <GlowCard className={HOVER_LIFT}>
             <DashedBox className="relative h-[140px]">
-              <span className="absolute left-5 top-5 h-2.5 w-2.5 rounded-full bg-secondary-500" />
+              <span className="absolute left-5 top-5 h-2.5 w-2.5 animate-pulse rounded-full bg-secondary-500" />
               <div className="absolute left-[27px] top-[27px] h-px w-10 border-t border-dashed border-secondary-300" />
               <div className="absolute left-[67px] top-[27px] h-10 w-px border-l border-dashed border-secondary-300" />
-              <span className="absolute left-[60px] top-[62px] flex h-3.5 w-3.5 items-center justify-center rounded-full border border-secondary-300 bg-white" />
+              <span
+                className="absolute left-[60px] top-[62px] flex h-3.5 w-3.5 animate-pulse items-center justify-center rounded-full border border-secondary-300 bg-white"
+                style={{ animationDelay: "0.4s" }}
+              />
               <div className="absolute left-[67px] top-[69px] h-10 w-px border-l border-dashed border-secondary-300" />
-              <span className="absolute left-[60px] top-[104px] flex h-3.5 w-3.5 items-center justify-center rounded-full border border-secondary-300 bg-white" />
+              <span
+                className="absolute left-[60px] top-[104px] flex h-3.5 w-3.5 animate-pulse items-center justify-center rounded-full border border-secondary-300 bg-white"
+                style={{ animationDelay: "0.8s" }}
+              />
             </DashedBox>
             <p className="mt-5 font-display text-h3 font-semibold text-heading">
               Optimization Engine
@@ -329,9 +389,10 @@ export default function HowItWorks() {
             </p>
           </GlowCard>
 
-          {/* 7. Generative UI — gradient card */}
+          {/* 7. Generative UI — gradient card, one panel cycles "active" to
+              demonstrate the UI regenerating itself */}
           <div
-            className="relative overflow-hidden rounded-2xl p-6"
+            className={`group relative overflow-hidden rounded-2xl p-6 ${HOVER_LIFT}`}
             style={{
               background:
                 "linear-gradient(135deg, #533afd 0%, #873eff 40%, #ff7eb0 75%, #ff7600 100%)",
@@ -340,16 +401,19 @@ export default function HowItWorks() {
             <button
               type="button"
               aria-label="Expand"
-              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-md bg-white/20 text-white backdrop-blur-sm"
+              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-md bg-white/20 text-white backdrop-blur-sm transition-transform duration-300 group-hover:rotate-90"
             >
               <AddIcon style={{ fontSize: 18 }} />
             </button>
             <div className="flex h-[88px] items-end gap-2 rounded-xl border border-dashed border-white/30 bg-white/10 p-3">
-              <span className="h-7 flex-1 rounded-md bg-white/25" />
-              <span className="h-7 flex-1 rounded-md bg-white/25" />
-              <span className="h-7 flex-1 rounded-md bg-white/25" />
-              <span className="h-9 w-14 rounded-md bg-white" />
-              <span className="h-9 flex-1 rounded-md bg-white/40" />
+              {Array.from({ length: GENERATIVE_BAR_COUNT }).map((_, i) => (
+                <span
+                  key={i}
+                  className={`flex-1 rounded-md transition-all duration-500 ${
+                    i === activeBar ? "h-9 bg-white" : "h-7 bg-white/25"
+                  }`}
+                />
+              ))}
             </div>
             <p className="mt-5 font-display text-h3 font-semibold text-white">
               Generative UI

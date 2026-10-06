@@ -531,3 +531,41 @@ body {
     animation: none;
   }
 }
+
+/* ================= How It Works feature grid ================= */
+/* Small dot traveling from the Semantic Modeling card's central hub out to
+   each connected system node and back, suggesting live data flow. Each dot
+   sets --tx/--ty (its direction + distance) and --delay via inline style. */
+.hiw-node-pulse {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 6px;
+  width: 6px;
+  border-radius: 9999px;
+  background: var(--color-primary-500);
+  animation: hiwNodePulse 2.4s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+@keyframes hiwNodePulse {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%);
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty)));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hiw-node-pulse {
+    animation: none;
+    opacity: 0;
+  }
+}
