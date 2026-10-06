@@ -15,6 +15,8 @@ export default function CtaSection() {
           <SectionHeading
             align="center"
             theme="dark"
+            eyebrow="Get Started"
+            eyebrowColor="accent"
             heading={
               <>
                 See how your data can drive faster,
