@@ -40,18 +40,9 @@ export default function About() {
 
             <div className="mt-6 space-y-4 text-p text-body">
               <p>
-                The world around us is built from fundamental building
-                blocks. Atoms combine to create molecules, molecules
-                combine to create more complex structures, and together
-                they create everything we see.
-              </p>
-              <p>We believe enterprises work the same way.</p>
-              <p>
-                Behind every supply chain, every operation and every
-                business outcome are thousands of individual decisions:
-                what to buy, what to produce, where to position
-                inventory, which supplier to choose, how much to ship,
-                what price to offer and what action to take next.
+                Just as atoms combine to build everything we see,
+                enterprises are built from thousands of decisions —
+                what to buy, where to ship, who to trust.
               </p>
               <p className="font-semibold text-heading">
                 Superatom AI is built to make those decisions smarter.
