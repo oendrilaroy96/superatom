@@ -46,7 +46,7 @@ const features: { title: string; desc: string; Icon: IconComponent }[] = [
 
 export default function Infrastructure() {
   return (
-    <section className="relative overflow-hidden py-24 sm:py-28">
+    <section className="relative overflow-hidden py-[120px]">
       <div className="relative z-[2] mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>

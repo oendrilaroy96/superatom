@@ -11,7 +11,7 @@ function DiagramPlaceholder() {
 
 export default function HowItWorks() {
   return (
-    <section className="relative overflow-hidden pb-[100px] pt-[120px]">
+    <section className="relative overflow-hidden py-[120px]">
       <div className="px-4 sm:px-10 xl:px-20">
         <SectionHeading
           align="center"

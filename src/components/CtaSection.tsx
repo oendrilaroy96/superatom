@@ -9,7 +9,7 @@ export default function CtaSection() {
   const [demoOpen, setDemoOpen] = useState(false);
 
   return (
-    <section className="py-16 sm:py-24">
+    <section className="py-[120px]">
       <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
         <div className="mx-auto max-w-[1300px] text-center">
           <SectionHeading

@@ -91,7 +91,7 @@ export default function InventoryIntelligence() {
           heroes (e.g. Infrastructure.tsx) instead of SolutionPage's
           centered layout — the right side is a stat card rather than a
           dashboard mockup. */}
-      <section className="py-16 sm:py-[120px]">
+      <section className="py-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
             <div>
@@ -143,7 +143,7 @@ export default function InventoryIntelligence() {
       </section>
 
       {/* Capabilities */}
-      <section className="py-16 sm:py-24">
+      <section className="py-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <SectionHeading
             align="center"
@@ -190,7 +190,7 @@ export default function InventoryIntelligence() {
       </section>
 
       {/* Industries */}
-      <section className="py-16 sm:py-24">
+      <section className="py-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <SectionHeading
             align="center"
@@ -220,7 +220,7 @@ export default function InventoryIntelligence() {
       </section>
 
       {/* Business outcomes */}
-      <section className="py-16 sm:py-24">
+      <section className="py-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <SectionHeading
             align="center"

@@ -133,7 +133,7 @@ export default function Features() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden py-[100px]">
+    <section className="relative overflow-hidden py-[120px]">
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
         <div className="grid grid-cols-1 gap-[18px] sm:grid-cols-2 lg:grid-cols-4">
           {/* 1. SOC 2 & ISO Ready — dark hero card */}

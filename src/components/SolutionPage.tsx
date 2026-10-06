@@ -26,7 +26,7 @@ export default function SolutionPage({
 
   return (
     <>
-      <section className="py-16 sm:py-[120px]">
+      <section className="py-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="mx-auto max-w-3xl text-center">
             <span className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary-100 text-primary-500">
