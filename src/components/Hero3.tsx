@@ -35,10 +35,12 @@ function HeroCopy() {
       <h1 className="hero2-heading m-0 mb-4 font-display font-semibold leading-[1.08] tracking-[-0.02em] text-heading">
         <span className="block">Decide Fast, Decide Right,</span>
         <span
-          className="block bg-clip-text text-transparent"
+          className="bg-clip-text text-transparent"
           style={{
             backgroundImage:
               "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)",
+            WebkitBoxDecorationBreak: "clone",
+            boxDecorationBreak: "clone",
           }}
         >
           Every time
