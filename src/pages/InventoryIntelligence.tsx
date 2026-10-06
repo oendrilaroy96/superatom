@@ -171,8 +171,7 @@ export default function InventoryIntelligence() {
               </>
             }
             description="Turn inventory from a cost center into a competitive advantage."
-            className="mx-auto max-w-2xl"
-            descriptionClassName="mx-auto"
+            descriptionClassName="mx-auto max-w-xl"
           />
 
           <div className="mx-auto mt-14 grid max-w-5xl grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-6">
