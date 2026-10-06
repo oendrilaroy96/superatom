@@ -98,7 +98,7 @@ export default function HowItWorks() {
                   just the 1px border ring (not a fill) via the padding +
                   mask-composite:exclude trick, so only the outline glows. */}
               <div
-                className="pointer-events-none absolute inset-0 z-0 rounded-lg opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                className="pointer-events-none absolute -inset-px z-0 rounded-lg opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                 style={{
                   padding: 1,
                   background:
