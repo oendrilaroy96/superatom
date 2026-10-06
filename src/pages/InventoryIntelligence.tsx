@@ -17,6 +17,7 @@ import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
 import type { IconComponent } from "../types/icon";
 import Button from "../components/ui/Button";
+import GlowCard from "../components/ui/GlowCard";
 import SectionHeading from "../components/ui/SectionHeading";
 import DemoModal from "../components/DemoModal";
 
@@ -165,24 +166,24 @@ export default function InventoryIntelligence() {
               full width instead. */}
           <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {capabilities.slice(0, 4).map((c) => (
-              <div key={c.title} className="rounded-lg border border-secondary-100 bg-white p-6">
+              <GlowCard key={c.title}>
                 <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
                   <c.Icon style={{ fontSize: 22 }} />
                 </span>
                 <p className="text-h4 mt-4 font-display font-semibold text-heading">{c.title}</p>
                 <p className="mt-1.5 text-xs leading-relaxed text-caption">{c.desc}</p>
-              </div>
+              </GlowCard>
             ))}
           </div>
           <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {capabilities.slice(4).map((c) => (
-              <div key={c.title} className="rounded-lg border border-secondary-100 bg-white p-6">
+              <GlowCard key={c.title}>
                 <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
                   <c.Icon style={{ fontSize: 22 }} />
                 </span>
                 <p className="text-h4 mt-4 font-display font-semibold text-heading">{c.title}</p>
                 <p className="mt-1.5 text-xs leading-relaxed text-caption">{c.desc}</p>
-              </div>
+              </GlowCard>
             ))}
           </div>
         </div>
@@ -241,10 +242,7 @@ export default function InventoryIntelligence() {
               rather than bare icon circles floating in a row. */}
           <div className="mx-auto mt-14 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {outcomes.map((o) => (
-              <div
-                key={o.label}
-                className="flex items-center gap-4 rounded-lg border border-secondary-100 bg-white p-6"
-              >
+              <GlowCard key={o.label} contentClassName="flex items-center gap-4 p-6">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-primary-100 text-primary-500">
                   {o.dir === "up" ? (
                     <ArrowUpwardIcon style={{ fontSize: 22 }} />
@@ -253,7 +251,7 @@ export default function InventoryIntelligence() {
                   )}
                 </span>
                 <p className="font-display text-h4 font-semibold text-heading">{o.label}</p>
-              </div>
+              </GlowCard>
             ))}
           </div>
         </div>

@@ -4,6 +4,7 @@ import StorageIcon from "@mui/icons-material/Storage";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import type { IconComponent } from "../types/icon";
+import GlowCard from "./ui/GlowCard";
 import SectionHeading from "./ui/SectionHeading";
 
 const InfrastructureDiagram = lazy(() => import("./InfrastructureDiagram"));
@@ -91,10 +92,7 @@ export default function Infrastructure() {
 
         <div className="mt-16 grid gap-6 sm:grid-cols-3">
           {features.map((f) => (
-            <div
-              key={f.title}
-              className="rounded-lg border border-secondary-100 bg-white p-6"
-            >
+            <GlowCard key={f.title}>
               <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
                 <f.Icon style={{ fontSize: 22 }} />
               </span>
@@ -104,7 +102,7 @@ export default function Infrastructure() {
               <p className="mt-1.5 text-xs leading-relaxed text-caption">
                 {f.desc}
               </p>
-            </div>
+            </GlowCard>
           ))}
         </div>
       </div>

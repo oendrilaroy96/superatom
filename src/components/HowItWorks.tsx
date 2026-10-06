@@ -7,6 +7,7 @@ import TimelineIcon from "@mui/icons-material/Timeline";
 import TuneIcon from "@mui/icons-material/Tune";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import type { IconComponent } from "../types/icon";
+import GlowCard from "./ui/GlowCard";
 import SectionHeading from "./ui/SectionHeading";
 
 const HowItWorksDiagram = lazy(() => import("./HowItWorksDiagram"));
@@ -85,42 +86,20 @@ export default function HowItWorks() {
       <div className="mx-auto mt-20 max-w-[1920px] px-4 sm:px-10 xl:px-20">
         <div className="flex flex-wrap justify-center gap-6">
           {points.map((p) => (
-            <div
+            <GlowCard
               key={p.title}
-              onMouseMove={(e) => {
-                const rect = e.currentTarget.getBoundingClientRect();
-                e.currentTarget.style.setProperty("--x", `${e.clientX - rect.left}px`);
-                e.currentTarget.style.setProperty("--y", `${e.clientY - rect.top}px`);
-              }}
-              className="group relative w-full rounded-lg border border-secondary-100 bg-white p-6 sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
+              className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
             >
-              {/* Gradient spotlight that follows the cursor, masked down to
-                  just the 1px border ring (not a fill) via the padding +
-                  mask-composite:exclude trick, so only the outline glows. */}
-              <div
-                className="pointer-events-none absolute -inset-px z-0 rounded-lg opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                style={{
-                  padding: 1,
-                  background:
-                    "radial-gradient(110px circle at var(--x, 50%) var(--y, 50%), #7fd5d6 0%, #91a9fe 18%, #9889fe 36%, #b78bff 54%, #ffb2d0 72%, #ffad66 86%, transparent 100%)",
-                  WebkitMask:
-                    "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                  WebkitMaskComposite: "xor",
-                  maskComposite: "exclude",
-                }}
-              />
-              <div className="relative z-10">
-                <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
-                  <p.Icon style={{ fontSize: 22 }} />
-                </span>
-                <p className="text-h4 mt-4 font-display font-semibold text-heading">
-                  {p.title}
-                </p>
-                <p className="mt-1.5 text-xs leading-relaxed text-caption">
-                  {p.desc}
-                </p>
-              </div>
-            </div>
+              <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
+                <p.Icon style={{ fontSize: 22 }} />
+              </span>
+              <p className="text-h4 mt-4 font-display font-semibold text-heading">
+                {p.title}
+              </p>
+              <p className="mt-1.5 text-xs leading-relaxed text-caption">
+                {p.desc}
+              </p>
+            </GlowCard>
           ))}
         </div>
       </div>
