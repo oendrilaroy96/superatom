@@ -115,15 +115,6 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
-      <div className="overflow-hidden pb-4" aria-hidden="true">
-        <p
-          className="select-none whitespace-nowrap text-center font-display font-bold leading-none tracking-tight text-white/[0.04]"
-          style={{ fontSize: "11vw" }}
-        >
-          superatom ai
-        </p>
-      </div>
     </footer>
   );
 }
