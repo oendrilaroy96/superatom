@@ -15,7 +15,7 @@ const columns: { heading: string; links: { name: string; path?: string }[] }[] =
   },
   {
     heading: "Resources",
-    links: [{ name: "Blog" }, { name: "Case Studies" }, { name: "Docs" }],
+    links: [{ name: "Blog" }],
   },
   {
     heading: "Company",

@@ -5,8 +5,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ArticleIcon from "@mui/icons-material/Article";
-import InsightsIcon from "@mui/icons-material/Insights";
-import MenuBookIcon from "@mui/icons-material/MenuBook";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import type { IconComponent } from "../types/icon";
 import logo from "../assets/superatom-logo.png";
@@ -21,8 +19,6 @@ const solutions: { name: string; blurb: string; Icon: IconComponent; path?: stri
 
 const resources: { name: string; blurb: string; Icon: IconComponent; path?: string }[] = [
   { name: "Blog", blurb: "Insights on decision intelligence.", Icon: ArticleIcon },
-  { name: "Case Studies", blurb: "How enterprises use Superatom.", Icon: InsightsIcon },
-  { name: "Docs", blurb: "Platform & integration guides.", Icon: MenuBookIcon },
 ];
 
 function ChevronDown() {
