@@ -32,7 +32,7 @@ const socials: { label: string; Icon: IconComponent; href: string }[] = [
   { label: "YouTube", Icon: YouTubeIcon, href: "https://www.youtube.com/@SuperatomAI" },
 ];
 
-const offices = ["Denver", "Hyderabad"];
+const offices = ["USA", "India"];
 
 const legalLinks = [{ name: "Privacy" }, { name: "Terms" }];
 
