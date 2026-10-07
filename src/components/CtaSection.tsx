@@ -5,7 +5,16 @@ import SectionHeading from "./ui/SectionHeading";
 import DemoModal from "./DemoModal";
 import { useDarkTransition } from "../context/DarkTransitionContext";
 
-/** CTA banner shown above the footer on every page; crossfades from the testimonial section's light lavender to dark in sync with the shared scroll threshold. */
+/**
+ * CTA banner shown above the footer on every page; crossfades from the
+ * testimonial section's light lavender to dark in sync with the shared
+ * scroll threshold. In the dark state this section turns transparent rather
+ * than painting its own bg-secondary-500, so the dark fill behind it and the
+ * footer's is the same single paint — two independently painted instances
+ * of the "same" flat color can render a couple of RGB units apart (visible
+ * as a faint seam) due to how the browser composites and dithers separate
+ * layers, even though both declare the identical Tailwind color.
+ */
 export default function CtaSection() {
   const [demoOpen, setDemoOpen] = useState(false);
   const isDark = useDarkTransition();
@@ -13,7 +22,7 @@ export default function CtaSection() {
   return (
     <section
       className={`relative overflow-hidden py-[120px] transition-colors duration-700 ease-in-out ${
-        isDark ? "bg-secondary-500" : "bg-[#f5f5ff]"
+        isDark ? "bg-transparent" : "bg-[#f5f5ff]"
       }`}
     >
       <div

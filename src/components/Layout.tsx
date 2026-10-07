@@ -59,16 +59,18 @@ export default function Layout() {
         <main className="relative z-10">
           <Outlet />
         </main>
-
-        {/* Crossfades from the testimonial section's light lavender to dark
-            once isDark flips true (see updateDarkBlockReveal above), like a
-            light switching on, rather than wiping into view progressively
-            as you scroll further. */}
-        <CtaSection />
       </DarkTransitionContext.Provider>
 
-      {/* Footer stays permanently dark, like the site's standing chrome. */}
+      {/* CTA + footer share this single bg-secondary-500 paint. CtaSection
+          turns transparent once isDark flips true (see updateDarkBlockReveal
+          above) and lets this shared fill show through, rather than painting
+          its own separate instance of the same color — two independently
+          painted "identical" flat colors can render a couple of RGB units
+          apart at their shared edge, visible as a faint seam. */}
       <div className="bg-secondary-500">
+        <DarkTransitionContext.Provider value={isDark}>
+          <CtaSection />
+        </DarkTransitionContext.Provider>
         <Footer />
       </div>
     </div>
