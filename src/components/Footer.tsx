@@ -21,7 +21,6 @@ const columns: { heading: string; links: { name: string; path?: string }[] }[] =
     heading: "Company",
     links: [
       { name: "About us", path: "/about" },
-      { name: "Careers" },
       { name: "Contact" },
       { name: "Privacy Policy" },
       { name: "Terms of Service" },
