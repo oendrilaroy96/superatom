@@ -38,7 +38,7 @@ export default function Footer() {
   return (
     <footer>
       <div className="mx-auto max-w-[1920px] px-4 pb-10 pt-20 sm:px-10 sm:pt-[120px] xl:px-20">
-        <div className="grid grid-cols-2 gap-x-8 gap-y-12 sm:grid-cols-3 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div className="grid grid-cols-2 gap-x-8 gap-y-12 sm:grid-cols-3 lg:grid-cols-[1fr_auto_auto_auto] lg:gap-x-20">
           <div className="col-span-2 sm:col-span-3 lg:col-span-1">
             <img src={logo} alt="Superatom AI" className="h-6 w-auto" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
