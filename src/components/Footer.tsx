@@ -22,8 +22,6 @@ const columns: { heading: string; links: { name: string; path?: string }[] }[] =
     links: [
       { name: "About us", path: "/about" },
       { name: "Contact" },
-      { name: "Privacy Policy" },
-      { name: "Terms of Service" },
     ],
   },
 ];
@@ -34,6 +32,10 @@ const socials: { label: string; Icon: IconComponent; href: string }[] = [
   { label: "YouTube", Icon: YouTubeIcon, href: "https://www.youtube.com/@SuperatomAI" },
 ];
 
+const offices = ["Denver", "Hyderabad"];
+
+const legalLinks = [{ name: "Privacy" }, { name: "Terms" }];
+
 export default function Footer() {
   return (
     <footer>
@@ -42,8 +44,7 @@ export default function Footer() {
           <div className="col-span-2 sm:col-span-3 lg:col-span-1">
             <img src={logo} alt="Superatom AI" className="h-6 w-auto" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
-              Decision intelligence for enterprises. Connect your data,
-              execute the decisions.
+              Decision intelligence for enterprise supply chains.
             </p>
             <div className="mt-5 flex items-center gap-2">
               {socials.map(({ label, Icon, href }) => (
@@ -94,11 +95,34 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-14 border-t border-white/10 pt-6">
-          <p className="text-center text-sm text-white/50 sm:text-left">
-            &copy; {new Date().getFullYear()} Superatom AI. All rights reserved.
+        <div className="mt-14 flex flex-col items-center gap-4 border-t border-white/10 pt-6 sm:grid sm:grid-cols-3 sm:gap-0">
+          <p className="order-1 text-sm text-white/50 sm:text-left">
+            &copy; {new Date().getFullYear()} Superatom AI
           </p>
+          <p className="order-3 text-xs font-medium uppercase tracking-[0.2em] text-white/30 sm:order-2 sm:text-center">
+            {offices.join(" · ")}
+          </p>
+          <div className="order-2 flex items-center gap-6 sm:order-3 sm:justify-end">
+            {legalLinks.map((link) => (
+              <a
+                key={link.name}
+                href="#"
+                className="text-sm text-white/50 transition-colors hover:text-white"
+              >
+                {link.name}
+              </a>
+            ))}
+          </div>
         </div>
+      </div>
+
+      <div className="overflow-hidden pb-4" aria-hidden="true">
+        <p
+          className="select-none whitespace-nowrap text-center font-display font-bold leading-none tracking-tight text-white/[0.04]"
+          style={{ fontSize: "11vw" }}
+        >
+          superatom ai
+        </p>
       </div>
     </footer>
   );
