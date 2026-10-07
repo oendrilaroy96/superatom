@@ -22,7 +22,7 @@ export default function CtaSection() {
         }`}
         style={{
           backgroundImage:
-            "radial-gradient(640px 420px at 15% 12%, rgba(83,58,253,0.3), transparent 55%), radial-gradient(640px 480px at 85% 48%, rgba(255,118,0,0.18), transparent 55%)",
+            "radial-gradient(960px 640px at 15% 12%, rgba(83,58,253,0.3), transparent 55%)",
           // Fade the glow in from the top so it doesn't start abruptly right
           // at the seam with the testimonial section's flat dark fill above.
           maskImage: "linear-gradient(180deg, transparent 0%, white 200px)",
