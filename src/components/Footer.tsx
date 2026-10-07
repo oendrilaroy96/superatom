@@ -62,26 +62,31 @@ export default function Footer() {
           </div>
 
           {columns.map((col) => (
-            <div key={col.heading} className="text-right">
+            <div key={col.heading}>
               <p className="font-display text-xs font-bold uppercase tracking-wide text-white">
                 {col.heading}
               </p>
+              <span className="mt-3 block h-px w-6 bg-primary-400/40" aria-hidden="true" />
               <ul className="mt-4 space-y-3">
                 {col.links.map((link) => (
                   <li key={link.name}>
                     {link.path ? (
                       <Link
                         to={link.path}
-                        className="text-sm text-white/60 transition-colors hover:text-white"
+                        className="group inline-flex items-center text-sm text-white/60 transition-colors hover:text-white"
                       >
-                        {link.name}
+                        <span className="transition-transform duration-200 group-hover:translate-x-0.5">
+                          {link.name}
+                        </span>
                       </Link>
                     ) : (
                       <a
                         href="#"
-                        className="text-sm text-white/60 transition-colors hover:text-white"
+                        className="group inline-flex items-center text-sm text-white/60 transition-colors hover:text-white"
                       >
-                        {link.name}
+                        <span className="transition-transform duration-200 group-hover:translate-x-0.5">
+                          {link.name}
+                        </span>
                       </a>
                     )}
                   </li>
