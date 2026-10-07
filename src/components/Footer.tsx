@@ -65,7 +65,6 @@ export default function Footer() {
               <p className="font-display text-xs font-bold uppercase tracking-wide text-white">
                 {col.heading}
               </p>
-              <span className="mt-3 block h-px w-6 bg-primary-400/40" aria-hidden="true" />
               <ul className="mt-4 space-y-3">
                 {col.links.map((link) => (
                   <li key={link.name}>
