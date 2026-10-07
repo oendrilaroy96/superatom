@@ -31,10 +31,12 @@ export default function CtaSection() {
         }`}
         style={{
           backgroundImage:
-            "radial-gradient(960px 640px at 15% 12%, rgba(83,58,253,0.3), transparent 55%)",
+            "radial-gradient(1300px 860px at 15% 12%, rgba(83,58,253,0.3), transparent 55%), radial-gradient(1100px 760px at 88% 92%, rgba(255,118,0,0.22), transparent 55%)",
           // Fade the glow in from the top and back out at the bottom so it
           // doesn't start or stop abruptly at the seams with the flat dark
           // fills of the testimonial section above and the footer below.
+          // Both radial gradients share this one mask, so the new
+          // bottom-right glow gets the same seamless fade for free.
           maskImage:
             "linear-gradient(180deg, transparent 0, white 200px, white calc(100% - 200px), transparent 100%)",
           WebkitMaskImage:
