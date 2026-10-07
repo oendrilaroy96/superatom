@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
@@ -9,7 +9,6 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import ShieldIcon from "@mui/icons-material/Shield";
 import TuneIcon from "@mui/icons-material/Tune";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
-import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
@@ -21,12 +20,6 @@ import GlowCard from "../components/ui/GlowCard";
 import SectionHeading from "../components/ui/SectionHeading";
 import DemoModal from "../components/DemoModal";
 import Customers from "../components/Customers";
-
-const heroStats: { label: string; Icon: IconComponent }[] = [
-  { label: "Make faster, smarter decisions", Icon: InsightsIcon },
-  { label: "Reduce working capital and write-offs", Icon: AccountBalanceWalletIcon },
-  { label: "Improve service levels and inventory turns", Icon: TuneIcon },
-];
 
 const capabilities: { title: string; desc: string; Icon: IconComponent }[] = [
   {
@@ -65,6 +58,62 @@ const capabilities: { title: string; desc: string; Icon: IconComponent }[] = [
     Icon: Inventory2Icon,
   },
 ];
+
+// One slot per card, front to back. Each card animates toward whichever slot
+// its current position in `order` maps to, so re-ordering `order` alone
+// drives the shuffle via each card's own CSS transition.
+const stackSlots = [
+  { x: 0, y: 0, rotate: -2, scale: 1, opacity: 1 },
+  { x: 16, y: 16, rotate: 4, scale: 0.96, opacity: 0.95 },
+  { x: -18, y: 30, rotate: -6, scale: 0.93, opacity: 0.85 },
+  { x: 22, y: 44, rotate: 6, scale: 0.9, opacity: 0.7 },
+  { x: -14, y: 58, rotate: -5, scale: 0.87, opacity: 0.55 },
+  { x: 12, y: 70, rotate: 4, scale: 0.84, opacity: 0.4 },
+  { x: -8, y: 82, rotate: -3, scale: 0.81, opacity: 0.25 },
+];
+
+/** Fanned stack of the capability cards; every few seconds the back-most card animates up to the front, cycling through all 7. */
+function CardStack() {
+  const [order, setOrder] = useState(capabilities.map((_, i) => i));
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = setInterval(() => {
+      setOrder((prev) => {
+        const next = [...prev];
+        const back = next.pop();
+        if (back !== undefined) next.unshift(back);
+        return next;
+      });
+    }, 2400);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <div className="relative h-[360px] w-full max-w-md sm:h-[400px]">
+      {capabilities.map((c, i) => {
+        const slot = stackSlots[order.indexOf(i)];
+        return (
+          <div
+            key={c.title}
+            className="absolute inset-x-0 top-0 rounded-2xl border border-secondary-100 bg-white p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.35)] transition-all duration-700 ease-in-out sm:p-7"
+            style={{
+              transform: `translate(${slot.x}px, ${slot.y}px) rotate(${slot.rotate}deg) scale(${slot.scale})`,
+              opacity: slot.opacity,
+              zIndex: stackSlots.length - stackSlots.indexOf(slot),
+            }}
+          >
+            <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
+              <c.Icon style={{ fontSize: 22 }} />
+            </span>
+            <p className="mt-4 font-display text-h4 font-semibold text-heading">{c.title}</p>
+            <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-caption">{c.desc}</p>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 const industries: { label: string; Icon: IconComponent }[] = [
   { label: "Supply Chain & Logistics", Icon: LocalShippingIcon },
@@ -138,37 +187,8 @@ export default function InventoryIntelligence() {
               </Button>
             </div>
 
-            <div className="relative mx-auto w-full max-w-md lg:mx-0 lg:ml-auto">
-              {/* Painted first (no z-index needed): DOM order alone puts
-                  this behind the main card below, which overlaps its
-                  bottom-right corner — the same lesson from the CTA
-                  section's glow bug, a negative z-index here would escape
-                  this div's stacking context (plain `relative`, no z-index
-                  of its own) instead of staying layered within it. */}
-              <div
-                className="absolute -top-8 -right-6 hidden w-40 rotate-6 rounded-xl border border-secondary-100 bg-white p-4 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.4)] sm:block"
-                aria-hidden="true"
-              >
-                <p className="text-[10px] font-semibold uppercase tracking-wide text-caption">
-                  Stockout risk
-                </p>
-                <p className="mt-1 font-display text-h3 font-bold text-primary-500">-32%</p>
-              </div>
-              <div className="relative rotate-[2deg] rounded-2xl border border-secondary-100 bg-white p-8 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.5)]">
-                <p className="text-h5 font-semibold uppercase tracking-[0.5px] text-caption">
-                  Why Inventory Intelligence
-                </p>
-                <div className="mt-5 space-y-5">
-                  {heroStats.map(({ label, Icon }) => (
-                    <div key={label} className="flex items-start gap-3">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary-100 text-primary-500">
-                        <Icon style={{ fontSize: 20 }} />
-                      </span>
-                      <p className="pt-2 text-sm font-medium text-heading">{label}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <div className="mx-auto w-full max-w-md lg:mx-0 lg:ml-auto">
+              <CardStack />
             </div>
           </div>
         </div>
