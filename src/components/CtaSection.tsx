@@ -102,32 +102,39 @@ export default function CtaSection() {
               aria-hidden="true"
             />
 
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
-              Decision Intelligence
-            </p>
-            <h2 className="mt-3 max-w-xl font-display text-[28px] font-semibold leading-[1.2] text-white sm:text-[34px] lg:text-[40px] lg:leading-[1.15]">
-              See how your data can drive faster, smarter decisions.
-            </h2>
-            <p className="mt-4 max-w-lg text-p text-white/60">
-              Get a personalised walkthrough of Superatom AI built around your business, your data and
-              the decisions that matter most to you.
-            </p>
+            {/* relative z-10: plain static in-flow content (no position set)
+                always paints *below* positioned siblings with z-index:auto —
+                like the two absolute glow/line divs above — regardless of
+                DOM order. Without its own stacking layer, this content would
+                render but be completely covered by the opaque glow div. */}
+            <div className="relative z-10">
+              <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
+                Decision Intelligence
+              </p>
+              <h2 className="mt-3 max-w-xl font-display text-[28px] font-semibold leading-[1.2] text-white sm:text-[34px] lg:text-[40px] lg:leading-[1.15]">
+                See how your data can drive faster, smarter decisions.
+              </h2>
+              <p className="mt-4 max-w-lg text-p text-white/60">
+                Get a personalised walkthrough of Superatom AI built around your business, your data
+                and the decisions that matter most to you.
+              </p>
 
-            <div className="mt-10 flex flex-wrap items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setDemoOpen(true)}
-                className="inline-flex items-center gap-2 rounded-full bg-primary-500 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-primary-600"
-              >
-                Book a demo
-                <ArrowForwardIcon style={{ fontSize: 18 }} />
-              </button>
-              <a
-                href="mailto:contact@superatom.ai"
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:border-white/40"
-              >
-                contact@superatom.ai
-              </a>
+              <div className="mt-10 flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setDemoOpen(true)}
+                  className="inline-flex items-center gap-2 rounded-full bg-primary-500 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-primary-600"
+                >
+                  Book a demo
+                  <ArrowForwardIcon style={{ fontSize: 18 }} />
+                </button>
+                <a
+                  href="mailto:contact@superatom.ai"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:border-white/40"
+                >
+                  contact@superatom.ai
+                </a>
+              </div>
             </div>
           </div>
 
