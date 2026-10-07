@@ -10,7 +10,7 @@ import { DarkTransitionContext } from "../context/DarkTransitionContext";
 // viewport before the background switches to dark. Measured against the
 // section's actual position rather than a fixed scroll offset, so it keeps
 // working if the content above it grows or shrinks.
-const TRANSITION_VISIBLE_RATIO = 0.2;
+const TRANSITION_VISIBLE_RATIO = 0.3;
 
 /** Shared chrome (header, background decoration, footer) around every routed page. */
 export default function Layout() {
