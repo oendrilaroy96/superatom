@@ -8,9 +8,11 @@ import ArticleIcon from "@mui/icons-material/Article";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import type { IconComponent } from "../types/icon";
 import logo from "../assets/superatom-logo.png";
+import logoWhite from "../assets/logo-white.png";
 import Button from "./ui/Button";
 import IconButton from "./ui/IconButton";
 import DemoModal from "./DemoModal";
+import { useDarkTransition } from "../context/DarkTransitionContext";
 
 const solutions: { name: string; blurb: string; Icon: IconComponent; path?: string }[] = [
   { name: "Inventory Intelligence", blurb: "Optimize, rebalance, prevent.", Icon: Inventory2Icon, path: "/solutions/inventory-intelligence" },
@@ -30,10 +32,10 @@ function ChevronDown() {
   );
 }
 
-function Logo() {
+function Logo({ isDark }: { isDark: boolean }) {
   return (
     <Link to="/" className="flex shrink-0 items-center">
-      <img src={logo} alt="Superatom AI" className="h-6 w-auto" />
+      <img src={isDark ? logoWhite : logo} alt="Superatom AI" className="h-6 w-auto" />
     </Link>
   );
 }
@@ -42,14 +44,20 @@ function DropdownNavItem({
   label,
   items,
   columns = 1,
+  isDark,
 }: {
   label: string;
   items: { name: string; blurb: string; Icon: IconComponent; path?: string }[];
   columns?: 1 | 2;
+  isDark: boolean;
 }) {
   return (
     <div className="group relative">
-      <button className="flex items-center gap-1 text-[13.5px] text-body transition-colors hover:text-heading">
+      <button
+        className={`flex items-center gap-1 text-[13.5px] transition-colors duration-700 ease-in-out ${
+          isDark ? "text-white/70 hover:text-white" : "text-body hover:text-heading"
+        }`}
+      >
         {label}
         <ChevronDown />
       </button>
@@ -99,6 +107,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [demoOpen, setDemoOpen] = useState(false);
+  const isDark = useDarkTransition();
 
   function openDemo() {
     setMobileOpen(false);
@@ -114,21 +123,25 @@ export default function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 h-16 border-b transition-colors duration-200 ${
+      className={`sticky top-0 z-50 h-16 border-b transition-colors duration-700 ease-in-out ${
         scrolled
-          ? "border-secondary-100 bg-white/90 backdrop-blur"
+          ? isDark
+            ? "border-white/10 bg-secondary-500/90 backdrop-blur"
+            : "border-secondary-100 bg-white/90 backdrop-blur"
           : "border-transparent bg-transparent"
       }`}
     >
       <div className="mx-auto flex h-16 max-w-[1920px] items-center justify-between px-4 sm:px-10 xl:px-20">
-        <Logo />
+        <Logo isDark={isDark} />
 
         <nav className="hidden items-center gap-[30px] lg:flex">
-          <DropdownNavItem label="Solutions" items={solutions} />
-          <DropdownNavItem label="Resources" items={resources} />
+          <DropdownNavItem label="Solutions" items={solutions} isDark={isDark} />
+          <DropdownNavItem label="Resources" items={resources} isDark={isDark} />
           <Link
             to="/about"
-            className="text-[13.5px] text-body transition-colors hover:text-heading"
+            className={`text-[13.5px] transition-colors duration-700 ease-in-out ${
+              isDark ? "text-white/70 hover:text-white" : "text-body hover:text-heading"
+            }`}
           >
             About us
           </Link>

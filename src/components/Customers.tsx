@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import bluelinx from "../assets/logos/bluelinx.png";
 import mindlabs from "../assets/logos/mindlabs.png";
 import seshaasai from "../assets/logos/seshaasai.png";
+import { useDarkTransition } from "../context/DarkTransitionContext";
 
 // BlueLinx's wordmark is much wider per unit height than the other two, so
 // at a shared height it visually dominates the row — sized down here so its
@@ -26,16 +27,24 @@ function CustomerLogo({
   name,
   logo,
   heightClass = "h-8 sm:h-9 xl:h-11",
+  isDark,
 }: {
   name: string;
   logo: string;
   heightClass?: string;
+  isDark: boolean;
 }) {
   return (
     <img
       src={logo}
       alt={name}
-      className={`w-auto shrink-0 object-contain opacity-60 grayscale transition duration-200 hover:opacity-100 hover:grayscale-0 ${heightClass}`}
+      // The logos are dark marks on transparent backgrounds — grayscale at
+      // 60% opacity reads fine on the light background, but the same dark
+      // pixels at 60% opacity would nearly disappear against the dark
+      // background, so invert them once isDark flips true.
+      className={`w-auto shrink-0 object-contain opacity-60 grayscale transition duration-200 hover:opacity-100 hover:grayscale-0 ${
+        isDark ? "invert" : ""
+      } ${heightClass}`}
     />
   );
 }
@@ -43,6 +52,7 @@ function CustomerLogo({
 export default function Customers() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [duration, setDuration] = useState(30);
+  const isDark = useDarkTransition();
 
   useEffect(() => {
     const el = trackRef.current;
@@ -58,9 +68,17 @@ export default function Customers() {
   }, []);
 
   return (
-    <section className="bg-[#f5f5ff] py-[60px]">
+    <section
+      className={`py-[60px] transition-colors duration-700 ease-in-out ${
+        isDark ? "bg-secondary-500" : "bg-[#f5f5ff]"
+      }`}
+    >
       <div className="mx-auto flex max-w-[1920px] items-center gap-x-8 px-4 sm:gap-x-10 sm:px-10 xl:px-20">
-        <span className="inline-flex h-10 shrink-0 items-center border-r border-secondary-200 pr-8 text-xl font-semibold text-heading sm:h-12 sm:pr-10 sm:text-2xl">
+        <span
+          className={`inline-flex h-10 shrink-0 items-center border-r pr-8 text-xl font-semibold transition-colors duration-700 ease-in-out sm:h-12 sm:pr-10 sm:text-2xl ${
+            isDark ? "border-white/15 text-white" : "border-secondary-200 text-heading"
+          }`}
+        >
           Trusted by
         </span>
         <div className="customers-marquee min-w-0 flex-1">
@@ -72,10 +90,22 @@ export default function Customers() {
             style={{ animationDuration: `${duration}s` }}
           >
             {lap.map((c, i) => (
-              <CustomerLogo key={`a-${i}-${c.name}`} name={c.name} logo={c.logo} heightClass={c.heightClass} />
+              <CustomerLogo
+                key={`a-${i}-${c.name}`}
+                name={c.name}
+                logo={c.logo}
+                heightClass={c.heightClass}
+                isDark={isDark}
+              />
             ))}
             {lap.map((c, i) => (
-              <CustomerLogo key={`b-${i}-${c.name}`} name={c.name} logo={c.logo} heightClass={c.heightClass} />
+              <CustomerLogo
+                key={`b-${i}-${c.name}`}
+                name={c.name}
+                logo={c.logo}
+                heightClass={c.heightClass}
+                isDark={isDark}
+              />
             ))}
           </div>
         </div>
