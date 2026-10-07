@@ -2,6 +2,7 @@ import { useState } from "react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import DemoModal from "./DemoModal";
+import { useDarkTransition } from "../context/DarkTransitionContext";
 
 type Office = {
   country: string;
@@ -27,7 +28,10 @@ const offices: Office[] = [
 
 function OfficeCard({ office }: { office: Office }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-7">
+    // Fixed dark bg (not a translucent white overlay) so this card and its
+    // light text stay legible even while the section itself is in its light
+    // (pre-scroll) crossfade state.
+    <div className="rounded-2xl border border-white/10 bg-secondary-600 p-7">
       <div className="flex items-start justify-between">
         <p className="text-xs font-semibold uppercase tracking-[0.15em] text-secondary-300">
           {office.country}
@@ -49,17 +53,39 @@ function OfficeCard({ office }: { office: Office }) {
   );
 }
 
-/** CTA banner shown above the footer on every page: a dark gradient card with the demo CTA, paired with the company's office locations. */
+/**
+ * CTA banner shown above the footer on every page: a dark gradient card with
+ * the demo CTA, paired with the company's office locations. The section's
+ * own background crossfades from the testimonial section's light lavender to
+ * dark in sync with the shared scroll threshold (like the testimonial
+ * section), while the dark card and office cards keep their fixed styling
+ * throughout — the same pattern as the testimonial's quote card staying
+ * light regardless of its section background.
+ */
 export default function CtaSection() {
   const [demoOpen, setDemoOpen] = useState(false);
+  const isDark = useDarkTransition();
 
   return (
-    <section className="py-[120px]">
+    <section
+      className={`transition-colors duration-700 ease-in-out py-[120px] ${
+        isDark ? "bg-transparent" : "bg-[#f5f5ff]"
+      }`}
+    >
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
         <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr]">
           <div className="relative overflow-hidden rounded-3xl border border-white/10 p-10 sm:p-12">
+            {/* No z-index here (relies on DOM order, painted before the
+                content below): a negative z-index on a child of this
+                position:relative div, which itself doesn't establish its own
+                stacking context, escapes to the nearest ancestor that does —
+                rendering behind the section's own background instead of
+                staying within this card. That was invisible while the
+                section was always dark, but shows as a transparent card once
+                the section gets an opaque light background in its own
+                crossfade. */}
             <div
-              className="absolute inset-0 -z-10"
+              className="absolute inset-0"
               style={{
                 backgroundImage:
                   "radial-gradient(900px 560px at 10% 0%, rgba(83,58,253,0.45), transparent 60%)",

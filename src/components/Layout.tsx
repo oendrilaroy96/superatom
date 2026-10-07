@@ -61,13 +61,17 @@ export default function Layout() {
         </main>
       </DarkTransitionContext.Provider>
 
-      {/* CTA + footer are permanently dark, like the site's standing chrome,
-          and share this single bg-secondary-500 paint rather than each
-          painting their own separate instance of the same color — two
+      {/* CTA + footer share this single bg-secondary-500 paint rather than
+          each painting their own separate instance of the same color — two
           independently painted "identical" flat colors can render a couple
-          of RGB units apart at their shared edge, visible as a faint seam. */}
+          of RGB units apart at their shared edge, visible as a faint seam.
+          CtaSection's own background crossfades to transparent once isDark
+          flips true (see updateDarkBlockReveal above), letting this shared
+          dark fill show through; footer stays permanently dark. */}
       <div className="bg-secondary-500">
-        <CtaSection />
+        <DarkTransitionContext.Provider value={isDark}>
+          <CtaSection />
+        </DarkTransitionContext.Provider>
         <Footer />
       </div>
     </div>
