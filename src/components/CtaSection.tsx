@@ -1,76 +1,115 @@
 import { useState } from "react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import Button from "./ui/Button";
-import SectionHeading from "./ui/SectionHeading";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import DemoModal from "./DemoModal";
-import { useDarkTransition } from "../context/DarkTransitionContext";
 
-/**
- * CTA banner shown above the footer on every page; crossfades from the
- * testimonial section's light lavender to dark in sync with the shared
- * scroll threshold. In the dark state this section turns transparent rather
- * than painting its own bg-secondary-500, so the dark fill behind it and the
- * footer's is the same single paint — two independently painted instances
- * of the "same" flat color can render a couple of RGB units apart (visible
- * as a faint seam) due to how the browser composites and dithers separate
- * layers, even though both declare the identical Tailwind color.
- */
+type Office = {
+  country: string;
+  city: string;
+  address: string[];
+};
+
+const offices: Office[] = [
+  {
+    country: "USA",
+    city: "Denver, Colorado",
+    address: ["12873 W Harvard Ave", "Denver, CO 80228, US"],
+  },
+  {
+    country: "India",
+    city: "Hyderabad, Telangana",
+    address: [
+      "Trendz Inspire, Kavuri Hills Rd, CBI Colony",
+      "Madhapur, Hyderabad, Telangana 500033",
+    ],
+  },
+];
+
+function OfficeCard({ office }: { office: Office }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-7">
+      <div className="flex items-start justify-between">
+        <p className="text-xs font-semibold uppercase tracking-[0.15em] text-secondary-300">
+          {office.country}
+        </p>
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-500/20 text-primary-300">
+          <LocationOnIcon style={{ fontSize: 18 }} />
+        </span>
+      </div>
+      <p className="mt-4 font-display text-lg font-semibold text-white">{office.city}</p>
+      <p className="mt-1.5 text-sm leading-relaxed text-white/50">
+        {office.address.map((line, i) => (
+          <span key={i}>
+            {line}
+            {i < office.address.length - 1 && <br />}
+          </span>
+        ))}
+      </p>
+    </div>
+  );
+}
+
+/** CTA banner shown above the footer on every page: a dark gradient card with the demo CTA, paired with the company's office locations. */
 export default function CtaSection() {
   const [demoOpen, setDemoOpen] = useState(false);
-  const isDark = useDarkTransition();
 
   return (
-    <section
-      className={`relative overflow-hidden py-[120px] transition-colors duration-700 ease-in-out ${
-        isDark ? "bg-transparent" : "bg-[#f5f5ff]"
-      }`}
-    >
-      <div
-        className={`pointer-events-none absolute inset-0 z-0 transition-opacity duration-700 ease-in-out ${
-          isDark ? "opacity-100" : "opacity-0"
-        }`}
-        style={{
-          backgroundImage:
-            "radial-gradient(1300px 860px at 15% 12%, rgba(83,58,253,0.3), transparent 55%), radial-gradient(1100px 760px at 88% 92%, rgba(255,118,0,0.22), transparent 55%)",
-          // Fade the glow in from the top and back out at the bottom so it
-          // doesn't start or stop abruptly at the seams with the flat dark
-          // fills of the testimonial section above and the footer below.
-          // Both radial gradients share this one mask, so the new
-          // bottom-right glow gets the same seamless fade for free.
-          maskImage:
-            "linear-gradient(180deg, transparent 0, white 200px, white calc(100% - 200px), transparent 100%)",
-          WebkitMaskImage:
-            "linear-gradient(180deg, transparent 0, white 200px, white calc(100% - 200px), transparent 100%)",
-        }}
-        aria-hidden="true"
-      />
-      <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-        <div className="mx-auto max-w-[1300px] text-center">
-          <SectionHeading
-            align="center"
-            theme={isDark ? "dark" : "light"}
-            eyebrow="Get Started"
-            eyebrowColor="accent"
-            className="mx-auto max-w-[960px]"
-            heading={
-              <>
-                See how your data can drive
-                <br />
-                faster, smarter decisions.
-              </>
-            }
-            description="Get a personalised walkthrough of Superatom AI built around your business, your data and the decisions that matter most to you."
-            descriptionClassName="mx-auto max-w-xl"
-          />
+    <section className="py-[120px]">
+      <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+        <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr]">
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 p-10 sm:p-12">
+            <div
+              className="absolute inset-0 -z-10"
+              style={{
+                backgroundImage:
+                  "radial-gradient(900px 560px at 10% 0%, rgba(83,58,253,0.45), transparent 60%)",
+                backgroundColor: "var(--color-secondary-600)",
+              }}
+              aria-hidden="true"
+            />
+            <div
+              className="absolute inset-x-0 top-0 h-[3px] blur-[1px]"
+              style={{
+                backgroundImage:
+                  "linear-gradient(90deg, transparent, #533afd 20%, #873eff 40%, #ff7eb0 60%, #ff7600 80%, transparent)",
+              }}
+              aria-hidden="true"
+            />
 
-          <Button
-            variant="accentOutline"
-            iconRight={<ArrowForwardIcon style={{ fontSize: 18 }} />}
-            className="mx-auto mt-8 font-semibold"
-            onClick={() => setDemoOpen(true)}
-          >
-            Book your demo
-          </Button>
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
+              Decision Intelligence
+            </p>
+            <h2 className="mt-3 max-w-xl font-display text-[28px] font-semibold leading-[1.2] text-white sm:text-[34px] lg:text-[40px] lg:leading-[1.15]">
+              See how your data can drive faster, smarter decisions.
+            </h2>
+            <p className="mt-4 max-w-lg text-p text-white/60">
+              Get a personalised walkthrough of Superatom AI built around your business, your data and
+              the decisions that matter most to you.
+            </p>
+
+            <div className="mt-10 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setDemoOpen(true)}
+                className="inline-flex items-center gap-2 rounded-full bg-primary-500 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-primary-600"
+              >
+                Book a demo
+                <ArrowForwardIcon style={{ fontSize: 18 }} />
+              </button>
+              <a
+                href="mailto:contact@superatom.ai"
+                className="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:border-white/40"
+              >
+                contact@superatom.ai
+              </a>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            {offices.map((office) => (
+              <OfficeCard key={office.country} office={office} />
+            ))}
+          </div>
         </div>
       </div>
 
