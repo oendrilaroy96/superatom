@@ -20,6 +20,7 @@ import Button from "../components/ui/Button";
 import GlowCard from "../components/ui/GlowCard";
 import SectionHeading from "../components/ui/SectionHeading";
 import DemoModal from "../components/DemoModal";
+import Customers from "../components/Customers";
 
 const heroStats: { label: string; Icon: IconComponent }[] = [
   { label: "Make faster, smarter decisions", Icon: InsightsIcon },
@@ -87,60 +88,93 @@ export default function InventoryIntelligence() {
 
   return (
     <>
-      {/* Two-column hero, matching the site's other left-text/right-visual
-          heroes (e.g. Infrastructure.tsx) instead of SolutionPage's
-          centered layout — the right side is a stat card rather than a
-          dashboard mockup. */}
-      <section className="py-[120px]">
-        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
+      {/* Dark enterprise-style hero (Stripe's /enterprise page look): a
+          diagonal warm glow over a dark navy section, bold white heading
+          with the last line in the brand's existing purple-to-orange
+          gradient (same one Hero3 uses), a floating stat card on the right
+          instead of a dashboard screenshot, and the customer logo row
+          directly beneath — mirroring Stripe's logos sitting just below the
+          dark band. */}
+      <section className="relative overflow-hidden bg-secondary-500 py-[140px]">
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(1400px 900px at 100% 110%, rgba(255,118,0,0.3), transparent 60%), radial-gradient(1000px 800px at 75% 40%, rgba(255,126,176,0.18), transparent 55%), radial-gradient(1200px 900px at 0% -10%, rgba(83,58,253,0.3), transparent 55%)",
+          }}
+          aria-hidden="true"
+        />
+        <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+          <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
             <div>
-              <SectionHeading
-                align="left"
-                theme="light"
-                eyebrow="Inventory Intelligence"
-                eyebrowColor="primary"
-                heading={
-                  <>
-                    End-to-End{" "}
-                    <span
-                      className="text-primary-500"
-                      style={{ overflowWrap: "break-word", hyphens: "auto" }}
-                    >
-                      Inventory Intelligence.
-                    </span>
-                  </>
-                }
-                description="Superatom brings together your data, business context, rules and policies to help you optimize, rebalance and proactively manage inventory across your entire supply chain."
-              />
+              <p className="text-h5 font-semibold uppercase tracking-[0.5px] text-primary-300">
+                Inventory Intelligence
+              </p>
+              <h1 className="mt-4 font-display text-[44px] font-bold leading-[1.1] text-white sm:text-[56px] lg:text-[64px]">
+                End-to-end
+                <br />
+                <span
+                  className="bg-clip-text text-transparent"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)",
+                  }}
+                >
+                  inventory intelligence
+                </span>
+              </h1>
+              <p className="mt-6 max-w-lg text-[18px] leading-[1.55] text-white/70">
+                Superatom brings together your data, business context, rules
+                and policies to help you optimize, rebalance and proactively
+                manage inventory across your entire supply chain.
+              </p>
               <Button
-                variant="primary"
+                variant="accentOutline"
                 iconRight={<ArrowForwardIcon style={{ fontSize: 18 }} />}
-                className="mt-8 shadow-[0_10px_30px_-10px_rgba(83,58,253,0.35)]"
+                className="mt-8 font-semibold"
                 onClick={() => setDemoOpen(true)}
               >
                 Book a demo
               </Button>
             </div>
 
-            <div className="rounded-2xl border border-secondary-100 bg-white p-8 shadow-[0_30px_60px_-30px_rgba(13,23,56,0.15)]">
-              <p className="text-h5 font-semibold uppercase tracking-[0.5px] text-caption">
-                Why Inventory Intelligence
-              </p>
-              <div className="mt-5 space-y-5">
-                {heroStats.map(({ label, Icon }) => (
-                  <div key={label} className="flex items-start gap-3">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary-100 text-primary-500">
-                      <Icon style={{ fontSize: 20 }} />
-                    </span>
-                    <p className="pt-2 text-sm font-medium text-heading">{label}</p>
-                  </div>
-                ))}
+            <div className="relative mx-auto w-full max-w-md lg:mx-0 lg:ml-auto">
+              {/* Painted first (no z-index needed): DOM order alone puts
+                  this behind the main card below, which overlaps its
+                  bottom-right corner — the same lesson from the CTA
+                  section's glow bug, a negative z-index here would escape
+                  this div's stacking context (plain `relative`, no z-index
+                  of its own) instead of staying layered within it. */}
+              <div
+                className="absolute -top-8 -right-6 hidden w-40 rotate-6 rounded-xl border border-secondary-100 bg-white p-4 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.4)] sm:block"
+                aria-hidden="true"
+              >
+                <p className="text-[10px] font-semibold uppercase tracking-wide text-caption">
+                  Stockout risk
+                </p>
+                <p className="mt-1 font-display text-h3 font-bold text-primary-500">-32%</p>
+              </div>
+              <div className="relative rotate-[2deg] rounded-2xl border border-secondary-100 bg-white p-8 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.5)]">
+                <p className="text-h5 font-semibold uppercase tracking-[0.5px] text-caption">
+                  Why Inventory Intelligence
+                </p>
+                <div className="mt-5 space-y-5">
+                  {heroStats.map(({ label, Icon }) => (
+                    <div key={label} className="flex items-start gap-3">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-primary-100 text-primary-500">
+                        <Icon style={{ fontSize: 20 }} />
+                      </span>
+                      <p className="pt-2 text-sm font-medium text-heading">{label}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      <Customers />
 
       {/* Capabilities */}
       <section className="py-[120px]">
