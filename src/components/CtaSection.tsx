@@ -23,10 +23,13 @@ export default function CtaSection() {
         style={{
           backgroundImage:
             "radial-gradient(960px 640px at 15% 12%, rgba(83,58,253,0.3), transparent 55%)",
-          // Fade the glow in from the top so it doesn't start abruptly right
-          // at the seam with the testimonial section's flat dark fill above.
-          maskImage: "linear-gradient(180deg, transparent 0%, white 200px)",
-          WebkitMaskImage: "linear-gradient(180deg, transparent 0%, white 200px)",
+          // Fade the glow in from the top and back out at the bottom so it
+          // doesn't start or stop abruptly at the seams with the flat dark
+          // fills of the testimonial section above and the footer below.
+          maskImage:
+            "linear-gradient(180deg, transparent 0, white 200px, white calc(100% - 200px), transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(180deg, transparent 0, white 200px, white calc(100% - 200px), transparent 100%)",
         }}
         aria-hidden="true"
       />
