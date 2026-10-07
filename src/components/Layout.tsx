@@ -54,36 +54,22 @@ export default function Layout() {
         }}
         aria-hidden="true"
       />
-      <Header />
-      <main className="relative z-10">
-        <DarkTransitionContext.Provider value={isDark}>
+      <DarkTransitionContext.Provider value={isDark}>
+        <Header />
+        <main className="relative z-10">
           <Outlet />
-        </DarkTransitionContext.Provider>
-      </main>
+        </main>
 
-      {/* CTA + footer share one dark block. The solid secondary-500 fill
-          (plus its glow) crossfades smoothly in once isDark flips true (see
-          updateDarkBlockReveal above), like a light switching on, rather
-          than wiping into view progressively as you scroll further. */}
-      <div className="relative overflow-hidden">
-        <div
-          className={`absolute inset-0 bg-secondary-500 transition-opacity duration-700 ease-in-out ${
-            isDark ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <div
-            className="pointer-events-none absolute inset-0 z-0"
-            style={{
-              backgroundImage:
-                "radial-gradient(640px 420px at 15% 12%, rgba(83,58,253,0.3), transparent 55%), radial-gradient(640px 480px at 85% 48%, rgba(255,118,0,0.18), transparent 55%)",
-            }}
-            aria-hidden="true"
-          />
-        </div>
-        <div className="relative z-10">
-          <CtaSection />
-          <Footer />
-        </div>
+        {/* Crossfades from the testimonial section's light lavender to dark
+            once isDark flips true (see updateDarkBlockReveal above), like a
+            light switching on, rather than wiping into view progressively
+            as you scroll further. */}
+        <CtaSection />
+      </DarkTransitionContext.Provider>
+
+      {/* Footer stays permanently dark, like the site's standing chrome. */}
+      <div className="bg-secondary-500">
+        <Footer />
       </div>
     </div>
   );
