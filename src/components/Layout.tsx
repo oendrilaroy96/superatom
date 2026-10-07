@@ -6,11 +6,11 @@ import CtaSection from "./CtaSection";
 import Footer from "./Footer";
 import { DarkTransitionContext } from "../context/DarkTransitionContext";
 
-// Scroll position (px from the top of the page) where the background
-// switches to dark. Tuned to the homepage's current content height — if the
-// content above the CTA section grows or shrinks substantially, this will
-// need to be adjusted to match where the dark block actually scrolls in.
-const TRANSITION_START_SCROLL = 4700;
+// Fraction of the CTA section's own height that must have scrolled into the
+// viewport before the background switches to dark. Measured against the
+// section's actual position rather than a fixed scroll offset, so it keeps
+// working if the content above it grows or shrinks.
+const TRANSITION_VISIBLE_RATIO = 0.2;
 
 /** Shared chrome (header, background decoration, footer) around every routed page. */
 export default function Layout() {
@@ -20,7 +20,15 @@ export default function Layout() {
   // crossfades to full opacity all at once (like a light switch), rather
   // than wiping into view progressively as you scroll further.
   const updateDarkBlockReveal = () => {
-    setIsDark(window.scrollY >= TRANSITION_START_SCROLL);
+    const cta = document.getElementById("cta-section");
+    if (!cta) return;
+    const rect = cta.getBoundingClientRect();
+    const visibleHeight = Math.max(
+      0,
+      Math.min(window.innerHeight, rect.bottom) - Math.max(0, rect.top)
+    );
+    const visibleRatio = rect.height > 0 ? visibleHeight / rect.height : 0;
+    setIsDark(visibleRatio >= TRANSITION_VISIBLE_RATIO);
   };
 
   useEffect(() => {
