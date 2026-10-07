@@ -36,7 +36,7 @@ export default function Testimonial() {
     >
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
         <div
-          className={`mx-auto rounded-2xl border p-8 shadow-[0_30px_60px_-30px_rgba(13,23,56,0.15)] transition-colors duration-700 ease-in-out sm:p-12 ${
+          className={`mx-auto max-w-5xl rounded-2xl border p-8 shadow-[0_30px_60px_-30px_rgba(13,23,56,0.15)] transition-colors duration-700 ease-in-out sm:p-12 ${
             isDark ? "border-white/10 bg-secondary-600" : "border-secondary-100 bg-[#fcfcff]"
           }`}
         >
