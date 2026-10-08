@@ -147,10 +147,19 @@ export default function Header() {
 
   const isDark = heroZoneDark || ctaIsDark;
 
+  // Normally the unscrolled header can stay fully transparent and just let
+  // whatever's directly behind it (always that page's own hero) show
+  // through. That trick doesn't work for heroZoneDark: the header is sticky
+  // and still reserves its own 64px of normal document flow above the hero,
+  // so at scrollY 0 it's the page's base (light) background sitting behind
+  // it there, not the hero. So once heroZoneDark is forcing dark, the header
+  // has to actually paint its dark fill rather than rely on transparency.
+  const paintBackground = scrolled || heroZoneDark;
+
   return (
     <header
       className={`sticky top-0 z-50 h-16 border-b transition-colors duration-700 ease-in-out ${
-        scrolled
+        paintBackground
           ? isDark
             ? "border-white/10 bg-secondary-500/90 backdrop-blur"
             : "border-secondary-100 bg-white/90 backdrop-blur"
