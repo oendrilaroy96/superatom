@@ -241,6 +241,14 @@ export default function InventoryIntelligence() {
   const [demoOpen, setDemoOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
   const [order, setOrder] = useState(capabilities.map((_, i) => i));
+  // Whether the "Capabilities" heading is currently pinned below the
+  // header. Driven explicitly off scroll position (rather than left to
+  // CSS `position: sticky`'s own release point, which stays coupled to
+  // this block's own height no matter how its spacer is tuned) so it lets
+  // go as soon as the stack has actually finished fanning into the grid
+  // preview, instead of staying stuck through the rest of the arrange.
+  const [headingPinned, setHeadingPinned] = useState(true);
+  const headingPinnedRef = useRef(true);
   const [cardStyles, setCardStyles] = useState<CardStyle[]>(() =>
     capabilities.map((_, i) => {
       const slot = stackSlots[i];
@@ -324,17 +332,16 @@ export default function InventoryIntelligence() {
 
     // Arranging starts once a card held at NEAR_FLOOR would otherwise just
     // start touching the (still descending, not yet stuck) heading's top
-    // edge — not earlier. darkZoneDocBottom - pinTop lands exactly there,
-    // since pinTop was built from NEAR_FLOOR's own visual footprint, so
-    // Phase A (the stack at full size, most visually prominent) never
-    // overlaps the heading; only the brief unstack lerp after this point
-    // has to cross paths with it, by which time the cards are already
-    // shrinking out of the fan.
+    // edge — not earlier, and not keyed to pinTop (which grows with the
+    // heading's own height and would push this earlier and earlier as the
+    // heading gets taller, starting the unstack while the hero is still
+    // mid-scroll). A card at NEAR_FLOOR has a visual footprint of
+    // CARD_H * HERO_SCALE, so that's the fixed threshold used instead.
     const darkZoneEl = document.getElementById("inventory-dark-zone");
     const darkZoneRect = darkZoneEl?.getBoundingClientRect();
     const darkZoneDocBottom = darkZoneRect ? darkZoneRect.bottom + scrollY : cell0DocTop;
 
-    const morphStart = darkZoneDocBottom - pinTop;
+    const morphStart = darkZoneDocBottom - (NEAR_FLOOR + CARD_H * HERO_SCALE);
     const morphEnd = cell0DocTop - pinTop;
     const rawSpan = Math.max(1, morphEnd - morphStart);
 
@@ -347,6 +354,15 @@ export default function InventoryIntelligence() {
     const holdEndY = unstackEndY + holdSpan;
 
     morphActiveRef.current = scrollY > morphStart;
+
+    // Once the stack has finished fanning out into the grid preview (the
+    // fan has fully closed), the heading no longer needs to stay pinned —
+    // it can scroll away with the rest of the page like any other section.
+    const shouldPin = scrollY <= unstackEndY;
+    if (shouldPin !== headingPinnedRef.current) {
+      headingPinnedRef.current = shouldPin;
+      setHeadingPinned(shouldPin);
+    }
 
     // Fixed viewport-space preview of the final 4-then-3 grid, used while
     // pinned (B1/B2) so each card has its own spread-out reading spot
@@ -604,19 +620,20 @@ export default function InventoryIntelligence() {
       <HighlightsBar />
       </div>
 
-      {/* The full "Capabilities" heading sticks just below the header for
-          as long as the stack below is arranging, so its context stays
-          visible the whole time instead of being scrolled past before the
-          cards ever come into view. It un-sticks naturally once this
-          block's extra height (the arrange scroll room) runs out, right
-          as the cards finish landing in the real grid, at which point this
-          is the only copy of the heading — the grid below has none of its
-          own. */}
+      {/* The full "Capabilities" heading sticks just below the header while
+          the stack below is actively fanning out into the grid, so its
+          context stays visible instead of being scrolled past before the
+          cards ever come into view. headingPinned (driven off scroll
+          position in updateMorph, not left to CSS's own release timing —
+          see its comment) lets go of it as soon as that fan-out finishes,
+          so it doesn't stay pinned any longer than it needs to; from then
+          on it's the only copy of the heading — the grid below has none of
+          its own. */}
       {isDesktop && (
         <div>
           <div
             ref={headingRef}
-            className="sticky top-20 z-[45] border-b border-secondary-100 bg-[#f8fafd]/95 py-10 backdrop-blur"
+            className={`z-[45] pb-16 pt-[120px] ${headingPinned ? "sticky top-20" : ""}`}
           >
             <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
               {capabilitiesHeading}
