@@ -313,28 +313,23 @@ export default function InventoryIntelligence() {
     const headingH = headingRect?.height ?? 0;
     const pinTop = STICKY_TOP + headingH + CARDS_GAP_BELOW_HEADING;
 
-    // Before the heading has actually scrolled up into its stuck position
-    // (right after the hero+highlights block, it still briefly travels with
-    // the page like any other element, starting out well below the fold).
-    // Clamping cards to pinTop is only at risk of overlapping that
-    // not-yet-stuck heading once the heading's own live top has already
-    // risen to/above pinTop — before that point, pinTop still sits safely
-    // above wherever the heading currently is, so the plain static value is
-    // used (and the hero stack stays visible at its natural spot instead of
-    // being dragged down to match the heading's distant starting position).
-    // Capped so a still-travelling heading can never push a card fully off
-    // the bottom of the viewport either.
-    const clampTop =
-      headingRect && headingRect.top <= pinTop
-        ? Math.min(headingRect.bottom + CARDS_GAP_BELOW_HEADING, window.innerHeight - 40)
-        : pinTop;
+    // A small catch point just under the header — not pinTop itself, which
+    // now (with the full-size heading) sits far lower than the hero stack's
+    // own natural resting spot, and would otherwise drag the whole stack
+    // down and away from the hero copy right from page load. This only
+    // needs to stop the stack disappearing off the top of the screen as it
+    // scrolls with the hero; the unstack phase below carries it the rest of
+    // the way down to pinTop once the heading has had room to arrive.
+    const NEAR_FLOOR = STICKY_TOP + 16;
 
-    // Arranging starts once the dark hero+highlights block (one full
-    // viewport) has scrolled past — not once the hero card's own position
-    // reaches the top, which, with the card vertically centered in a tall
-    // 100vh hero, would be well before the hero is actually done scrolling
-    // by. This also roughly lines up with the sticky heading's own natural
-    // arrival at the top, since it sits right after that block too.
+    // Arranging starts once a card held at NEAR_FLOOR would otherwise just
+    // start touching the (still descending, not yet stuck) heading's top
+    // edge — not earlier. darkZoneDocBottom - pinTop lands exactly there,
+    // since pinTop was built from NEAR_FLOOR's own visual footprint, so
+    // Phase A (the stack at full size, most visually prominent) never
+    // overlaps the heading; only the brief unstack lerp after this point
+    // has to cross paths with it, by which time the cards are already
+    // shrinking out of the fan.
     const darkZoneEl = document.getElementById("inventory-dark-zone");
     const darkZoneRect = darkZoneEl?.getBoundingClientRect();
     const darkZoneDocBottom = darkZoneRect ? darkZoneRect.bottom + scrollY : cell0DocTop;
@@ -355,7 +350,13 @@ export default function InventoryIntelligence() {
 
     // Fixed viewport-space preview of the final 4-then-3 grid, used while
     // pinned (B1/B2) so each card has its own spread-out reading spot
-    // instead of all 7 collapsing onto one point as the fan closes.
+    // instead of all 7 collapsing onto one point as the fan closes. Its top
+    // row tracks the heading's own live bottom edge (rather than the
+    // static, already-stuck pinTop) while the heading is still travelling
+    // up into place, so the preview never settles above a heading that
+    // hasn't arrived yet — it naturally converges on pinTop exactly once
+    // the heading actually sticks.
+    const readTop = headingRect ? Math.max(pinTop, headingRect.bottom + CARDS_GAP_BELOW_HEADING) : pinTop;
     const READ_GAP = 16;
     const row1Width = 4 * CARD_W + 3 * READ_GAP;
     const row2Width = 3 * CARD_W + 2 * READ_GAP;
@@ -364,8 +365,8 @@ export default function InventoryIntelligence() {
     const row2Left = centerX - row2Width / 2;
     const readPosFor = (i: number) =>
       i < 4
-        ? { top: pinTop, left: row1Left + i * (CARD_W + READ_GAP) }
-        : { top: pinTop + CARD_H + READ_GAP, left: row2Left + (i - 4) * (CARD_W + READ_GAP) };
+        ? { top: readTop, left: row1Left + i * (CARD_W + READ_GAP) }
+        : { top: readTop + CARD_H + READ_GAP, left: row2Left + (i - 4) * (CARD_W + READ_GAP) };
 
     const order = orderRef.current;
     const exitingIndex = exitingIndexRef.current;
@@ -375,12 +376,11 @@ export default function InventoryIntelligence() {
       const cellRect = cellEl.getBoundingClientRect();
       const slot =
         i === exitingIndex ? EXIT_SLOT : i === enteringIndex ? ENTER_SLOT : stackSlots[order.indexOf(i)];
-      // Tracks the hero card live while it's still naturally below pinTop;
-      // once scrolling would carry it above that (well before the dark
-      // zone has actually scrolled past, since the card sits mid-hero, not
-      // at its bottom), it simply holds there instead of disappearing
-      // above the viewport before the official unstack begins.
-      const stackPos = { top: Math.max(heroRect.top + slot.y, clampTop), left: heroLeft + slot.x };
+      // Tracks the hero card live while it's still naturally below
+      // NEAR_FLOOR; once scrolling would carry it above that, it simply
+      // holds there instead of disappearing above the viewport before the
+      // official unstack begins.
+      const stackPos = { top: Math.max(heroRect.top + slot.y, NEAR_FLOOR), left: heroLeft + slot.x };
       const readPos = readPosFor(i);
 
       let fan: number;
