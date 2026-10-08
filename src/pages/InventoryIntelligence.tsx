@@ -83,6 +83,12 @@ const stackSlots = [
   { x: 180, y: 180, rotate: 18, scale: 0.7, opacity: 0.25 },
 ];
 
+// Pose for whichever card just stepped down from front: instead of easing
+// into the back of the stack like every other card does, it slides out to
+// the left and fades away, clearing the front slot for the next card to
+// rise into. Used only for the ~750ms right after it loses the front spot.
+const EXIT_SLOT = { x: -120, y: 16, rotate: -10, scale: 0.9, opacity: 0 };
+
 // A single fixed portrait size used for every card in both the hero stack
 // and the capabilities grid, so a card keeps the same footprint as it
 // travels from one to the other instead of resizing mid-flight.
@@ -94,12 +100,11 @@ const CARD_H = 288;
 // the grid, so there's nothing to pop between the two.
 const HERO_SCALE = 1.3;
 
-// CSS `top` offset for the sticky "Capabilities" heading (a little below
-// the h-16 = 64px main header). The cards pin below the heading's own
-// measured height, so the heading stays fully readable above them while
-// they arrange — see STICKY_TOP's use in updateMorph.
-const STICKY_TOP = 80;
-const CARDS_GAP_BELOW_HEADING = 24;
+// How far below the sticky header (h-16 = 64px) the stack pins while the
+// cards are unstacking into the grid below. The cards render above the
+// header (see the overlay's z-index) so this is just a comfortable resting
+// spot, not a boundary that has to avoid overlapping anything.
+const PIN_TOP = 96;
 
 // Scroll distance (px) spent fanning the stack open into a flat row while
 // pinned in place, then the extra distance it just sits there, fully
@@ -125,11 +130,11 @@ function CapabilityCardFace({ c }: { c: (typeof capabilities)[number] }) {
 }
 
 /** Mobile/tablet fallback: the fanned stack with no scroll-driven morph. */
-function MobileCardStack({ order }: { order: number[] }) {
+function MobileCardStack({ order, exitingIndex }: { order: number[]; exitingIndex: number | null }) {
   return (
     <div className="relative h-[420px] w-full max-w-sm">
       {capabilities.map((c, i) => {
-        const slot = stackSlots[order.indexOf(i)];
+        const slot = i === exitingIndex ? EXIT_SLOT : stackSlots[order.indexOf(i)];
         return (
           <div
             key={c.title}
@@ -137,7 +142,7 @@ function MobileCardStack({ order }: { order: number[] }) {
             style={{
               transform: `translate(${slot.x}px, ${slot.y}px) rotate(${slot.rotate}deg) scale(${slot.scale})`,
               opacity: slot.opacity,
-              zIndex: stackSlots.length - stackSlots.indexOf(slot),
+              zIndex: i === exitingIndex ? stackSlots.length + 1 : stackSlots.length - stackSlots.indexOf(slot),
             }}
           >
             <CapabilityCardFace c={c} />
@@ -222,7 +227,6 @@ export default function InventoryIntelligence() {
 
   const heroSlotRef = useRef<HTMLDivElement>(null);
   const cellRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const headingRef = useRef<HTMLDivElement>(null);
   const morphActiveRef = useRef(false);
 
   // `updateMorph` is handed to useLenis below and must keep one stable
@@ -230,10 +234,12 @@ export default function InventoryIntelligence() {
   // the function reference it's given changes, and setCardStyles always
   // produces a brand-new array, so a fresh closure here on every render
   // would re-subscribe -> re-run -> setState -> re-render in an infinite
-  // loop. Reading isDesktop/order through refs (synced post-render below)
-  // instead of closing over them directly keeps the callback itself frozen.
+  // loop. Reading isDesktop/order/exitingIndex through refs (synced
+  // post-render below) instead of closing over them directly keeps the
+  // callback itself frozen.
   const isDesktopRef = useRef(isDesktop);
   const orderRef = useRef(order);
+  const exitingIndexRef = useRef<number | null>(null);
   useEffect(() => {
     isDesktopRef.current = isDesktop;
     orderRef.current = order;
@@ -268,14 +274,8 @@ export default function InventoryIntelligence() {
     const heroDocTop = heroRect.top + scrollY;
     const cell0DocTop = cell0Rect.top + scrollY;
 
-    // The cards pin just below the sticky "Capabilities" heading, whose
-    // height is measured live (it wraps differently at different widths)
-    // rather than assumed, so there's never an overlap between the two.
-    const headingH = headingRef.current?.getBoundingClientRect().height ?? 0;
-    const pinTop = STICKY_TOP + headingH + CARDS_GAP_BELOW_HEADING;
-
-    const morphStart = heroDocTop - pinTop;
-    const morphEnd = cell0DocTop - pinTop;
+    const morphStart = heroDocTop - PIN_TOP;
+    const morphEnd = cell0DocTop - PIN_TOP;
     const rawSpan = Math.max(1, morphEnd - morphStart);
 
     const unstackSpan = Math.max(60, Math.min(UNSTACK_PX, rawSpan * 0.4));
@@ -299,14 +299,15 @@ export default function InventoryIntelligence() {
     const row2Left = centerX - row2Width / 2;
     const readPosFor = (i: number) =>
       i < 4
-        ? { top: pinTop, left: row1Left + i * (CARD_W + READ_GAP) }
-        : { top: pinTop + CARD_H + READ_GAP, left: row2Left + (i - 4) * (CARD_W + READ_GAP) };
+        ? { top: PIN_TOP, left: row1Left + i * (CARD_W + READ_GAP) }
+        : { top: PIN_TOP + CARD_H + READ_GAP, left: row2Left + (i - 4) * (CARD_W + READ_GAP) };
 
     const order = orderRef.current;
+    const exitingIndex = exitingIndexRef.current;
     const next = capabilities.map((_, i) => {
       const cellEl = cellRefs.current[i] ?? cell0;
       const cellRect = cellEl.getBoundingClientRect();
-      const slot = stackSlots[order.indexOf(i)];
+      const slot = i === exitingIndex ? EXIT_SLOT : stackSlots[order.indexOf(i)];
       const stackPos = { top: heroRect.top + slot.y, left: heroLeft + slot.x };
       const readPos = readPosFor(i);
 
@@ -367,28 +368,43 @@ export default function InventoryIntelligence() {
 
   useLenis(updateMorph);
 
-  // While true, the overlay cards get a CSS transition so the shuffle
-  // reads as the back card visibly sliding up to the front rather than
-  // snapping there. It's only ever turned on for that 700ms window: the
-  // continuous scroll-driven repositioning above must stay untransitioned
-  // (instant) or it would lag behind the actual scroll position.
+  // While true, the overlay cards get a CSS transition so each step of the
+  // carousel reads as motion (the retiring card sliding out, the next one
+  // rising in) rather than snapping there. It's only ever turned on for
+  // that 700ms window: the continuous scroll-driven repositioning above
+  // must stay untransitioned (instant) or it would lag behind the actual
+  // scroll position.
   const [shuffling, setShuffling] = useState(false);
+  // Which capability just stepped down from front and is mid-exit (slides
+  // left, fades to 0) — read by MobileCardStack directly; the desktop
+  // overlay reads the ref mirror of this instead (see updateMorph above).
+  const [exitingIndex, setExitingIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = setInterval(() => {
       if (morphActiveRef.current) return;
+      // The front card steps down and every other card moves up one slot
+      // (so whichever was 2nd becomes the new front) — an endless loop
+      // through all 7, rather than pulling the back card forward.
+      const frontCapability = orderRef.current[0];
+      exitingIndexRef.current = frontCapability;
+      setExitingIndex(frontCapability);
       setShuffling(true);
-      setOrder((prev) => {
-        const next = [...prev];
-        const back = next.pop();
-        if (back !== undefined) next.unshift(back);
-        return next;
-      });
-      window.setTimeout(() => setShuffling(false), 750);
+      setOrder((prev) => [...prev.slice(1), prev[0]]);
+      window.setTimeout(() => {
+        setShuffling(false);
+        exitingIndexRef.current = null;
+        setExitingIndex(null);
+        // Without this, nothing would recompute cardStyles again until the
+        // next shuffle or scroll tick, so the just-exited card would stay
+        // frozen in its exit pose for the ~1.65s in between instead of
+        // settling at the back of the stack right away.
+        updateMorph();
+      }, 750);
     }, 2400);
     return () => clearInterval(id);
-  }, []);
+  }, [updateMorph]);
 
   // Shared between the sticky (desktop) and in-flow (mobile) placements
   // below so the two don't drift out of sync.
@@ -407,25 +423,6 @@ export default function InventoryIntelligence() {
       className="mx-auto max-w-2xl"
       descriptionClassName="mx-auto"
     />
-  );
-
-  // A short, single-line version for the sticky desktop bar: the full
-  // heading above (with its description) runs 400px+ tall, which would
-  // push the cards' pin point below where the hero stack itself starts,
-  // leaving no scroll room before pinning kicks in. This stays compact
-  // enough that there's always real "still embedded in the hero" room
-  // first, and un-sticks to become the Capabilities section's actual
-  // heading once the cards land in the grid.
-  const stickyHeadingCompact = (
-    <p className="text-center">
-      <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-500">
-        Capabilities
-      </span>
-      <span className="mx-2 text-secondary-200">&bull;</span>
-      <span className="font-display text-base font-bold text-heading sm:text-lg">
-        End-to-end inventory intelligence
-      </span>
-    </p>
   );
 
   return (
@@ -482,7 +479,7 @@ export default function InventoryIntelligence() {
               {isDesktop ? (
                 <div ref={heroSlotRef} style={{ width: CARD_W, height: CARD_H }} />
               ) : (
-                <MobileCardStack order={order} />
+                <MobileCardStack order={order} exitingIndex={exitingIndex} />
               )}
             </div>
           </div>
@@ -491,32 +488,22 @@ export default function InventoryIntelligence() {
 
       <HighlightsBar />
 
-      {/* The "Capabilities" heading sticks just below the header for as
-          long as the stack below is arranging, so its context stays
-          visible the whole time instead of being scrolled past before the
-          cards ever come into view. It un-sticks naturally once this
-          block's extra height (the arrange scroll room) runs out, right
-          as the cards finish landing in the real grid. */}
+      {/* Dedicated scroll room for the unstack -> hold -> glide sequence
+          below, independent of how tall the hero itself is. The cards
+          arrange here while the Capabilities heading and grid still sit
+          below, untouched, in normal document flow. */}
       {isDesktop && (
-        <div>
-          <div
-            ref={headingRef}
-            className="sticky top-20 z-[45] border-b border-secondary-100 bg-[#f8fafd]/95 py-5 backdrop-blur"
-          >
-            <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-              {stickyHeadingCompact}
-            </div>
-          </div>
-          <div aria-hidden="true" style={{ height: UNSTACK_PX + HOLD_PX + 260 }} />
-        </div>
+        <div aria-hidden="true" style={{ height: UNSTACK_PX + HOLD_PX + 260 }} />
       )}
 
       {/* Fixed overlay carrying the actual visible cards on desktop: their
           position is computed every scroll tick (see updateMorph) against
           the hero slot above and the grid-cell placeholders below, so they
-          visually travel from one to the other as the page scrolls. */}
+          visually travel from one to the other as the page scrolls. Sits
+          above the header (z-50) so the cards pass in front of it rather
+          than disappearing behind it while pinned near the top. */}
       {isDesktop && (
-        <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-40">
+        <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[60]">
           {capabilities.map((c, i) => {
             const s = cardStyles[i];
             return (
@@ -547,9 +534,7 @@ export default function InventoryIntelligence() {
       {/* Capabilities */}
       <section className="py-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          {/* On desktop this heading is rendered once already, sticky,
-              above the arrange-and-glide block up top. */}
-          {!isDesktop && capabilitiesHeading}
+          {capabilitiesHeading}
 
           {isDesktop ? (
             // Invisible placeholders only: they reserve the grid's layout
