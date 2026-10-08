@@ -203,6 +203,13 @@ function HighlightsBar() {
   );
 }
 
+const distortionStats: { value: string; label: string }[] = [
+  { value: "US$1.7tn", label: "lost every year to stockouts and overstock worldwide" },
+  { value: "65.6%", label: "of that loss comes from empty shelves, not excess stock" },
+  { value: "<25%", label: "of retailers use AI in their inventory decisions today" },
+  { value: "2.3x", label: "higher sales growth for the retailers that do" },
+];
+
 const industries: { label: string; Icon: IconComponent }[] = [
   { label: "Supply Chain & Logistics", Icon: LocalShippingIcon },
   { label: "Retail & E-Commerce", Icon: StorefrontIcon },
@@ -706,6 +713,45 @@ export default function InventoryIntelligence() {
               </div>
             </>
           )}
+        </div>
+      </section>
+
+      {/* Cost of guesswork */}
+      <section className="py-[120px]">
+        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+          <div className="mx-auto max-w-5xl overflow-hidden rounded-2xl border border-secondary-100 bg-white">
+            <div className="px-8 py-14 text-center sm:px-16">
+              <h2 className="font-display text-[32px] font-bold leading-[1.25] text-heading sm:text-[44px]">
+                The cost of running
+                <br />
+                inventory on guesswork
+              </h2>
+            </div>
+            <div className="grid grid-cols-2 border-t border-secondary-100 sm:grid-cols-4">
+              {distortionStats.map((stat, i) => (
+                <div
+                  key={stat.label}
+                  className={`border-secondary-100 px-6 py-10 text-center ${
+                    i % 2 === 1 ? "border-l" : ""
+                  } ${i >= 2 ? "border-t sm:border-t-0" : ""} ${i > 0 ? "sm:border-l" : ""}`}
+                >
+                  <p
+                    className={`font-display text-[30px] font-bold sm:text-[40px] ${
+                      i === 0 ? "text-heading" : "text-secondary-300"
+                    }`}
+                  >
+                    {stat.value}
+                  </p>
+                  <p className="mx-auto mt-2 max-w-[180px] text-sm leading-snug text-caption">
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="border-t border-secondary-100 py-4 text-center text-xs text-caption">
+              Source: IHL Group, The 2026 Inventory Distortion Study.
+            </p>
+          </div>
         </div>
       </section>
 
