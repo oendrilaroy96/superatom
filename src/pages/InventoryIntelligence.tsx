@@ -68,17 +68,19 @@ const highlights: { label: string; Icon: IconComponent }[] = [
   { label: "Improve service levels and inventory turns", Icon: SettingsSuggestIcon },
 ];
 
-// One slot per card, front to back. Each card animates toward whichever slot
-// its current position in `order` maps to, so re-ordering `order` alone
-// drives the shuffle via each card's own CSS transition.
+// One slot per card, front to back. Every offset is positive (right and
+// down only) and rotation only ever tilts clockwise, so the stack cascades
+// away to the bottom-right and the front card's left edge stays the clean,
+// unobstructed side the eye lands on first — the stack is only ever
+// "revealed" from the left, never peeking out past it.
 const stackSlots = [
-  { x: 0, y: 0, rotate: -2, scale: 1, opacity: 1 },
-  { x: 16, y: 16, rotate: 4, scale: 0.96, opacity: 0.95 },
-  { x: -18, y: 30, rotate: -6, scale: 0.93, opacity: 0.85 },
-  { x: 22, y: 44, rotate: 6, scale: 0.9, opacity: 0.7 },
-  { x: -14, y: 58, rotate: -5, scale: 0.87, opacity: 0.55 },
-  { x: 12, y: 70, rotate: 4, scale: 0.84, opacity: 0.4 },
-  { x: -8, y: 82, rotate: -3, scale: 0.81, opacity: 0.25 },
+  { x: 0, y: 0, rotate: 0, scale: 1, opacity: 1 },
+  { x: 28, y: 20, rotate: 3, scale: 0.96, opacity: 0.95 },
+  { x: 52, y: 42, rotate: 6, scale: 0.92, opacity: 0.85 },
+  { x: 72, y: 66, rotate: 8, scale: 0.88, opacity: 0.7 },
+  { x: 90, y: 90, rotate: 10, scale: 0.84, opacity: 0.55 },
+  { x: 106, y: 112, rotate: 12, scale: 0.8, opacity: 0.4 },
+  { x: 120, y: 132, rotate: 14, scale: 0.76, opacity: 0.25 },
 ];
 
 // A single fixed portrait size used for every card in both the hero stack
@@ -86,6 +88,11 @@ const stackSlots = [
 // travels from one to the other instead of resizing mid-flight.
 const CARD_W = 216;
 const CARD_H = 288;
+
+// How much bigger than its true (grid) size the stack renders while it
+// still sits in the hero; lerps back down to 1 as the cards unstack into
+// the grid, so there's nothing to pop between the two.
+const HERO_SCALE = 1.3;
 
 // How far below the sticky header (h-16 = 64px) the stack pins while the
 // cards are unstacking into the grid below.
@@ -212,12 +219,14 @@ export default function InventoryIntelligence() {
   // the function reference it's given changes, and setCardStyles always
   // produces a brand-new array, so a fresh closure here on every render
   // would re-subscribe -> re-run -> setState -> re-render in an infinite
-  // loop. Reading isDesktop/order through refs (kept in sync during render)
+  // loop. Reading isDesktop/order through refs (synced post-render below)
   // instead of closing over them directly keeps the callback itself frozen.
   const isDesktopRef = useRef(isDesktop);
-  isDesktopRef.current = isDesktop;
   const orderRef = useRef(order);
-  orderRef.current = order;
+  useEffect(() => {
+    isDesktopRef.current = isDesktop;
+    orderRef.current = order;
+  });
 
   // Reads the hero slot's and each grid cell's live position and recomputes
   // every card's current spot along the hero -> grid journey. `t` (0 to 1)
@@ -263,7 +272,7 @@ export default function InventoryIntelligence() {
         top: baseTop + slot.y * fan - scrollY,
         left: baseLeft + slot.x * fan,
         rotate: slot.rotate * fan,
-        scale: lerp(1, slot.scale, fan),
+        scale: lerp(1, slot.scale * HERO_SCALE, fan),
         opacity: lerp(1, slot.opacity, fan),
         zIndex: stackSlots.length - stackSlots.indexOf(slot),
         ready: true,
@@ -352,9 +361,9 @@ export default function InventoryIntelligence() {
               </Button>
             </div>
 
-            <div className="mx-auto w-full max-w-sm lg:mx-0 lg:ml-auto">
+            <div className="mx-auto w-full max-w-sm lg:mx-0 lg:ml-auto lg:max-w-md">
               {isDesktop ? (
-                <div ref={heroSlotRef} style={{ width: CARD_W, height: CARD_H }} className="mx-auto" />
+                <div ref={heroSlotRef} style={{ width: CARD_W, height: CARD_H }} />
               ) : (
                 <MobileCardStack order={order} />
               )}
@@ -383,6 +392,7 @@ export default function InventoryIntelligence() {
                   width: CARD_W,
                   height: CARD_H,
                   transform: `rotate(${s.rotate}deg) scale(${s.scale})`,
+                  transformOrigin: "top left",
                   opacity: s.ready ? s.opacity : 0,
                   zIndex: s.zIndex,
                 }}
