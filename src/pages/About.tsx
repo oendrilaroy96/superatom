@@ -3,11 +3,31 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import SectionHeading from "../components/ui/SectionHeading";
 
 const teamMembers = [
-  { name: "Prashanth Dharawath", role: "Co-Founder & CEO", linkedin: "#" },
-  { name: "Ashish Tandi", role: "Co-Founder & CTO", linkedin: "#" },
-  { name: "Sharath Bhat", role: "Co-Founder, GTM & Strategy", linkedin: "#" },
-  { name: "Chetan Sai", role: "Co-Founder & Technical Delivery Lead", linkedin: "#" },
-  { name: "Gopinadh Boppudi", role: "Senior Software Engineer", linkedin: "#" },
+  {
+    name: "Prashanth Dharawath",
+    role: "Co-Founder & CEO",
+    linkedin: "https://www.linkedin.com/in/prashanth-dharawath-a15833369/",
+  },
+  {
+    name: "Ashish Tandi",
+    role: "Co-Founder & CTO",
+    linkedin: "https://www.linkedin.com/in/ashishblessing/",
+  },
+  {
+    name: "Sharath Bhat",
+    role: "Co-Founder, GTM & Strategy",
+    linkedin: "https://www.linkedin.com/in/sharathramakrishnabhat/",
+  },
+  {
+    name: "Chetan Sai",
+    role: "Co-Founder & Technical Delivery Lead",
+    linkedin: "https://www.linkedin.com/in/chetan-sai-1720a8174/",
+  },
+  {
+    name: "Gopinadh Boppudi",
+    role: "Senior Software Engineer",
+    linkedin: "https://www.linkedin.com/in/gopinadh-boppudi-8730751b0/",
+  },
 ];
 
 export default function About() {
@@ -116,8 +136,11 @@ export default function About() {
                 rel="noopener noreferrer"
                 className="group block overflow-hidden rounded-2xl border border-secondary-100 bg-white transition-colors hover:border-primary-300"
               >
-                <div className="flex aspect-square w-full items-center justify-center border-b border-dashed border-secondary-200 bg-page text-caption">
+                <div className="relative flex aspect-square w-full items-center justify-center border-b border-dashed border-secondary-200 bg-page text-caption">
                   <PersonIcon style={{ fontSize: 40 }} />
+                  <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#0A66C2] text-white shadow-md transition-transform duration-200 group-hover:scale-110">
+                    <LinkedInIcon style={{ fontSize: 18 }} />
+                  </span>
                 </div>
                 <div className="p-5">
                   <p className="font-display text-h4 font-semibold text-heading">
@@ -125,12 +148,6 @@ export default function About() {
                   </p>
                   <p className="mt-0.5 text-xs font-medium text-caption">
                     {member.role}
-                  </p>
-                  <p className="mt-3 flex items-center gap-1.5 text-xs font-medium text-primary-500">
-                    <LinkedInIcon style={{ fontSize: 16 }} />
-                    <span className="transition-transform duration-200 group-hover:translate-x-0.5">
-                      View profile
-                    </span>
                   </p>
                 </div>
               </a>
