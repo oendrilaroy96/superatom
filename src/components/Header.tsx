@@ -161,8 +161,8 @@ export default function Header() {
       className={`sticky top-0 z-50 h-16 border-b transition-colors duration-700 ease-in-out ${
         paintBackground
           ? isDark
-            ? "border-white/10 bg-secondary-500/90 backdrop-blur"
-            : "border-secondary-100 bg-white/90 backdrop-blur"
+            ? "border-white/10 bg-secondary-500"
+            : "border-secondary-100 bg-white"
           : "border-transparent bg-transparent"
       }`}
     >

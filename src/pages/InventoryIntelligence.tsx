@@ -72,15 +72,17 @@ const highlights: { label: string; Icon: IconComponent }[] = [
 // down only) and rotation only ever tilts clockwise, so the stack cascades
 // away to the bottom-right and the front card's left edge stays the clean,
 // unobstructed side the eye lands on first — the stack is only ever
-// "revealed" from the left, never peeking out past it.
+// "revealed" from the left, never peeking out past it. Every card stays
+// fully opaque at rest; only position, rotation and scale carry the sense
+// of depth (opacity is reserved for the exit-fade pose below).
 const stackSlots = [
   { x: 0, y: 0, rotate: 0, scale: 1, opacity: 1 },
-  { x: 40, y: 28, rotate: 4, scale: 0.95, opacity: 0.95 },
-  { x: 76, y: 58, rotate: 8, scale: 0.9, opacity: 0.85 },
-  { x: 108, y: 90, rotate: 11, scale: 0.85, opacity: 0.7 },
-  { x: 136, y: 122, rotate: 14, scale: 0.8, opacity: 0.55 },
-  { x: 160, y: 152, rotate: 16, scale: 0.75, opacity: 0.4 },
-  { x: 180, y: 180, rotate: 18, scale: 0.7, opacity: 0.25 },
+  { x: 47, y: 33, rotate: 4, scale: 0.95, opacity: 1 },
+  { x: 89, y: 68, rotate: 8, scale: 0.9, opacity: 1 },
+  { x: 126, y: 105, rotate: 11, scale: 0.85, opacity: 1 },
+  { x: 159, y: 142, rotate: 14, scale: 0.8, opacity: 1 },
+  { x: 187, y: 177, rotate: 16, scale: 0.75, opacity: 1 },
+  { x: 210, y: 210, rotate: 18, scale: 0.7, opacity: 1 },
 ];
 
 // Pose for whichever card just stepped down from front: instead of easing
@@ -92,19 +94,20 @@ const EXIT_SLOT = { x: -120, y: 16, rotate: -10, scale: 0.9, opacity: 0 };
 // A single fixed portrait size used for every card in both the hero stack
 // and the capabilities grid, so a card keeps the same footprint as it
 // travels from one to the other instead of resizing mid-flight.
-const CARD_W = 216;
-const CARD_H = 288;
+const CARD_W = 252;
+const CARD_H = 336;
 
 // How much bigger than its true (grid) size the stack renders while it
 // still sits in the hero; lerps back down to 1 as the cards unstack into
 // the grid, so there's nothing to pop between the two.
 const HERO_SCALE = 1.3;
 
-// How far below the sticky header (h-16 = 64px) the stack pins while the
-// cards are unstacking into the grid below. The cards render above the
-// header (see the overlay's z-index) so this is just a comfortable resting
-// spot, not a boundary that has to avoid overlapping anything.
-const PIN_TOP = 96;
+// CSS `top` offset for the sticky "Capabilities" heading (a little below
+// the h-16 = 64px main header). The cards pin below the heading's own
+// measured height, so the heading stays fully readable above them while
+// they arrange.
+const STICKY_TOP = 80;
+const CARDS_GAP_BELOW_HEADING = 24;
 
 // Scroll distance (px) spent fanning the stack open into a flat row while
 // pinned in place, then the extra distance it just sits there, fully
@@ -227,6 +230,7 @@ export default function InventoryIntelligence() {
 
   const heroSlotRef = useRef<HTMLDivElement>(null);
   const cellRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const headingRef = useRef<HTMLDivElement>(null);
   const morphActiveRef = useRef(false);
 
   // `updateMorph` is handed to useLenis below and must keep one stable
@@ -271,11 +275,26 @@ export default function InventoryIntelligence() {
     const heroRect = heroEl.getBoundingClientRect();
     const cell0Rect = cell0.getBoundingClientRect();
     const heroLeft = heroRect.left;
-    const heroDocTop = heroRect.top + scrollY;
     const cell0DocTop = cell0Rect.top + scrollY;
 
-    const morphStart = heroDocTop - PIN_TOP;
-    const morphEnd = cell0DocTop - PIN_TOP;
+    // The cards pin just below the sticky "Capabilities" heading, whose
+    // height is measured live (it wraps differently at different widths)
+    // rather than assumed, so there's never an overlap between the two.
+    const headingH = headingRef.current?.getBoundingClientRect().height ?? 0;
+    const pinTop = STICKY_TOP + headingH + CARDS_GAP_BELOW_HEADING;
+
+    // Arranging starts once the dark hero+highlights block (one full
+    // viewport) has scrolled past — not once the hero card's own position
+    // reaches the top, which, with the card vertically centered in a tall
+    // 100vh hero, would be well before the hero is actually done scrolling
+    // by. This also roughly lines up with the sticky heading's own natural
+    // arrival at the top, since it sits right after that block too.
+    const darkZoneEl = document.getElementById("inventory-dark-zone");
+    const darkZoneRect = darkZoneEl?.getBoundingClientRect();
+    const darkZoneDocBottom = darkZoneRect ? darkZoneRect.bottom + scrollY : cell0DocTop;
+
+    const morphStart = darkZoneDocBottom - pinTop;
+    const morphEnd = cell0DocTop - pinTop;
     const rawSpan = Math.max(1, morphEnd - morphStart);
 
     const unstackSpan = Math.max(60, Math.min(UNSTACK_PX, rawSpan * 0.4));
@@ -299,8 +318,8 @@ export default function InventoryIntelligence() {
     const row2Left = centerX - row2Width / 2;
     const readPosFor = (i: number) =>
       i < 4
-        ? { top: PIN_TOP, left: row1Left + i * (CARD_W + READ_GAP) }
-        : { top: PIN_TOP + CARD_H + READ_GAP, left: row2Left + (i - 4) * (CARD_W + READ_GAP) };
+        ? { top: pinTop, left: row1Left + i * (CARD_W + READ_GAP) }
+        : { top: pinTop + CARD_H + READ_GAP, left: row2Left + (i - 4) * (CARD_W + READ_GAP) };
 
     const order = orderRef.current;
     const exitingIndex = exitingIndexRef.current;
@@ -308,7 +327,12 @@ export default function InventoryIntelligence() {
       const cellEl = cellRefs.current[i] ?? cell0;
       const cellRect = cellEl.getBoundingClientRect();
       const slot = i === exitingIndex ? EXIT_SLOT : stackSlots[order.indexOf(i)];
-      const stackPos = { top: heroRect.top + slot.y, left: heroLeft + slot.x };
+      // Tracks the hero card live while it's still naturally below pinTop;
+      // once scrolling would carry it above that (well before the dark
+      // zone has actually scrolled past, since the card sits mid-hero, not
+      // at its bottom), it simply holds there instead of disappearing
+      // above the viewport before the official unstack begins.
+      const stackPos = { top: Math.max(heroRect.top + slot.y, pinTop), left: heroLeft + slot.x };
       const readPos = readPosFor(i);
 
       let fan: number;
@@ -353,7 +377,10 @@ export default function InventoryIntelligence() {
   }, []);
 
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
+    // The bigger cards need more room per row than the lg (1024px) breakpoint
+    // comfortably gives 4-across, so the scroll morph is gated to xl instead;
+    // narrower desktop/tablet widths fall back to the static stack/grid.
+    const mq = window.matchMedia("(min-width: 1280px)");
     const update = () => setIsDesktop(mq.matches);
     update();
     mq.addEventListener("change", update);
@@ -406,8 +433,8 @@ export default function InventoryIntelligence() {
     return () => clearInterval(id);
   }, [updateMorph]);
 
-  // Shared between the sticky (desktop) and in-flow (mobile) placements
-  // below so the two don't drift out of sync.
+  // The full heading as it appears in its own resting spot in the
+  // Capabilities section, matching Industries/Business Outcomes exactly.
   const capabilitiesHeading = (
     <SectionHeading
       align="center"
@@ -425,14 +452,42 @@ export default function InventoryIntelligence() {
     />
   );
 
+  // A short, single-line version for the sticky desktop bar: the full
+  // heading above (with its description) runs 400px+ tall, which would
+  // push the cards' pin point below where the hero stack itself starts,
+  // leaving no scroll room before pinning kicks in. This stays compact
+  // enough that there's always real "still embedded in the hero" room
+  // first, and un-sticks once the cards land in the grid, right above
+  // where the full heading (above) sits.
+  const stickyHeadingCompact = (
+    <p className="text-center">
+      <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-500">
+        Capabilities
+      </span>
+      <span className="mx-2 text-secondary-200">&bull;</span>
+      <span className="font-display text-base font-bold text-heading sm:text-lg">
+        End-to-end inventory intelligence
+      </span>
+    </p>
+  );
+
   return (
     <>
       {/* Dark enterprise-style hero (Stripe's /enterprise page look): a
           diagonal warm glow over a dark navy section, bold white heading
           with the last line in the brand's existing purple-to-orange
           gradient (same one Hero3 uses), and a floating stack of capability
-          cards on the right instead of a dashboard screenshot. */}
-      <section className="relative overflow-hidden bg-secondary-500 py-20">
+          cards on the right instead of a dashboard screenshot. On desktop,
+          hero and the highlights bar right under it together fill exactly
+          one viewport height, so both are visible without scrolling on
+          load. calc(100vh - 4rem) rather than h-screen: the sticky header
+          (h-16) still reserves its own 64px of normal document flow above
+          this, so a flat h-screen would push the total past one viewport.
+          Left as natural/auto height below lg: the hero's text, button and
+          card stack need more room than one mobile screen without feeling
+          cramped, so forcing the same 100vh there would only overflow. */}
+      <div className="flex flex-col lg:h-[calc(100vh-4rem)]">
+      <section className="relative flex flex-1 items-center overflow-hidden bg-secondary-500 py-16 lg:py-0">
         <div
           className="pointer-events-none absolute inset-0"
           style={{
@@ -441,7 +496,7 @@ export default function InventoryIntelligence() {
           }}
           aria-hidden="true"
         />
-        <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+        <div className="relative mx-auto w-full max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
             <div>
               <p className="text-h5 font-semibold uppercase tracking-[0.5px] text-primary-300">
@@ -475,7 +530,7 @@ export default function InventoryIntelligence() {
               </Button>
             </div>
 
-            <div className="mx-auto w-full max-w-sm lg:mx-0 lg:ml-auto lg:max-w-md">
+            <div className="mx-auto w-full max-w-sm lg:mx-0 lg:ml-auto lg:max-w-lg">
               {isDesktop ? (
                 <div ref={heroSlotRef} style={{ width: CARD_W, height: CARD_H }} />
               ) : (
@@ -487,13 +542,27 @@ export default function InventoryIntelligence() {
       </section>
 
       <HighlightsBar />
+      </div>
 
-      {/* Dedicated scroll room for the unstack -> hold -> glide sequence
-          below, independent of how tall the hero itself is. The cards
-          arrange here while the Capabilities heading and grid still sit
-          below, untouched, in normal document flow. */}
+      {/* The "Capabilities" heading sticks just below the header for as
+          long as the stack below is arranging, so its context stays
+          visible the whole time instead of being scrolled past before the
+          cards ever come into view. It un-sticks naturally once this
+          block's extra height (the arrange scroll room) runs out, right
+          as the cards finish landing in the real grid — just above the
+          full heading, which sits in its normal resting spot there. */}
       {isDesktop && (
-        <div aria-hidden="true" style={{ height: UNSTACK_PX + HOLD_PX + 260 }} />
+        <div>
+          <div
+            ref={headingRef}
+            className="sticky top-20 z-[45] border-b border-secondary-100 bg-[#f8fafd]/95 py-5 backdrop-blur"
+          >
+            <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+              {stickyHeadingCompact}
+            </div>
+          </div>
+          <div aria-hidden="true" style={{ height: UNSTACK_PX + HOLD_PX + 260 }} />
+        </div>
       )}
 
       {/* Fixed overlay carrying the actual visible cards on desktop: their
