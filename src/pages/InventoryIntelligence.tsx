@@ -103,7 +103,7 @@ const ENTER_SLOT = { x: 450, y: 284, rotate: 18, scale: 0.7, opacity: 0 };
 // and the capabilities grid, so a card keeps the same footprint as it
 // travels from one to the other instead of resizing mid-flight.
 const CARD_W = 252;
-const CARD_H = 336;
+const CARD_H = 300;
 
 // How much bigger than its true (grid) size the stack renders while it
 // still sits in the hero; lerps back down to 1 as the cards unstack into
