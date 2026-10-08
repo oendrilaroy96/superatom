@@ -75,12 +75,12 @@ const highlights: { label: string; Icon: IconComponent }[] = [
 // "revealed" from the left, never peeking out past it.
 const stackSlots = [
   { x: 0, y: 0, rotate: 0, scale: 1, opacity: 1 },
-  { x: 28, y: 20, rotate: 3, scale: 0.96, opacity: 0.95 },
-  { x: 52, y: 42, rotate: 6, scale: 0.92, opacity: 0.85 },
-  { x: 72, y: 66, rotate: 8, scale: 0.88, opacity: 0.7 },
-  { x: 90, y: 90, rotate: 10, scale: 0.84, opacity: 0.55 },
-  { x: 106, y: 112, rotate: 12, scale: 0.8, opacity: 0.4 },
-  { x: 120, y: 132, rotate: 14, scale: 0.76, opacity: 0.25 },
+  { x: 40, y: 28, rotate: 4, scale: 0.95, opacity: 0.95 },
+  { x: 76, y: 58, rotate: 8, scale: 0.9, opacity: 0.85 },
+  { x: 108, y: 90, rotate: 11, scale: 0.85, opacity: 0.7 },
+  { x: 136, y: 122, rotate: 14, scale: 0.8, opacity: 0.55 },
+  { x: 160, y: 152, rotate: 16, scale: 0.75, opacity: 0.4 },
+  { x: 180, y: 180, rotate: 18, scale: 0.7, opacity: 0.25 },
 ];
 
 // A single fixed portrait size used for every card in both the hero stack
@@ -97,6 +97,13 @@ const HERO_SCALE = 1.3;
 // How far below the sticky header (h-16 = 64px) the stack pins while the
 // cards are unstacking into the grid below.
 const PIN_TOP = 96;
+
+// Scroll distance (px) spent fanning the stack open into a flat row while
+// pinned in place, then the extra distance it just sits there, fully
+// arranged and still, so there's a moment to actually read the cards
+// before they continue down into the grid.
+const UNSTACK_PX = 420;
+const HOLD_PX = 480;
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -229,14 +236,21 @@ export default function InventoryIntelligence() {
   });
 
   // Reads the hero slot's and each grid cell's live position and recomputes
-  // every card's current spot along the hero -> grid journey. `t` (0 to 1)
-  // is derived straight from scroll position: 0 while the stack still sits
-  // in the hero, pinned in between, 1 once the reference (first) grid cell
-  // has scrolled up to PIN_TOP, at which point every card has arrived at
-  // its own cell. Because this lerps directly between two document-space
-  // anchors, the hand-off at both ends is continuous (no branching per
-  // "phase"), so there is nothing to pop between tracking the hero and
-  // tracking the grid.
+  // every card's current spot along the hero -> grid journey, in four
+  // stages driven purely by scroll position:
+  //   A  scrollY <= morphStart       embedded in the hero, tracking 1:1
+  //   B1 through unstackEndY         pinned, fanning out into a flat
+  //                                  preview of the grid (each card gets
+  //                                  its own spread-out spot, not a single
+  //                                  shared point)
+  //   B2 through holdEndY            pinned, holding that flat preview
+  //                                  still so there's time to read it
+  //   C-entry through morphEnd       glides from the preview into this
+  //                                  card's own live grid-cell position
+  //   C  beyond morphEnd             embedded in the grid, tracking 1:1
+  // Each boundary is defined so the two formulas on either side agree
+  // exactly at that scrollY (see the derivation in the project notes), so
+  // there's nothing to pop between any two stages.
   const updateMorph = useCallback(() => {
     if (!isDesktopRef.current) return;
     const heroEl = heroSlotRef.current;
@@ -246,31 +260,77 @@ export default function InventoryIntelligence() {
     const scrollY = window.scrollY;
     const heroRect = heroEl.getBoundingClientRect();
     const cell0Rect = cell0.getBoundingClientRect();
-    const heroDocTop = heroRect.top + scrollY;
     const heroLeft = heroRect.left;
+    const heroDocTop = heroRect.top + scrollY;
     const cell0DocTop = cell0Rect.top + scrollY;
 
     const morphStart = heroDocTop - PIN_TOP;
     const morphEnd = cell0DocTop - PIN_TOP;
-    const denom = morphEnd - morphStart;
-    const t = denom > 1 ? clamp((scrollY - morphStart) / denom, 0, 1) : scrollY >= morphStart ? 1 : 0;
+    const rawSpan = Math.max(1, morphEnd - morphStart);
 
-    morphActiveRef.current = t > 0;
+    const unstackSpan = Math.max(60, Math.min(UNSTACK_PX, rawSpan * 0.4));
+    const afterUnstack = Math.max(1, rawSpan - unstackSpan);
+    const holdSpan = Math.max(0, Math.min(HOLD_PX, afterUnstack * 0.6));
+    const glideSpan = Math.max(1, rawSpan - unstackSpan - holdSpan);
+
+    const unstackEndY = morphStart + unstackSpan;
+    const holdEndY = unstackEndY + holdSpan;
+
+    morphActiveRef.current = scrollY > morphStart;
+
+    // Fixed viewport-space preview of the final 4-then-3 grid, used while
+    // pinned (B1/B2) so each card has its own spread-out reading spot
+    // instead of all 7 collapsing onto one point as the fan closes.
+    const READ_GAP = 16;
+    const row1Width = 4 * CARD_W + 3 * READ_GAP;
+    const row2Width = 3 * CARD_W + 2 * READ_GAP;
+    const centerX = window.innerWidth / 2;
+    const row1Left = centerX - row1Width / 2;
+    const row2Left = centerX - row2Width / 2;
+    const readPosFor = (i: number) =>
+      i < 4
+        ? { top: PIN_TOP, left: row1Left + i * (CARD_W + READ_GAP) }
+        : { top: PIN_TOP + CARD_H + READ_GAP, left: row2Left + (i - 4) * (CARD_W + READ_GAP) };
 
     const order = orderRef.current;
     const next = capabilities.map((_, i) => {
       const cellEl = cellRefs.current[i] ?? cell0;
       const cellRect = cellEl.getBoundingClientRect();
-      const docTop = cellRect.top + scrollY;
       const slot = stackSlots[order.indexOf(i)];
-      const fan = 1 - t;
+      const stackPos = { top: heroRect.top + slot.y, left: heroLeft + slot.x };
+      const readPos = readPosFor(i);
 
-      const baseTop = lerp(heroDocTop, docTop, t);
-      const baseLeft = lerp(heroLeft, cellRect.left, t);
+      let fan: number;
+      let top: number;
+      let left: number;
+
+      if (scrollY <= morphStart) {
+        fan = 1;
+        top = stackPos.top;
+        left = stackPos.left;
+      } else if (scrollY <= unstackEndY) {
+        const localT = clamp((scrollY - morphStart) / unstackSpan, 0, 1);
+        fan = 1 - localT;
+        top = lerp(stackPos.top, readPos.top, localT);
+        left = lerp(stackPos.left, readPos.left, localT);
+      } else if (scrollY <= holdEndY) {
+        fan = 0;
+        top = readPos.top;
+        left = readPos.left;
+      } else if (scrollY <= morphEnd) {
+        fan = 0;
+        const localT = clamp((scrollY - holdEndY) / glideSpan, 0, 1);
+        top = lerp(readPos.top, cellRect.top, localT);
+        left = lerp(readPos.left, cellRect.left, localT);
+      } else {
+        fan = 0;
+        top = cellRect.top;
+        left = cellRect.left;
+      }
 
       return {
-        top: baseTop + slot.y * fan - scrollY,
-        left: baseLeft + slot.x * fan,
+        top,
+        left,
         rotate: slot.rotate * fan,
         scale: lerp(1, slot.scale * HERO_SCALE, fan),
         opacity: lerp(1, slot.opacity, fan),
@@ -297,16 +357,25 @@ export default function InventoryIntelligence() {
 
   useLenis(updateMorph);
 
+  // While true, the overlay cards get a CSS transition so the shuffle
+  // reads as the back card visibly sliding up to the front rather than
+  // snapping there. It's only ever turned on for that 700ms window: the
+  // continuous scroll-driven repositioning above must stay untransitioned
+  // (instant) or it would lag behind the actual scroll position.
+  const [shuffling, setShuffling] = useState(false);
+
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = setInterval(() => {
       if (morphActiveRef.current) return;
+      setShuffling(true);
       setOrder((prev) => {
         const next = [...prev];
         const back = next.pop();
         if (back !== undefined) next.unshift(back);
         return next;
       });
+      window.setTimeout(() => setShuffling(false), 750);
     }, 2400);
     return () => clearInterval(id);
   }, []);
@@ -318,7 +387,7 @@ export default function InventoryIntelligence() {
           with the last line in the brand's existing purple-to-orange
           gradient (same one Hero3 uses), and a floating stack of capability
           cards on the right instead of a dashboard screenshot. */}
-      <section className="relative overflow-hidden bg-secondary-500 py-[140px]">
+      <section className="relative overflow-hidden bg-secondary-500 py-20">
         <div
           className="pointer-events-none absolute inset-0"
           style={{
@@ -374,6 +443,15 @@ export default function InventoryIntelligence() {
 
       <HighlightsBar />
 
+      {/* Dedicated scroll room for the pin -> unstack -> hold -> glide
+          sequence below, independent of how tall the hero itself is. */}
+      {isDesktop && (
+        <div
+          aria-hidden="true"
+          style={{ height: UNSTACK_PX + HOLD_PX + 260 }}
+        />
+      )}
+
       {/* Fixed overlay carrying the actual visible cards on desktop: their
           position is computed every scroll tick (see updateMorph) against
           the hero slot above and the grid-cell placeholders below, so they
@@ -393,6 +471,9 @@ export default function InventoryIntelligence() {
                   height: CARD_H,
                   transform: `rotate(${s.rotate}deg) scale(${s.scale})`,
                   transformOrigin: "top left",
+                  transition: shuffling
+                    ? "top 0.7s cubic-bezier(.22,1,.36,1), left 0.7s cubic-bezier(.22,1,.36,1), transform 0.7s cubic-bezier(.22,1,.36,1), opacity 0.7s ease"
+                    : "none",
                   opacity: s.ready ? s.opacity : 0,
                   zIndex: s.zIndex,
                 }}
