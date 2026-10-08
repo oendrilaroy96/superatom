@@ -315,12 +315,19 @@ export default function InventoryIntelligence() {
 
     // Before the heading has actually scrolled up into its stuck position
     // (right after the hero+highlights block, it still briefly travels with
-    // the page like any other element), its live bottom edge sits lower
-    // than pinTop assumes. Clamping cards to the live edge instead of the
-    // static pinTop keeps them tracking just below wherever the heading
-    // currently is, rather than snapping below its future, not-yet-reached
-    // resting spot and overlapping the still-travelling heading text.
-    const clampTop = headingRect ? headingRect.bottom + CARDS_GAP_BELOW_HEADING : pinTop;
+    // the page like any other element, starting out well below the fold).
+    // Clamping cards to pinTop is only at risk of overlapping that
+    // not-yet-stuck heading once the heading's own live top has already
+    // risen to/above pinTop — before that point, pinTop still sits safely
+    // above wherever the heading currently is, so the plain static value is
+    // used (and the hero stack stays visible at its natural spot instead of
+    // being dragged down to match the heading's distant starting position).
+    // Capped so a still-travelling heading can never push a card fully off
+    // the bottom of the viewport either.
+    const clampTop =
+      headingRect && headingRect.top <= pinTop
+        ? Math.min(headingRect.bottom + CARDS_GAP_BELOW_HEADING, window.innerHeight - 40)
+        : pinTop;
 
     // Arranging starts once the dark hero+highlights block (one full
     // viewport) has scrolled past — not once the hero card's own position
