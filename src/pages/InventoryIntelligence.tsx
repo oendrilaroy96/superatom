@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useLenis } from "lenis/react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
@@ -14,12 +15,14 @@ import StorefrontIcon from "@mui/icons-material/Storefront";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
+import LayersIcon from "@mui/icons-material/Layers";
+import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
 import type { IconComponent } from "../types/icon";
 import Button from "../components/ui/Button";
 import GlowCard from "../components/ui/GlowCard";
 import SectionHeading from "../components/ui/SectionHeading";
 import DemoModal from "../components/DemoModal";
-import Customers from "../components/Customers";
 
 const capabilities: { title: string; desc: string; Icon: IconComponent }[] = [
   {
@@ -59,6 +62,12 @@ const capabilities: { title: string; desc: string; Icon: IconComponent }[] = [
   },
 ];
 
+const highlights: { label: string; Icon: IconComponent }[] = [
+  { label: "Make faster, smarter decisions", Icon: QueryStatsIcon },
+  { label: "Reduce working capital and write-offs", Icon: LayersIcon },
+  { label: "Improve service levels and inventory turns", Icon: SettingsSuggestIcon },
+];
+
 // One slot per card, front to back. Each card animates toward whichever slot
 // its current position in `order` maps to, so re-ordering `order` alone
 // drives the shuffle via each card's own CSS transition.
@@ -72,46 +81,79 @@ const stackSlots = [
   { x: -8, y: 82, rotate: -3, scale: 0.81, opacity: 0.25 },
 ];
 
-/** Fanned stack of the capability cards; every few seconds the back-most card animates up to the front, cycling through all 7. */
-function CardStack() {
-  const [order, setOrder] = useState(capabilities.map((_, i) => i));
+// A single fixed portrait size used for every card in both the hero stack
+// and the capabilities grid, so a card keeps the same footprint as it
+// travels from one to the other instead of resizing mid-flight.
+const CARD_W = 216;
+const CARD_H = 288;
 
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const id = setInterval(() => {
-      setOrder((prev) => {
-        const next = [...prev];
-        const back = next.pop();
-        if (back !== undefined) next.unshift(back);
-        return next;
-      });
-    }, 2400);
-    return () => clearInterval(id);
-  }, []);
+// How far below the sticky header (h-16 = 64px) the stack pins while the
+// cards are unstacking into the grid below.
+const PIN_TOP = 96;
 
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+/** Icon, title and description shared by every rendering of a capability card. */
+function CapabilityCardFace({ c }: { c: (typeof capabilities)[number] }) {
   return (
-    <div className="relative h-[360px] w-full max-w-md sm:h-[400px]">
+    <>
+      <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
+        <c.Icon style={{ fontSize: 22 }} />
+      </span>
+      <p className="mt-4 font-display text-h4 font-semibold text-heading">{c.title}</p>
+      <p className="mt-2 line-clamp-4 text-xs leading-relaxed text-caption">{c.desc}</p>
+    </>
+  );
+}
+
+/** Mobile/tablet fallback: the fanned stack with no scroll-driven morph. */
+function MobileCardStack({ order }: { order: number[] }) {
+  return (
+    <div className="relative h-[420px] w-full max-w-sm">
       {capabilities.map((c, i) => {
         const slot = stackSlots[order.indexOf(i)];
         return (
           <div
             key={c.title}
-            className="absolute inset-x-0 top-0 rounded-2xl border border-secondary-100 bg-white p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.35)] transition-all duration-700 ease-in-out sm:p-7"
+            className="absolute inset-x-0 top-0 rounded-2xl border border-secondary-100 bg-white p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.35)] transition-all duration-700 ease-in-out"
             style={{
               transform: `translate(${slot.x}px, ${slot.y}px) rotate(${slot.rotate}deg) scale(${slot.scale})`,
               opacity: slot.opacity,
               zIndex: stackSlots.length - stackSlots.indexOf(slot),
             }}
           >
-            <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
-              <c.Icon style={{ fontSize: 22 }} />
-            </span>
-            <p className="mt-4 font-display text-h4 font-semibold text-heading">{c.title}</p>
-            <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-caption">{c.desc}</p>
+            <CapabilityCardFace c={c} />
           </div>
         );
       })}
     </div>
+  );
+}
+
+/** Dark highlights bar (replaces the logo row right under the hero). */
+function HighlightsBar() {
+  return (
+    <section className="border-t border-white/10 bg-secondary-500">
+      <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+        <div className="flex flex-col divide-y divide-white/10 sm:flex-row sm:divide-x sm:divide-y-0">
+          {highlights.map(({ label, Icon }) => (
+            <div
+              key={label}
+              className="flex flex-1 items-center justify-center gap-3 py-8 text-center sm:px-8"
+            >
+              <span
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+                style={{ backgroundColor: "rgba(34,211,238,0.12)", color: "#22d3ee" }}
+              >
+                <Icon style={{ fontSize: 20 }} />
+              </span>
+              <p className="text-sm font-semibold text-white sm:text-base">{label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -132,18 +174,141 @@ const outcomes: { label: string; dir: "up" | "down" }[] = [
   { label: "Better Inventory Turns", dir: "up" },
 ];
 
+type CardStyle = {
+  top: number;
+  left: number;
+  rotate: number;
+  scale: number;
+  opacity: number;
+  zIndex: number;
+  ready: boolean;
+};
+
 export default function InventoryIntelligence() {
   const [demoOpen, setDemoOpen] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(true);
+  const [order, setOrder] = useState(capabilities.map((_, i) => i));
+  const [cardStyles, setCardStyles] = useState<CardStyle[]>(() =>
+    capabilities.map((_, i) => {
+      const slot = stackSlots[i];
+      return {
+        top: 0,
+        left: 0,
+        rotate: slot.rotate,
+        scale: slot.scale,
+        opacity: slot.opacity,
+        zIndex: stackSlots.length - i,
+        ready: false,
+      };
+    })
+  );
+
+  const heroSlotRef = useRef<HTMLDivElement>(null);
+  const cellRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const morphActiveRef = useRef(false);
+
+  // `updateMorph` is handed to useLenis below and must keep one stable
+  // identity for the life of the component: useLenis re-subscribes whenever
+  // the function reference it's given changes, and setCardStyles always
+  // produces a brand-new array, so a fresh closure here on every render
+  // would re-subscribe -> re-run -> setState -> re-render in an infinite
+  // loop. Reading isDesktop/order through refs (kept in sync during render)
+  // instead of closing over them directly keeps the callback itself frozen.
+  const isDesktopRef = useRef(isDesktop);
+  isDesktopRef.current = isDesktop;
+  const orderRef = useRef(order);
+  orderRef.current = order;
+
+  // Reads the hero slot's and each grid cell's live position and recomputes
+  // every card's current spot along the hero -> grid journey. `t` (0 to 1)
+  // is derived straight from scroll position: 0 while the stack still sits
+  // in the hero, pinned in between, 1 once the reference (first) grid cell
+  // has scrolled up to PIN_TOP, at which point every card has arrived at
+  // its own cell. Because this lerps directly between two document-space
+  // anchors, the hand-off at both ends is continuous (no branching per
+  // "phase"), so there is nothing to pop between tracking the hero and
+  // tracking the grid.
+  const updateMorph = useCallback(() => {
+    if (!isDesktopRef.current) return;
+    const heroEl = heroSlotRef.current;
+    const cell0 = cellRefs.current[0];
+    if (!heroEl || !cell0) return;
+
+    const scrollY = window.scrollY;
+    const heroRect = heroEl.getBoundingClientRect();
+    const cell0Rect = cell0.getBoundingClientRect();
+    const heroDocTop = heroRect.top + scrollY;
+    const heroLeft = heroRect.left;
+    const cell0DocTop = cell0Rect.top + scrollY;
+
+    const morphStart = heroDocTop - PIN_TOP;
+    const morphEnd = cell0DocTop - PIN_TOP;
+    const denom = morphEnd - morphStart;
+    const t = denom > 1 ? clamp((scrollY - morphStart) / denom, 0, 1) : scrollY >= morphStart ? 1 : 0;
+
+    morphActiveRef.current = t > 0;
+
+    const order = orderRef.current;
+    const next = capabilities.map((_, i) => {
+      const cellEl = cellRefs.current[i] ?? cell0;
+      const cellRect = cellEl.getBoundingClientRect();
+      const docTop = cellRect.top + scrollY;
+      const slot = stackSlots[order.indexOf(i)];
+      const fan = 1 - t;
+
+      const baseTop = lerp(heroDocTop, docTop, t);
+      const baseLeft = lerp(heroLeft, cellRect.left, t);
+
+      return {
+        top: baseTop + slot.y * fan - scrollY,
+        left: baseLeft + slot.x * fan,
+        rotate: slot.rotate * fan,
+        scale: lerp(1, slot.scale, fan),
+        opacity: lerp(1, slot.opacity, fan),
+        zIndex: stackSlots.length - stackSlots.indexOf(slot),
+        ready: true,
+      };
+    });
+    setCardStyles(next);
+  }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    updateMorph();
+    window.addEventListener("resize", updateMorph);
+    return () => window.removeEventListener("resize", updateMorph);
+  }, [updateMorph, isDesktop, order]);
+
+  useLenis(updateMorph);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = setInterval(() => {
+      if (morphActiveRef.current) return;
+      setOrder((prev) => {
+        const next = [...prev];
+        const back = next.pop();
+        if (back !== undefined) next.unshift(back);
+        return next;
+      });
+    }, 2400);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <>
       {/* Dark enterprise-style hero (Stripe's /enterprise page look): a
           diagonal warm glow over a dark navy section, bold white heading
           with the last line in the brand's existing purple-to-orange
-          gradient (same one Hero3 uses), a floating stat card on the right
-          instead of a dashboard screenshot, and the customer logo row
-          directly beneath — mirroring Stripe's logos sitting just below the
-          dark band. */}
+          gradient (same one Hero3 uses), and a floating stack of capability
+          cards on the right instead of a dashboard screenshot. */}
       <section className="relative overflow-hidden bg-secondary-500 py-[140px]">
         <div
           className="pointer-events-none absolute inset-0"
@@ -187,14 +352,47 @@ export default function InventoryIntelligence() {
               </Button>
             </div>
 
-            <div className="mx-auto w-full max-w-md lg:mx-0 lg:ml-auto">
-              <CardStack />
+            <div className="mx-auto w-full max-w-sm lg:mx-0 lg:ml-auto">
+              {isDesktop ? (
+                <div ref={heroSlotRef} style={{ width: CARD_W, height: CARD_H }} className="mx-auto" />
+              ) : (
+                <MobileCardStack order={order} />
+              )}
             </div>
           </div>
         </div>
       </section>
 
-      <Customers />
+      <HighlightsBar />
+
+      {/* Fixed overlay carrying the actual visible cards on desktop: their
+          position is computed every scroll tick (see updateMorph) against
+          the hero slot above and the grid-cell placeholders below, so they
+          visually travel from one to the other as the page scrolls. */}
+      {isDesktop && (
+        <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-40">
+          {capabilities.map((c, i) => {
+            const s = cardStyles[i];
+            return (
+              <div
+                key={c.title}
+                className="absolute rounded-2xl border border-secondary-100 bg-white p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.35)]"
+                style={{
+                  top: s.top,
+                  left: s.left,
+                  width: CARD_W,
+                  height: CARD_H,
+                  transform: `rotate(${s.rotate}deg) scale(${s.scale})`,
+                  opacity: s.ready ? s.opacity : 0,
+                  zIndex: s.zIndex,
+                }}
+              >
+                <CapabilityCardFace c={c} />
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Capabilities */}
       <section className="py-[120px]">
@@ -214,32 +412,52 @@ export default function InventoryIntelligence() {
             descriptionClassName="mx-auto"
           />
 
-          {/* Two rows of 4 and 3 (rather than one 4-col grid, which left
-              the last row's 3 cards sitting left-aligned with an empty
-              slot) so the bottom row's cards spread evenly across the
-              full width instead. */}
-          <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {capabilities.slice(0, 4).map((c) => (
-              <GlowCard key={c.title}>
-                <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
-                  <c.Icon style={{ fontSize: 22 }} />
-                </span>
-                <p className="text-h4 mt-4 font-display font-semibold text-heading">{c.title}</p>
-                <p className="mt-1.5 text-xs leading-relaxed text-caption">{c.desc}</p>
-              </GlowCard>
-            ))}
-          </div>
-          <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {capabilities.slice(4).map((c) => (
-              <GlowCard key={c.title}>
-                <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
-                  <c.Icon style={{ fontSize: 22 }} />
-                </span>
-                <p className="text-h4 mt-4 font-display font-semibold text-heading">{c.title}</p>
-                <p className="mt-1.5 text-xs leading-relaxed text-caption">{c.desc}</p>
-              </GlowCard>
-            ))}
-          </div>
+          {isDesktop ? (
+            // Invisible placeholders only: they reserve the grid's layout
+            // space and give updateMorph a live rect per card to land on.
+            // The actual card UI is painted by the fixed overlay above.
+            <div className="mx-auto mt-16 max-w-6xl">
+              <div className="flex flex-wrap justify-center gap-4">
+                {capabilities.slice(0, 4).map((c, i) => (
+                  <div
+                    key={c.title}
+                    ref={(el) => {
+                      cellRefs.current[i] = el;
+                    }}
+                    style={{ width: CARD_W, height: CARD_H }}
+                  />
+                ))}
+              </div>
+              <div className="mt-4 flex flex-wrap justify-center gap-4">
+                {capabilities.slice(4).map((c, i) => (
+                  <div
+                    key={c.title}
+                    ref={(el) => {
+                      cellRefs.current[i + 4] = el;
+                    }}
+                    style={{ width: CARD_W, height: CARD_H }}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                {capabilities.slice(0, 4).map((c) => (
+                  <GlowCard key={c.title}>
+                    <CapabilityCardFace c={c} />
+                  </GlowCard>
+                ))}
+              </div>
+              <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {capabilities.slice(4).map((c) => (
+                  <GlowCard key={c.title}>
+                    <CapabilityCardFace c={c} />
+                  </GlowCard>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </section>
 
