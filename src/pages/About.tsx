@@ -1,17 +1,14 @@
 import PersonIcon from "@mui/icons-material/Person";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import SectionHeading from "../components/ui/SectionHeading";
 
 const teamMembers = [
-  "Ashish Charan Tandi",
-  "Prashanth Dharawath",
-  "Sharath Bhat",
-  "Chetan Sai",
-  "Gopinadh Boppudi",
-].map((name) => ({
-  name,
-  role: "[Role placeholder]",
-  bio: "[Short bio — add once available.]",
-}));
+  { name: "Prashanth Dharawath", role: "Co-Founder & CEO", linkedin: "#" },
+  { name: "Ashish Tandi", role: "Co-Founder & CTO", linkedin: "#" },
+  { name: "Sharath Bhat", role: "Co-Founder, GTM & Strategy", linkedin: "#" },
+  { name: "Chetan Sai", role: "Co-Founder & Technical Delivery Lead", linkedin: "#" },
+  { name: "Gopinadh Boppudi", role: "Senior Software Engineer", linkedin: "#" },
+];
 
 export default function About() {
   return (
@@ -108,12 +105,16 @@ export default function About() {
 
           {/* Team directory: full-bleed photo placeholder up top, like
               real headshot cards, instead of a small avatar floating in
-              a mostly-empty card. */}
+              a mostly-empty card. Each card links out to that person's
+              LinkedIn profile. */}
           <div className="mt-16 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
             {teamMembers.map((member) => (
-              <div
+              <a
                 key={member.name}
-                className="overflow-hidden rounded-2xl border border-secondary-100 bg-white"
+                href={member.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block overflow-hidden rounded-2xl border border-secondary-100 bg-white transition-colors hover:border-primary-300"
               >
                 <div className="flex aspect-square w-full items-center justify-center border-b border-dashed border-secondary-200 bg-page text-caption">
                   <PersonIcon style={{ fontSize: 40 }} />
@@ -125,11 +126,14 @@ export default function About() {
                   <p className="mt-0.5 text-xs font-medium text-caption">
                     {member.role}
                   </p>
-                  <p className="mt-2 text-xs italic leading-relaxed text-caption">
-                    {member.bio}
+                  <p className="mt-3 flex items-center gap-1.5 text-xs font-medium text-primary-500">
+                    <LinkedInIcon style={{ fontSize: 16 }} />
+                    <span className="transition-transform duration-200 group-hover:translate-x-0.5">
+                      View profile
+                    </span>
                   </p>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         </div>
