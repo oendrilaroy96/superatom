@@ -77,12 +77,12 @@ const highlights: { label: string; Icon: IconComponent }[] = [
 // of depth (opacity is reserved for the exit-fade pose below).
 const stackSlots = [
   { x: 0, y: 0, rotate: 0, scale: 1, opacity: 1 },
-  { x: 47, y: 33, rotate: 4, scale: 0.95, opacity: 1 },
-  { x: 89, y: 68, rotate: 8, scale: 0.9, opacity: 1 },
-  { x: 126, y: 105, rotate: 11, scale: 0.85, opacity: 1 },
-  { x: 159, y: 142, rotate: 14, scale: 0.8, opacity: 1 },
-  { x: 187, y: 177, rotate: 16, scale: 0.75, opacity: 1 },
-  { x: 210, y: 210, rotate: 18, scale: 0.7, opacity: 1 },
+  { x: 63, y: 45, rotate: 4, scale: 0.95, opacity: 1 },
+  { x: 120, y: 92, rotate: 8, scale: 0.9, opacity: 1 },
+  { x: 170, y: 142, rotate: 11, scale: 0.85, opacity: 1 },
+  { x: 215, y: 192, rotate: 14, scale: 0.8, opacity: 1 },
+  { x: 252, y: 239, rotate: 16, scale: 0.75, opacity: 1 },
+  { x: 284, y: 284, rotate: 18, scale: 0.7, opacity: 1 },
 ];
 
 // Pose for whichever card just stepped down from front: instead of easing
@@ -530,7 +530,7 @@ export default function InventoryIntelligence() {
               </Button>
             </div>
 
-            <div className="mx-auto w-full max-w-sm lg:mx-0 lg:ml-auto lg:max-w-lg lg:-translate-y-6">
+            <div className="mx-auto w-full max-w-sm lg:mx-0 lg:ml-auto lg:max-w-xl lg:-translate-y-16">
               {isDesktop ? (
                 <div ref={heroSlotRef} style={{ width: CARD_W, height: CARD_H }} />
               ) : (
