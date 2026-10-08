@@ -94,9 +94,12 @@ const CARD_H = 288;
 // the grid, so there's nothing to pop between the two.
 const HERO_SCALE = 1.3;
 
-// How far below the sticky header (h-16 = 64px) the stack pins while the
-// cards are unstacking into the grid below.
-const PIN_TOP = 96;
+// CSS `top` offset for the sticky "Capabilities" heading (a little below
+// the h-16 = 64px main header). The cards pin below the heading's own
+// measured height, so the heading stays fully readable above them while
+// they arrange — see STICKY_TOP's use in updateMorph.
+const STICKY_TOP = 80;
+const CARDS_GAP_BELOW_HEADING = 24;
 
 // Scroll distance (px) spent fanning the stack open into a flat row while
 // pinned in place, then the extra distance it just sits there, fully
@@ -219,6 +222,7 @@ export default function InventoryIntelligence() {
 
   const heroSlotRef = useRef<HTMLDivElement>(null);
   const cellRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const headingRef = useRef<HTMLDivElement>(null);
   const morphActiveRef = useRef(false);
 
   // `updateMorph` is handed to useLenis below and must keep one stable
@@ -264,8 +268,14 @@ export default function InventoryIntelligence() {
     const heroDocTop = heroRect.top + scrollY;
     const cell0DocTop = cell0Rect.top + scrollY;
 
-    const morphStart = heroDocTop - PIN_TOP;
-    const morphEnd = cell0DocTop - PIN_TOP;
+    // The cards pin just below the sticky "Capabilities" heading, whose
+    // height is measured live (it wraps differently at different widths)
+    // rather than assumed, so there's never an overlap between the two.
+    const headingH = headingRef.current?.getBoundingClientRect().height ?? 0;
+    const pinTop = STICKY_TOP + headingH + CARDS_GAP_BELOW_HEADING;
+
+    const morphStart = heroDocTop - pinTop;
+    const morphEnd = cell0DocTop - pinTop;
     const rawSpan = Math.max(1, morphEnd - morphStart);
 
     const unstackSpan = Math.max(60, Math.min(UNSTACK_PX, rawSpan * 0.4));
@@ -289,8 +299,8 @@ export default function InventoryIntelligence() {
     const row2Left = centerX - row2Width / 2;
     const readPosFor = (i: number) =>
       i < 4
-        ? { top: PIN_TOP, left: row1Left + i * (CARD_W + READ_GAP) }
-        : { top: PIN_TOP + CARD_H + READ_GAP, left: row2Left + (i - 4) * (CARD_W + READ_GAP) };
+        ? { top: pinTop, left: row1Left + i * (CARD_W + READ_GAP) }
+        : { top: pinTop + CARD_H + READ_GAP, left: row2Left + (i - 4) * (CARD_W + READ_GAP) };
 
     const order = orderRef.current;
     const next = capabilities.map((_, i) => {
@@ -380,6 +390,44 @@ export default function InventoryIntelligence() {
     return () => clearInterval(id);
   }, []);
 
+  // Shared between the sticky (desktop) and in-flow (mobile) placements
+  // below so the two don't drift out of sync.
+  const capabilitiesHeading = (
+    <SectionHeading
+      align="center"
+      theme="light"
+      eyebrow="Capabilities"
+      eyebrowColor="primary"
+      heading={
+        <span style={{ overflowWrap: "break-word", hyphens: "auto" }}>
+          End-to-end inventory intelligence
+        </span>
+      }
+      description="From planning to execution, Superatom helps you make and automate better inventory decisions across your network."
+      className="mx-auto max-w-2xl"
+      descriptionClassName="mx-auto"
+    />
+  );
+
+  // A short, single-line version for the sticky desktop bar: the full
+  // heading above (with its description) runs 400px+ tall, which would
+  // push the cards' pin point below where the hero stack itself starts,
+  // leaving no scroll room before pinning kicks in. This stays compact
+  // enough that there's always real "still embedded in the hero" room
+  // first, and un-sticks to become the Capabilities section's actual
+  // heading once the cards land in the grid.
+  const stickyHeadingCompact = (
+    <p className="text-center">
+      <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-500">
+        Capabilities
+      </span>
+      <span className="mx-2 text-secondary-200">&bull;</span>
+      <span className="font-display text-base font-bold text-heading sm:text-lg">
+        End-to-end inventory intelligence
+      </span>
+    </p>
+  );
+
   return (
     <>
       {/* Dark enterprise-style hero (Stripe's /enterprise page look): a
@@ -443,13 +491,24 @@ export default function InventoryIntelligence() {
 
       <HighlightsBar />
 
-      {/* Dedicated scroll room for the pin -> unstack -> hold -> glide
-          sequence below, independent of how tall the hero itself is. */}
+      {/* The "Capabilities" heading sticks just below the header for as
+          long as the stack below is arranging, so its context stays
+          visible the whole time instead of being scrolled past before the
+          cards ever come into view. It un-sticks naturally once this
+          block's extra height (the arrange scroll room) runs out, right
+          as the cards finish landing in the real grid. */}
       {isDesktop && (
-        <div
-          aria-hidden="true"
-          style={{ height: UNSTACK_PX + HOLD_PX + 260 }}
-        />
+        <div>
+          <div
+            ref={headingRef}
+            className="sticky top-20 z-[45] border-b border-secondary-100 bg-[#f8fafd]/95 py-5 backdrop-blur"
+          >
+            <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+              {stickyHeadingCompact}
+            </div>
+          </div>
+          <div aria-hidden="true" style={{ height: UNSTACK_PX + HOLD_PX + 260 }} />
+        </div>
       )}
 
       {/* Fixed overlay carrying the actual visible cards on desktop: their
@@ -488,20 +547,9 @@ export default function InventoryIntelligence() {
       {/* Capabilities */}
       <section className="py-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <SectionHeading
-            align="center"
-            theme="light"
-            eyebrow="Capabilities"
-            eyebrowColor="primary"
-            heading={
-              <span style={{ overflowWrap: "break-word", hyphens: "auto" }}>
-                End-to-end inventory intelligence
-              </span>
-            }
-            description="From planning to execution, Superatom helps you make and automate better inventory decisions across your network."
-            className="mx-auto max-w-2xl"
-            descriptionClassName="mx-auto"
-          />
+          {/* On desktop this heading is rendered once already, sticky,
+              above the arrange-and-glide block up top. */}
+          {!isDesktop && capabilitiesHeading}
 
           {isDesktop ? (
             // Invisible placeholders only: they reserve the grid's layout
