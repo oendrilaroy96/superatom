@@ -151,7 +151,7 @@ function MobileCardStack({ order }: { order: number[] }) {
 /** Dark highlights bar (replaces the logo row right under the hero). */
 function HighlightsBar() {
   return (
-    <section className="border-t border-white/10 bg-secondary-500">
+    <section id="inventory-dark-zone" className="border-t border-white/10 bg-secondary-500">
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
         <div className="flex flex-col divide-y divide-white/10 sm:flex-row sm:divide-x sm:divide-y-0">
           {highlights.map(({ label, Icon }) => (

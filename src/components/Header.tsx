@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
@@ -107,7 +107,16 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [demoOpen, setDemoOpen] = useState(false);
-  const isDark = useDarkTransition();
+  const ctaIsDark = useDarkTransition();
+  const location = useLocation();
+
+  // The Inventory Intelligence page opens on a dark navy hero (plus the
+  // dark highlights bar right under it) rather than the usual light
+  // background, so the header needs to match it from the top instead of
+  // waiting for the page's own CTA section to scroll into view. Dark stays
+  // forced on while any of that dark block (marked by #inventory-dark-zone,
+  // its last/lowest piece) is still visible below the header.
+  const [heroZoneDark, setHeroZoneDark] = useState(false);
 
   function openDemo() {
     setMobileOpen(false);
@@ -120,6 +129,23 @@ export default function Header() {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    const onInventoryPage = location.pathname === "/solutions/inventory-intelligence";
+    const update = () => {
+      const zone = onInventoryPage ? document.getElementById("inventory-dark-zone") : null;
+      setHeroZoneDark(!!zone && zone.getBoundingClientRect().bottom > 64);
+    };
+    update();
+    window.addEventListener("scroll", update);
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [location.pathname]);
+
+  const isDark = heroZoneDark || ctaIsDark;
 
   return (
     <header
