@@ -91,6 +91,14 @@ const stackSlots = [
 // rise into. Used only for the ~750ms right after it loses the front spot.
 const EXIT_SLOT = { x: -120, y: 16, rotate: -10, scale: 0.9, opacity: 0 };
 
+// Mirror image of EXIT_SLOT, off to the right instead of the left: the
+// momentary, invisible starting point a card is snapped to right after its
+// exit finishes, so its re-entry into the back of the stack animates in
+// from the right (sliding left, fading in) rather than popping into place.
+// Same rotate/scale as the back slot it's heading for, so only x and
+// opacity actually animate during the visible part of the re-entry.
+const ENTER_SLOT = { x: 450, y: 284, rotate: 18, scale: 0.7, opacity: 0 };
+
 // A single fixed portrait size used for every card in both the hero stack
 // and the capabilities grid, so a card keeps the same footprint as it
 // travels from one to the other instead of resizing mid-flight.
@@ -133,19 +141,32 @@ function CapabilityCardFace({ c }: { c: (typeof capabilities)[number] }) {
 }
 
 /** Mobile/tablet fallback: the fanned stack with no scroll-driven morph. */
-function MobileCardStack({ order, exitingIndex }: { order: number[]; exitingIndex: number | null }) {
+function MobileCardStack({
+  order,
+  exitingIndex,
+  enteringIndex,
+  shuffling,
+}: {
+  order: number[];
+  exitingIndex: number | null;
+  enteringIndex: number | null;
+  shuffling: boolean;
+}) {
   return (
     <div className="relative h-[420px] w-full max-w-sm">
       {capabilities.map((c, i) => {
-        const slot = i === exitingIndex ? EXIT_SLOT : stackSlots[order.indexOf(i)];
+        const slot =
+          i === exitingIndex ? EXIT_SLOT : i === enteringIndex ? ENTER_SLOT : stackSlots[order.indexOf(i)];
+        const isTransitioning = i === exitingIndex || i === enteringIndex;
         return (
           <div
             key={c.title}
-            className="absolute inset-x-0 top-0 rounded-2xl border border-secondary-100 bg-white p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.35)] transition-all duration-700 ease-in-out"
+            className="absolute inset-x-0 top-0 rounded-2xl border border-secondary-100 bg-white p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.35)]"
             style={{
               transform: `translate(${slot.x}px, ${slot.y}px) rotate(${slot.rotate}deg) scale(${slot.scale})`,
               opacity: slot.opacity,
-              zIndex: i === exitingIndex ? stackSlots.length + 1 : stackSlots.length - stackSlots.indexOf(slot),
+              zIndex: isTransitioning ? stackSlots.length + 1 : stackSlots.length - stackSlots.indexOf(slot),
+              transition: shuffling ? "transform 0.7s cubic-bezier(.22,1,.36,1), opacity 0.7s ease" : "none",
             }}
           >
             <CapabilityCardFace c={c} />
@@ -244,6 +265,7 @@ export default function InventoryIntelligence() {
   const isDesktopRef = useRef(isDesktop);
   const orderRef = useRef(order);
   const exitingIndexRef = useRef<number | null>(null);
+  const enteringIndexRef = useRef<number | null>(null);
   useEffect(() => {
     isDesktopRef.current = isDesktop;
     orderRef.current = order;
@@ -323,10 +345,12 @@ export default function InventoryIntelligence() {
 
     const order = orderRef.current;
     const exitingIndex = exitingIndexRef.current;
+    const enteringIndex = enteringIndexRef.current;
     const next = capabilities.map((_, i) => {
       const cellEl = cellRefs.current[i] ?? cell0;
       const cellRect = cellEl.getBoundingClientRect();
-      const slot = i === exitingIndex ? EXIT_SLOT : stackSlots[order.indexOf(i)];
+      const slot =
+        i === exitingIndex ? EXIT_SLOT : i === enteringIndex ? ENTER_SLOT : stackSlots[order.indexOf(i)];
       // Tracks the hero card live while it's still naturally below pinTop;
       // once scrolling would carry it above that (well before the dark
       // zone has actually scrolled past, since the card sits mid-hero, not
@@ -398,14 +422,17 @@ export default function InventoryIntelligence() {
   // While true, the overlay cards get a CSS transition so each step of the
   // carousel reads as motion (the retiring card sliding out, the next one
   // rising in) rather than snapping there. It's only ever turned on for
-  // that 700ms window: the continuous scroll-driven repositioning above
-  // must stay untransitioned (instant) or it would lag behind the actual
-  // scroll position.
+  // these transition windows: the continuous scroll-driven repositioning
+  // above must stay untransitioned (instant) or it would lag behind the
+  // actual scroll position.
   const [shuffling, setShuffling] = useState(false);
   // Which capability just stepped down from front and is mid-exit (slides
-  // left, fades to 0) — read by MobileCardStack directly; the desktop
-  // overlay reads the ref mirror of this instead (see updateMorph above).
+  // left, fades to 0); which one is mid-entry (slides in from the right,
+  // fades in, into the back of the stack) — read by MobileCardStack
+  // directly, the desktop overlay reads the ref mirrors instead (see
+  // updateMorph above).
   const [exitingIndex, setExitingIndex] = useState<number | null>(null);
+  const [enteringIndex, setEnteringIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -415,19 +442,42 @@ export default function InventoryIntelligence() {
       // (so whichever was 2nd becomes the new front) — an endless loop
       // through all 7, rather than pulling the back card forward.
       const frontCapability = orderRef.current[0];
+
+      // Phase 1 (0-750ms): slide left and fade out.
       exitingIndexRef.current = frontCapability;
       setExitingIndex(frontCapability);
       setShuffling(true);
       setOrder((prev) => [...prev.slice(1), prev[0]]);
+
       window.setTimeout(() => {
+        // Snap it (invisible at opacity 0, so the jump itself is never
+        // seen) to a starting point off to the right, by committing this
+        // with the transition briefly switched off.
         setShuffling(false);
         exitingIndexRef.current = null;
         setExitingIndex(null);
-        // Without this, nothing would recompute cardStyles again until the
-        // next shuffle or scroll tick, so the just-exited card would stay
-        // frozen in its exit pose for the ~1.65s in between instead of
-        // settling at the back of the stack right away.
+        enteringIndexRef.current = frontCapability;
+        setEnteringIndex(frontCapability);
         updateMorph();
+
+        requestAnimationFrame(() => {
+          // Phase 2 (+700ms): now animate from that right-hand starting
+          // point into its real spot at the back of the stack, fading in
+          // as it arrives — the mirror image of phase 1.
+          setShuffling(true);
+          enteringIndexRef.current = null;
+          setEnteringIndex(null);
+          updateMorph();
+
+          window.setTimeout(() => {
+            setShuffling(false);
+            // Without this, nothing would recompute cardStyles again until
+            // the next shuffle or scroll tick, so the card would stay
+            // frozen mid-entry for the remaining time between shuffles
+            // instead of settling at the back of the stack right away.
+            updateMorph();
+          }, 700);
+        });
       }, 750);
     }, 2400);
     return () => clearInterval(id);
@@ -534,7 +584,12 @@ export default function InventoryIntelligence() {
               {isDesktop ? (
                 <div ref={heroSlotRef} style={{ width: CARD_W, height: CARD_H }} />
               ) : (
-                <MobileCardStack order={order} exitingIndex={exitingIndex} />
+                <MobileCardStack
+                  order={order}
+                  exitingIndex={exitingIndex}
+                  enteringIndex={enteringIndex}
+                  shuffling={shuffling}
+                />
               )}
             </div>
           </div>
