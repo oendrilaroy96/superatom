@@ -530,7 +530,7 @@ export default function InventoryIntelligence() {
               </Button>
             </div>
 
-            <div className="mx-auto w-full max-w-sm lg:mx-0 lg:ml-auto lg:max-w-lg">
+            <div className="mx-auto w-full max-w-sm lg:mx-0 lg:ml-auto lg:max-w-lg lg:-translate-y-6">
               {isDesktop ? (
                 <div ref={heroSlotRef} style={{ width: CARD_W, height: CARD_H }} />
               ) : (
