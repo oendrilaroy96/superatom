@@ -20,12 +20,12 @@ const teamMembers = [
   },
   {
     name: "Chetan Sai",
-    role: "Co-Founder & Technical Delivery Lead",
+    role: "Co-Founder & COO",
     linkedin: "https://www.linkedin.com/in/chetan-sai-1720a8174/",
   },
   {
     name: "Gopinadh Boppudi",
-    role: "Senior Software Engineer",
+    role: "Head of Engineering",
     linkedin: "https://www.linkedin.com/in/gopinadh-boppudi-8730751b0/",
   },
 ];

@@ -213,8 +213,8 @@ const distortionStats: { value: string; label: string }[] = [
 const industries: { label: string; Icon: IconComponent }[] = [
   { label: "Supply Chain & Logistics", Icon: LocalShippingIcon },
   { label: "Retail & E-Commerce", Icon: StorefrontIcon },
-  { label: "Financial Services", Icon: AccountBalanceIcon },
-  { label: "Healthcare", Icon: LocalHospitalIcon },
+  // { label: "Financial Services", Icon: AccountBalanceIcon },
+  { label: "Pharma", Icon: LocalHospitalIcon },
   { label: "Manufacturing", Icon: PrecisionManufacturingIcon },
 ];
 
@@ -558,66 +558,66 @@ export default function InventoryIntelligence() {
           card stack need more room than one mobile screen without feeling
           cramped, so forcing the same 100vh there would only overflow. */}
       <div className="flex flex-col lg:h-[calc(100vh-4rem)]">
-      <section className="relative flex flex-1 items-center overflow-hidden bg-secondary-500 py-16 lg:py-0">
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            backgroundImage:
-              "radial-gradient(1400px 900px at 100% 110%, rgba(255,118,0,0.3), transparent 60%), radial-gradient(1000px 800px at 75% 40%, rgba(255,126,176,0.18), transparent 55%), radial-gradient(1200px 900px at 0% -10%, rgba(83,58,253,0.3), transparent 55%)",
-          }}
-          aria-hidden="true"
-        />
-        <div className="relative mx-auto w-full max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
-            <div>
-              <p className="text-h5 font-semibold uppercase tracking-[0.5px] text-primary-300">
-                Inventory Intelligence
-              </p>
-              <h1 className="mt-4 font-display text-[44px] font-bold leading-[1.1] text-white sm:text-[56px] lg:text-[64px]">
-                End-to-end
-                <br />
-                <span
-                  className="bg-clip-text text-transparent"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)",
-                  }}
+        <section className="relative flex flex-1 items-center overflow-hidden bg-secondary-500 py-16 lg:py-0">
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              backgroundImage:
+                "radial-gradient(1400px 900px at 100% 110%, rgba(255,118,0,0.3), transparent 60%), radial-gradient(1000px 800px at 75% 40%, rgba(255,126,176,0.18), transparent 55%), radial-gradient(1200px 900px at 0% -10%, rgba(83,58,253,0.3), transparent 55%)",
+            }}
+            aria-hidden="true"
+          />
+          <div className="relative mx-auto w-full max-w-[1920px] px-4 sm:px-10 xl:px-20">
+            <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+              <div>
+                <p className="text-h5 font-semibold uppercase tracking-[0.5px] text-primary-300">
+                  Inventory Intelligence
+                </p>
+                <h1 className="mt-4 font-display text-[44px] font-bold leading-[1.1] text-white sm:text-[56px] lg:text-[64px]">
+                  End-to-end
+                  <br />
+                  <span
+                    className="bg-clip-text text-transparent"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)",
+                    }}
+                  >
+                    inventory intelligence
+                  </span>
+                </h1>
+                <p className="mt-6 max-w-lg text-[18px] leading-[1.55] text-white/70">
+                  Superatom brings together your data, business context, rules
+                  and policies to help you optimize, rebalance and proactively
+                  manage inventory across your entire supply chain.
+                </p>
+                <Button
+                  variant="accentOutline"
+                  iconRight={<ArrowForwardIcon style={{ fontSize: 18 }} />}
+                  className="mt-8 font-semibold"
+                  onClick={() => setDemoOpen(true)}
                 >
-                  inventory intelligence
-                </span>
-              </h1>
-              <p className="mt-6 max-w-lg text-[18px] leading-[1.55] text-white/70">
-                Superatom brings together your data, business context, rules
-                and policies to help you optimize, rebalance and proactively
-                manage inventory across your entire supply chain.
-              </p>
-              <Button
-                variant="accentOutline"
-                iconRight={<ArrowForwardIcon style={{ fontSize: 18 }} />}
-                className="mt-8 font-semibold"
-                onClick={() => setDemoOpen(true)}
-              >
-                Book a demo
-              </Button>
-            </div>
+                  Book a demo
+                </Button>
+              </div>
 
-            <div className="mx-auto w-full max-w-sm lg:mx-0 lg:ml-auto lg:max-w-xl lg:-translate-y-16">
-              {isDesktop ? (
-                <div ref={heroSlotRef} style={{ width: CARD_W, height: CARD_H }} />
-              ) : (
-                <MobileCardStack
-                  order={order}
-                  exitingIndex={exitingIndex}
-                  enteringIndex={enteringIndex}
-                  shuffling={shuffling}
-                />
-              )}
+              <div className="mx-auto w-full max-w-sm lg:mx-0 lg:ml-auto lg:max-w-xl lg:-translate-y-16">
+                {isDesktop ? (
+                  <div ref={heroSlotRef} style={{ width: CARD_W, height: CARD_H }} />
+                ) : (
+                  <MobileCardStack
+                    order={order}
+                    exitingIndex={exitingIndex}
+                    enteringIndex={enteringIndex}
+                    shuffling={shuffling}
+                  />
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <HighlightsBar />
+        <HighlightsBar />
       </div>
 
       {/* The full "Capabilities" heading sticks just below the header while
@@ -751,14 +751,12 @@ export default function InventoryIntelligence() {
               {distortionStats.map((stat, i) => (
                 <div
                   key={stat.label}
-                  className={`border-secondary-100 px-6 py-10 text-center ${
-                    i % 2 === 1 ? "border-l" : ""
-                  } ${i >= 2 ? "border-t sm:border-t-0" : ""} ${i > 0 ? "sm:border-l" : ""}`}
+                  className={`border-secondary-100 px-6 py-10 text-center ${i % 2 === 1 ? "border-l" : ""
+                    } ${i >= 2 ? "border-t sm:border-t-0" : ""} ${i > 0 ? "sm:border-l" : ""}`}
                 >
                   <p
-                    className={`font-display text-[30px] font-bold sm:text-[40px] ${
-                      i === 0 ? "text-heading" : "text-secondary-300"
-                    }`}
+                    className={`font-display text-[30px] font-bold sm:text-[40px] ${i === 0 ? "text-heading" : "text-secondary-300"
+                      }`}
                   >
                     {stat.value}
                   </p>
