@@ -12,7 +12,6 @@ import TuneIcon from "@mui/icons-material/Tune";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import StorefrontIcon from "@mui/icons-material/Storefront";
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
