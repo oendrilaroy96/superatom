@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import DemoModal from "./DemoModal";
@@ -56,21 +57,25 @@ function OfficeCard({ office }: { office: Office }) {
 /**
  * CTA banner shown above the footer on every page: a dark gradient card with
  * the demo CTA, paired with the company's office locations. The section's
- * own background crossfades from the testimonial section's light lavender to
- * dark in sync with the shared scroll threshold (like the testimonial
- * section), while the dark card and office cards keep their fixed styling
- * throughout — the same pattern as the testimonial's quote card staying
- * light regardless of its section background.
+ * own background crossfades from light to dark in sync with the shared
+ * scroll threshold, while the dark card and office cards keep their fixed
+ * styling throughout — the same pattern as the testimonial's quote card
+ * staying light regardless of its section background. The light stage
+ * matches whatever section sits right above it on that page: the
+ * testimonial section's lavender on the home page, but the About page's
+ * team section instead crossfades through its own plain page background,
+ * so this follows suit there rather than introducing a mismatched tint.
  */
 export default function CtaSection() {
   const [demoOpen, setDemoOpen] = useState(false);
   const isDark = useDarkTransition();
+  const isAboutPage = useLocation().pathname === "/about";
 
   return (
     <section
       id="cta-section"
       className={`transition-colors duration-700 ease-in-out py-[120px] ${
-        isDark ? "bg-transparent" : "bg-[#f5f5ff]"
+        isDark ? "bg-transparent" : isAboutPage ? "bg-page" : "bg-[#f5f5ff]"
       }`}
     >
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">

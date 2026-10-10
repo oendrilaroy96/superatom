@@ -115,7 +115,16 @@ const HERO_SCALE = 1.3;
 // measured height, so the heading stays fully readable above them while
 // they arrange.
 const STICKY_TOP = 80;
-const CARDS_GAP_BELOW_HEADING = 24;
+// This also sets how much earlier `position: sticky`'s own native release
+// point sits relative to morphEnd (the cards' real landing point): that
+// gap works out to exactly (the Capabilities section's own py-[120px]) +
+// (the grid's mt-16, 64px) - CARDS_GAP_BELOW_HEADING, independent of how
+// big the sticky block's spacer is made. Setting this to their sum (184)
+// cancels that gap to zero, so the heading only ever lets go of its pin
+// right as the cards actually finish landing — not up to ~160px of scroll
+// earlier, which used to leave the cards still visibly gliding into place
+// on their own after the heading had already resumed scrolling away.
+const CARDS_GAP_BELOW_HEADING = 184;
 
 // Scroll distance (px) spent fanning the stack open into a flat row while
 // pinned in place, then the extra distance it just sits there, fully
@@ -355,10 +364,16 @@ export default function InventoryIntelligence() {
 
     morphActiveRef.current = scrollY > morphStart;
 
-    // Once the stack has finished fanning out into the grid preview (the
-    // fan has fully closed), the heading no longer needs to stay pinned —
-    // it can scroll away with the rest of the page like any other section.
-    const shouldPin = scrollY <= unstackEndY;
+    // Stays pinned through the whole arrange sequence — fan-out, hold and
+    // the final glide into the real grid cells — releasing only once the
+    // cards have actually landed. Releasing any earlier (e.g. right after
+    // the fan closes) would let the heading resume scrolling away while
+    // the cards were still gliding into place on their own fixed-position
+    // schedule, so the two visibly drifted apart instead of moving as one
+    // unit; releasing them together at the same instant means there's
+    // nothing left animating independently afterwards, so the cards simply
+    // scroll up with the heading like normal page content from then on.
+    const shouldPin = scrollY <= morphEnd;
     if (shouldPin !== headingPinnedRef.current) {
       headingPinnedRef.current = shouldPin;
       setHeadingPinned(shouldPin);

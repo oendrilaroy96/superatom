@@ -1,6 +1,7 @@
 import PersonIcon from "@mui/icons-material/Person";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import SectionHeading from "../components/ui/SectionHeading";
+import { useDarkTransition } from "../context/DarkTransitionContext";
 
 const teamMembers = [
   {
@@ -31,73 +32,101 @@ const teamMembers = [
 ];
 
 export default function About() {
+  // Crossfades this section's own background from light to dark in sync
+  // with the shared scroll threshold, the same pattern Testimonial uses on
+  // the home page — so there's a section doing that handoff right before
+  // CtaSection here too, instead of CtaSection's own crossfade being the
+  // first one on the page.
+  const isDark = useDarkTransition();
+
   return (
-    <section className="py-[120px]">
-      <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-        <div className="max-w-2xl">
-          <SectionHeading
-            align="left"
-            theme="light"
-            eyebrow="About Superatom AI"
-            eyebrowColor="accent"
-            heading={
-              <>
-                Every great outcome starts with{" "}
-                <span className="text-primary-500">an informed decision.</span>
-              </>
-            }
-          />
-
-          <div className="mt-6 space-y-4 text-p text-body">
-            <p>
-              Just as atoms combine to build everything we see,
-              enterprises are built from thousands of decisions —
-              what to buy, where to ship, who to trust.
-            </p>
-            <p className="font-semibold text-heading">
-              Superatom AI is built to make those decisions smarter.
-            </p>
-            <p>
-              We bring together the data, context, intelligence and
-              actions needed to make each decision better, and connect
-              thousands of those decisions into a smarter, more
-              responsive enterprise.
-            </p>
-          </div>
-
-          <p className="mt-6 font-display text-h3 font-semibold text-primary-500">
-            Decide Fast. Decide Right. Every Time.
-          </p>
-          <p className="mt-2 text-h5 font-semibold uppercase tracking-[0.5px] text-caption">
-            That&rsquo;s the idea behind Superatom.
-          </p>
-        </div>
-
-        <div className="mt-24 sm:mt-32">
-          {/* Matches the hero's 2-column split above (same width, same
-              gap) instead of a separately centered, narrower container —
-              keeps this section flush with the page's own padding. */}
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
+    <>
+      <section className="py-[120px]">
+        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+          <div className="max-w-2xl">
             <SectionHeading
               align="left"
               theme="light"
+              eyebrow="About Superatom AI"
+              eyebrowColor="accent"
+              heading={
+                <>
+                  Every great outcome starts with{" "}
+                  <span className="text-primary-500">an informed decision.</span>
+                </>
+              }
+            />
+
+            <div className="mt-6 space-y-4 text-p text-body">
+              <p>
+                Just as atoms combine to build everything we see,
+                enterprises are built from thousands of decisions —
+                what to buy, where to ship, who to trust.
+              </p>
+              <p className="font-semibold text-heading">
+                Superatom AI is built to make those decisions smarter.
+              </p>
+              <p>
+                We bring together the data, context, intelligence and
+                actions needed to make each decision better, and connect
+                thousands of those decisions into a smarter, more
+                responsive enterprise.
+              </p>
+            </div>
+
+            <p className="mt-6 font-display text-h3 font-semibold text-primary-500">
+              Decide Fast. Decide Right. Every Time.
+            </p>
+            <p className="mt-2 text-h5 font-semibold uppercase tracking-[0.5px] text-caption">
+              That&rsquo;s the idea behind Superatom.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        className={`py-[120px] transition-colors duration-700 ease-in-out ${
+          isDark ? "bg-secondary-500" : "bg-page"
+        }`}
+      >
+        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+          {/* Matches the hero's 2-column split above (same width, same
+              gap) instead of a separately centered, narrower container —
+              keeps this section flush with the page's own padding.
+              items-start rather than items-center: the heading reads as
+              its own top-anchored block next to the paragraph, rather than
+              floating at the paragraph's vertical midpoint. */}
+          <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-16">
+            <SectionHeading
+              align="left"
+              theme={isDark ? "dark" : "light"}
               eyebrow="Our Team"
               eyebrowColor="primary"
               heading={
                 <>
                   Experience that understands{" "}
-                  <span className="text-primary-500">enterprise.</span>
+                  <span className={isDark ? "text-primary-300" : "text-primary-500"}>
+                    enterprise.
+                  </span>
                 </>
               }
             />
 
             <div>
-              <p className="text-p font-semibold text-heading">
+              <p
+                className={`text-p font-semibold transition-colors duration-700 ease-in-out ${
+                  isDark ? "text-white" : "text-heading"
+                }`}
+              >
                 We bring years of enterprise systems building expertise
                 to you through Superatom AI.
               </p>
 
-              <div className="mt-4 space-y-4 text-p text-body">
+              <div
+                className={`mt-4 space-y-4 text-p transition-colors duration-700 ease-in-out ${
+                  isDark ? "text-white/70" : "text-body"
+                }`}
+              >
                 <p>
                   Superatom AI is built by people from successful, large
                   scale enterprises such as Blue Yonder, Pine Labs and
@@ -114,10 +143,18 @@ export default function About() {
 
               <div className="mt-6 h-0.5 w-24 bg-primary-500" />
 
-              <p className="mt-6 font-display text-h3 font-semibold text-heading">
+              <p
+                className={`mt-6 font-display text-h3 font-semibold transition-colors duration-700 ease-in-out ${
+                  isDark ? "text-white" : "text-heading"
+                }`}
+              >
                 Deep experience. Diverse perspectives.
               </p>
-              <p className="font-display text-h3 font-semibold text-primary-500">
+              <p
+                className={`font-display text-h3 font-semibold transition-colors duration-700 ease-in-out ${
+                  isDark ? "text-primary-300" : "text-primary-500"
+                }`}
+              >
                 One mission: faster decisions at scale.
               </p>
             </div>
@@ -126,7 +163,10 @@ export default function About() {
           {/* Team directory: full-bleed photo placeholder up top, like
               real headshot cards, instead of a small avatar floating in
               a mostly-empty card. Each card links out to that person's
-              LinkedIn profile. */}
+              LinkedIn profile. Kept fixed light regardless of the
+              section's own crossfade (same pattern as CtaSection's office
+              cards), so the cards read consistently as "cards" rather than
+              dimming into the dark background. */}
           <div className="mt-16 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
             {teamMembers.map((member) => (
               <a
@@ -154,7 +194,7 @@ export default function About() {
             ))}
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
