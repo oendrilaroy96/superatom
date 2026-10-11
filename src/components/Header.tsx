@@ -51,8 +51,24 @@ function DropdownNavItem({
   columns?: 1 | 2;
   isDark: boolean;
 }) {
+  // Visibility is tracked explicitly (not left to pure CSS :hover) so it
+  // can be force-closed below on navigation: clicking a link inside the
+  // panel changes the route without the cursor actually moving away, and
+  // since the header isn't remounted between pages, :hover alone would
+  // keep the panel showing on top of the new page underneath it.
+  const [open, setOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
+
   return (
-    <div className="group relative">
+    <div
+      className="group relative"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
       <button
         className={`flex items-center gap-1 text-[13.5px] transition-colors duration-700 ease-in-out ${
           isDark ? "text-white/70 hover:text-white" : "text-body hover:text-heading"
@@ -62,9 +78,9 @@ function DropdownNavItem({
         <ChevronDown />
       </button>
       <div
-        className={`invisible absolute left-1/2 top-full z-50 -translate-x-1/2 pt-4 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100 ${
-          columns === 2 ? "w-[620px]" : "w-80"
-        }`}
+        className={`absolute left-1/2 top-full z-50 -translate-x-1/2 pt-4 transition-all duration-150 ${
+          open ? "visible opacity-100" : "invisible opacity-0"
+        } ${columns === 2 ? "w-[620px]" : "w-80"}`}
       >
         <div
           className={`rounded-xl border border-secondary-100 bg-white p-3 shadow-xl shadow-secondary-900/10 ${
