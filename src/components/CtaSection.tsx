@@ -63,8 +63,8 @@ function OfficeCard({ office }: { office: Office }) {
  * staying light regardless of its section background. The light stage
  * matches whatever section sits right above it on that page: the
  * testimonial section's lavender on the home page, but the About page's
- * team section instead crossfades through its own plain page background,
- * so this follows suit there rather than introducing a mismatched tint.
+ * team section instead stays fully transparent in its own light stage, so
+ * this follows suit there too rather than introducing a mismatched tint.
  */
 export default function CtaSection() {
   const [demoOpen, setDemoOpen] = useState(false);
@@ -75,7 +75,7 @@ export default function CtaSection() {
     <section
       id="cta-section"
       className={`transition-colors duration-700 ease-in-out py-[120px] ${
-        isDark ? "bg-transparent" : isAboutPage ? "bg-page" : "bg-[#f5f5ff]"
+        isDark ? "bg-transparent" : isAboutPage ? "bg-transparent" : "bg-[#f5f5ff]"
       }`}
     >
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
