@@ -110,27 +110,18 @@ const CARD_H = 300;
 const HERO_SCALE = 1.3;
 
 // CSS `top` offset for the sticky "Capabilities" heading (a little below
-// the h-16 = 64px main header). The cards pin below the heading's own
-// measured height, so the heading stays fully readable above them while
-// they arrange.
+// the h-16 = 64px main header).
 const STICKY_TOP = 80;
-// This also sets how much earlier `position: sticky`'s own native release
-// point sits relative to morphEnd (the cards' real landing point): that
-// gap works out to exactly (the Capabilities section's own py-[120px]) +
-// (the grid's mt-16, 64px) - CARDS_GAP_BELOW_HEADING, independent of how
-// big the sticky block's spacer is made. Setting this to their sum (184)
-// cancels that gap to zero, so the heading only ever lets go of its pin
-// right as the cards actually finish landing — not up to ~160px of scroll
-// earlier, which used to leave the cards still visibly gliding into place
-// on their own after the heading had already resumed scrolling away.
-const CARDS_GAP_BELOW_HEADING = 184;
 
-// Scroll distance (px) spent fanning the stack open into a flat row while
-// pinned in place, then the extra distance it just sits there, fully
-// arranged and still, so there's a moment to actually read the cards
-// before they continue down into the grid.
-const UNSTACK_PX = 420;
-const HOLD_PX = 480;
+// Scroll distance (px) spent fanning the stack open while pinned below the
+// heading. Also doubles as the gap reserved between the sticky heading and
+// the grid below it: with the heading pinned at STICKY_TOP for this whole
+// stretch, this is almost exactly how much the grid's own natural position
+// has left to travel before it reaches its resting spot under the heading
+// (see the ARRANGE_FLOOR math in updateMorph) — so it has to be at least
+// this big for the CSS `sticky` heading to actually stay stuck the whole
+// time, not just cover up some unrelated chunk of blank page.
+const UNSTACK_PX = 480;
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -250,13 +241,15 @@ export default function InventoryIntelligence() {
   const [isDesktop, setIsDesktop] = useState(true);
   const [order, setOrder] = useState(capabilities.map((_, i) => i));
   // Whether the "Capabilities" heading is currently pinned below the
-  // header. Driven explicitly off scroll position (rather than left to
-  // CSS `position: sticky`'s own release point, which stays coupled to
-  // this block's own height no matter how its spacer is tuned) so it lets
-  // go as soon as the stack has actually finished fanning into the grid
-  // preview, instead of staying stuck through the rest of the arrange.
-  const [headingPinned, setHeadingPinned] = useState(true);
-  const headingPinnedRef = useRef(true);
+  // header — rendered with `position: fixed` rather than CSS `sticky` while
+  // true (see the render below), since the duration it needs to stay
+  // pinned for is derived from real card-travel distance in updateMorph,
+  // not from how tall a spacer div happens to be; `sticky` would just
+  // release early once its own container ran out of room. Starts false:
+  // the page opens on the hero, well before scrolling reaches the point
+  // where the heading would actually need to pin.
+  const [headingPinned, setHeadingPinned] = useState(false);
+  const headingPinnedRef = useRef(false);
   const [cardStyles, setCardStyles] = useState<CardStyle[]>(() =>
     capabilities.map((_, i) => {
       const slot = stackSlots[i];
@@ -276,6 +269,12 @@ export default function InventoryIntelligence() {
   const cellRefs = useRef<(HTMLDivElement | null)[]>([]);
   const headingRef = useRef<HTMLDivElement>(null);
   const morphActiveRef = useRef(false);
+  // The heading's own box height, remeasured every tick (its content never
+  // resizes, so in practice this only actually changes once) — needed by
+  // the placeholder that keeps this block's layout height stable while the
+  // heading itself is pinned (see the render below).
+  const [headingHeight, setHeadingHeight] = useState(0);
+  const headingHeightRef = useRef(0);
 
   // `updateMorph` is handed to useLenis below and must keep one stable
   // identity for the life of the component: useLenis re-subscribes whenever
@@ -295,21 +294,24 @@ export default function InventoryIntelligence() {
   });
 
   // Reads the hero slot's and each grid cell's live position and recomputes
-  // every card's current spot along the hero -> grid journey, in four
+  // every card's current spot along the hero -> grid journey, in three
   // stages driven purely by scroll position:
-  //   A  scrollY <= morphStart       embedded in the hero, tracking 1:1
-  //   B1 through unstackEndY         pinned, fanning out into a flat
-  //                                  preview of the grid (each card gets
-  //                                  its own spread-out spot, not a single
-  //                                  shared point)
-  //   B2 through holdEndY            pinned, holding that flat preview
-  //                                  still so there's time to read it
-  //   C-entry through morphEnd       glides from the preview into this
-  //                                  card's own live grid-cell position
-  //   C  beyond morphEnd             embedded in the grid, tracking 1:1
-  // Each boundary is defined so the two formulas on either side agree
-  // exactly at that scrollY (see the derivation in the project notes), so
-  // there's nothing to pop between any two stages.
+  //   A  scrollY <= morphStart        embedded in the hero, tracking 1:1
+  //   B  through this card's own
+  //      unstackEndY                  pinned, fanning open below the
+  //                                    (also pinned) heading — "arranged"
+  //                                    already means "final", there's no
+  //                                    separate preview spot and no second
+  //                                    move afterward
+  //   C  beyond unstackEndY           embedded in the grid, tracking 1:1
+  // Phase B's top is a plain blend between two fixed points — NEAR_FLOOR
+  // (where Phase A leaves it) and ARRANGE_FLOOR, below the pinned heading's
+  // own height, where Phase C picks it up — rather than chasing a target
+  // that's still moving. Both ends are fixed numbers, so the blend is a
+  // straight line: linear and continuous at both seams by construction,
+  // with no risk of a dip/bump or of overshooting off-screen partway
+  // through. See the headingPinned render below for why the heading itself
+  // pins with `fixed` rather than CSS `sticky`.
   const updateMorph = useCallback(() => {
     if (!isDesktopRef.current) return;
     const heroEl = heroSlotRef.current;
@@ -318,85 +320,59 @@ export default function InventoryIntelligence() {
 
     const scrollY = window.scrollY;
     const heroRect = heroEl.getBoundingClientRect();
-    const cell0Rect = cell0.getBoundingClientRect();
     const heroLeft = heroRect.left;
-    const cell0DocTop = cell0Rect.top + scrollY;
 
-    // The cards pin just below the sticky "Capabilities" heading, whose
-    // height is measured live (it wraps differently at different widths)
-    // rather than assumed, so there's never an overlap between the two.
-    const headingRect = headingRef.current?.getBoundingClientRect();
-    const headingH = headingRect?.height ?? 0;
-    const pinTop = STICKY_TOP + headingH + CARDS_GAP_BELOW_HEADING;
+    if (headingRef.current) {
+      const measuredHeight = headingRef.current.getBoundingClientRect().height;
+      if (measuredHeight !== headingHeightRef.current) {
+        headingHeightRef.current = measuredHeight;
+        setHeadingHeight(measuredHeight);
+      }
+    }
 
-    // A small catch point just under the header — not pinTop itself, which
-    // now (with the full-size heading) sits far lower than the hero stack's
-    // own natural resting spot, and would otherwise drag the whole stack
-    // down and away from the hero copy right from page load. This only
-    // needs to stop the stack disappearing off the top of the screen as it
-    // scrolls with the hero; the unstack phase below carries it the rest of
-    // the way down to pinTop once the heading has had room to arrive.
+    // A small catch point just under the header. Once scrolling would
+    // carry the hero card above this, it simply holds there instead of
+    // disappearing off the top of the screen before arranging begins.
     const NEAR_FLOOR = STICKY_TOP + 16;
+
+    // Once pinned, the heading occupies STICKY_TOP down through its own
+    // height; the stack has to rest below all of that while fanning open,
+    // or it ends up sitting on top of the heading's own text instead of
+    // beside/under it.
+    const ARRANGE_FLOOR = STICKY_TOP + headingHeightRef.current + 24;
 
     // Arranging starts once a card held at NEAR_FLOOR would otherwise just
     // start touching the (still descending, not yet stuck) heading's top
-    // edge — not earlier, and not keyed to pinTop (which grows with the
-    // heading's own height and would push this earlier and earlier as the
-    // heading gets taller, starting the unstack while the hero is still
-    // mid-scroll). A card at NEAR_FLOOR has a visual footprint of
-    // CARD_H * HERO_SCALE, so that's the fixed threshold used instead.
+    // edge — not earlier. A card at NEAR_FLOOR has a visual footprint of
+    // CARD_H * HERO_SCALE, so that's the threshold used.
     const darkZoneEl = document.getElementById("inventory-dark-zone");
     const darkZoneRect = darkZoneEl?.getBoundingClientRect();
-    const darkZoneDocBottom = darkZoneRect ? darkZoneRect.bottom + scrollY : cell0DocTop;
+    const darkZoneDocBottom = darkZoneRect
+      ? darkZoneRect.bottom + scrollY
+      : cell0.getBoundingClientRect().top + scrollY;
 
     const morphStart = darkZoneDocBottom - (NEAR_FLOOR + CARD_H * HERO_SCALE);
-    const morphEnd = cell0DocTop - pinTop;
-    const rawSpan = Math.max(1, morphEnd - morphStart);
 
-    const unstackSpan = Math.max(60, Math.min(UNSTACK_PX, rawSpan * 0.4));
-    const afterUnstack = Math.max(1, rawSpan - unstackSpan);
-    const holdSpan = Math.max(0, Math.min(HOLD_PX, afterUnstack * 0.6));
-    const glideSpan = Math.max(1, rawSpan - unstackSpan - holdSpan);
-
-    const unstackEndY = morphStart + unstackSpan;
-    const holdEndY = unstackEndY + holdSpan;
+    // Each cell's document-space top is fixed regardless of scroll, so the
+    // scroll position at which its live top would reach ARRANGE_FLOOR is a
+    // constant too, computed fresh per card rather than shared, so a card
+    // never fans past the point its own cell actually lands.
+    const unstackEndYs = capabilities.map((_, i) => {
+      const cellEl = cellRefs.current[i] ?? cell0;
+      return cellEl.getBoundingClientRect().top + scrollY - ARRANGE_FLOOR;
+    });
 
     morphActiveRef.current = scrollY > morphStart;
 
-    // Stays pinned through the whole arrange sequence — fan-out, hold and
-    // the final glide into the real grid cells — releasing only once the
-    // cards have actually landed. Releasing any earlier (e.g. right after
-    // the fan closes) would let the heading resume scrolling away while
-    // the cards were still gliding into place on their own fixed-position
-    // schedule, so the two visibly drifted apart instead of moving as one
-    // unit; releasing them together at the same instant means there's
-    // nothing left animating independently afterwards, so the cards simply
-    // scroll up with the heading like normal page content from then on.
-    const shouldPin = scrollY <= morphEnd;
+    // Pinned until the slowest card (the one whose cell has the farthest
+    // left to travel) has landed — released the instant it's fully
+    // arranged, since "arranged" already means every card is sitting in
+    // its final spot, so the page just continues scrolling normally.
+    const shouldPin = scrollY > morphStart && scrollY <= Math.max(...unstackEndYs);
     if (shouldPin !== headingPinnedRef.current) {
       headingPinnedRef.current = shouldPin;
       setHeadingPinned(shouldPin);
     }
-
-    // Fixed viewport-space preview of the final 4-then-3 grid, used while
-    // pinned (B1/B2) so each card has its own spread-out reading spot
-    // instead of all 7 collapsing onto one point as the fan closes. Its top
-    // row tracks the heading's own live bottom edge (rather than the
-    // static, already-stuck pinTop) while the heading is still travelling
-    // up into place, so the preview never settles above a heading that
-    // hasn't arrived yet — it naturally converges on pinTop exactly once
-    // the heading actually sticks.
-    const readTop = headingRect ? Math.max(pinTop, headingRect.bottom + CARDS_GAP_BELOW_HEADING) : pinTop;
-    const READ_GAP = 16;
-    const row1Width = 4 * CARD_W + 3 * READ_GAP;
-    const row2Width = 3 * CARD_W + 2 * READ_GAP;
-    const centerX = window.innerWidth / 2;
-    const row1Left = centerX - row1Width / 2;
-    const row2Left = centerX - row2Width / 2;
-    const readPosFor = (i: number) =>
-      i < 4
-        ? { top: readTop, left: row1Left + i * (CARD_W + READ_GAP) }
-        : { top: readTop + CARD_H + READ_GAP, left: row2Left + (i - 4) * (CARD_W + READ_GAP) };
 
     const order = orderRef.current;
     const exitingIndex = exitingIndexRef.current;
@@ -404,6 +380,7 @@ export default function InventoryIntelligence() {
     const next = capabilities.map((_, i) => {
       const cellEl = cellRefs.current[i] ?? cell0;
       const cellRect = cellEl.getBoundingClientRect();
+      const unstackEndY = unstackEndYs[i];
       const slot =
         i === exitingIndex ? EXIT_SLOT : i === enteringIndex ? ENTER_SLOT : stackSlots[order.indexOf(i)];
       // Tracks the hero card live while it's still naturally below
@@ -411,35 +388,24 @@ export default function InventoryIntelligence() {
       // holds there instead of disappearing above the viewport before the
       // official unstack begins.
       const stackPos = { top: Math.max(heroRect.top + slot.y, NEAR_FLOOR), left: heroLeft + slot.x };
-      const readPos = readPosFor(i);
 
       let fan: number;
       let top: number;
-      let left: number;
 
       if (scrollY <= morphStart) {
         fan = 1;
         top = stackPos.top;
-        left = stackPos.left;
       } else if (scrollY <= unstackEndY) {
-        const localT = clamp((scrollY - morphStart) / unstackSpan, 0, 1);
-        fan = 1 - localT;
-        top = lerp(stackPos.top, readPos.top, localT);
-        left = lerp(stackPos.left, readPos.left, localT);
-      } else if (scrollY <= holdEndY) {
-        fan = 0;
-        top = readPos.top;
-        left = readPos.left;
-      } else if (scrollY <= morphEnd) {
-        fan = 0;
-        const localT = clamp((scrollY - holdEndY) / glideSpan, 0, 1);
-        top = lerp(readPos.top, cellRect.top, localT);
-        left = lerp(readPos.left, cellRect.left, localT);
+        fan = 1 - clamp((scrollY - morphStart) / (unstackEndY - morphStart), 0, 1);
+        top = lerp(ARRANGE_FLOOR, NEAR_FLOOR, fan);
       } else {
         fan = 0;
         top = cellRect.top;
-        left = cellRect.left;
       }
+      // Scroll-invariant on both ends (neither the hero slot nor a grid
+      // cell moves horizontally as the page scrolls vertically), so a
+      // plain blend never fights a moving target the way top would.
+      const left = lerp(cellRect.left, stackPos.left, fan);
 
       return {
         top,
@@ -634,26 +600,34 @@ export default function InventoryIntelligence() {
         <HighlightsBar />
       </div>
 
-      {/* The full "Capabilities" heading sticks just below the header while
+      {/* The full "Capabilities" heading pins just below the header while
           the stack below is actively fanning out into the grid, so its
           context stays visible instead of being scrolled past before the
           cards ever come into view. headingPinned (driven off scroll
-          position in updateMorph, not left to CSS's own release timing —
-          see its comment) lets go of it as soon as that fan-out finishes,
-          so it doesn't stay pinned any longer than it needs to; from then
-          on it's the only copy of the heading — the grid below has none of
-          its own. */}
+          position in updateMorph) lets go of it as soon as that fan-out
+          finishes, so it doesn't stay pinned any longer than it needs to;
+          from then on it's the only copy of the heading — the grid below
+          has none of its own. Pinned with `fixed`, not CSS `sticky`: how
+          long this needs to stay pinned is derived from real card-travel
+          distance, which can exceed how tall the (intentionally small)
+          spacer below is — `sticky` would just release early once its own
+          container ran out of room to keep sticking through. While pinned,
+          a same-sized invisible placeholder keeps this block's own layout
+          height so nothing below it jumps when it switches positioning. */}
       {isDesktop && (
         <div>
           <div
             ref={headingRef}
-            className={`z-[45] pb-16 pt-[120px] ${headingPinned ? "sticky top-20" : ""}`}
+            className={`z-[45] pb-16 pt-[120px] ${
+              headingPinned ? "fixed inset-x-0 top-20" : "relative"
+            }`}
           >
             <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
               {capabilitiesHeading}
             </div>
           </div>
-          <div aria-hidden="true" style={{ height: UNSTACK_PX + HOLD_PX + 260 }} />
+          {headingPinned && <div aria-hidden="true" style={{ height: headingHeight }} />}
+          <div aria-hidden="true" style={{ height: UNSTACK_PX }} />
         </div>
       )}
 
