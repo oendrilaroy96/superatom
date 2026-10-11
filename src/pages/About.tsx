@@ -86,7 +86,7 @@ export default function About() {
 
       <section
         className={`py-[120px] transition-colors duration-700 ease-in-out ${
-          isDark ? "bg-secondary-500" : "bg-page"
+          isDark ? "bg-secondary-500" : "bg-transparent"
         }`}
       >
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
