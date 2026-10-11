@@ -62,9 +62,13 @@ function OfficeCard({ office }: { office: Office }) {
  * styling throughout — the same pattern as the testimonial's quote card
  * staying light regardless of its section background. The light stage
  * matches whatever section sits right above it on that page: the
- * testimonial section's lavender on the home page, but the About page's
- * team section instead stays fully transparent in its own light stage, so
- * this follows suit there too rather than introducing a mismatched tint.
+ * testimonial section's lavender on the home page, or the About page
+ * team section's own (near-white) light stage. This section can't go
+ * fully transparent in its light stage the way the team section can —
+ * it's painted over a permanently dark bg-secondary-500 in Layout (shared
+ * with the footer, see Layout's comment), so a transparent "light" state
+ * here would just show that dark fill straight through instead of
+ * crossfading into it on scroll. Needs an actual opaque color instead.
  */
 export default function CtaSection() {
   const [demoOpen, setDemoOpen] = useState(false);
@@ -75,7 +79,7 @@ export default function CtaSection() {
     <section
       id="cta-section"
       className={`transition-colors duration-700 ease-in-out py-[120px] ${
-        isDark ? "bg-transparent" : isAboutPage ? "bg-transparent" : "bg-[#f5f5ff]"
+        isDark ? "bg-transparent" : isAboutPage ? "bg-white" : "bg-[#f5f5ff]"
       }`}
     >
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
