@@ -13,16 +13,28 @@ type DemoModalProps = {
 const inputClasses =
   "w-full rounded-md border border-secondary-200 bg-white px-3.5 py-2.5 text-sm text-heading placeholder:text-caption transition-colors focus:border-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500/30";
 
+function FieldLabel({ label, required }: { label: string; required?: boolean }) {
+  return (
+    <span className="mb-1.5 block text-sm font-medium text-heading">
+      {label}
+      {required && (
+        <span className="ml-0.5 text-red-500" aria-hidden="true">
+          *
+        </span>
+      )}
+    </span>
+  );
+}
+
 function Field({
   label,
+  required,
   ...props
 }: { label: string } & InputHTMLAttributes<HTMLInputElement>) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-sm font-medium text-heading">
-        {label}
-      </span>
-      <input className={inputClasses} {...props} />
+      <FieldLabel label={label} required={required} />
+      <input className={inputClasses} required={required} {...props} />
     </label>
   );
 }
@@ -52,9 +64,7 @@ const countries = [
 function CountryField({ label, name, required }: { label: string; name: string; required?: boolean }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-sm font-medium text-heading">
-        {label}
-      </span>
+      <FieldLabel label={label} required={required} />
       <select name={name} required={required} defaultValue="" className={inputClasses}>
         <option value="" disabled>
           Select country
@@ -154,16 +164,14 @@ const dialCodes: { country: string; code: string }[] = [
 function PhoneField({ label, required }: { label: string; required?: boolean }) {
   return (
     <div>
-      <span className="mb-1.5 block text-sm font-medium text-heading">
-        {label}
-      </span>
+      <FieldLabel label={label} required={required} />
       <div className="flex gap-2">
         <select
           name="mobileCountryCode"
           aria-label="Country code"
           required={required}
           defaultValue="+1"
-          className={`${inputClasses} !w-[6.5rem] min-w-0 shrink-0 px-2`}
+          className={`${inputClasses} !w-[4.5rem] min-w-0 shrink-0 px-2`}
         >
           {dialCodes.map(({ country, code }) => (
             <option key={country} value={code}>
@@ -281,9 +289,7 @@ export default function DemoModal({ open, onClose }: DemoModalProps) {
               </div>
 
               <label className="block">
-                <span className="mb-1.5 block text-sm font-medium text-heading">
-                  Message
-                </span>
+                <FieldLabel label="Message" required />
                 <textarea
                   name="message"
                   rows={4}
