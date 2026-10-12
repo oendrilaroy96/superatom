@@ -126,12 +126,13 @@ export default function Header() {
   const ctaIsDark = useDarkTransition();
   const location = useLocation();
 
-  // The Inventory Intelligence page opens on a dark navy hero (plus the
-  // dark highlights bar right under it) rather than the usual light
-  // background, so the header needs to match it from the top instead of
-  // waiting for the page's own CTA section to scroll into view. Dark stays
-  // forced on while any of that dark block (marked by #inventory-dark-zone,
-  // its last/lowest piece) is still visible below the header.
+  // The Solutions pages (Inventory and Procurement Intelligence) each open
+  // on a dark navy hero (plus a dark highlights bar right under it) rather
+  // than the usual light background, so the header needs to match it from
+  // the top instead of waiting for the page's own CTA section to scroll
+  // into view. Dark stays forced on while any of that dark block (marked
+  // by the page's own id, its last/lowest piece) is still visible below
+  // the header.
   const [heroZoneDark, setHeroZoneDark] = useState(false);
 
   function openDemo() {
@@ -147,9 +148,14 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    const onInventoryPage = location.pathname === "/solutions/inventory-intelligence";
+    const darkZoneId =
+      location.pathname === "/solutions/inventory-intelligence"
+        ? "inventory-dark-zone"
+        : location.pathname === "/solutions/procurement-intelligence"
+          ? "procurement-dark-zone"
+          : null;
     const update = () => {
-      const zone = onInventoryPage ? document.getElementById("inventory-dark-zone") : null;
+      const zone = darkZoneId ? document.getElementById(darkZoneId) : null;
       setHeroZoneDark(!!zone && zone.getBoundingClientRect().bottom > 64);
     };
     update();
