@@ -11,7 +11,7 @@ const faqs: { question: string; answer: ReactNode }[] = [
   {
     question: "Who is Superatom AI for?",
     answer:
-      "Superatom AI is a Data-to-Insights platform that acts like an analyst for leadership teams. It connects directly to enterprise systems such as ERPs, CRMs, databases, and operational tools to deliver real-time, actionable insights. Instead of analyzing dashboards or switching between apps, users get clear answers, explanations, and recommended actions instantly. Superatom transforms complex enterprise data into simple, decision-ready intelligence for every team.",
+      "Superatom AI is designed for business leaders, operations teams, analysts, and decision-makers who work with high-volume enterprise data. It helps organizations reduce decision delays, improve visibility, and take data-driven actions easily. Whether you work in supply chain, logistics, manufacturing, sales, or finance, Superatom provides every role with the insights they need—without depending on BI teams or analysts.",
   },
   {
     question: "How is Superatom AI different from a traditional dashboard?",
