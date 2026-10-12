@@ -596,3 +596,38 @@ body {
     transform: scaleX(1);
   }
 }
+
+/* Legal document pages (Privacy Policy, Terms of Service): crossfades every
+   piece of text/border inside to the dark palette once .legal-doc-dark is
+   toggled on (see LegalPageLayout's useDarkTransition), so the long scroll
+   of body copy hands off smoothly into the dark CTA block at the page's
+   bottom instead of cutting from light to dark at the section's own edge.
+   Descendant selectors here (two classes) outrank the plain single-class
+   Tailwind utilities (.text-heading, .text-body, ...) regardless of the
+   generated stylesheet's internal order, so no !important is needed. */
+.legal-doc,
+.legal-doc * {
+  transition:
+    color 700ms ease-in-out,
+    border-color 700ms ease-in-out,
+    background-color 700ms ease-in-out;
+}
+.legal-doc-dark .text-heading,
+.legal-doc-dark strong.text-heading {
+  color: #ffffff;
+}
+.legal-doc-dark .text-body {
+  color: rgba(255, 255, 255, 0.7);
+}
+.legal-doc-dark .text-caption {
+  color: rgba(255, 255, 255, 0.5);
+}
+.legal-doc-dark a.text-primary-500 {
+  color: var(--color-primary-300);
+}
+.legal-doc-dark a.text-primary-500:hover {
+  color: var(--color-primary-200);
+}
+.legal-doc-dark .border-secondary-100 {
+  border-color: rgba(255, 255, 255, 0.1);
+}
