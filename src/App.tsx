@@ -6,6 +6,9 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import InventoryIntelligence from "./pages/InventoryIntelligence";
 import ProcurementIntelligence from "./pages/ProcurementIntelligence";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import FAQ from "./pages/FAQ";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -25,6 +28,9 @@ function App() {
               path="/solutions/procurement-intelligence"
               element={<ProcurementIntelligence />}
             />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/faq" element={<FAQ />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

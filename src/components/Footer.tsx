@@ -4,6 +4,7 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import type { IconComponent } from "../types/icon";
 import logo from "../assets/logo-white.png";
+import { openCookiePreferences } from "../lib/cookieConsent";
 
 const columns: { heading: string; links: { name: string; path?: string }[] }[] = [
   {
@@ -15,7 +16,7 @@ const columns: { heading: string; links: { name: string; path?: string }[] }[] =
   },
   {
     heading: "Resources",
-    links: [{ name: "Blog" }],
+    links: [{ name: "Blog" }, { name: "FAQ", path: "/faq" }],
   },
   {
     heading: "Company",
@@ -34,7 +35,10 @@ const socials: { label: string; Icon: IconComponent; href: string }[] = [
 
 const offices = ["USA", "India"];
 
-const legalLinks = [{ name: "Privacy" }, { name: "Terms" }];
+const legalLinks = [
+  { name: "Privacy", path: "/privacy-policy" },
+  { name: "Terms", path: "/terms-of-service" },
+];
 
 export default function Footer() {
   return (
@@ -102,16 +106,23 @@ export default function Footer() {
           <p className="order-3 text-xs font-medium uppercase tracking-[0.2em] text-white/30 sm:order-2 sm:text-center">
             {offices.join(" · ")}
           </p>
-          <div className="order-2 flex items-center gap-6 sm:order-3 sm:justify-end">
+          <div className="order-2 flex flex-wrap items-center justify-center gap-6 sm:order-3 sm:justify-end">
             {legalLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
-                href="#"
+                to={link.path}
                 className="text-sm text-white/50 transition-colors hover:text-white"
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
+            <button
+              type="button"
+              onClick={openCookiePreferences}
+              className="text-sm text-white/50 transition-colors hover:text-white"
+            >
+              Cookie Preferences
+            </button>
           </div>
         </div>
       </div>

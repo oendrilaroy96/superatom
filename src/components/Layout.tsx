@@ -4,6 +4,7 @@ import { useLenis } from "lenis/react";
 import Header from "./Header";
 import CtaSection from "./CtaSection";
 import Footer from "./Footer";
+import CookieConsent from "./CookieConsent";
 import { DarkTransitionContext } from "../context/DarkTransitionContext";
 
 // Fraction of the CTA section's own height that must have scrolled into the
@@ -82,6 +83,8 @@ export default function Layout() {
         </DarkTransitionContext.Provider>
         <Footer />
       </div>
+
+      <CookieConsent />
     </div>
   );
 }
