@@ -8,21 +8,21 @@ const link =
   "font-medium text-primary-500 underline underline-offset-2 hover:text-primary-600";
 
 const sections = [
-  { id: "what-we-collect", label: "1. What information do we collect?" },
-  { id: "how-we-process", label: "2. How do we process your information?" },
-  { id: "legal-bases", label: "3. Legal bases for processing" },
-  { id: "sharing", label: "4. When and with whom do we share information?" },
-  { id: "cookies", label: "5. Cookies and other tracking technologies" },
-  { id: "social-logins", label: "6. How do we handle your social logins?" },
-  { id: "retention", label: "7. How long do we keep your information?" },
-  { id: "safety", label: "8. How do we keep your information safe?" },
-  { id: "minors", label: "9. Do we collect information from minors?" },
-  { id: "rights", label: "10. What are your privacy rights?" },
-  { id: "dnt", label: "11. Controls for Do-Not-Track features" },
-  { id: "us-residents", label: "12. US residents — specific rights" },
-  { id: "updates", label: "13. Do we make updates to this notice?" },
-  { id: "contact", label: "14. How can you contact us?" },
-  { id: "review-data", label: "15. Review, update, or delete your data" },
+  { id: "what-we-collect", label: "1. What we collect" },
+  { id: "how-we-process", label: "2. How we use it" },
+  { id: "legal-bases", label: "3. Legal bases" },
+  { id: "sharing", label: "4. Who we share with" },
+  { id: "cookies", label: "5. Cookies & tracking" },
+  { id: "social-logins", label: "6. Social logins" },
+  { id: "retention", label: "7. Data retention" },
+  { id: "safety", label: "8. Keeping data safe" },
+  { id: "minors", label: "9. Minors" },
+  { id: "rights", label: "10. Your privacy rights" },
+  { id: "dnt", label: "11. Do-Not-Track" },
+  { id: "us-residents", label: "12. US resident rights" },
+  { id: "updates", label: "13. Policy updates" },
+  { id: "contact", label: "14. Contact us" },
+  { id: "review-data", label: "15. Review/delete your data" },
 ];
 
 const intro = (

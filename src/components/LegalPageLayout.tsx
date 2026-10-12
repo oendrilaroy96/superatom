@@ -88,19 +88,19 @@ export default function LegalPageLayout({
 
           <nav
             aria-label="Table of contents"
-            className="sticky top-24 mt-10 hidden max-h-[calc(100vh-7rem)] overflow-y-auto pb-8 lg:mt-0 lg:block"
+            className="sticky top-24 mt-10 hidden max-h-[calc(100vh-7rem)] overflow-y-auto pb-6 lg:mt-0 lg:block"
           >
             <p className="text-xs font-semibold uppercase tracking-[0.5px] text-caption">
               On this page
             </p>
-            <ul className="mt-3 space-y-1 border-l border-secondary-100">
+            <ul className="mt-2.5 border-l border-secondary-100">
               {sections.map((s) => {
                 const active = s.id === activeId;
                 return (
                   <li key={s.id}>
                     <a
                       href={`#${s.id}`}
-                      className={`-ml-px block border-l-2 py-1.5 pl-4 text-sm leading-snug transition-colors ${
+                      className={`-ml-px block truncate border-l-2 py-1 pl-4 text-[13px] leading-tight transition-colors ${
                         active
                           ? "border-primary-500 font-medium text-primary-500"
                           : "border-transparent text-body hover:border-secondary-200 hover:text-heading"
