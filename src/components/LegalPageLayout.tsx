@@ -3,6 +3,51 @@ import SectionHeading from "./ui/SectionHeading";
 
 export type LegalTocItem = { id: string; label: string };
 
+/**
+ * Wraps a numbered section of a legal document so it crossfades (+ a small
+ * rise) into place the first time it scrolls into view, instead of popping
+ * in with the rest of the page. Carries the section's anchor id, so the
+ * sidebar/TOC and scrollspy in LegalPageLayout keep targeting it directly.
+ */
+export function LegalSection({
+  id,
+  children,
+}: {
+  id: string;
+  children: ReactNode;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.01 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      id={id}
+      ref={ref}
+      className={`mt-10 scroll-mt-28 transition-all duration-700 ease-out first:mt-0 motion-reduce:transition-none motion-reduce:opacity-100 motion-reduce:translate-y-0 ${
+        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+      }`}
+    >
+      {children}
+    </div>
+  );
+}
+
 type LegalPageLayoutProps = {
   eyebrow: string;
   heading: string;
