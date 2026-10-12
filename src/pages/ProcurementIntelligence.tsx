@@ -134,7 +134,7 @@ function MobileCardStack({
         return (
           <div
             key={c.title}
-            className="absolute inset-x-0 top-0 rounded-2xl border border-secondary-100 bg-white p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.35)]"
+            className="absolute inset-x-0 top-0 rounded-2xl border border-secondary-100 bg-white p-6 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)]"
             style={{
               transform: `translate(${slot.x}px, ${slot.y}px) rotate(${slot.rotate}deg) scale(${slot.scale})`,
               opacity: slot.opacity,
@@ -519,7 +519,7 @@ export default function ProcurementIntelligence() {
             return (
               <div
                 key={c.title}
-                className="absolute rounded-2xl border border-secondary-100 bg-white p-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.35)]"
+                className="absolute rounded-2xl border border-secondary-100 bg-white p-6 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)]"
                 style={{
                   top: s.top,
                   left: s.left,
