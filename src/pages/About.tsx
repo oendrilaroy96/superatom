@@ -2,32 +2,40 @@ import PersonIcon from "@mui/icons-material/Person";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import SectionHeading from "../components/ui/SectionHeading";
 import { useDarkTransition } from "../context/DarkTransitionContext";
+import prashanthPhoto from "../assets/SuperatomTeams/Prashanth.webp";
+import sharathPhoto from "../assets/SuperatomTeams/Sharath.webp";
+import chetanPhoto from "../assets/SuperatomTeams/Chetan.webp";
 
 const teamMembers = [
   {
     name: "Prashanth Dharawath",
     role: "Co-Founder & CEO",
     linkedin: "https://www.linkedin.com/in/prashanth-dharawath-a15833369/",
+    photo: prashanthPhoto,
   },
   {
     name: "Ashish Tandi",
     role: "Co-Founder & CTO",
     linkedin: "https://www.linkedin.com/in/ashishblessing/",
+    photo: null,
   },
   {
     name: "Sharath Bhat",
     role: "Co-Founder, GTM & Strategy",
     linkedin: "https://www.linkedin.com/in/sharathramakrishnabhat/",
+    photo: sharathPhoto,
   },
   {
     name: "Chetan Sai",
     role: "Co-Founder & COO",
     linkedin: "https://www.linkedin.com/in/chetan-sai-1720a8174/",
+    photo: chetanPhoto,
   },
   {
     name: "Gopinadh Boppudi",
     role: "Head of Engineering",
     linkedin: "https://www.linkedin.com/in/gopinadh-boppudi-8730751b0/",
+    photo: null,
   },
 ];
 
@@ -176,8 +184,16 @@ export default function About() {
                 rel="noopener noreferrer"
                 className="group block overflow-hidden rounded-2xl border border-secondary-100 bg-white transition-colors hover:border-primary-300"
               >
-                <div className="relative flex aspect-square w-full items-center justify-center border-b border-dashed border-secondary-200 bg-page text-caption">
-                  <PersonIcon style={{ fontSize: 40 }} />
+                <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden border-b border-dashed border-secondary-200 bg-page text-caption">
+                  {member.photo ? (
+                    <img
+                      src={member.photo}
+                      alt={member.name}
+                      className="h-full w-full object-cover object-top"
+                    />
+                  ) : (
+                    <PersonIcon style={{ fontSize: 40 }} />
+                  )}
                   <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#0A66C2] text-white shadow-md transition-transform duration-200 group-hover:scale-110">
                     <LinkedInIcon style={{ fontSize: 18 }} />
                   </span>
