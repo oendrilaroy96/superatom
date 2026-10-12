@@ -52,7 +52,7 @@ export function LegalSection({
 type LegalPageLayoutProps = {
   eyebrow: string;
   heading: string;
-  lastUpdated: string;
+  lastUpdated?: string;
   intro: ReactNode;
   sections: LegalTocItem[];
   children: ReactNode;
@@ -116,7 +116,7 @@ export default function LegalPageLayout({
             eyebrow={eyebrow}
             eyebrowColor="primary"
             heading={heading}
-            description={`Last updated: ${lastUpdated}`}
+            description={lastUpdated ? `Last updated: ${lastUpdated}` : undefined}
           />
           <div className="mt-10">{intro}</div>
         </div>
