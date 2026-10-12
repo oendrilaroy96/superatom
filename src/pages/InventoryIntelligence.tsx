@@ -766,7 +766,7 @@ export default function InventoryIntelligence() {
               ))}
             </div>
             <p className="border-t border-secondary-100 py-4 text-center text-xs text-caption">
-              Source: IHL Group, The 2026 Inventory Distortion Study.
+              Source: IHL Group, 2026.
             </p>
           </div>
         </div>
