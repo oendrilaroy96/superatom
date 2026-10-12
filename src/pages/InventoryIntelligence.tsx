@@ -673,7 +673,12 @@ export default function InventoryIntelligence() {
       )}
 
       {/* Capabilities */}
-      <section className="py-[120px]">
+      {/* xl:pt-10 shrinks the gap above the grid specifically on desktop
+          (where that space sits below the pinned heading rather than above
+          an in-flow one, so it reads as empty rather than as breathing
+          room) — pb stays the full 120px so spacing below the grid, before
+          the next section, is unaffected. */}
+      <section className="pb-[120px] pt-[120px] xl:pt-10">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           {/* On desktop this heading already lives in the sticky block
               above; rendering it again here would duplicate it right as it
@@ -685,7 +690,7 @@ export default function InventoryIntelligence() {
             // Invisible placeholders only: they reserve the grid's layout
             // space and give updateMorph a live rect per card to land on.
             // The actual card UI is painted by the fixed overlay above.
-            <div className="mx-auto mt-16 max-w-6xl">
+            <div className="mx-auto mt-4 max-w-6xl">
               <div className="flex flex-wrap justify-center gap-4">
                 {capabilities.slice(0, 4).map((c, i) => (
                   <div
