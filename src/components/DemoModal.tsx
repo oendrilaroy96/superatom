@@ -27,6 +27,48 @@ function Field({
   );
 }
 
+const countries = [
+  "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Argentina", "Armenia", "Australia",
+  "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
+  "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei",
+  "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Chad", "Chile", "China",
+  "Colombia", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czechia", "Denmark", "Dominican Republic",
+  "Ecuador", "Egypt", "El Salvador", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France",
+  "Gabon", "Georgia", "Germany", "Ghana", "Greece", "Guatemala", "Honduras", "Hong Kong", "Hungary",
+  "Iceland", "India", "Indonesia", "Iraq", "Ireland", "Israel", "Italy", "Ivory Coast", "Jamaica",
+  "Japan", "Jordan", "Kazakhstan", "Kenya", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon",
+  "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia",
+  "Maldives", "Mali", "Malta", "Mauritius", "Mexico", "Moldova", "Monaco", "Mongolia", "Montenegro",
+  "Morocco", "Mozambique", "Myanmar", "Namibia", "Nepal", "Netherlands", "New Zealand", "Nicaragua",
+  "Niger", "Nigeria", "North Macedonia", "Norway", "Oman", "Pakistan", "Panama", "Papua New Guinea",
+  "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Rwanda",
+  "Saudi Arabia", "Senegal", "Serbia", "Singapore", "Slovakia", "Slovenia", "South Africa",
+  "South Korea", "Spain", "Sri Lanka", "Sweden", "Switzerland", "Taiwan", "Tajikistan", "Tanzania",
+  "Thailand", "Tunisia", "Turkey", "Turkmenistan", "Uganda", "Ukraine", "United Arab Emirates",
+  "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Venezuela", "Vietnam", "Yemen",
+  "Zambia", "Zimbabwe",
+];
+
+function CountryField({ label, name, required }: { label: string; name: string; required?: boolean }) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-sm font-medium text-heading">
+        {label}
+      </span>
+      <select name={name} required={required} defaultValue="" className={inputClasses}>
+        <option value="" disabled>
+          Select country
+        </option>
+        {countries.map((c) => (
+          <option key={c} value={c}>
+            {c}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
 export default function DemoModal({ open, onClose }: DemoModalProps) {
   const [submitted, setSubmitted] = useState(false);
   const [agreed, setAgreed] = useState(false);
@@ -118,7 +160,10 @@ export default function DemoModal({ open, onClose }: DemoModalProps) {
                 <Field label="Mobile number" name="mobile" type="tel" autoComplete="tel" placeholder="+1 555 000 0000" required />
                 <Field label="Company" name="company" type="text" autoComplete="organization" placeholder="Acme Inc." required />
               </div>
-              <Field label="Designation" name="designation" type="text" placeholder="VP, Supply Chain" required />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Designation" name="designation" type="text" placeholder="VP, Supply Chain" required />
+                <CountryField label="Country" name="country" required />
+              </div>
 
               <label className="block">
                 <span className="mb-1.5 block text-sm font-medium text-heading">
