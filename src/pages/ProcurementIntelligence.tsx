@@ -450,9 +450,8 @@ export default function ProcurementIntelligence() {
                   Procurement Intelligence
                 </p>
                 <h1 className="mt-4 font-display text-[44px] font-bold leading-[1.1] text-white sm:text-[56px] lg:text-[64px]">
-                  Smarter procurement
+                  Smarter procurement.
                   <br />
-                  decisions.{" "}
                   <span
                     className="bg-clip-text text-transparent"
                     style={{
