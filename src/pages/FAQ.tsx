@@ -66,28 +66,56 @@ const faqs: { question: string; answer: ReactNode }[] = [
   },
 ];
 
-function FaqItem({ question, answer }: { question: string; answer: ReactNode }) {
-  const [open, setOpen] = useState(false);
+function FaqItem({
+  question,
+  answer,
+  open,
+  onToggle,
+}: {
+  question: string;
+  answer: ReactNode;
+  open: boolean;
+  onToggle: () => void;
+}) {
   return (
     <div className="border-b border-secondary-100 py-5">
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={onToggle}
         className="flex w-full items-center justify-between gap-4 text-left"
         aria-expanded={open}
       >
         <span className="font-display text-base font-semibold text-heading">{question}</span>
         <ExpandMoreIcon
           style={{ fontSize: 22 }}
-          className={`shrink-0 text-caption transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`shrink-0 text-caption transition-transform duration-300 ${open ? "rotate-180" : ""}`}
         />
       </button>
-      {open && <div className="mt-3 text-sm leading-relaxed text-body">{answer}</div>}
+      {/* grid-template-rows 0fr -> 1fr gives a smooth height animation
+          without measuring the content; the inner opacity crossfades
+          separately so the text fades in/out rather than popping. */}
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-in-out motion-reduce:transition-none ${
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div
+            className={`pt-3 text-sm leading-relaxed text-body transition-opacity duration-300 ease-in-out motion-reduce:transition-none ${
+              open ? "opacity-100 delay-100" : "opacity-0"
+            }`}
+          >
+            {answer}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
 export default function FAQ() {
+  const [openQuestion, setOpenQuestion] = useState<string | null>(null);
+
   return (
     <section className="py-[120px]">
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
@@ -102,7 +130,17 @@ export default function FAQ() {
 
         <div className="mx-auto mt-14 max-w-3xl">
           {faqs.length > 0 ? (
-            faqs.map((f) => <FaqItem key={f.question} {...f} />)
+            faqs.map((f) => (
+              <FaqItem
+                key={f.question}
+                question={f.question}
+                answer={f.answer}
+                open={openQuestion === f.question}
+                onToggle={() =>
+                  setOpenQuestion((prev) => (prev === f.question ? null : f.question))
+                }
+              />
+            ))
           ) : (
             <p className="text-center text-sm text-caption">
               We&rsquo;re putting together answers to the questions we hear most. Check back soon.
