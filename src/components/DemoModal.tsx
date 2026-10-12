@@ -171,7 +171,7 @@ function PhoneField({ label, required }: { label: string; required?: boolean }) 
           aria-label="Country code"
           required={required}
           defaultValue="+1"
-          className={`${inputClasses} !w-[4.5rem] min-w-0 shrink-0 px-2`}
+          className={`${inputClasses} !w-[4.5rem] min-w-0 shrink-0 !px-1.5`}
         >
           {dialCodes.map(({ country, code }) => (
             <option key={country} value={code}>
@@ -280,12 +280,12 @@ export default function DemoModal({ open, onClose }: DemoModalProps) {
                 <Field label="Email" name="email" type="email" autoComplete="email" placeholder="jane@company.com" required />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <PhoneField label="Mobile number" required />
+                <PhoneField label="Mobile number" />
                 <Field label="Company" name="company" type="text" autoComplete="organization" placeholder="Acme Inc." required />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Designation" name="designation" type="text" placeholder="VP, Supply Chain" required />
-                <CountryField label="Country" name="country" required />
+                <Field label="Designation" name="designation" type="text" placeholder="VP, Supply Chain" />
+                <CountryField label="Country" name="country" />
               </div>
 
               <label className="block">
