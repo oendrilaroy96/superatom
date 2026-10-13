@@ -165,7 +165,7 @@ export default function SuperatomDiagram() {
               <path
                 d="M2 1L8 5L2 9"
                 fill="none"
-                stroke="#EA2261"
+                stroke="#533AFD"
                 strokeWidth={1.6}
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -197,13 +197,13 @@ export default function SuperatomDiagram() {
               y1={190}
               x2={494}
               y2={190}
-              stroke="#EA2261"
+              stroke="#533AFD"
               strokeWidth={3}
               strokeLinecap="round"
               strokeDasharray="0.5 9.5"
               markerEnd="url(#satom-diag-arrow)"
             />
-            <rect x={500} y={158} width={148} height={64} rx={12} fill="#FFD7EF" />
+            <rect x={500} y={158} width={148} height={64} rx={12} fill="#E5E1FF" />
             <text x={574} y={180} textAnchor="middle" dominantBaseline="central" fill="#061B31" fontSize={16} fontWeight={600}>
               Decisions
             </text>
