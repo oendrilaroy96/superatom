@@ -5,6 +5,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ArticleIcon from "@mui/icons-material/Article";
+import AnalyticsIcon from "@mui/icons-material/Analytics";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import type { IconComponent } from "../types/icon";
 import logo from "../assets/superatom-logo.png";
@@ -21,6 +22,7 @@ const solutions: { name: string; blurb: string; Icon: IconComponent; path?: stri
 
 const resources: { name: string; blurb: string; Icon: IconComponent; path?: string }[] = [
   { name: "Blog", blurb: "Insights on decision intelligence.", Icon: ArticleIcon, path: "/blog" },
+  { name: "Case Studies", blurb: "Customer outcomes, as they publish.", Icon: AnalyticsIcon, path: "/case-studies" },
 ];
 
 function ChevronDown() {

@@ -16,7 +16,11 @@ const columns: { heading: string; links: { name: string; path?: string }[] }[] =
   },
   {
     heading: "Resources",
-    links: [{ name: "Blog", path: "/blog" }, { name: "FAQ", path: "/faq" }],
+    links: [
+      { name: "Blog", path: "/blog" },
+      { name: "Case Studies", path: "/case-studies" },
+      { name: "FAQ", path: "/faq" },
+    ],
   },
   {
     heading: "Company",
