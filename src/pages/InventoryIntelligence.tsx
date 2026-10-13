@@ -129,7 +129,6 @@ const capabilities: {
   illoBorder?: string;
   dotGrid?: boolean;
   accent?: "dot";
-  center?: boolean;
 }[] = [
   {
     title: "Inventory Optimization",
@@ -163,7 +162,6 @@ const capabilities: {
     desc: "Predicts stockout risks and recommends replenishment, inventory transfers, production changes or expedited procurement to maintain service levels.",
     illustration: stockoutArt,
     illoBg: "#E4DFFF",
-    center: true,
   },
   {
     title: "Dynamic Inventory Policy Optimization",
@@ -246,7 +244,7 @@ function CapabilityCardFace({ c }: { c: (typeof capabilities)[number] }) {
   return (
     <div className="flex h-full flex-col">
       <div
-        className="flex h-20 shrink-0 items-center justify-center overflow-hidden rounded-xl p-2.5"
+        className="flex h-28 shrink-0 items-center justify-center overflow-hidden rounded-lg p-2"
         style={{
           background: c.illoBg,
           border: c.illoBorder ? `1px solid ${c.illoBorder}` : undefined,
@@ -256,7 +254,7 @@ function CapabilityCardFace({ c }: { c: (typeof capabilities)[number] }) {
       >
         {c.illustration}
       </div>
-      <div className={`mt-2 flex flex-1 flex-col ${c.center ? "items-center text-center" : ""}`}>
+      <div className="mt-2 flex flex-1 flex-col">
         {c.accent === "dot" ? (
           <span className="mb-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-primary-500" />
         ) : (
@@ -265,7 +263,7 @@ function CapabilityCardFace({ c }: { c: (typeof capabilities)[number] }) {
         <p className="line-clamp-2 font-display text-h4 font-semibold leading-tight text-heading">
           {c.title}
         </p>
-        <p className="mt-1 line-clamp-4 flex-1 text-xs leading-relaxed text-caption">{c.desc}</p>
+        <p className="mt-1 line-clamp-4 text-xs leading-relaxed text-caption">{c.desc}</p>
       </div>
     </div>
   );
@@ -292,7 +290,7 @@ function MobileCardStack({
         return (
           <div
             key={c.title}
-            className="absolute inset-x-0 top-0 rounded-2xl border border-secondary-100 bg-white p-6 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)]"
+            className="absolute inset-x-0 top-0 rounded-lg border border-secondary-100 bg-white p-3 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)]"
             style={{
               transform: `translate(${slot.x}px, ${slot.y}px) rotate(${slot.rotate}deg) scale(${slot.scale})`,
               opacity: slot.opacity,
@@ -785,7 +783,7 @@ export default function InventoryIntelligence() {
             return (
               <div
                 key={c.title}
-                className="absolute rounded-2xl border border-secondary-100 bg-white p-6 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)]"
+                className="absolute rounded-lg border border-secondary-100 bg-white p-3 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)]"
                 style={{
                   top: s.top,
                   left: s.left,
@@ -853,14 +851,14 @@ export default function InventoryIntelligence() {
             <>
               <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 {capabilities.slice(0, 4).map((c) => (
-                  <GlowCard key={c.title}>
+                  <GlowCard key={c.title} contentClassName="p-3">
                     <CapabilityCardFace c={c} />
                   </GlowCard>
                 ))}
               </div>
               <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {capabilities.slice(4).map((c) => (
-                  <GlowCard key={c.title}>
+                  <GlowCard key={c.title} contentClassName="p-3">
                     <CapabilityCardFace c={c} />
                   </GlowCard>
                 ))}
