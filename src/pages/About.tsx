@@ -90,7 +90,7 @@ function TeamCard({ member }: { member: TeamMember }) {
       href={member.linkedin}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative block aspect-[3/4] overflow-hidden rounded-2xl border border-secondary-100 bg-primary-100"
+      className="group relative block aspect-[3/4] overflow-hidden rounded-2xl border border-secondary-100 bg-white"
     >
       {member.photo ? (
         <img
