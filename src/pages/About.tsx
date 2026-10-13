@@ -69,18 +69,16 @@ export default function About() {
 
               <div className="mt-6 space-y-4 text-p text-body">
                 <p>
-                  Just as atoms combine to build everything we see,
-                  enterprises are built from thousands of decisions —
-                  what to buy, where to ship, who to trust.
-                </p>
-                <p className="font-semibold text-heading">
-                  Superatom AI is built to make those decisions smarter.
+                  Just as a cluster of atoms can combine to behave as a
+                  single, unified entity known as a superatom, we at
+                  Superatom AI believe that great enterprises are built on
+                  the power of connected data and data driven decisions.
                 </p>
                 <p>
-                  We bring together the data, context, intelligence and
-                  actions needed to make each decision better, and connect
-                  thousands of those decisions into a smarter, more
-                  responsive enterprise.
+                  We are building the intelligence layer that brings
+                  together fragmented enterprise data, bridges the gap
+                  between data and actionable insights, and enables
+                  enterprises to make better decisions faster.
                 </p>
               </div>
 
