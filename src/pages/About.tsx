@@ -207,7 +207,7 @@ export default function About() {
             <div>
               <Eyebrow>Our Journey</Eyebrow>
 
-              <div className="relative mt-10 overflow-hidden rounded-[22px] border border-primary-500/10 bg-gradient-to-br from-white to-primary-100/50 p-7">
+              <div className="relative mt-10 overflow-hidden rounded-[22px] border border-primary-500/10 bg-gradient-to-br from-white to-primary-100/50 p-7 h-60">
                 <div
                   aria-hidden="true"
                   className="pointer-events-none absolute -right-8 -top-10 size-28 rounded-full border border-dashed border-primary-500/30"
@@ -216,13 +216,13 @@ export default function About() {
                   <span className="absolute left-20 top-[76px] size-2 rounded-full border-2 border-white bg-[#873eff] shadow-sm" />
                   <span className="absolute left-6 top-0 size-2 rounded-full border-2 border-white bg-accent-500 shadow-sm" />
                 </div>
-                <p className="font-display text-[48px] font-semibold leading-none tracking-tight text-heading">
+                <p className="font-display text-[70px] font-semibold leading-none tracking-tight text-heading">
                   60<span className="text-primary-500">+</span>
                 </p>
                 <p className="mt-4 font-display text-[13px] font-bold text-heading">
                   CIO conversations
                 </p>
-                <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.1em] text-caption">
+                <p className="mt-1 text-[10px] uppercase tracking-[0.1em] text-caption">
                   Across the globe
                 </p>
               </div>
@@ -287,18 +287,16 @@ export default function About() {
       </section>
 
       <section
-        className={`py-[120px] transition-colors duration-700 ease-in-out ${
-          isDark ? "bg-secondary-500" : "bg-gradient-to-b from-primary-100/40 to-transparent"
-        }`}
+        className={`py-[120px] transition-colors duration-700 ease-in-out ${isDark ? "bg-secondary-500" : "bg-gradient-to-b from-primary-100/40 to-transparent"
+          }`}
       >
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[0.86fr_1fr] lg:gap-16">
             <div>
               <Eyebrow>Our Team</Eyebrow>
               <h2
-                className={`mt-5 font-display text-[42px] font-semibold leading-[1.15] transition-colors duration-700 ease-in-out sm:text-[48px] ${
-                  isDark ? "text-white" : "text-heading"
-                }`}
+                className={`mt-5 font-display text-[42px] font-semibold leading-[1.15] transition-colors duration-700 ease-in-out sm:text-[48px] ${isDark ? "text-white" : "text-heading"
+                  }`}
               >
                 Enterprise expertise.
                 <br />
@@ -316,9 +314,8 @@ export default function About() {
             </div>
 
             <div
-              className={`space-y-4 pt-2 text-p leading-relaxed transition-colors duration-700 ease-in-out ${
-                isDark ? "text-white/70" : "text-body"
-              }`}
+              className={`space-y-4 pt-2 text-p leading-relaxed transition-colors duration-700 ease-in-out ${isDark ? "text-white/70" : "text-body"
+                }`}
             >
               <p>
                 We bring together a diverse team of strategic thinkers,
@@ -365,16 +362,14 @@ export default function About() {
               consistently rather than dimming into the page background. */}
           <div className="mt-16 flex items-center justify-between gap-4">
             <p
-              className={`text-[9px] font-bold uppercase tracking-[0.1em] transition-colors duration-700 ease-in-out ${
-                isDark ? "text-white/40" : "text-caption"
-              }`}
+              className={`text-[9px] font-bold uppercase tracking-[0.1em] transition-colors duration-700 ease-in-out ${isDark ? "text-white/40" : "text-caption"
+                }`}
             >
               The people behind Superatom
             </p>
             <p
-              className={`text-[9px] font-bold uppercase tracking-[0.1em] transition-colors duration-700 ease-in-out ${
-                isDark ? "text-white/40" : "text-caption"
-              }`}
+              className={`text-[9px] font-bold uppercase tracking-[0.1em] transition-colors duration-700 ease-in-out ${isDark ? "text-white/40" : "text-caption"
+                }`}
             >
               One team &middot; One mission
             </p>
@@ -393,9 +388,8 @@ export default function About() {
               aria-hidden="true"
             />
             <p
-              className={`text-[11px] font-bold uppercase tracking-[0.08em] transition-colors duration-700 ease-in-out ${
-                isDark ? "text-white/40" : "text-caption"
-              }`}
+              className={`text-[11px] font-bold uppercase tracking-[0.08em] transition-colors duration-700 ease-in-out ${isDark ? "text-white/40" : "text-caption"
+                }`}
             >
               Five perspectives. One shared ambition.
             </p>
