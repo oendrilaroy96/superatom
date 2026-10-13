@@ -16,12 +16,21 @@ import Button from "../components/ui/Button";
 import GlowCard from "../components/ui/GlowCard";
 import SectionHeading from "../components/ui/SectionHeading";
 import DemoModal from "../components/DemoModal";
+import { useDarkTransition } from "../context/DarkTransitionContext";
 
 const BRAND_GRADIENT =
   "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)";
 
 /** Small gradient dash + label, the eyebrow treatment used throughout this page's Figma redesign instead of SectionHeading's own colored-text eyebrow. */
-function Eyebrow({ children, align = "left" }: { children: ReactNode; align?: "left" | "center" }) {
+function Eyebrow({
+  children,
+  align = "left",
+  dark = false,
+}: {
+  children: ReactNode;
+  align?: "left" | "center";
+  dark?: boolean;
+}) {
   return (
     <div className={`flex items-center gap-2.5 ${align === "center" ? "justify-center" : ""}`}>
       <span
@@ -29,7 +38,12 @@ function Eyebrow({ children, align = "left" }: { children: ReactNode; align?: "l
         style={{ backgroundImage: "linear-gradient(90deg, #29b9bb, #533afd)" }}
         aria-hidden="true"
       />
-      <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-caption">{children}</p>
+      <p
+        className={`text-[11px] font-bold uppercase tracking-[0.16em] transition-colors duration-700 ease-in-out ${dark ? "text-white/60" : "text-caption"
+          }`}
+      >
+        {children}
+      </p>
     </div>
   );
 }
@@ -415,6 +429,12 @@ type CardStyle = {
 };
 
 export default function InventoryIntelligence() {
+  // Crossfades the Business Outcomes section's background from light to
+  // dark in sync with the shared scroll threshold (same pattern as About's
+  // Our Team section), so there's a handoff right before CtaSection here
+  // too, instead of CtaSection's own crossfade being the first one on the
+  // page.
+  const isDark = useDarkTransition();
   const [demoOpen, setDemoOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
   const [order, setOrder] = useState(capabilities.map((_, i) => i));
@@ -1072,13 +1092,16 @@ export default function InventoryIntelligence() {
       </section>
 
       {/* Business outcomes */}
-      <section className="py-[120px]">
+      <section
+        className={`py-[120px] transition-colors duration-700 ease-in-out ${isDark ? "bg-secondary-500" : "bg-transparent"
+          }`}
+      >
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="mx-auto max-w-5xl text-center">
-            <Eyebrow align="center">Business outcomes</Eyebrow>
+            <Eyebrow align="center" dark={isDark}>Business outcomes</Eyebrow>
             <SectionHeading
               align="center"
-              theme="light"
+              theme={isDark ? "dark" : "light"}
               heading={
                 <span className="lg:whitespace-nowrap">
                   Better inventory decisions.
@@ -1135,7 +1158,10 @@ export default function InventoryIntelligence() {
 
           <div className="mt-7 flex items-center justify-center gap-2.5">
             <span className="size-[7px] rounded-full bg-[#29b9bb] shadow-[0_0_0_5px_rgba(41,185,187,0.12)]" />
-            <p className="text-xs font-semibold text-caption">
+            <p
+              className={`text-xs font-semibold transition-colors duration-700 ease-in-out ${isDark ? "text-white/60" : "text-caption"
+                }`}
+            >
               One connected inventory view. Six measurable ways to improve
               performance.
             </p>
