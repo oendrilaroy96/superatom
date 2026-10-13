@@ -57,7 +57,7 @@ export default function About() {
               <SectionHeading
                 align="left"
                 theme="light"
-                eyebrow="Our Journey"
+                eyebrow="About Superatom AI"
                 eyebrowColor="accent"
                 heading={
                   <>
@@ -69,17 +69,16 @@ export default function About() {
 
               <div className="mt-6 space-y-4 text-p text-body">
                 <p>
-                  Superatom AI began with conversations with 60+ CIOs across
-                  the globe, helping us deeply understand the enterprise BI
-                  landscape, the challenges faced by business analytics
-                  teams, and the growing need for faster, more effective
-                  decision-making.
+                  Just as a cluster of atoms can combine to behave as a
+                  single, unified entity known as a superatom, we at
+                  Superatom AI believe that great enterprises are built on
+                  the power of connected data and data driven decisions.
                 </p>
                 <p>
-                  These conversations with technology and business leaders
-                  laid the foundation for our vision: To transform how
-                  enterprises make decisions by bridging the gap between
-                  enterprise data, business context, and action.
+                  We are building the intelligence layer that brings
+                  together fragmented enterprise data, bridges the gap
+                  between data and actionable insights, and enables
+                  enterprises to make better decisions faster.
                 </p>
               </div>
 
@@ -130,11 +129,8 @@ export default function About() {
                   isDark ? "text-white" : "text-heading"
                 }`}
               >
-                We bring together a diverse team of strategic thinkers,
-                technology experts, and customer-obsessed builders. Our
-                collective experience spans building and scaling teams
-                across geographies, developing enterprise-grade products,
-                GTM experts and building startups from the ground up.
+                We bring years of enterprise systems building expertise
+                to you through Superatom AI.
               </p>
 
               <div
@@ -143,16 +139,16 @@ export default function About() {
                 }`}
               >
                 <p>
-                  With experience across organizations such as Blue
-                  Yonder, DHL, and Pine Labs, alongside entrepreneurial
-                  experience and backgrounds from prestigious
-                  institutions, including the IITs, our team combines
-                  enterprise expertise with a builder&rsquo;s mindset.
+                  Superatom AI is built by people from successful, large
+                  scale enterprises such as Blue Yonder, Pine Labs and
+                  DHL. Together, we bring serial entrepreneurs, product
+                  innovators, industry experts and proven operators
+                  under one roof.
                 </p>
                 <p>
-                  We believe phenomenal outcomes are built through
-                  continuous learning, disciplined execution, and an
-                  unwavering commitment to customer success.
+                  Our advisory board adds further depth through
+                  experienced CIOs, CTOs, entrepreneurs and industry
+                  leaders.
                 </p>
               </div>
 
