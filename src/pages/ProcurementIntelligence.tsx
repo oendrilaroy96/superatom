@@ -11,6 +11,7 @@ import Button from "../components/ui/Button";
 import GlowCard from "../components/ui/GlowCard";
 import SectionHeading from "../components/ui/SectionHeading";
 import DemoModal from "../components/DemoModal";
+import { useDarkTransition } from "../context/DarkTransitionContext";
 
 // Each capability's own small inline illustration, matching the style and
 // color tokens ported for InventoryIntelligence.tsx's capability cards (see
@@ -314,6 +315,12 @@ type CardStyle = {
  * as just keeping the two copies in sync by hand.
  */
 export default function ProcurementIntelligence() {
+  // Crossfades the Business Outcomes section's background from light to
+  // dark in sync with the shared scroll threshold (same pattern as About's
+  // Our Team section and Inventory Intelligence's Business Outcomes), so
+  // there's a handoff right before CtaSection here too, instead of
+  // CtaSection's own crossfade being the first one on the page.
+  const isDark = useDarkTransition();
   const [demoOpen, setDemoOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
   const [order, setOrder] = useState(capabilities.map((_, i) => i));
@@ -699,11 +706,14 @@ export default function ProcurementIntelligence() {
       </section>
 
       {/* Business outcomes */}
-      <section className="py-[120px]">
+      <section
+        className={`py-[120px] transition-colors duration-700 ease-in-out ${isDark ? "bg-secondary-500" : "bg-transparent"
+          }`}
+      >
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <SectionHeading
             align="center"
-            theme="light"
+            theme={isDark ? "dark" : "light"}
             eyebrow="Business Outcomes"
             eyebrowColor="primary"
             heading={
