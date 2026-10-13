@@ -102,7 +102,7 @@ export default function SuperatomDiagram() {
         const circle = inner.querySelector("circle") as SVGCircleElement;
         g.style.transform = `translate(${p[0]}px,${p[1]}px)`;
         inner.setAttribute("class", connected ? "" : "flt");
-        circle.setAttribute("fill", connected ? "#B9B9F9" : "#E5EDF5");
+        circle.setAttribute("fill", connected ? "#C9A8E8" : "#E5EDF5");
         circle.setAttribute("stroke", connected ? "#533AFD" : "#8792A2");
       });
       bonds.forEach((line, i) => {
@@ -145,7 +145,7 @@ export default function SuperatomDiagram() {
 
   return (
     <div ref={rootRef} className="satom-diag">
-      <div className="mx-auto flex flex-col gap-3 px-4 py-8 sm:px-8">
+      <div className="mx-auto flex flex-col gap-3 py-8">
         <svg viewBox="0 0 680 380" role="img" aria-labelledby="satom-diag-t satom-diag-d">
           <title id="satom-diag-t">Superatom AI: from fragmented data to decisions</title>
           <desc id="satom-diag-d">

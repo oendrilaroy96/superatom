@@ -52,7 +52,7 @@ export default function About() {
     <>
       <section className="py-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[0.95fr_1.4fr] lg:gap-10">
             <div>
               <SectionHeading
                 align="left"
