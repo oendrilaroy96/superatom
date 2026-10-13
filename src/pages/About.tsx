@@ -221,7 +221,7 @@ export default function About() {
               </span>
             </h2>
 
-            <div className="relative overflow-hidden rounded-[22px] border border-primary-500/10 bg-gradient-to-br from-white to-primary-100/50 p-7 h-60">
+            <div className="relative flex h-60 flex-col items-start justify-end overflow-hidden rounded-[22px] border border-primary-500/10 bg-gradient-to-br from-white to-primary-100/50 p-7">
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute -right-8 -top-10 size-28 rounded-full border border-dashed border-primary-500/30"
