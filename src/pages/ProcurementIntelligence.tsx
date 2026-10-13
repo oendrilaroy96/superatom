@@ -6,12 +6,59 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import SavingsIcon from "@mui/icons-material/Savings";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import BoltIcon from "@mui/icons-material/Bolt";
+import CheckIcon from "@mui/icons-material/Check";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
+import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
 import type { IconComponent } from "../types/icon";
 import Button from "../components/ui/Button";
 import GlowCard from "../components/ui/GlowCard";
 import SectionHeading from "../components/ui/SectionHeading";
 import DemoModal from "../components/DemoModal";
 import { useDarkTransition } from "../context/DarkTransitionContext";
+
+const BRAND_GRADIENT =
+  "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)";
+
+/** Small gradient dash + label, matching the eyebrow treatment used on InventoryIntelligence.tsx. */
+function Eyebrow({ children, align = "left" }: { children: ReactNode; align?: "left" | "center" }) {
+  return (
+    <div className={`flex items-center gap-2.5 ${align === "center" ? "justify-center" : ""}`}>
+      <span
+        className="h-0.5 w-6 shrink-0 rounded-full"
+        style={{ backgroundImage: "linear-gradient(90deg, #29b9bb, #533afd)" }}
+        aria-hidden="true"
+      />
+      <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-caption">{children}</p>
+    </div>
+  );
+}
+
+const industries: { label: string; desc: string; Icon: IconComponent }[] = [
+  {
+    label: "Supply Chain & Logistics",
+    desc: "Coordinated sourcing and supplier visibility across every lane and partner.",
+    Icon: LocalShippingIcon,
+  },
+  {
+    label: "Retail & E-Commerce",
+    desc: "Faster, smarter purchasing decisions across every channel and SKU.",
+    Icon: StorefrontIcon,
+  },
+  {
+    label: "Pharma",
+    desc: "Controlled, compliant sourcing for critical supply networks.",
+    Icon: LocalHospitalIcon,
+  },
+  {
+    label: "Manufacturing",
+    desc: "Reliable materials sourcing across sites, suppliers, and production schedules.",
+    Icon: PrecisionManufacturingIcon,
+  },
+];
+
+const industryChecklist = ["Global operations", "Multi-site visibility", "Enterprise-grade control"];
 
 // Each capability's own small inline illustration, matching the style and
 // color tokens ported for InventoryIntelligence.tsx's capability cards (see
@@ -721,6 +768,85 @@ export default function ProcurementIntelligence() {
               ))}
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Industries */}
+      <section className="py-[120px]">
+        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+          <div className="mx-auto max-w-5xl text-center">
+            <Eyebrow align="center">Industries</Eyebrow>
+            <SectionHeading
+              align="center"
+              theme="light"
+              heading={
+                <span className="lg:whitespace-nowrap">
+                  Built for complex sourcing.
+                  <br />
+                  <span className="bg-clip-text text-transparent" style={{ backgroundImage: BRAND_GRADIENT }}>
+                    Ready for enterprise scale.
+                  </span>
+                </span>
+              }
+              description="Procurement Intelligence adapts to the demands of your sector, connecting every supplier, system, and team on one secure platform."
+              descriptionClassName="mx-auto max-w-2xl"
+            />
+          </div>
+
+          <div className="mx-auto mt-9 flex flex-wrap items-center justify-center gap-x-7 gap-y-3">
+            {industryChecklist.map((item) => (
+              <div key={item} className="flex items-center gap-2">
+                <span className="flex size-5 shrink-0 items-center justify-center rounded-[10px] border border-primary-500/30 bg-white text-primary-500">
+                  <CheckIcon style={{ fontSize: 12 }} />
+                </span>
+                <p className="text-[13px] font-semibold text-heading">{item}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-px overflow-hidden rounded-[20px] border border-secondary-100 bg-secondary-100 shadow-[0_28px_90px_-30px_rgba(20,34,60,0.15)] sm:grid-cols-2 lg:grid-cols-4">
+            {industries.map(({ label, desc, Icon }, i) => (
+              <div key={label} className="flex flex-col bg-white p-7">
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-caption">
+                    {String(i + 1).padStart(2, "0")}
+                  </p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-caption">
+                    Industry
+                  </p>
+                </div>
+                <div className="mt-16">
+                  <span className="relative flex size-[52px] shrink-0 items-center justify-center rounded-2xl border border-secondary-100 bg-page text-heading">
+                    <Icon style={{ fontSize: 24 }} />
+                    <span
+                      className="absolute -bottom-1.5 left-3.5 h-[3px] w-[22px] rounded-full"
+                      style={{ backgroundImage: BRAND_GRADIENT }}
+                    />
+                  </span>
+                </div>
+                <p className="mt-8 font-display text-xl font-semibold tracking-tight text-heading">
+                  {label}
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-caption">{desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mx-auto mt-6 flex max-w-6xl flex-col items-start justify-between gap-4 rounded-2xl bg-secondary-500 px-7 py-6 shadow-[0_20px_30px_-10px_rgba(13,30,58,0.25)] sm:flex-row sm:items-center">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-300">
+                One operational view
+              </p>
+              <p className="mt-1.5 text-base font-medium text-white">
+                From regional teams to global networks, every decision
+                starts with trusted procurement data.
+              </p>
+            </div>
+            <span className="flex shrink-0 items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3.5 py-2.5">
+              <span className="size-[7px] rounded-full bg-[#29b9bb] shadow-[0_0_0_4px_rgba(41,185,187,0.14)]" />
+              <span className="text-xs font-semibold text-white">Built to scale</span>
+            </span>
+          </div>
         </div>
       </section>
 
