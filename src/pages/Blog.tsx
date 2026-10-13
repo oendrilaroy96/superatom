@@ -1,73 +1,284 @@
-import ArticleIcon from "@mui/icons-material/Article";
-import SectionHeading from "../components/ui/SectionHeading";
+import { useState, type ReactNode } from "react";
+import Inventory2Icon from "@mui/icons-material/Inventory2";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import DesignServicesIcon from "@mui/icons-material/DesignServices";
+import ScienceIcon from "@mui/icons-material/Science";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import type { IconComponent } from "../types/icon";
 
-type BlogPost = {
-  title: string;
-  excerpt: string;
-  category: string;
-  date: string;
-  readTime: string;
+const BRAND_GRADIENT =
+  "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)";
+
+/** Small gradient dash + label, matching the eyebrow treatment used on the solutions pages. */
+function Eyebrow({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex items-center gap-2.5">
+      <span
+        className="h-0.5 w-7 shrink-0 rounded-full"
+        style={{ backgroundImage: BRAND_GRADIENT }}
+        aria-hidden="true"
+      />
+      <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-caption">{children}</p>
+    </div>
+  );
+}
+
+type Category = "Inventory intelligence" | "Procurement" | "Design operations" | "Pharma" | "AI adoption";
+
+const categoryIcon: Record<Category, IconComponent> = {
+  "Inventory intelligence": Inventory2Icon,
+  Procurement: ShoppingCartIcon,
+  "Design operations": DesignServicesIcon,
+  Pharma: ScienceIcon,
+  "AI adoption": AutoAwesomeIcon,
 };
 
-// Empty until there are real posts to publish — see FAQ.tsx for the same
-// "nothing here yet" fallback pattern used below.
-const posts: BlogPost[] = [];
-
-function PostCard({ post }: { post: BlogPost }) {
+/** No real photography to source, so each article gets a brand-colored
+ * placeholder (icon on a gradient wash) instead — consistent with the
+ * illustration-box treatment already used across the solutions pages,
+ * rather than standing in fake stock photography. */
+function ArticleArt({ category, badge }: { category: Category; badge: string }) {
+  const Icon = categoryIcon[category];
   return (
-    <article className="flex flex-col rounded-lg border border-secondary-100 bg-white p-6 transition-colors hover:border-primary-300">
-      <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.08em] text-primary-500">
-        <span>{post.category}</span>
-        <span className="text-secondary-200">&bull;</span>
-        <span className="font-normal normal-case tracking-normal text-caption">
-          {post.date}
-        </span>
+    <div
+      className="relative flex h-full w-full items-center justify-center overflow-hidden"
+      style={{ backgroundImage: "linear-gradient(135deg, #5B47E0 0%, #2A1C6B 100%)" }}
+    >
+      <Icon style={{ fontSize: 40 }} className="text-white/85" />
+      <span className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/10 text-[11px] font-semibold text-white backdrop-blur-sm">
+        {badge}
+      </span>
+    </div>
+  );
+}
+
+type Article = {
+  badge: string;
+  category: Category;
+  readTime: string;
+  title: string;
+  date: string;
+  status: "read" | "soon";
+};
+
+const articles: Article[] = [
+  {
+    badge: "01",
+    category: "Inventory intelligence",
+    readTime: "12 min read",
+    title: "Inventory Intelligence: Definition and the Scale of the Problem",
+    date: "May 14, 2026",
+    status: "read",
+  },
+  {
+    badge: "02",
+    category: "Inventory intelligence",
+    readTime: "10 min read",
+    title: "Inventory Intelligence: Why It’s a Discipline and Where Adoption Stands",
+    date: "May 21, 2026",
+    status: "read",
+  },
+  {
+    badge: "03",
+    category: "Inventory intelligence",
+    readTime: "11 min read",
+    title: "Inventory Intelligence: Trends, Risks, and How to Build the Capability",
+    date: "May 28, 2026",
+    status: "read",
+  },
+  {
+    badge: "04",
+    category: "Procurement",
+    readTime: "8 min read",
+    title: "Procurement Intelligence: From Spend Visibility to Better Decisions",
+    date: "June 06, 2026",
+    status: "soon",
+  },
+  {
+    badge: "05",
+    category: "Design operations",
+    readTime: "7 min read",
+    title: "The Hidden Cost of Design Latency",
+    date: "June 13, 2026",
+    status: "soon",
+  },
+  {
+    badge: "06",
+    category: "Pharma",
+    readTime: "9 min read",
+    title: "Pharma Procurement Intelligence: Resilience Beyond Cost",
+    date: "June 20, 2026",
+    status: "soon",
+  },
+  {
+    badge: "07",
+    category: "AI adoption",
+    readTime: "9 min read",
+    title: "Building Trust in AI Recommendations, One Decision at a Time",
+    date: "June 27, 2026",
+    status: "soon",
+  },
+];
+
+const featured = articles[0];
+const categories: ("All research" | Category)[] = [
+  "All research",
+  "Inventory intelligence",
+  "Procurement",
+  "Design operations",
+  "Pharma",
+  "AI adoption",
+];
+
+function ArticleCard({ article }: { article: Article }) {
+  return (
+    <article className="flex flex-col">
+      <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl">
+        <ArticleArt category={article.category} badge={article.badge} />
       </div>
-      <p className="mt-3 font-display text-h3 font-semibold leading-snug text-heading">
-        {post.title}
+      <div className="mt-4 flex items-center justify-between">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-primary-500">
+          {article.category}
+        </p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-caption">
+          {article.readTime}
+        </p>
+      </div>
+      <p className="mt-3 font-display text-xl font-semibold leading-snug tracking-tight text-heading">
+        {article.title}
       </p>
-      <p className="mt-2 flex-1 text-sm leading-relaxed text-body">{post.excerpt}</p>
-      <p className="mt-4 text-xs font-medium text-caption">{post.readTime}</p>
+      <div className="mt-4 flex items-center justify-between border-t border-secondary-100 pt-4">
+        <p className="text-xs text-caption">{article.date}</p>
+        <p className="text-xs font-medium text-caption">
+          {article.status === "read" ? "Read article ↗" : "Coming soon"}
+        </p>
+      </div>
     </article>
   );
 }
 
 export default function Blog() {
-  return (
-    <section className="py-[120px]">
-      <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-        <SectionHeading
-          align="center"
-          theme="light"
-          eyebrow="Blog"
-          eyebrowColor="primary"
-          heading="Insights on decision intelligence"
-          description="Perspectives on inventory, procurement, and the future of decision intelligence for the enterprise."
-          className="mx-auto max-w-2xl"
-          descriptionClassName="mx-auto"
-        />
+  const [active, setActive] = useState<(typeof categories)[number]>("All research");
+  const filtered =
+    active === "All research" ? articles : articles.filter((a) => a.category === active);
 
-        {posts.length > 0 ? (
-          <div className="mx-auto mt-14 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post) => (
-              <PostCard key={post.title} post={post} />
+  return (
+    <>
+      {/* Hero */}
+      <section className="pb-[88px] pt-[120px]">
+        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+          <Eyebrow>Field notes for modern operators</Eyebrow>
+          <h1 className="mt-6 font-display text-[44px] font-semibold leading-[1.1] tracking-tight text-heading sm:text-[58px]">
+            Better decisions
+            <br />
+            start{" "}
+            <span className="bg-clip-text text-transparent" style={{ backgroundImage: BRAND_GRADIENT }}>
+              before
+            </span>{" "}
+            the alert.
+          </h1>
+          <div className="mt-10 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
+            <p className="max-w-xl text-p leading-relaxed text-body">
+              Clear thinking on inventory, AI, and the systems that keep products moving.
+            </p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-caption">
+              Issue 01 / 2026
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured article */}
+      <section className="pb-[120px]">
+        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+          <div className="mx-auto grid max-w-6xl grid-cols-1 overflow-hidden rounded-[28px] border border-secondary-100 lg:grid-cols-[3fr_2fr]">
+            <div className="relative min-h-[320px]">
+              <ArticleArt category={featured.category} badge={featured.badge} />
+              <span className="absolute left-5 top-5 rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-white backdrop-blur-sm">
+                {featured.category}
+              </span>
+              <div className="absolute bottom-5 right-5 max-w-[220px] rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md">
+                <p className="font-display text-[34px] font-semibold leading-none text-white">
+                  $1.7T
+                </p>
+                <p className="mt-2 text-xs leading-snug text-white/80">
+                  lost to inventory distortion each year
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-col justify-between gap-8 bg-page p-8 sm:p-12">
+              <div>
+                <div className="flex items-center gap-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary-500">
+                    Research
+                  </p>
+                  <span className="h-px w-6 bg-accent-300" aria-hidden="true" />
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary-500">
+                    {featured.readTime}
+                  </p>
+                </div>
+                <p className="mt-5 font-display text-[28px] font-semibold leading-tight tracking-tight text-heading sm:text-[32px]">
+                  {featured.title}
+                </p>
+                <p className="mt-5 text-sm leading-relaxed text-body">
+                  A framework for FMCG, retail, and supply chain leaders:
+                  inventory intelligence as an organizational capability, not
+                  a product category.
+                </p>
+              </div>
+              <div>
+                <span className="inline-flex items-center gap-3 rounded-full bg-secondary-500 px-6 py-3.5 text-sm font-medium text-white">
+                  Read the article <span aria-hidden="true">&#8599;</span>
+                </span>
+                <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.1em] text-caption">
+                  Published May 2026
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Latest from the journal */}
+      <section className="pb-[120px]">
+        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+          <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
+            <div>
+              <Eyebrow>01</Eyebrow>
+              <h2 className="mt-5 font-display text-[36px] font-semibold tracking-tight text-heading sm:text-[44px]">
+                Latest from the journal
+              </h2>
+            </div>
+            <p className="max-w-[430px] text-sm leading-relaxed text-body">
+              Research and practical thinking across inventory, procurement,
+              design operations, and regulated supply chains.
+            </p>
+          </div>
+
+          <div className="mx-auto mt-10 flex max-w-6xl flex-wrap gap-2 border-y border-secondary-100 py-4">
+            {categories.map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => setActive(c)}
+                className={`rounded-full px-4 py-2.5 text-xs font-medium transition-colors ${
+                  active === c
+                    ? "bg-secondary-500 text-white"
+                    : "text-caption hover:bg-page"
+                }`}
+              >
+                {c}
+              </button>
             ))}
           </div>
-        ) : (
-          <div className="mx-auto mt-14 flex max-w-xl flex-col items-center rounded-2xl border border-dashed border-secondary-100 bg-white px-10 py-14 text-center">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 text-primary-500">
-              <ArticleIcon style={{ fontSize: 22 }} />
-            </span>
-            <p className="mt-5 font-display text-h4 font-semibold text-heading">
-              We&rsquo;re working on our first posts
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-caption">
-              Check back soon for perspectives on inventory, procurement, and
-              decision intelligence.
-            </p>
+
+          <div className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((article) => (
+              <ArticleCard key={article.title} article={article} />
+            ))}
           </div>
-        )}
-      </div>
-    </section>
+        </div>
+      </section>
+    </>
   );
 }
