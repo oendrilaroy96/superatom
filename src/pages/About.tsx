@@ -1,13 +1,43 @@
-import PersonIcon from "@mui/icons-material/Person";
+import type { ReactNode } from "react";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import SectionHeading from "../components/ui/SectionHeading";
-import SuperatomDiagram from "../components/SuperatomDiagram";
+import GlowCard from "../components/ui/GlowCard";
 import { useDarkTransition } from "../context/DarkTransitionContext";
 import prashanthPhoto from "../assets/SuperatomTeams/Prashanth.webp";
 import sharathPhoto from "../assets/SuperatomTeams/Sharath.webp";
 import chetanPhoto from "../assets/SuperatomTeams/Chetan.webp";
 
-const teamMembers = [
+const BRAND_GRADIENT =
+  "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)";
+
+const principles: { n: string; title: string; desc: string }[] = [
+  {
+    n: "01",
+    title: "Connected data",
+    desc: "One unified view across every operational system.",
+  },
+  {
+    n: "02",
+    title: "Actionable insight",
+    desc: "Intelligence that turns complexity into clear direction.",
+  },
+  {
+    n: "03",
+    title: "Faster decisions",
+    desc: "Confident action at the speed your business demands.",
+  },
+];
+
+type TeamMember = {
+  name: string;
+  role: string;
+  linkedin: string;
+  photo: string | null;
+  /** Diagonal gradient stops for members without a photo yet. */
+  avatarGradient?: [string, string];
+};
+
+const teamMembers: TeamMember[] = [
   {
     name: "Prashanth Dharawath",
     role: "Co-Founder & CEO",
@@ -19,6 +49,7 @@ const teamMembers = [
     role: "Co-Founder & CTO",
     linkedin: "https://www.linkedin.com/in/ashishblessing/",
     photo: null,
+    avatarGradient: ["#3f6c79", "#172f3f"],
   },
   {
     name: "Sharath Bhat",
@@ -37,8 +68,73 @@ const teamMembers = [
     role: "Head of Engineering",
     linkedin: "https://www.linkedin.com/in/gopinadh-boppudi-8730751b0/",
     photo: null,
+    avatarGradient: ["#56628d", "#222b4b"],
   },
 ];
+
+/** Small gradient dash + label, the eyebrow treatment used throughout this redesign instead of SectionHeading's own colored-text eyebrow. */
+function Eyebrow({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span
+        className="h-0.5 w-7 shrink-0 rounded-full"
+        style={{ backgroundImage: BRAND_GRADIENT }}
+        aria-hidden="true"
+      />
+      <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-caption">
+        {children}
+      </p>
+    </div>
+  );
+}
+
+/** Abstract head-and-shoulders silhouette for team members without a photo yet. */
+function AvatarPlaceholder({ colors }: { colors: [string, string] }) {
+  return (
+    <div
+      className="absolute inset-0"
+      style={{ backgroundImage: `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 100%)` }}
+    >
+      <div className="absolute bottom-0 left-1/2 h-[55%] w-[85%] -translate-x-1/2 rounded-t-full bg-white/10 shadow-[inset_-12px_-10px_28px_rgba(11,22,40,0.3)]" />
+      <div className="absolute left-1/2 top-[34%] h-[30%] w-[30%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/15 shadow-[inset_-10px_-8px_22px_rgba(11,22,40,0.3)]" />
+    </div>
+  );
+}
+
+function TeamCard({ member }: { member: TeamMember }) {
+  return (
+    <a
+      href={member.linkedin}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group relative block aspect-[3/4] overflow-hidden rounded-2xl border border-secondary-100 bg-secondary-500"
+    >
+      {member.photo ? (
+        <img
+          src={member.photo}
+          alt={member.name}
+          className="absolute inset-0 h-full w-full object-cover object-top"
+        />
+      ) : (
+        <AvatarPlaceholder colors={member.avatarGradient!} />
+      )}
+      <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-secondary-600/95 via-secondary-600/35 to-transparent" />
+      <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-2">
+        <div>
+          <p className="font-display text-[13px] font-bold leading-tight text-white">
+            {member.name}
+          </p>
+          <p className="mt-1 text-[9px] font-semibold uppercase tracking-[0.08em] text-white/60">
+            {member.role}
+          </p>
+        </div>
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-white/20 bg-white/10 text-white transition-transform duration-200 group-hover:scale-110">
+          <LinkedInIcon style={{ fontSize: 15 }} />
+        </span>
+      </div>
+    </a>
+  );
+}
 
 export default function About() {
   // Crossfades this section's own background from light to dark in sync
@@ -50,167 +146,288 @@ export default function About() {
 
   return (
     <>
-      <section className="py-[120px]">
-        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[0.95fr_1.4fr] lg:gap-10">
-            <div>
-              <SectionHeading
-                align="left"
-                theme="light"
-                eyebrow="About Superatom AI"
-                eyebrowColor="accent"
-                heading={
-                  <>
-                    Every great outcome starts with{" "}
-                    <span className="text-primary-500">an informed decision.</span>
-                  </>
-                }
-              />
+      <section className="relative overflow-hidden py-[120px]">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-20 -top-32 size-[480px] rounded-full bg-primary-500/[0.06] blur-3xl"
+        />
+        <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+          <div className="max-w-2xl">
+            <Eyebrow>About Superatom AI</Eyebrow>
+            <SectionHeading
+              align="left"
+              theme="light"
+              size="lg"
+              heading={
+                <>
+                  Every great outcome starts with{" "}
+                  <span
+                    className="bg-clip-text text-transparent"
+                    style={{
+                      backgroundImage: BRAND_GRADIENT,
+                      WebkitBoxDecorationBreak: "clone",
+                      boxDecorationBreak: "clone",
+                    }}
+                  >
+                    an informed decision.
+                  </span>
+                </>
+              }
+            />
 
-              <div className="mt-6 space-y-4 text-p text-body">
-                <p>
-                  Just as a cluster of atoms can combine to behave as a
-                  single, unified entity known as a superatom, we at
-                  Superatom AI believe that great enterprises are built on
-                  the power of connected data and data driven decisions.
-                </p>
-                <p>
-                  We are building the intelligence layer that brings
-                  together fragmented enterprise data, bridges the gap
-                  between data and actionable insights, and enables
-                  enterprises to make better decisions faster.
-                </p>
-              </div>
-
-              <p className="mt-6 font-display text-h3 font-semibold text-primary-500">
-                Decide Fast. Decide Right. Every Time.
+            <div className="mt-6 space-y-4 text-p text-body">
+              <p>
+                Just as a cluster of atoms can combine to behave as a
+                single, unified entity known as a superatom, we at
+                Superatom AI believe that great enterprises are built on
+                the power of connected data and data driven decisions.
               </p>
-              <p className="mt-2 text-h5 font-semibold uppercase tracking-[0.5px] text-caption">
-                That&rsquo;s the idea behind Superatom.
+              <p>
+                We are building the intelligence layer that brings
+                together fragmented enterprise data, bridges the gap
+                between data and actionable insights, and enables
+                enterprises to make better decisions faster.
               </p>
             </div>
 
-            <SuperatomDiagram />
+            <div className="mt-8 flex gap-4">
+              <span
+                className="w-[3px] shrink-0 rounded-full"
+                style={{ backgroundImage: BRAND_GRADIENT }}
+                aria-hidden="true"
+              />
+              <div>
+                <p className="font-display text-h3 font-semibold text-primary-500">
+                  Decide Fast. Decide Right. Every Time.
+                </p>
+                <p className="mt-1 text-h5 font-semibold uppercase tracking-[0.5px] text-caption">
+                  That&rsquo;s the idea behind Superatom.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-16 grid grid-cols-1 gap-8 border-t border-secondary-100 pt-10 sm:grid-cols-3">
+            {principles.map((p) => (
+              <div key={p.n}>
+                <div className="flex items-baseline gap-2.5">
+                  <span className="text-h5 font-bold tracking-[0.08em] text-primary-500">
+                    {p.n}
+                  </span>
+                  <p className="font-display text-lg font-bold text-heading">{p.title}</p>
+                </div>
+                <p className="mt-2 max-w-[270px] text-sm leading-relaxed text-caption">
+                  {p.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Our Journey */}
+      <section className="relative overflow-hidden py-[120px]">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -left-24 bottom-0 size-[420px] rounded-full bg-[#ff7eb0]/[0.06] blur-3xl"
+        />
+        <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[0.42fr_1fr] lg:gap-10">
+            <div>
+              <Eyebrow>Our Journey</Eyebrow>
+
+              <div className="relative mt-10 overflow-hidden rounded-[22px] border border-primary-500/10 bg-gradient-to-br from-white to-primary-100/50 p-7">
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -right-8 -top-10 size-28 rounded-full border border-dashed border-primary-500/30"
+                >
+                  <span className="absolute -left-1 top-12 size-2 rounded-full border-2 border-white bg-primary-500 shadow-sm" />
+                  <span className="absolute left-20 top-[76px] size-2 rounded-full border-2 border-white bg-[#873eff] shadow-sm" />
+                  <span className="absolute left-6 top-0 size-2 rounded-full border-2 border-white bg-accent-500 shadow-sm" />
+                </div>
+                <p className="font-display text-[48px] font-semibold leading-none tracking-tight text-heading">
+                  60<span className="text-primary-500">+</span>
+                </p>
+                <p className="mt-4 font-display text-[13px] font-bold text-heading">
+                  CIO conversations
+                </p>
+                <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.1em] text-caption">
+                  Across the globe
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="font-display text-[42px] font-semibold leading-[1.15] text-heading sm:text-[48px]">
+                Listening first.
+                <br />
+                <span
+                  className="bg-clip-text text-transparent"
+                  style={{
+                    backgroundImage: BRAND_GRADIENT,
+                    WebkitBoxDecorationBreak: "clone",
+                    boxDecorationBreak: "clone",
+                  }}
+                >
+                  Building with purpose.
+                </span>
+              </h2>
+
+              <p className="mt-8 text-p leading-relaxed text-body">
+                Superatom AI began with conversations with 60+ CIOs across
+                the globe, helping us deeply understand the enterprise BI
+                landscape, the challenges faced by business analytics
+                teams, and the growing need for faster, more effective
+                decision-making.
+              </p>
+
+              <div className="my-5 flex items-center gap-1.5" aria-hidden="true">
+                <span className="size-[5px] rounded-full bg-primary-500" />
+                <span className="size-[5px] rounded-full bg-[#873eff]" />
+                <span className="size-[5px] rounded-full bg-accent-500" />
+              </div>
+
+              <p className="text-p leading-relaxed text-body">
+                These conversations with technology and business leaders
+                laid the foundation for our vision:
+              </p>
+
+              <div className="relative mt-6 overflow-hidden rounded-[22px] border border-primary-500/10 bg-white/70 p-7">
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -top-4 right-6 select-none font-display text-[90px] font-bold leading-none text-primary-500/10"
+                >
+                  &rdquo;
+                </span>
+                <span
+                  className="absolute left-0 top-0 h-full w-[3px]"
+                  style={{ backgroundImage: BRAND_GRADIENT }}
+                  aria-hidden="true"
+                />
+                <p className="relative font-display text-[20px] font-semibold leading-snug tracking-tight text-heading sm:text-[22px]">
+                  To transform how enterprises make decisions by bridging
+                  the gap between enterprise data, business context, and
+                  action.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <section
         className={`py-[120px] transition-colors duration-700 ease-in-out ${
-          isDark ? "bg-secondary-500" : "bg-transparent"
+          isDark ? "bg-secondary-500" : "bg-gradient-to-b from-primary-100/40 to-transparent"
         }`}
       >
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          {/* Matches the hero's 2-column split above (same width, same
-              gap) instead of a separately centered, narrower container —
-              keeps this section flush with the page's own padding.
-              items-start rather than items-center: the heading reads as
-              its own top-anchored block next to the paragraph, rather than
-              floating at the paragraph's vertical midpoint. */}
-          <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-16">
-            <SectionHeading
-              align="left"
-              theme={isDark ? "dark" : "light"}
-              eyebrow="Our Team"
-              eyebrowColor="primary"
-              heading={
-                <>
-                  Experience that understands{" "}
-                  <span className={isDark ? "text-primary-300" : "text-primary-500"}>
-                    enterprise.
-                  </span>
-                </>
-              }
-            />
-
+          <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[0.86fr_1fr] lg:gap-16">
             <div>
-              <p
-                className={`text-p font-semibold transition-colors duration-700 ease-in-out ${
+              <Eyebrow>Our Team</Eyebrow>
+              <h2
+                className={`mt-5 font-display text-[42px] font-semibold leading-[1.15] transition-colors duration-700 ease-in-out sm:text-[48px] ${
                   isDark ? "text-white" : "text-heading"
                 }`}
               >
-                We bring years of enterprise systems building expertise
-                to you through Superatom AI.
+                Enterprise expertise.
+                <br />
+                <span
+                  className="bg-clip-text text-transparent"
+                  style={{
+                    backgroundImage: BRAND_GRADIENT,
+                    WebkitBoxDecorationBreak: "clone",
+                    boxDecorationBreak: "clone",
+                  }}
+                >
+                  Builder&rsquo;s mindset.
+                </span>
+              </h2>
+            </div>
+
+            <div
+              className={`space-y-4 pt-2 text-p leading-relaxed transition-colors duration-700 ease-in-out ${
+                isDark ? "text-white/70" : "text-body"
+              }`}
+            >
+              <p>
+                We bring together a diverse team of strategic thinkers,
+                technology experts, and customer-obsessed builders. Our
+                collective experience spans building and scaling teams
+                across geographies, developing enterprise-grade products,
+                GTM experts and building startups from the ground up.
               </p>
-
-              <div
-                className={`mt-4 space-y-4 text-p transition-colors duration-700 ease-in-out ${
-                  isDark ? "text-white/70" : "text-body"
-                }`}
-              >
-                <p>
-                  Superatom AI is built by people from successful, large
-                  scale enterprises such as Blue Yonder, Pine Labs and
-                  DHL. Together, we bring serial entrepreneurs, product
-                  innovators, industry experts and proven operators
-                  under one roof.
-                </p>
-                <p>
-                  Our advisory board adds further depth through
-                  experienced CIOs, CTOs, entrepreneurs and industry
-                  leaders.
-                </p>
-              </div>
-
-              <div className="mt-6 h-0.5 w-24 bg-primary-500" />
-
-              <p
-                className={`mt-6 font-display text-h3 font-semibold transition-colors duration-700 ease-in-out ${
-                  isDark ? "text-white" : "text-heading"
-                }`}
-              >
-                Deep experience. Diverse perspectives.
-              </p>
-              <p
-                className={`font-display text-h3 font-semibold transition-colors duration-700 ease-in-out ${
-                  isDark ? "text-primary-300" : "text-primary-500"
-                }`}
-              >
-                One mission: faster decisions at scale.
+              <p>
+                With experience across organizations such as Blue
+                Yonder, DHL, and Pine Labs, alongside entrepreneurial
+                experience and backgrounds from prestigious
+                institutions, including the IITs, our team combines
+                enterprise expertise with a builder&rsquo;s mindset.
               </p>
             </div>
           </div>
 
-          {/* Team directory: full-bleed photo placeholder up top, like
-              real headshot cards, instead of a small avatar floating in
-              a mostly-empty card. Each card links out to that person's
-              LinkedIn profile. Kept fixed light regardless of the
-              section's own crossfade (same pattern as CtaSection's office
-              cards), so the cards read consistently as "cards" rather than
-              dimming into the dark background. */}
-          <div className="mt-16 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
-            {teamMembers.map((member) => (
-              <a
-                key={member.name}
-                href={member.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group block overflow-hidden rounded-2xl border border-secondary-100 bg-white transition-colors hover:border-primary-300"
+          <GlowCard
+            className="mt-12"
+            contentClassName="grid grid-cols-1 gap-4 p-8 sm:grid-cols-[180px_1fr] sm:gap-8"
+          >
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-caption">
+              What we believe
+            </p>
+            <p className="font-display text-[22px] font-medium leading-snug tracking-tight text-body sm:text-[26px] lg:text-[30px]">
+              We believe phenomenal outcomes are built through{" "}
+              <span
+                className="text-heading"
+                style={{ boxShadow: "inset 0 -2px 0 0 #ff7eb0" }}
               >
-                <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden border-b border-dashed border-secondary-200 bg-page text-caption">
-                  {member.photo ? (
-                    <img
-                      src={member.photo}
-                      alt={member.name}
-                      className="h-full w-full object-cover object-top"
-                    />
-                  ) : (
-                    <PersonIcon style={{ fontSize: 40 }} />
-                  )}
-                  <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#0A66C2] text-white shadow-md transition-transform duration-200 group-hover:scale-110">
-                    <LinkedInIcon style={{ fontSize: 18 }} />
-                  </span>
-                </div>
-                <div className="p-5">
-                  <p className="font-display text-h4 font-semibold text-heading">
-                    {member.name}
-                  </p>
-                  <p className="mt-0.5 text-xs font-medium text-caption">
-                    {member.role}
-                  </p>
-                </div>
-              </a>
+                continuous learning
+              </span>
+              , disciplined execution, and an unwavering commitment to
+              customer success.
+            </p>
+          </GlowCard>
+
+          {/* Team directory: full-bleed photo with a bottom gradient scrim
+              carrying the name/role/LinkedIn badge over the image itself,
+              matching the redesigned portrait-card treatment. Kept fixed
+              light-on-dark-scrim regardless of the section's own crossfade
+              (same pattern as the previous card design), so the cards read
+              consistently rather than dimming into the page background. */}
+          <div className="mt-16 flex items-center justify-between gap-4">
+            <p
+              className={`text-[9px] font-bold uppercase tracking-[0.1em] transition-colors duration-700 ease-in-out ${
+                isDark ? "text-white/40" : "text-caption"
+              }`}
+            >
+              The people behind Superatom
+            </p>
+            <p
+              className={`text-[9px] font-bold uppercase tracking-[0.1em] transition-colors duration-700 ease-in-out ${
+                isDark ? "text-white/40" : "text-caption"
+              }`}
+            >
+              One team &middot; One mission
+            </p>
+          </div>
+
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {teamMembers.map((member) => (
+              <TeamCard key={member.name} member={member} />
             ))}
+          </div>
+
+          <div className="mt-8 flex items-center gap-3">
+            <span
+              className="h-0.5 w-8 shrink-0 rounded-full"
+              style={{ backgroundImage: BRAND_GRADIENT }}
+              aria-hidden="true"
+            />
+            <p
+              className={`text-[11px] font-bold uppercase tracking-[0.08em] transition-colors duration-700 ease-in-out ${
+                isDark ? "text-white/40" : "text-caption"
+              }`}
+            >
+              Five perspectives. One shared ambition.
+            </p>
           </div>
         </div>
       </section>
