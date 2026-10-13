@@ -80,7 +80,7 @@ export default function SuperatomDiagram() {
       g.setAttribute("class", "node");
       g.style.transitionDelay = `${i * 80}ms`;
       g.innerHTML =
-        `<g class="flt" style="animation-delay:${i * -0.5}s"><circle r="${NODE_R}" stroke-width="1.75"/>` +
+        `<g class="flt" style="animation-delay:${i * -0.5}s"><circle r="${NODE_R}" stroke-width="2"/>` +
         `<text text-anchor="middle" dominant-baseline="central" fill="#061B31" font-size="14" font-weight="500">${s}</text></g>`;
       nodesGroup.appendChild(g);
       return g;
@@ -102,8 +102,8 @@ export default function SuperatomDiagram() {
         const circle = inner.querySelector("circle") as SVGCircleElement;
         g.style.transform = `translate(${p[0]}px,${p[1]}px)`;
         inner.setAttribute("class", connected ? "" : "flt");
-        circle.setAttribute("fill", connected ? "#C9A8E8" : "#E5EDF5");
-        circle.setAttribute("stroke", connected ? "#533AFD" : "#8792A2");
+        circle.setAttribute("fill", connected ? "#FFFFFF" : "#E5EDF5");
+        circle.setAttribute("stroke", connected ? "#C9A8E8" : "#8792A2");
       });
       bonds.forEach((line, i) => {
         line.style.transition = `stroke-dashoffset .7s ${EASE} ${connected ? 500 + i * 90 : 0}ms`;
