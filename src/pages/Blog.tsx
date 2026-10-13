@@ -5,12 +5,13 @@ import DesignServicesIcon from "@mui/icons-material/DesignServices";
 import ScienceIcon from "@mui/icons-material/Science";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import type { IconComponent } from "../types/icon";
+import { useDarkTransition } from "../context/DarkTransitionContext";
 
 const BRAND_GRADIENT =
   "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)";
 
 /** Small gradient dash + label, matching the eyebrow treatment used on the solutions pages. */
-function Eyebrow({ children }: { children: ReactNode }) {
+function Eyebrow({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
   return (
     <div className="flex items-center gap-2.5">
       <span
@@ -18,7 +19,13 @@ function Eyebrow({ children }: { children: ReactNode }) {
         style={{ backgroundImage: BRAND_GRADIENT }}
         aria-hidden="true"
       />
-      <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-caption">{children}</p>
+      <p
+        className={`text-[11px] font-bold uppercase tracking-[0.16em] transition-colors duration-700 ease-in-out ${
+          dark ? "text-white/60" : "text-caption"
+        }`}
+      >
+        {children}
+      </p>
     </div>
   );
 }
@@ -130,7 +137,7 @@ const categories: ("All research" | Category)[] = [
   "AI adoption",
 ];
 
-function ArticleCard({ article }: { article: Article }) {
+function ArticleCard({ article, dark = false }: { article: Article; dark?: boolean }) {
   return (
     <article className="flex flex-col">
       <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl">
@@ -140,16 +147,34 @@ function ArticleCard({ article }: { article: Article }) {
         <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-primary-500">
           {article.category}
         </p>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-caption">
+        <p
+          className={`text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors duration-700 ease-in-out ${
+            dark ? "text-white/50" : "text-caption"
+          }`}
+        >
           {article.readTime}
         </p>
       </div>
-      <p className="mt-3 font-display text-xl font-semibold leading-snug tracking-tight text-heading">
+      <p
+        className={`mt-3 font-display text-xl font-semibold leading-snug tracking-tight transition-colors duration-700 ease-in-out ${
+          dark ? "text-white" : "text-heading"
+        }`}
+      >
         {article.title}
       </p>
-      <div className="mt-4 flex items-center justify-between border-t border-secondary-100 pt-4">
-        <p className="text-xs text-caption">{article.date}</p>
-        <p className="text-xs font-medium text-caption">
+      <div
+        className={`mt-4 flex items-center justify-between border-t pt-4 transition-colors duration-700 ease-in-out ${
+          dark ? "border-white/10" : "border-secondary-100"
+        }`}
+      >
+        <p className={`text-xs transition-colors duration-700 ease-in-out ${dark ? "text-white/50" : "text-caption"}`}>
+          {article.date}
+        </p>
+        <p
+          className={`text-xs font-medium transition-colors duration-700 ease-in-out ${
+            dark ? "text-white/50" : "text-caption"
+          }`}
+        >
           {article.status === "read" ? "Read article ↗" : "Coming soon"}
         </p>
       </div>
@@ -161,6 +186,7 @@ export default function Blog() {
   const [active, setActive] = useState<(typeof categories)[number]>("All research");
   const filtered =
     active === "All research" ? articles : articles.filter((a) => a.category === active);
+  const isDark = useDarkTransition();
 
   return (
     <>
@@ -240,31 +266,51 @@ export default function Blog() {
       </section>
 
       {/* Latest from the journal */}
-      <section className="pb-[120px]">
+      <section
+        className={`py-[120px] transition-colors duration-700 ease-in-out ${
+          isDark ? "bg-secondary-500" : "bg-transparent"
+        }`}
+      >
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
             <div>
-              <Eyebrow>01</Eyebrow>
-              <h2 className="mt-5 font-display text-[36px] font-semibold tracking-tight text-heading sm:text-[44px]">
+              <Eyebrow dark={isDark}>01</Eyebrow>
+              <h2
+                className={`mt-5 font-display text-[36px] font-semibold tracking-tight transition-colors duration-700 ease-in-out sm:text-[44px] ${
+                  isDark ? "text-white" : "text-heading"
+                }`}
+              >
                 Latest from the journal
               </h2>
             </div>
-            <p className="max-w-[430px] text-sm leading-relaxed text-body">
+            <p
+              className={`max-w-[430px] text-sm leading-relaxed transition-colors duration-700 ease-in-out ${
+                isDark ? "text-white/70" : "text-body"
+              }`}
+            >
               Research and practical thinking across inventory, procurement,
               design operations, and regulated supply chains.
             </p>
           </div>
 
-          <div className="mx-auto mt-10 flex max-w-6xl flex-wrap gap-2 border-y border-secondary-100 py-4">
+          <div
+            className={`mx-auto mt-10 flex max-w-6xl flex-wrap gap-2 border-y py-4 transition-colors duration-700 ease-in-out ${
+              isDark ? "border-white/10" : "border-secondary-100"
+            }`}
+          >
             {categories.map((c) => (
               <button
                 key={c}
                 type="button"
                 onClick={() => setActive(c)}
-                className={`rounded-full px-4 py-2.5 text-xs font-medium transition-colors ${
+                className={`rounded-full px-4 py-2.5 text-xs font-medium transition-colors duration-700 ease-in-out ${
                   active === c
-                    ? "bg-secondary-500 text-white"
-                    : "text-caption hover:bg-page"
+                    ? isDark
+                      ? "bg-white text-secondary-500"
+                      : "bg-secondary-500 text-white"
+                    : isDark
+                      ? "text-white/60 hover:bg-white/10"
+                      : "text-caption hover:bg-page"
                 }`}
               >
                 {c}
@@ -274,7 +320,7 @@ export default function Blog() {
 
           <div className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((article) => (
-              <ArticleCard key={article.title} article={article} />
+              <ArticleCard key={article.title} article={article} dark={isDark} />
             ))}
           </div>
         </div>
