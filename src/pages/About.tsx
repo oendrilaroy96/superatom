@@ -250,7 +250,7 @@ export default function About() {
                 decision-making.
               </p>
 
-              <div className="my-5 flex items-center gap-1.5" aria-hidden="true">
+              <div className="my-6 flex items-center gap-1.5" aria-hidden="true">
                 <span className="size-[5px] rounded-full bg-primary-500" />
                 <span className="size-[5px] rounded-full bg-[#873eff]" />
                 <span className="size-[5px] rounded-full bg-accent-500" />
@@ -264,7 +264,7 @@ export default function About() {
               <div className="relative mt-6 overflow-hidden rounded-[22px] border border-primary-500/10 bg-white/70 p-7">
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute -top-4 right-6 select-none font-display text-[90px] font-bold leading-none text-primary-500/10"
+                  className="pointer-events-none absolute top-0 right-6 select-none font-display text-[90px] font-bold leading-none text-primary-500/10"
                 >
                   &rdquo;
                 </span>
