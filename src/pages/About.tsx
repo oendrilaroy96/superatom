@@ -11,24 +11,6 @@ import chetanPhoto from "../assets/SuperatomTeams/Chetan.webp";
 const BRAND_GRADIENT =
   "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)";
 
-const principles: { n: string; title: string; desc: string }[] = [
-  {
-    n: "01",
-    title: "Connected data",
-    desc: "One unified view across every operational system.",
-  },
-  {
-    n: "02",
-    title: "Actionable insight",
-    desc: "Intelligence that turns complexity into clear direction.",
-  },
-  {
-    n: "03",
-    title: "Faster decisions",
-    desc: "Confident action at the speed your business demands.",
-  },
-];
-
 type TeamMember = {
   name: string;
   role: string;
@@ -153,7 +135,7 @@ export default function About() {
           className="pointer-events-none absolute -right-20 -top-32 size-[480px] rounded-full bg-primary-500/[0.06] blur-3xl"
         />
         <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[0.95fr_1.4fr] lg:gap-10">
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.3fr_1.4fr] lg:gap-10">
             <div>
               <Eyebrow>About Superatom AI</Eyebrow>
               <SectionHeading
@@ -210,22 +192,6 @@ export default function About() {
             </div>
 
             <SuperatomDiagram />
-          </div>
-
-          <div className="mt-16 grid grid-cols-1 gap-8 border-t border-secondary-100 pt-10 sm:grid-cols-3">
-            {principles.map((p) => (
-              <div key={p.n}>
-                <div className="flex items-baseline gap-2.5">
-                  <span className="text-h5 font-bold tracking-[0.08em] text-primary-500">
-                    {p.n}
-                  </span>
-                  <p className="font-display text-lg font-bold text-heading">{p.title}</p>
-                </div>
-                <p className="mt-2 max-w-[270px] text-sm leading-relaxed text-caption">
-                  {p.desc}
-                </p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
