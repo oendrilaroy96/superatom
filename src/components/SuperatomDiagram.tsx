@@ -144,7 +144,7 @@ export default function SuperatomDiagram() {
   }, []);
 
   return (
-    <div ref={rootRef} className="satom-diag overflow-hidden rounded-2xl bg-[#141414]">
+    <div ref={rootRef} className="satom-diag">
       <div className="mx-auto flex flex-col gap-3 px-4 py-8 sm:px-8">
         <svg viewBox="0 0 680 380" role="img" aria-labelledby="satom-diag-t satom-diag-d">
           <title id="satom-diag-t">Superatom AI: from fragmented data to decisions</title>
