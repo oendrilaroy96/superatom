@@ -9,6 +9,7 @@ import ProcurementIntelligence from "./pages/ProcurementIntelligence";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import FAQ from "./pages/FAQ";
+import Blog from "./pages/Blog";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/faq" element={<FAQ />} />
+            <Route path="/blog" element={<Blog />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

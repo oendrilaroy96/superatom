@@ -20,7 +20,7 @@ const solutions: { name: string; blurb: string; Icon: IconComponent; path?: stri
 ];
 
 const resources: { name: string; blurb: string; Icon: IconComponent; path?: string }[] = [
-  { name: "Blog", blurb: "Insights on decision intelligence.", Icon: ArticleIcon },
+  { name: "Blog", blurb: "Insights on decision intelligence.", Icon: ArticleIcon, path: "/blog" },
 ];
 
 function ChevronDown() {
