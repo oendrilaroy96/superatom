@@ -1,15 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useLenis } from "lenis/react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import InsightsIcon from "@mui/icons-material/Insights";
-import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import ShieldIcon from "@mui/icons-material/Shield";
-import TuneIcon from "@mui/icons-material/Tune";
-import Inventory2Icon from "@mui/icons-material/Inventory2";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
@@ -23,41 +16,166 @@ import GlowCard from "../components/ui/GlowCard";
 import SectionHeading from "../components/ui/SectionHeading";
 import DemoModal from "../components/DemoModal";
 
-const capabilities: { title: string; desc: string; Icon: IconComponent }[] = [
+// Each capability's own small inline illustration (line chart, transfer
+// arrows, aging bars, etc.) instead of a single generic icon — ported from
+// the supplied portrait-card designs. Kept as plain SVG markup (not a
+// per-capability component) since none of them take props.
+const optimizationArt = (
+  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
+    <path d="M10 100h180" stroke="#CFC9FA" strokeWidth={1.5} />
+    <path d="M10 70h180M10 40h180" stroke="#DDD8FC" strokeWidth={1} strokeDasharray="3 5" />
+    <polyline points="14 88 58 58 96 72 140 36 186 22" stroke="#5B47E0" strokeWidth={3} />
+    <circle cx={58} cy={58} r={4.5} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
+    <circle cx={96} cy={72} r={4.5} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
+    <circle cx={140} cy={36} r={4.5} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
+    <circle cx={186} cy={22} r={5.5} fill="#5B47E0" />
+    <path d="M168 4v8M164 8h8" stroke="#8A7BF0" strokeWidth={2} />
+  </svg>
+);
+
+const rebalancingArt = (
+  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
+    <path d="M10 100h180" stroke="#CFC9FA" strokeWidth={1.5} />
+    <path d="M20 54 L45 38 L70 54 V100 H20 Z" fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
+    <path d="M36 100 V78 H54 V100" stroke="#5B47E0" strokeWidth={2} />
+    <path d="M130 54 L155 38 L180 54 V100 H130 Z" fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
+    <path d="M146 100 V78 H164 V100" stroke="#5B47E0" strokeWidth={2} />
+    <path d="M76 44 Q100 22 124 44" stroke="#5B47E0" strokeWidth={2.5} />
+    <path d="M115 43 L124 44 L122 35" stroke="#5B47E0" strokeWidth={2.5} />
+    <path d="M124 72 Q100 92 76 72" stroke="#8A7BF0" strokeWidth={2.5} strokeDasharray="4 5" />
+    <path d="M85 73 L76 72 L78 81" stroke="#8A7BF0" strokeWidth={2.5} />
+  </svg>
+);
+
+const agingArt = (
+  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
+    <path d="M10 100h180" stroke="#CFC9FA" strokeWidth={1.5} />
+    <rect x={20} y={40} width={22} height={60} rx={3} fill="#5B47E0" />
+    <rect x={52} y={52} width={22} height={48} rx={3} fill="#7B6AE8" />
+    <rect x={84} y={62} width={22} height={38} rx={3} fill="#A79CF3" />
+    <rect x={116} y={72} width={22} height={28} rx={3} fill="#CFC9FA" />
+    <circle cx={166} cy={40} r={22} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
+    <path d="M166 27 V40 L175 46" stroke="#5B47E0" strokeWidth={2.5} />
+  </svg>
+);
+
+const predictiveExcessArt = (
+  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
+    <path d="M10 100h180" stroke="#CFC9FA" strokeWidth={1.5} />
+    <rect x={20} y={66} width={20} height={34} rx={3} fill="#5B47E0" />
+    <rect x={48} y={58} width={20} height={42} rx={3} fill="#5B47E0" />
+    <rect x={76} y={52} width={20} height={48} rx={3} fill="#5B47E0" />
+    <rect x={104} y={44} width={20} height={56} rx={3} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2} strokeDasharray="4 3" />
+    <rect x={132} y={34} width={20} height={66} rx={3} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2} strokeDasharray="4 3" />
+    <rect x={160} y={22} width={20} height={78} rx={3} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2} strokeDasharray="4 3" />
+    <rect x={133} y={35} width={18} height={9} fill="#A79CF3" />
+    <rect x={161} y={23} width={18} height={21} fill="#A79CF3" />
+    <path d="M10 44h180" stroke="#5B47E0" strokeWidth={1.5} strokeDasharray="6 5" />
+    <path d="M186 6v8M182 10h8" stroke="#8A7BF0" strokeWidth={2} />
+  </svg>
+);
+
+const stockoutArt = (
+  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
+    <path d="M10 100h180" stroke="#CFC9FA" strokeWidth={1.5} />
+    <path d="M10 82h180" stroke="#8A7BF0" strokeWidth={1.5} strokeDasharray="6 5" />
+    <polyline points="14 30 50 42 86 58 112 70" stroke="#5B47E0" strokeWidth={3} />
+    <polyline points="112 70 136 54 158 44" stroke="#5B47E0" strokeWidth={3} strokeDasharray="5 5" />
+    <circle cx={112} cy={70} r={5} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
+    <path
+      d="M180 8 L194 13 V25 C194 34 188 40 180 43 C172 40 166 34 166 25 V13 Z"
+      fill="#5B47E0"
+    />
+    <path d="M174 25 L178 29 L186 20" stroke="#FFFFFF" strokeWidth={2.5} />
+  </svg>
+);
+
+const dynamicPolicyArt = (
+  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
+    <path d="M30 28h140M30 55h140M30 82h140" stroke="#CFC9FA" strokeWidth={5} />
+    <path d="M30 28h80" stroke="#5B47E0" strokeWidth={5} />
+    <path d="M30 55h40" stroke="#5B47E0" strokeWidth={5} />
+    <path d="M30 82h110" stroke="#5B47E0" strokeWidth={5} />
+    <circle cx={110} cy={28} r={9} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
+    <circle cx={70} cy={55} r={9} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
+    <circle cx={140} cy={82} r={9} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
+    <path d="M180 10v8M176 14h8" stroke="#8A7BF0" strokeWidth={2} />
+  </svg>
+);
+
+const replenishmentArt = (
+  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
+    <path
+      d="M78 48 L31 26 M78 70 L31 92 M122 48 L169 26 M122 70 L169 92"
+      stroke="#8A7BF0"
+      strokeWidth={1.5}
+      strokeDasharray="4 4"
+    />
+    <circle cx={24} cy={22} r={7} fill="#FFFFFF" stroke="#8A7BF0" strokeWidth={2} />
+    <circle cx={24} cy={96} r={7} fill="#FFFFFF" stroke="#8A7BF0" strokeWidth={2} />
+    <circle cx={176} cy={22} r={7} fill="#FFFFFF" stroke="#8A7BF0" strokeWidth={2} />
+    <circle cx={176} cy={96} r={7} fill="#FFFFFF" stroke="#8A7BF0" strokeWidth={2} />
+    <rect x={80} y={44} width={40} height={36} rx={4} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
+    <rect x={75} y={32} width={50} height={14} rx={3} fill="#5B47E0" />
+    <path d="M93 58h14" stroke="#5B47E0" strokeWidth={2.5} />
+  </svg>
+);
+
+const capabilities: {
+  title: string;
+  desc: string;
+  illustration: ReactNode;
+  illoBg: string;
+  illoBorder?: string;
+  dotGrid?: boolean;
+  accent?: "dot";
+  center?: boolean;
+}[] = [
   {
     title: "Inventory Optimization",
     desc: "Recommends optimal inventory levels by evaluating demand patterns, lead times and supply variability.",
-    Icon: InsightsIcon,
+    illustration: optimizationArt,
+    illoBg: "#EFEDFF",
   },
   {
     title: "Inventory Rebalancing",
     desc: "Recommends when, where and how much inventory to transfer across plants, warehouses and distribution centres to maximize availability and minimize carrying costs.",
-    Icon: SwapHorizIcon,
+    illustration: rebalancingArt,
+    illoBg: "#EFEDFF",
+    dotGrid: true,
+    accent: "dot",
   },
   {
     title: "Aging Inventory Intelligence",
     desc: "Identifies aging and slow-moving inventory early and recommends transfer, deployment, liquidation or production adjustments to reduce write-offs.",
-    Icon: AccessTimeIcon,
+    illustration: agingArt,
+    illoBg: "#FFFFFF",
+    illoBorder: "#DCD6FD",
   },
   {
     title: "Predictive Excess Inventory Intelligence",
     desc: "Predicts future excess inventory by evaluating demand trends, production plans, procurement schedules and inventory policies, enabling proactive actions before losses occur.",
-    Icon: TrendingUpIcon,
+    illustration: predictiveExcessArt,
+    illoBg: "#EFEDFF",
   },
   {
     title: "Stockout Prevention",
     desc: "Predicts stockout risks and recommends replenishment, inventory transfers, production changes or expedited procurement to maintain service levels.",
-    Icon: ShieldIcon,
+    illustration: stockoutArt,
+    illoBg: "#E4DFFF",
+    center: true,
   },
   {
     title: "Dynamic Inventory Policy Optimization",
     desc: "Continuously optimizes safety stock, reorder points and inventory norms based on changing demand, lead times and supply uncertainty.",
-    Icon: TuneIcon,
+    illustration: dynamicPolicyArt,
+    illoBg: "#EFEDFF",
   },
   {
     title: "Replenishment Decision Intelligence",
     desc: "Recommends what to replenish, when to replenish, where to deploy inventory and the optimal quantity across the network.",
-    Icon: Inventory2Icon,
+    illustration: replenishmentArt,
+    illoBg: "#FFFFFF",
   },
 ];
 
@@ -123,15 +241,32 @@ const UNSTACK_PX = 200;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-/** Icon, title and description shared by every rendering of a capability card. */
+/** Illustration, title and description shared by every rendering of a capability card. */
 function CapabilityCardFace({ c }: { c: (typeof capabilities)[number] }) {
   return (
-    <div className="flex h-full flex-col justify-center">
-      <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
-        <c.Icon style={{ fontSize: 22 }} />
-      </span>
-      <p className="mt-4 font-display text-h4 font-semibold text-heading">{c.title}</p>
-      <p className="mt-2 line-clamp-4 text-xs leading-relaxed text-caption">{c.desc}</p>
+    <div className="flex h-full flex-col">
+      <div
+        className="flex h-20 shrink-0 items-center justify-center overflow-hidden rounded-xl p-2.5"
+        style={{
+          background: c.illoBg,
+          border: c.illoBorder ? `1px solid ${c.illoBorder}` : undefined,
+          backgroundImage: c.dotGrid ? "radial-gradient(#D6D0FB 1px, transparent 1px)" : undefined,
+          backgroundSize: c.dotGrid ? "10px 10px" : undefined,
+        }}
+      >
+        {c.illustration}
+      </div>
+      <div className={`mt-2 flex flex-1 flex-col ${c.center ? "items-center text-center" : ""}`}>
+        {c.accent === "dot" ? (
+          <span className="mb-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-primary-500" />
+        ) : (
+          <span className="mb-2 h-[3px] w-6 shrink-0 rounded-full bg-primary-500" />
+        )}
+        <p className="line-clamp-2 font-display text-h4 font-semibold leading-tight text-heading">
+          {c.title}
+        </p>
+        <p className="mt-1 line-clamp-4 flex-1 text-xs leading-relaxed text-caption">{c.desc}</p>
+      </div>
     </div>
   );
 }
