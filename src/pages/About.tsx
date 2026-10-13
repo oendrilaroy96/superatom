@@ -203,48 +203,46 @@ export default function About() {
           className="pointer-events-none absolute -left-24 bottom-0 size-[420px] rounded-full bg-[#ff7eb0]/[0.06] blur-3xl"
         />
         <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[0.42fr_1fr] lg:gap-10">
-            <div>
-              <Eyebrow>Our Journey</Eyebrow>
+          <div className="grid grid-cols-1 items-start gap-y-8 lg:grid-cols-[0.42fr_1fr] lg:gap-x-12 lg:gap-y-[78px]">
+            <Eyebrow>Our Journey</Eyebrow>
 
-              <div className="relative mt-10 overflow-hidden rounded-[22px] border border-primary-500/10 bg-gradient-to-br from-white to-primary-100/50 p-7 h-60">
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -right-8 -top-10 size-28 rounded-full border border-dashed border-primary-500/30"
-                >
-                  <span className="absolute -left-1 top-12 size-2 rounded-full border-2 border-white bg-primary-500 shadow-sm" />
-                  <span className="absolute left-20 top-[76px] size-2 rounded-full border-2 border-white bg-[#873eff] shadow-sm" />
-                  <span className="absolute left-6 top-0 size-2 rounded-full border-2 border-white bg-accent-500 shadow-sm" />
-                </div>
-                <p className="font-display text-[70px] font-semibold leading-none tracking-tight text-heading">
-                  60<span className="text-primary-500">+</span>
-                </p>
-                <p className="mt-4 font-display text-[13px] font-bold text-heading">
-                  CIO conversations
-                </p>
-                <p className="mt-1 text-[10px] uppercase tracking-[0.1em] text-caption">
-                  Across the globe
-                </p>
+            <h2 className="font-display text-[42px] font-semibold leading-[1.15] text-heading sm:text-[48px]">
+              Listening first.
+              <br />
+              <span
+                className="bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: BRAND_GRADIENT,
+                  WebkitBoxDecorationBreak: "clone",
+                  boxDecorationBreak: "clone",
+                }}
+              >
+                Building with purpose.
+              </span>
+            </h2>
+
+            <div className="relative overflow-hidden rounded-[22px] border border-primary-500/10 bg-gradient-to-br from-white to-primary-100/50 p-7 h-60">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-8 -top-10 size-28 rounded-full border border-dashed border-primary-500/30"
+              >
+                <span className="absolute -left-1 top-12 size-2 rounded-full border-2 border-white bg-primary-500 shadow-sm" />
+                <span className="absolute left-20 top-[76px] size-2 rounded-full border-2 border-white bg-[#873eff] shadow-sm" />
+                <span className="absolute left-6 top-0 size-2 rounded-full border-2 border-white bg-accent-500 shadow-sm" />
               </div>
+              <p className="font-display text-[70px] font-semibold leading-none tracking-tight text-heading">
+                60<span className="text-primary-500">+</span>
+              </p>
+              <p className="mt-4 font-display text-[13px] font-bold text-heading">
+                CIO conversations
+              </p>
+              <p className="mt-1 text-[10px] uppercase tracking-[0.1em] text-caption">
+                Across the globe
+              </p>
             </div>
 
-            <div>
-              <h2 className="font-display text-[42px] font-semibold leading-[1.15] text-heading sm:text-[48px]">
-                Listening first.
-                <br />
-                <span
-                  className="bg-clip-text text-transparent"
-                  style={{
-                    backgroundImage: BRAND_GRADIENT,
-                    WebkitBoxDecorationBreak: "clone",
-                    boxDecorationBreak: "clone",
-                  }}
-                >
-                  Building with purpose.
-                </span>
-              </h2>
-
-              <p className="mt-8 text-p leading-relaxed text-body">
+            <div className="max-w-[780px]">
+              <p className="text-p leading-relaxed text-body">
                 Superatom AI began with conversations with 60+ CIOs across
                 the globe, helping us deeply understand the enterprise BI
                 landscape, the challenges faced by business analytics
