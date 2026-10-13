@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { useLenis } from "lenis/react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -6,48 +6,137 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import SavingsIcon from "@mui/icons-material/Savings";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import BoltIcon from "@mui/icons-material/Bolt";
-import GroupsIcon from "@mui/icons-material/Groups";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import DescriptionIcon from "@mui/icons-material/Description";
-import Inventory2Icon from "@mui/icons-material/Inventory2";
-import AccountTreeIcon from "@mui/icons-material/AccountTree";
-import ShieldIcon from "@mui/icons-material/Shield";
 import type { IconComponent } from "../types/icon";
 import Button from "../components/ui/Button";
 import GlowCard from "../components/ui/GlowCard";
 import SectionHeading from "../components/ui/SectionHeading";
 import DemoModal from "../components/DemoModal";
 
-const capabilities: { title: string; desc: string; Icon: IconComponent }[] = [
+// Each capability's own small inline illustration, matching the style and
+// color tokens ported for InventoryIntelligence.tsx's capability cards (see
+// that file's comment above its own illustration consts).
+const supplierSelectionArt = (
+  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
+    <path d="M10 100h180" stroke="#CFC9FA" strokeWidth={1.5} />
+    <rect x={30} y={60} width={26} height={40} rx={3} fill="#CFC9FA" />
+    <rect x={87} y={40} width={26} height={60} rx={3} fill="#5B47E0" />
+    <rect x={144} y={66} width={26} height={34} rx={3} fill="#A79CF3" />
+    <path
+      d="M100 16 L104.5 27 L116 28 L107 35.5 L110 47 L100 40.5 L90 47 L93 35.5 L84 28 L95.5 27 Z"
+      fill="#5B47E0"
+    />
+  </svg>
+);
+
+const procurementPlanningArt = (
+  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
+    <rect x={30} y={22} width={140} height={76} rx={8} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2} />
+    <path d="M30 44h140" stroke="#5B47E0" strokeWidth={2} />
+    <path d="M58 14v16M142 14v16" stroke="#8A7BF0" strokeWidth={3} />
+    <circle cx={54} cy={60} r={4} fill="#CFC9FA" />
+    <circle cx={74} cy={60} r={4} fill="#CFC9FA" />
+    <circle cx={94} cy={60} r={4} fill="#CFC9FA" />
+    <circle cx={54} cy={78} r={4} fill="#CFC9FA" />
+    <rect x={110} y={52} width={44} height={34} rx={6} fill="#5B47E0" />
+    <path d="M122 69l7 7 14-14" stroke="#FFFFFF" strokeWidth={3} />
+  </svg>
+);
+
+const contractIntelligenceArt = (
+  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
+    <rect x={54} y={10} width={92} height={94} rx={8} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
+    <path d="M70 32h60M70 46h60M70 60h38" stroke="#CFC9FA" strokeWidth={4} />
+    <circle cx={146} cy={84} r={20} fill="#5B47E0" />
+    <path d="M137 84.5l5.5 5.5 11-11" stroke="#FFFFFF" strokeWidth={3} />
+  </svg>
+);
+
+const orderQuantityArt = (
+  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
+    <path d="M100 16v74" stroke="#5B47E0" strokeWidth={3} />
+    <path d="M38 38h124" stroke="#5B47E0" strokeWidth={3} />
+    <path d="M38 38 L22 72 A18 18 0 0 0 54 72 Z" fill="#CFC9FA" stroke="#5B47E0" strokeWidth={2} />
+    <path d="M162 38 L146 72 A18 18 0 0 0 178 72 Z" fill="#5B47E0" />
+    <circle cx={100} cy={18} r={6} fill="#5B47E0" />
+    <rect x={82} y={92} width={36} height={12} rx={3} fill="#5B47E0" />
+  </svg>
+);
+
+const workflowIntelligenceArt = (
+  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
+    <circle cx={100} cy={18} r={10} fill="#5B47E0" />
+    <path
+      d="M100 28 V46 M100 46 L40 78 M100 46 L100 78 M100 46 L160 78"
+      stroke="#8A7BF0"
+      strokeWidth={1.5}
+      strokeDasharray="4 4"
+    />
+    <circle cx={40} cy={88} r={9} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
+    <circle cx={100} cy={88} r={9} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
+    <circle cx={160} cy={88} r={9} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
+    <path d="M36 88l3 3 5-5" stroke="#5B47E0" strokeWidth={2} />
+  </svg>
+);
+
+const riskIntelligenceArt = (
+  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
+    <circle cx={100} cy={55} r={46} fill="none" stroke="#DDD8FC" strokeWidth={1} strokeDasharray="3 5" />
+    <circle cx={100} cy={55} r={31} fill="none" stroke="#CFC9FA" strokeWidth={1} strokeDasharray="3 5" />
+    <path
+      d="M100 18 L132 29 V54 C132 75 118 91 100 98 C82 91 68 75 68 54 V29 Z"
+      fill="#5B47E0"
+    />
+    <path d="M87 55l9 9 18-18" stroke="#FFFFFF" strokeWidth={3} />
+  </svg>
+);
+
+const capabilities: {
+  title: string;
+  desc: string;
+  illustration: ReactNode;
+  illoBg: string;
+  illoBorder?: string;
+  dotGrid?: boolean;
+  accent?: "dot";
+}[] = [
   {
     title: "Supplier Selection Intelligence",
     desc: "Recommends the optimal supplier by evaluating cost, quality, lead time, capacity, contracts, ESG, and supply risk.",
-    Icon: GroupsIcon,
+    illustration: supplierSelectionArt,
+    illoBg: "#EFEDFF",
   },
   {
     title: "Procurement Planning",
     desc: "Determines whether procurement is required by evaluating inventory, demand forecasts, production plans, and existing purchase commitments.",
-    Icon: CalendarMonthIcon,
+    illustration: procurementPlanningArt,
+    illoBg: "#EFEDFF",
+    dotGrid: true,
+    accent: "dot",
   },
   {
     title: "Contract Intelligence",
     desc: "Recommends the most beneficial contract by evaluating pricing, commercial terms, commitments, expiry, and negotiated agreements.",
-    Icon: DescriptionIcon,
+    illustration: contractIntelligenceArt,
+    illoBg: "#FFFFFF",
+    illoBorder: "#DCD6FD",
   },
   {
     title: "Order Quantity Optimization",
     desc: "Recommends the optimal purchase quantity by balancing demand, inventory, MOQ, lead time, and working capital objectives.",
-    Icon: Inventory2Icon,
+    illustration: orderQuantityArt,
+    illoBg: "#EFEDFF",
   },
   {
     title: "Procurement Workflow Intelligence",
     desc: "Identifies routine procurement decisions that can be automated, while routing exceptions and high-impact trade-offs to the right teams with recommendations and explainable reasoning.",
-    Icon: AccountTreeIcon,
+    illustration: workflowIntelligenceArt,
+    illoBg: "#FFFFFF",
   },
   {
     title: "Procurement Risk Intelligence",
     desc: "Continuously monitors supplier, geopolitical, logistics, and compliance risks and recommends proactive sourcing actions.",
-    Icon: ShieldIcon,
+    illustration: riskIntelligenceArt,
+    illoBg: "#E4DFFF",
   },
 ];
 
@@ -100,15 +189,32 @@ const UNSTACK_PX = 200;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-/** Icon, title and description shared by every rendering of a capability card. */
+/** Illustration, title and description shared by every rendering of a capability card. */
 function CapabilityCardFace({ c }: { c: (typeof capabilities)[number] }) {
   return (
-    <div className="flex h-full flex-col justify-center">
-      <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
-        <c.Icon style={{ fontSize: 22 }} />
-      </span>
-      <p className="mt-4 font-display text-h4 font-semibold text-heading">{c.title}</p>
-      <p className="mt-2 line-clamp-4 text-xs leading-relaxed text-caption">{c.desc}</p>
+    <div className="flex h-full flex-col">
+      <div
+        className="flex h-28 shrink-0 items-center justify-center overflow-hidden rounded-lg p-2"
+        style={{
+          background: c.illoBg,
+          border: c.illoBorder ? `1px solid ${c.illoBorder}` : undefined,
+          backgroundImage: c.dotGrid ? "radial-gradient(#D6D0FB 1px, transparent 1px)" : undefined,
+          backgroundSize: c.dotGrid ? "10px 10px" : undefined,
+        }}
+      >
+        {c.illustration}
+      </div>
+      <div className="mt-2 flex flex-1 flex-col">
+        {c.accent === "dot" ? (
+          <span className="mb-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-primary-500" />
+        ) : (
+          <span className="mb-2 h-[3px] w-6 shrink-0 rounded-full bg-primary-500" />
+        )}
+        <p className="line-clamp-2 font-display text-h4 font-semibold leading-tight text-heading">
+          {c.title}
+        </p>
+        <p className="mt-1 line-clamp-4 text-xs leading-relaxed text-caption">{c.desc}</p>
+      </div>
     </div>
   );
 }
@@ -134,7 +240,7 @@ function MobileCardStack({
         return (
           <div
             key={c.title}
-            className="absolute inset-x-0 top-0 rounded-2xl border border-secondary-100 bg-white p-6 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)]"
+            className="absolute inset-x-0 top-0 rounded-lg border border-secondary-100 bg-white p-3 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)]"
             style={{
               transform: `translate(${slot.x}px, ${slot.y}px) rotate(${slot.rotate}deg) scale(${slot.scale})`,
               opacity: slot.opacity,
@@ -519,7 +625,7 @@ export default function ProcurementIntelligence() {
             return (
               <div
                 key={c.title}
-                className="absolute rounded-2xl border border-secondary-100 bg-white p-6 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)]"
+                className="absolute rounded-lg border border-secondary-100 bg-white p-3 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)]"
                 style={{
                   top: s.top,
                   left: s.left,
@@ -583,7 +689,7 @@ export default function ProcurementIntelligence() {
           ) : (
             <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {capabilities.map((c) => (
-                <GlowCard key={c.title}>
+                <GlowCard key={c.title} contentClassName="p-3">
                   <CapabilityCardFace c={c} />
                 </GlowCard>
               ))}
