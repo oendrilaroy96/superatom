@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import SectionHeading from "../components/ui/SectionHeading";
 import GlowCard from "../components/ui/GlowCard";
+import SuperatomDiagram from "../components/SuperatomDiagram";
 import { useDarkTransition } from "../context/DarkTransitionContext";
 import prashanthPhoto from "../assets/SuperatomTeams/Prashanth.webp";
 import sharathPhoto from "../assets/SuperatomTeams/Sharath.webp";
@@ -152,59 +153,63 @@ export default function About() {
           className="pointer-events-none absolute -right-20 -top-32 size-[480px] rounded-full bg-primary-500/[0.06] blur-3xl"
         />
         <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="max-w-2xl">
-            <Eyebrow>About Superatom AI</Eyebrow>
-            <SectionHeading
-              align="left"
-              theme="light"
-              size="lg"
-              heading={
-                <>
-                  Every great outcome starts with{" "}
-                  <span
-                    className="bg-clip-text text-transparent"
-                    style={{
-                      backgroundImage: BRAND_GRADIENT,
-                      WebkitBoxDecorationBreak: "clone",
-                      boxDecorationBreak: "clone",
-                    }}
-                  >
-                    an informed decision.
-                  </span>
-                </>
-              }
-            />
-
-            <div className="mt-6 space-y-4 text-p text-body">
-              <p>
-                Just as a cluster of atoms can combine to behave as a
-                single, unified entity known as a superatom, we at
-                Superatom AI believe that great enterprises are built on
-                the power of connected data and data driven decisions.
-              </p>
-              <p>
-                We are building the intelligence layer that brings
-                together fragmented enterprise data, bridges the gap
-                between data and actionable insights, and enables
-                enterprises to make better decisions faster.
-              </p>
-            </div>
-
-            <div className="mt-8 flex gap-4">
-              <span
-                className="w-[3px] shrink-0 rounded-full"
-                style={{ backgroundImage: BRAND_GRADIENT }}
-                aria-hidden="true"
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[0.95fr_1.4fr] lg:gap-10">
+            <div>
+              <Eyebrow>About Superatom AI</Eyebrow>
+              <SectionHeading
+                align="left"
+                theme="light"
+                size="lg"
+                heading={
+                  <>
+                    Every great outcome starts with{" "}
+                    <span
+                      className="bg-clip-text text-transparent"
+                      style={{
+                        backgroundImage: BRAND_GRADIENT,
+                        WebkitBoxDecorationBreak: "clone",
+                        boxDecorationBreak: "clone",
+                      }}
+                    >
+                      an informed decision.
+                    </span>
+                  </>
+                }
               />
-              <div>
-                <p className="font-display text-h3 font-semibold text-primary-500">
-                  Decide Fast. Decide Right. Every Time.
+
+              <div className="mt-6 space-y-4 text-p text-body">
+                <p>
+                  Just as a cluster of atoms can combine to behave as a
+                  single, unified entity known as a superatom, we at
+                  Superatom AI believe that great enterprises are built on
+                  the power of connected data and data driven decisions.
                 </p>
-                <p className="mt-1 text-h5 font-semibold uppercase tracking-[0.5px] text-caption">
-                  That&rsquo;s the idea behind Superatom.
+                <p>
+                  We are building the intelligence layer that brings
+                  together fragmented enterprise data, bridges the gap
+                  between data and actionable insights, and enables
+                  enterprises to make better decisions faster.
                 </p>
               </div>
+
+              <div className="mt-8 flex gap-4">
+                <span
+                  className="w-[3px] shrink-0 rounded-full"
+                  style={{ backgroundImage: BRAND_GRADIENT }}
+                  aria-hidden="true"
+                />
+                <div>
+                  <p className="font-display text-h3 font-semibold text-primary-500">
+                    Decide Fast. Decide Right. Every Time.
+                  </p>
+                  <p className="mt-1 text-h5 font-semibold uppercase tracking-[0.5px] text-caption">
+                    That&rsquo;s the idea behind Superatom.
+                  </p>
+                </div>
+              </div>
             </div>
+
+            <SuperatomDiagram />
           </div>
 
           <div className="mt-16 grid grid-cols-1 gap-8 border-t border-secondary-100 pt-10 sm:grid-cols-3">
