@@ -283,13 +283,32 @@ function HighlightsBar() {
   );
 }
 
-const outcomes: { label: string; dir: "up" | "down" }[] = [
-  { label: "Lower Procurement Cost", dir: "down" },
-  { label: "Lower Working Capital", dir: "down" },
-  { label: "Better Contract Utilization", dir: "up" },
-  { label: "Reliable Supply", dir: "up" },
-  { label: "Lower Supplier Risk", dir: "down" },
-  { label: "Higher Buyer Productivity", dir: "up" },
+const outcomeGroups: {
+  eyebrow: string;
+  title: string;
+  accent: string;
+  items: { label: string; dir: "up" | "down" }[];
+}[] = [
+  {
+    eyebrow: "Efficiency",
+    title: "Reduce procurement cost and risk",
+    accent: "linear-gradient(90deg, #29b9bb 0%, #486ffd 50%, rgba(72,111,253,0) 100%)",
+    items: [
+      { label: "Lower Procurement Cost", dir: "down" },
+      { label: "Lower Working Capital", dir: "down" },
+      { label: "Lower Supplier Risk", dir: "down" },
+      { label: "Better Contract Utilization", dir: "up" },
+    ],
+  },
+  {
+    eyebrow: "Performance",
+    title: "Increase procurement productivity",
+    accent: "linear-gradient(90deg, #873eff 0%, #ff7600 50%, rgba(255,118,0,0) 100%)",
+    items: [
+      { label: "Reliable Supply", dir: "up" },
+      { label: "Higher Buyer Productivity", dir: "up" },
+    ],
+  },
 ];
 
 type CardStyle = {
@@ -727,19 +746,55 @@ export default function ProcurementIntelligence() {
             descriptionClassName="mx-auto max-w-xl"
           />
 
-          <div className="mx-auto mt-14 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {outcomes.map((o) => (
-              <GlowCard key={o.label} contentClassName="flex items-center gap-4 p-6">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-primary-100 text-primary-500">
-                  {o.dir === "up" ? (
-                    <ArrowUpwardIcon style={{ fontSize: 22 }} />
-                  ) : (
-                    <ArrowDownwardIcon style={{ fontSize: 22 }} />
-                  )}
-                </span>
-                <p className="font-display text-h4 font-semibold text-heading">{o.label}</p>
-              </GlowCard>
+          <div className="mx-auto mt-14 grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
+            {outcomeGroups.map((group) => (
+              <div
+                key={group.eyebrow}
+                className="relative overflow-hidden rounded-[20px] border border-secondary-100 bg-white p-8 shadow-[0_26px_80px_-30px_rgba(20,34,60,0.15)]"
+              >
+                <span
+                  className="absolute left-0 top-0 h-[2px] w-full"
+                  style={{ backgroundImage: group.accent }}
+                  aria-hidden="true"
+                />
+                <div className="flex items-start justify-between gap-4">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-caption">
+                    {group.eyebrow}
+                  </p>
+                  <p className="text-right font-display text-xl font-semibold tracking-tight text-heading">
+                    {group.title}
+                  </p>
+                </div>
+                <div
+                  className={`mt-8 grid grid-cols-1 gap-px overflow-hidden rounded-[14px] border border-secondary-100 bg-secondary-100 ${group.items.length > 2 ? "sm:grid-cols-2" : ""
+                    }`}
+                >
+                  {group.items.map((o) => (
+                    <div key={o.label} className="flex items-center gap-4 bg-white p-5">
+                      <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary-100 text-primary-500">
+                        {o.dir === "up" ? (
+                          <ArrowUpwardIcon style={{ fontSize: 20 }} />
+                        ) : (
+                          <ArrowDownwardIcon style={{ fontSize: 20 }} />
+                        )}
+                      </span>
+                      <p className="font-display text-[15px] font-semibold text-heading">{o.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             ))}
+          </div>
+
+          <div className="mt-7 flex items-center justify-center gap-2.5">
+            <span className="size-[7px] rounded-full bg-[#29b9bb] shadow-[0_0_0_5px_rgba(41,185,187,0.12)]" />
+            <p
+              className={`text-xs font-semibold transition-colors duration-700 ease-in-out ${isDark ? "text-white/60" : "text-caption"
+                }`}
+            >
+              One connected procurement view. Six measurable ways to improve
+              performance.
+            </p>
           </div>
         </div>
       </section>
