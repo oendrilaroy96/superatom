@@ -1,9 +1,8 @@
 @import "tailwindcss";
 
-@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap");
-
-/* Inter + Manrope: used only by the How It Works diagram below, which was
-   ported from a standalone prototype built against this exact pairing. */
+/* Inter + Manrope: Manrope is also the site's display font (--font-display
+   below); Inter is used only by the How It Works diagram, ported from a
+   standalone prototype built against this exact pairing. */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap");
 
 /* Inter Tight: used only by the SuperatomDiagram component (About page
@@ -90,10 +89,10 @@
   --color-success-800: #074e33;
   --color-success-900: #042e1e;
 
-  --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Manrope", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Satoshi", ui-sans-serif, system-ui, sans-serif;
 
-  /* Type scale (Figma: Typography) — Archivo H1–H4, Satoshi H5/p,
+  /* Type scale (Figma: Typography) — Manrope H1–H4, Satoshi H5/p,
      line-height = font-size × 1.618 (golden ratio), rounded to the pixel. */
   --text-h1: 2.5rem; /* 40px */
   --text-h1--line-height: 4.0625rem; /* 65px */
