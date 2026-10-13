@@ -995,22 +995,22 @@ export default function InventoryIntelligence() {
       {/* Industries */}
       <section className="py-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="mx-auto max-w-2xl text-center">
+          <div className="mx-auto max-w-5xl text-center">
             <Eyebrow align="center">Industries</Eyebrow>
             <SectionHeading
               align="center"
               theme="light"
               heading={
-                <>
+                <span className="lg:whitespace-nowrap">
                   Built for complex inventory.
                   <br />
                   <span className="bg-clip-text text-transparent" style={{ backgroundImage: BRAND_GRADIENT }}>
                     Ready for enterprise scale.
                   </span>
-                </>
+                </span>
               }
               description="Inventory Intelligence adapts to the demands of your sector, connecting every site, system, and team on one secure platform."
-              descriptionClassName="mx-auto"
+              descriptionClassName="mx-auto max-w-2xl"
             />
           </div>
 
