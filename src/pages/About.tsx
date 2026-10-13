@@ -334,12 +334,12 @@ export default function About() {
 
           <GlowCard
             className="mt-20"
-            contentClassName="grid grid-cols-1 gap-4 p-8 sm:grid-cols-[180px_1fr] sm:gap-8"
+            contentClassName="grid grid-cols-1 gap-4 p-8 sm:grid-cols-[370px_1fr] sm:gap-12"
           >
             <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-caption">
               What we believe
             </p>
-            <p className="font-display text-[22px] font-medium leading-snug tracking-tight text-body sm:text-[26px] lg:text-[30px]">
+            <p className="font-display text-[22px] font-normal leading-snug tracking-tight text-body sm:text-[26px] lg:text-[30px]">
               We believe phenomenal outcomes are built through{" "}
               <span
                 className="text-heading"
