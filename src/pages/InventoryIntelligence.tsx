@@ -3,6 +3,7 @@ import { useLenis } from "lenis/react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import CheckIcon from "@mui/icons-material/Check";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
@@ -15,6 +16,23 @@ import Button from "../components/ui/Button";
 import GlowCard from "../components/ui/GlowCard";
 import SectionHeading from "../components/ui/SectionHeading";
 import DemoModal from "../components/DemoModal";
+
+const BRAND_GRADIENT =
+  "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)";
+
+/** Small gradient dash + label, the eyebrow treatment used throughout this page's Figma redesign instead of SectionHeading's own colored-text eyebrow. */
+function Eyebrow({ children, align = "left" }: { children: ReactNode; align?: "left" | "center" }) {
+  return (
+    <div className={`flex items-center gap-2.5 ${align === "center" ? "justify-center" : ""}`}>
+      <span
+        className="h-0.5 w-6 shrink-0 rounded-full"
+        style={{ backgroundImage: "linear-gradient(90deg, #29b9bb, #533afd)" }}
+        aria-hidden="true"
+      />
+      <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-caption">{children}</p>
+    </div>
+  );
+}
 
 // Each capability's own small inline illustration (line chart, transfer
 // arrows, aging bars, etc.) instead of a single generic icon — ported from
@@ -326,28 +344,64 @@ function HighlightsBar() {
   );
 }
 
-const distortionStats: { value: string; label: string }[] = [
-  { value: "US$1.7tn", label: "lost every year to stockouts and overstock worldwide" },
-  { value: "65.6%", label: "of that loss comes from empty shelves, not excess stock" },
-  { value: "<25%", label: "of retailers use AI in their inventory decisions today" },
-  { value: "2.3x", label: "higher sales growth for the retailers that do" },
+const distortionStats: { value: string; label: string; dotColor: string }[] = [
+  { value: "US$1.7tn", label: "lost every year to stockouts and overstock worldwide", dotColor: "#29b9bb" },
+  { value: "65.6%", label: "of that loss comes from empty shelves, not excess stock", dotColor: "#486ffd" },
+  { value: "<25%", label: "of retailers use AI in their inventory decisions today", dotColor: "#873eff" },
+  { value: "2.3x", label: "higher sales growth for the retailers that do", dotColor: "#ff7600" },
 ];
 
-const industries: { label: string; Icon: IconComponent }[] = [
-  { label: "Supply Chain & Logistics", Icon: LocalShippingIcon },
-  { label: "Retail & E-Commerce", Icon: StorefrontIcon },
-  // { label: "Financial Services", Icon: AccountBalanceIcon },
-  { label: "Pharma", Icon: LocalHospitalIcon },
-  { label: "Manufacturing", Icon: PrecisionManufacturingIcon },
+const industries: { label: string; desc: string; Icon: IconComponent }[] = [
+  {
+    label: "Supply Chain & Logistics",
+    desc: "End-to-end visibility across locations, partners, and inventory flows.",
+    Icon: LocalShippingIcon,
+  },
+  {
+    label: "Retail & E-Commerce",
+    desc: "Accurate availability and intelligent allocation at every channel.",
+    Icon: StorefrontIcon,
+  },
+  {
+    label: "Pharma",
+    desc: "Controlled, compliant inventory operations for critical supply networks.",
+    Icon: LocalHospitalIcon,
+  },
+  {
+    label: "Manufacturing",
+    desc: "Production-ready materials planning across sites, teams, and suppliers.",
+    Icon: PrecisionManufacturingIcon,
+  },
 ];
 
-const outcomes: { label: string; dir: "up" | "down" }[] = [
-  { label: "Lower Working Capital", dir: "down" },
-  { label: "Higher Service Levels", dir: "up" },
-  { label: "Fewer Stockouts", dir: "down" },
-  { label: "Lower Inventory Write-offs", dir: "down" },
-  { label: "Lower Carrying Cost", dir: "down" },
-  { label: "Better Inventory Turns", dir: "up" },
+const industryChecklist = ["Global operations", "Multi-site visibility", "Enterprise-grade control"];
+
+const outcomeGroups: {
+  eyebrow: string;
+  title: string;
+  accent: string;
+  items: { label: string; dir: "up" | "down" }[];
+}[] = [
+  {
+    eyebrow: "Efficiency",
+    title: "Reduce operational drag",
+    accent: "linear-gradient(90deg, #29b9bb 0%, #486ffd 50%, rgba(72,111,253,0) 100%)",
+    items: [
+      { label: "Lower Working Capital", dir: "down" },
+      { label: "Fewer Stockouts", dir: "down" },
+      { label: "Lower Inventory Write-offs", dir: "down" },
+      { label: "Lower Carrying Cost", dir: "down" },
+    ],
+  },
+  {
+    eyebrow: "Performance",
+    title: "Increase inventory productivity",
+    accent: "linear-gradient(90deg, #873eff 0%, #ff7600 50%, rgba(255,118,0,0) 100%)",
+    items: [
+      { label: "Higher Service Levels", dir: "up" },
+      { label: "Better Inventory Turns", dir: "up" },
+    ],
+  },
 ];
 
 type CardStyle = {
@@ -653,30 +707,27 @@ export default function InventoryIntelligence() {
   // The full heading as it appears in its own resting spot in the
   // Capabilities section, matching Industries/Business Outcomes exactly.
   const capabilitiesHeading = (
-    <SectionHeading
-      align="center"
-      theme="light"
-      eyebrow="Capabilities"
-      eyebrowColor="primary"
-      heading={
-        <>
-          End-to-end inventory
-          <br />
-          <span
-            className="bg-clip-text text-transparent"
-            style={{
-              backgroundImage:
-                "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)",
-            }}
-          >
-            intelligence.
-          </span>
-        </>
-      }
-      description="From planning to execution, turn fragmented inventory signals into coordinated decisions across your network."
-      className="mx-auto max-w-2xl"
-      descriptionClassName="mx-auto"
-    />
+    <div className="mx-auto max-w-2xl text-center">
+      <Eyebrow align="center">Capabilities</Eyebrow>
+      <SectionHeading
+        align="center"
+        theme="light"
+        heading={
+          <>
+            End-to-end inventory
+            <br />
+            <span
+              className="bg-clip-text text-transparent"
+              style={{ backgroundImage: BRAND_GRADIENT }}
+            >
+              intelligence.
+            </span>
+          </>
+        }
+        description="From planning to execution, turn fragmented inventory signals into coordinated decisions across your network."
+        descriptionClassName="mx-auto"
+      />
+    </div>
   );
 
   return (
@@ -872,39 +923,71 @@ export default function InventoryIntelligence() {
         </div>
       </section>
 
-      {/* Cost of guesswork */}
+      {/* The inventory gap */}
       <section className="py-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="mx-auto max-w-5xl overflow-hidden rounded-2xl border border-secondary-100 bg-white">
-            <div className="px-8 py-14 text-center sm:px-16">
-              <h2 className="font-display text-[32px] font-bold leading-[1.25] text-heading sm:text-[44px]">
-                The cost of running
-                <br />
-                inventory on guesswork
-              </h2>
-            </div>
-            <div className="grid grid-cols-2 border-t border-secondary-100 sm:grid-cols-4">
-              {distortionStats.map((stat, i) => (
-                <div
-                  key={stat.label}
-                  className={`border-secondary-100 px-6 py-10 text-center ${i % 2 === 1 ? "border-l" : ""
-                    } ${i >= 2 ? "border-t sm:border-t-0" : ""} ${i > 0 ? "sm:border-l" : ""}`}
-                >
-                  <p
-                    className={`font-display text-[30px] font-bold sm:text-[40px] ${i === 0 ? "text-heading" : "text-secondary-300"
-                      }`}
-                  >
-                    {stat.value}
+          <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[24px] border border-secondary-100 bg-white shadow-[0_30px_90px_-30px_rgba(20,34,60,0.14)]">
+            <span
+              className="absolute left-12 top-0 h-[3px] w-[148px]"
+              style={{ backgroundImage: "linear-gradient(90deg, #29b9bb 0%, #486ffd 33%, #873eff 67%, #ff7600 100%)" }}
+              aria-hidden="true"
+            />
+            <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr]">
+              <div className="flex flex-col justify-between gap-10 border-b border-secondary-100 px-8 py-12 sm:px-12 lg:border-b-0 lg:border-r">
+                <div>
+                  <Eyebrow>The inventory gap</Eyebrow>
+                  <h2 className="mt-5 font-display text-[36px] font-semibold leading-[1.1] tracking-tight text-heading sm:text-[44px]">
+                    The cost of running
+                    <br />
+                    <span className="bg-clip-text text-transparent" style={{ backgroundImage: BRAND_GRADIENT }}>
+                      inventory on guesswork.
+                    </span>
+                  </h2>
+                </div>
+                <div className="border-t border-secondary-100 pt-6">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-primary-500">
+                    The enterprise reality
                   </p>
-                  <p className="mx-auto mt-2 max-w-[180px] text-sm leading-snug text-caption">
-                    {stat.label}
+                  <p className="mt-3 text-sm leading-relaxed text-body">
+                    Small inventory gaps compound across locations, channels,
+                    and teams. The result is trapped capital, missed demand,
+                    and slower growth.
                   </p>
                 </div>
-              ))}
+                <div className="flex items-center gap-3">
+                  <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-caption">
+                    Research benchmark
+                  </p>
+                  <span className="h-px w-6 bg-secondary-100" aria-hidden="true" />
+                  <p className="text-[10px] font-medium uppercase tracking-[0.1em] text-caption">
+                    IHL Group, 2026
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2">
+                {distortionStats.map((stat, i) => (
+                  <div
+                    key={stat.label}
+                    className={`px-8 py-9 ${i % 2 === 1 ? "border-l border-secondary-100" : ""} ${i >= 2 ? "border-t border-secondary-100" : ""
+                      }`}
+                  >
+                    <div className="flex justify-end">
+                      <span
+                        className="size-[7px] rounded-full"
+                        style={{ background: stat.dotColor, boxShadow: `0 0 0 5px ${stat.dotColor}1a` }}
+                      />
+                    </div>
+                    <p className="mt-10 font-display text-[32px] font-semibold tracking-tight text-heading sm:text-[40px]">
+                      {stat.value}
+                    </p>
+                    <p className="mt-3 max-w-[220px] text-sm leading-snug text-caption">
+                      {stat.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
-            <p className="border-t border-secondary-100 py-4 text-center text-xs text-caption">
-              Source: IHL Group, 2026.
-            </p>
           </div>
         </div>
       </section>
@@ -912,29 +995,78 @@ export default function InventoryIntelligence() {
       {/* Industries */}
       <section className="py-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <SectionHeading
-            align="center"
-            theme="light"
-            eyebrow="Industries"
-            eyebrowColor="primary"
-            heading="Built for every inventory-driven industry"
-            description="Inventory Intelligence adapts to the demands of your sector, wherever stock needs to move."
-            className="mx-auto max-w-2xl"
-            descriptionClassName="mx-auto"
-          />
+          <div className="mx-auto max-w-2xl text-center">
+            <Eyebrow align="center">Industries</Eyebrow>
+            <SectionHeading
+              align="center"
+              theme="light"
+              heading={
+                <>
+                  Built for complex inventory.
+                  <br />
+                  <span className="bg-clip-text text-transparent" style={{ backgroundImage: BRAND_GRADIENT }}>
+                    Ready for enterprise scale.
+                  </span>
+                </>
+              }
+              description="Inventory Intelligence adapts to the demands of your sector, connecting every site, system, and team on one secure platform."
+              descriptionClassName="mx-auto"
+            />
+          </div>
 
-          <div className="mx-auto mt-12 flex flex-wrap justify-center gap-4">
-            {industries.map(({ label, Icon }) => (
-              <div
-                key={label}
-                className="flex items-center gap-2.5 rounded-full border border-secondary-100 bg-white px-5 py-3"
-              >
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-500">
-                  <Icon style={{ fontSize: 16 }} />
+          <div className="mx-auto mt-9 flex flex-wrap items-center justify-center gap-x-7 gap-y-3">
+            {industryChecklist.map((item) => (
+              <div key={item} className="flex items-center gap-2">
+                <span className="flex size-5 shrink-0 items-center justify-center rounded-[10px] border border-primary-500/30 bg-white text-primary-500">
+                  <CheckIcon style={{ fontSize: 12 }} />
                 </span>
-                <span className="text-sm font-medium text-heading">{label}</span>
+                <p className="text-[13px] font-semibold text-heading">{item}</p>
               </div>
             ))}
+          </div>
+
+          <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-px overflow-hidden rounded-[20px] border border-secondary-100 bg-secondary-100 shadow-[0_28px_90px_-30px_rgba(20,34,60,0.15)] sm:grid-cols-2 lg:grid-cols-4">
+            {industries.map(({ label, desc, Icon }, i) => (
+              <div key={label} className="flex flex-col bg-white p-7">
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-caption">
+                    {String(i + 1).padStart(2, "0")}
+                  </p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-caption">
+                    Industry
+                  </p>
+                </div>
+                <div className="mt-16">
+                  <span className="relative flex size-[52px] shrink-0 items-center justify-center rounded-2xl border border-secondary-100 bg-page text-heading">
+                    <Icon style={{ fontSize: 24 }} />
+                    <span
+                      className="absolute -bottom-1.5 left-3.5 h-[3px] w-[22px] rounded-full"
+                      style={{ backgroundImage: BRAND_GRADIENT }}
+                    />
+                  </span>
+                </div>
+                <p className="mt-8 font-display text-xl font-semibold tracking-tight text-heading">
+                  {label}
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-caption">{desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mx-auto mt-6 flex max-w-6xl flex-col items-start justify-between gap-4 rounded-2xl bg-secondary-500 px-7 py-6 shadow-[0_20px_30px_-10px_rgba(13,30,58,0.25)] sm:flex-row sm:items-center">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-300">
+                One operational view
+              </p>
+              <p className="mt-1.5 text-base font-medium text-white">
+                From regional teams to global networks, every decision
+                starts with trusted inventory data.
+              </p>
+            </div>
+            <span className="flex shrink-0 items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3.5 py-2.5">
+              <span className="size-[7px] rounded-full bg-[#29b9bb] shadow-[0_0_0_4px_rgba(41,185,187,0.14)]" />
+              <span className="text-xs font-semibold text-white">Built to scale</span>
+            </span>
           </div>
         </div>
       </section>
@@ -942,37 +1074,71 @@ export default function InventoryIntelligence() {
       {/* Business outcomes */}
       <section className="py-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <SectionHeading
-            align="center"
-            theme="light"
-            eyebrow="Business Outcomes"
-            eyebrowColor="primary"
-            heading={
-              <>
-                Better inventory decisions.
-                <br />
-                Tangible business impact.
-              </>
-            }
-            description="Turn inventory from a cost center into a competitive advantage."
-            descriptionClassName="mx-auto max-w-xl"
-          />
+          <div className="mx-auto max-w-2xl text-center">
+            <Eyebrow align="center">Business outcomes</Eyebrow>
+            <SectionHeading
+              align="center"
+              theme="light"
+              heading={
+                <>
+                  Better inventory decisions.
+                  <br />
+                  <span className="bg-clip-text text-transparent" style={{ backgroundImage: BRAND_GRADIENT }}>
+                    Tangible business impact.
+                  </span>
+                </>
+              }
+              description="Turn inventory from a cost center into a competitive advantage."
+              descriptionClassName="mx-auto"
+            />
+          </div>
 
-          {/* Same bordered-card shape as the Capabilities grid above,
-              rather than bare icon circles floating in a row. */}
-          <div className="mx-auto mt-14 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {outcomes.map((o) => (
-              <GlowCard key={o.label} contentClassName="flex items-center gap-4 p-6">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-primary-100 text-primary-500">
-                  {o.dir === "up" ? (
-                    <ArrowUpwardIcon style={{ fontSize: 22 }} />
-                  ) : (
-                    <ArrowDownwardIcon style={{ fontSize: 22 }} />
-                  )}
-                </span>
-                <p className="font-display text-h4 font-semibold text-heading">{o.label}</p>
-              </GlowCard>
+          <div className="mx-auto mt-14 grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
+            {outcomeGroups.map((group) => (
+              <div
+                key={group.eyebrow}
+                className="relative overflow-hidden rounded-[20px] border border-secondary-100 bg-white p-8 shadow-[0_26px_80px_-30px_rgba(20,34,60,0.15)]"
+              >
+                <span
+                  className="absolute left-0 top-0 h-[2px] w-full"
+                  style={{ backgroundImage: group.accent }}
+                  aria-hidden="true"
+                />
+                <div className="flex items-start justify-between gap-4">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-caption">
+                    {group.eyebrow}
+                  </p>
+                  <p className="text-right font-display text-xl font-semibold tracking-tight text-heading">
+                    {group.title}
+                  </p>
+                </div>
+                <div
+                  className={`mt-8 grid grid-cols-1 gap-px overflow-hidden rounded-[14px] border border-secondary-100 bg-secondary-100 ${group.items.length > 2 ? "sm:grid-cols-2" : ""
+                    }`}
+                >
+                  {group.items.map((o) => (
+                    <div key={o.label} className="flex items-center gap-4 bg-white p-5">
+                      <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary-100 text-primary-500">
+                        {o.dir === "up" ? (
+                          <ArrowUpwardIcon style={{ fontSize: 20 }} />
+                        ) : (
+                          <ArrowDownwardIcon style={{ fontSize: 20 }} />
+                        )}
+                      </span>
+                      <p className="font-display text-[15px] font-semibold text-heading">{o.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             ))}
+          </div>
+
+          <div className="mt-7 flex items-center justify-center gap-2.5">
+            <span className="size-[7px] rounded-full bg-[#29b9bb] shadow-[0_0_0_5px_rgba(41,185,187,0.12)]" />
+            <p className="text-xs font-semibold text-caption">
+              One connected inventory view. Six measurable ways to improve
+              performance.
+            </p>
           </div>
         </div>
       </section>
