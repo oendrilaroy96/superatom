@@ -1074,22 +1074,22 @@ export default function InventoryIntelligence() {
       {/* Business outcomes */}
       <section className="py-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="mx-auto max-w-2xl text-center">
+          <div className="mx-auto max-w-5xl text-center">
             <Eyebrow align="center">Business outcomes</Eyebrow>
             <SectionHeading
               align="center"
               theme="light"
               heading={
-                <>
+                <span className="lg:whitespace-nowrap">
                   Better inventory decisions.
                   <br />
                   <span className="bg-clip-text text-transparent" style={{ backgroundImage: BRAND_GRADIENT }}>
                     Tangible business impact.
                   </span>
-                </>
+                </span>
               }
               description="Turn inventory from a cost center into a competitive advantage."
-              descriptionClassName="mx-auto"
+              descriptionClassName="mx-auto max-w-2xl"
             />
           </div>
 
