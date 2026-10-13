@@ -32,7 +32,7 @@ const teamMembers: TeamMember[] = [
     role: "Co-Founder & CTO",
     linkedin: "https://www.linkedin.com/in/ashishblessing/",
     photo: null,
-    avatarGradient: ["#3f6c79", "#172f3f"],
+    avatarGradient: ["#cfe3e6", "#8fb3ba"],
   },
   {
     name: "Sharath Bhat",
@@ -51,7 +51,7 @@ const teamMembers: TeamMember[] = [
     role: "Head of Engineering",
     linkedin: "https://www.linkedin.com/in/gopinadh-boppudi-8730751b0/",
     photo: null,
-    avatarGradient: ["#56628d", "#222b4b"],
+    avatarGradient: ["#d6d9f0", "#9ba3d4"],
   },
 ];
 
@@ -90,7 +90,7 @@ function TeamCard({ member }: { member: TeamMember }) {
       href={member.linkedin}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative block aspect-[3/4] overflow-hidden rounded-2xl border border-secondary-100 bg-secondary-500"
+      className="group relative block aspect-[3/4] overflow-hidden rounded-2xl border border-secondary-100 bg-primary-100"
     >
       {member.photo ? (
         <img
