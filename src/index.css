@@ -6,6 +6,10 @@
    ported from a standalone prototype built against this exact pairing. */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap");
 
+/* Inter Tight: used only by the SuperatomDiagram component (About page
+   hero), ported from a standalone prototype built against this font. */
+@import url("https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600&display=swap");
+
 /* Satoshi (variable font, weights 300–900) — self-hosted per the ITF Free
    Font License (see public/fonts/SATOSHI-LICENSE.txt), which permits
    self-hosting. Source: Fontshare (https://www.fontshare.com/fonts/satoshi). */
@@ -594,6 +598,92 @@ body {
   .hiw-bar-fill {
     animation: none;
     transform: scaleX(1);
+  }
+}
+
+/* SuperatomDiagram (About page hero) — ported 1:1 from a standalone
+   prototype; see src/components/SuperatomDiagram.tsx for the paired
+   script. Classes and keyframes keep the prototype's original names so the
+   two stay easy to diff against each other. */
+.satom-diag svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+  font-family: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+}
+.satom-diag .cap {
+  position: relative;
+  min-height: 48px;
+  text-align: center;
+}
+.satom-diag .cap span {
+  position: absolute;
+  inset: 0 0 auto 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #9aa3ae;
+  opacity: 0;
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.satom-diag .cap span.on {
+  opacity: 1;
+}
+.satom-diag .node {
+  transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.satom-diag .node circle {
+  transition:
+    fill 0.8s,
+    stroke 0.8s;
+}
+.satom-diag .fade {
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.satom-diag .halo {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes satomDiagFlow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+@keyframes satomDiagSpin {
+  to {
+    stroke-dashoffset: -56;
+  }
+}
+@keyframes satomDiagFloat {
+  0%,
+  100% {
+    transform: translateY(-3px);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+@keyframes satomDiagBreathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .satom-diag .flow {
+    animation: satomDiagFlow 0.9s linear infinite;
+  }
+  .satom-diag .spin {
+    animation: satomDiagSpin 8s linear infinite;
+  }
+  .satom-diag .flt {
+    animation: satomDiagFloat 3.2s ease-in-out infinite;
+  }
+  .satom-diag .br {
+    animation: satomDiagBreathe 2.8s ease-in-out infinite;
   }
 }
 
