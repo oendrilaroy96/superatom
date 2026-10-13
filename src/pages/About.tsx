@@ -333,7 +333,7 @@ export default function About() {
           </div>
 
           <GlowCard
-            className="mt-12"
+            className="mt-20"
             contentClassName="grid grid-cols-1 gap-4 p-8 sm:grid-cols-[180px_1fr] sm:gap-8"
           >
             <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-caption">
@@ -358,7 +358,7 @@ export default function About() {
               light-on-dark-scrim regardless of the section's own crossfade
               (same pattern as the previous card design), so the cards read
               consistently rather than dimming into the page background. */}
-          <div className="mt-16 flex items-center justify-between gap-4">
+          <div className="mt-20 flex items-center justify-between gap-4">
             <p
               className={`text-[9px] font-bold uppercase tracking-[0.1em] transition-colors duration-700 ease-in-out ${isDark ? "text-white/40" : "text-caption"
                 }`}
