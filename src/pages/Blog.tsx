@@ -1,9 +1,11 @@
-import { useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import DesignServicesIcon from "@mui/icons-material/DesignServices";
 import ScienceIcon from "@mui/icons-material/Science";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from "@mui/icons-material/Close";
 import type { IconComponent } from "../types/icon";
 import { useDarkTransition } from "../context/DarkTransitionContext";
 
@@ -184,9 +186,18 @@ function ArticleCard({ article, dark = false }: { article: Article; dark?: boole
 
 export default function Blog() {
   const [active, setActive] = useState<(typeof categories)[number]>("All research");
-  const filtered =
-    active === "All research" ? articles : articles.filter((a) => a.category === active);
+  const [query, setQuery] = useState("");
   const isDark = useDarkTransition();
+
+  const filtered = useMemo(() => {
+    const byCategory =
+      active === "All research" ? articles : articles.filter((a) => a.category === active);
+    const q = query.trim().toLowerCase();
+    if (!q) return byCategory;
+    return byCategory.filter(
+      (a) => a.title.toLowerCase().includes(q) || a.category.toLowerCase().includes(q),
+    );
+  }, [active, query]);
 
   return (
     <>
@@ -294,35 +305,80 @@ export default function Blog() {
           </div>
 
           <div
-            className={`mx-auto mt-10 flex max-w-6xl flex-wrap gap-2 border-y py-4 transition-colors duration-700 ease-in-out ${
+            className={`mx-auto mt-10 flex max-w-6xl flex-col gap-4 border-y py-4 transition-colors duration-700 ease-in-out lg:flex-row lg:items-center lg:justify-between ${
               isDark ? "border-white/10" : "border-secondary-100"
             }`}
           >
-            {categories.map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setActive(c)}
-                className={`rounded-full px-4 py-2.5 text-xs font-medium transition-colors duration-700 ease-in-out ${
-                  active === c
-                    ? isDark
-                      ? "bg-white text-secondary-500"
-                      : "bg-secondary-500 text-white"
-                    : isDark
-                      ? "text-white/60 hover:bg-white/10"
-                      : "text-caption hover:bg-page"
+            <div className="flex flex-wrap gap-2">
+              {categories.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setActive(c)}
+                  className={`rounded-full px-4 py-2.5 text-xs font-medium transition-colors duration-700 ease-in-out ${
+                    active === c
+                      ? isDark
+                        ? "bg-white text-secondary-500"
+                        : "bg-secondary-500 text-white"
+                      : isDark
+                        ? "text-white/60 hover:bg-white/10"
+                        : "text-caption hover:bg-page"
+                  }`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+
+            <div className="relative shrink-0 lg:w-64">
+              <SearchIcon
+                style={{ fontSize: 17 }}
+                className={`pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors duration-700 ease-in-out ${
+                  isDark ? "text-white/50" : "text-caption"
                 }`}
-              >
-                {c}
-              </button>
-            ))}
+              />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search articles"
+                aria-label="Search articles"
+                className={`w-full rounded-full border py-2.5 pl-10 pr-9 text-xs font-medium outline-none transition-colors duration-700 ease-in-out ${
+                  isDark
+                    ? "border-white/15 bg-white/10 text-white placeholder:text-white/50 focus:border-white/30"
+                    : "border-secondary-100 bg-page text-heading placeholder:text-caption focus:border-primary-500/40"
+                }`}
+              />
+              {query && (
+                <button
+                  type="button"
+                  onClick={() => setQuery("")}
+                  aria-label="Clear search"
+                  className={`absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center transition-colors duration-700 ease-in-out ${
+                    isDark ? "text-white/50 hover:text-white" : "text-caption hover:text-heading"
+                  }`}
+                >
+                  <CloseIcon style={{ fontSize: 15 }} />
+                </button>
+              )}
+            </div>
           </div>
 
-          <div className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((article) => (
-              <ArticleCard key={article.title} article={article} dark={isDark} />
-            ))}
-          </div>
+          {filtered.length > 0 ? (
+            <div className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+              {filtered.map((article) => (
+                <ArticleCard key={article.title} article={article} dark={isDark} />
+              ))}
+            </div>
+          ) : (
+            <p
+              className={`mx-auto mt-16 max-w-6xl text-center text-sm transition-colors duration-700 ease-in-out ${
+                isDark ? "text-white/60" : "text-caption"
+              }`}
+            >
+              No articles match &ldquo;{query}&rdquo;. Try a different search or category.
+            </p>
+          )}
         </div>
       </section>
     </>
