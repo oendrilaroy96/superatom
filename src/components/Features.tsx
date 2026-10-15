@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import ShieldIcon from "@mui/icons-material/Shield";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import HubIcon from "@mui/icons-material/Hub";
@@ -32,36 +32,6 @@ function DashedBox({
     >
       {children}
     </div>
-  );
-}
-
-/** A labeled dot chip, absolutely positioned around DashedBox's hub in the Semantic Modeling card. Scales up slightly on hover. */
-function Node({
-  className,
-  color,
-  label,
-}: {
-  className: string;
-  color: string;
-  label: string;
-}) {
-  return (
-    <div
-      className={`absolute flex items-center gap-1.5 rounded-full border border-secondary-100 bg-white px-2.5 py-1.5 shadow-sm transition-transform duration-300 hover:z-10 hover:scale-110 hover:shadow-md ${className}`}
-    >
-      <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: color }} />
-      <span className="text-xs font-medium text-heading">{label}</span>
-    </div>
-  );
-}
-
-/** A dot traveling from the hub to a node along a given direction; purely CSS-driven (see .hiw-node-pulse in index.css) so it animates continuously without JS. */
-function PulseDot({ tx, ty, delay }: { tx: string; ty: string; delay: string }) {
-  return (
-    <span
-      className="hiw-node-pulse"
-      style={{ "--tx": tx, "--ty": ty, "--delay": delay } as CSSProperties}
-    />
   );
 }
 
@@ -101,6 +71,22 @@ const WORKFLOW_STEPS = [
 ];
 
 const GENERATIVE_BAR_COUNT = 5;
+
+// Semantic Modeling card: scattered raw system fields on the left, versus
+// the connected graph of real business entities it resolves them into on
+// the right — showing the before/after of what semantic modeling does.
+const SEMANTIC_RAW_FIELDS: { label: string; rotate: string }[] = [
+  { label: "cust_id", rotate: "-rotate-2" },
+  { label: "ord_tbl", rotate: "rotate-1" },
+  { label: "sku_042", rotate: "-rotate-1" },
+  { label: "whs_loc", rotate: "rotate-2" },
+];
+const SEMANTIC_GRAPH: { label: string; color: string; edge?: string }[] = [
+  { label: "Customer", color: "#29b9bb" },
+  { label: "Order", color: "#ff7600", edge: "places" },
+  { label: "Product", color: "#ff7eb0", edge: "contains" },
+  { label: "Warehouse", color: "#873eff", edge: "stocked in" },
+];
 
 // The Generative UI card cycles through a few different kinds of output
 // (bar chart, pie chart, plain text) to show that the UI can render whatever
@@ -298,31 +284,58 @@ export default function Features() {
             </p>
           </GlowCard>
 
-          {/* 4. Semantic Modeling — spans 2 cols, 2 rows. Dots continuously
-              travel from the hub to each node to suggest live data flow. */}
+          {/* 4. Semantic Modeling — spans 2 cols, 2 rows. Shows the before/
+              after of what it actually does: scattered raw system fields on
+              the left resolve into a connected graph of named business
+              entities and relationships on the right. */}
           <GlowCard className={`sm:col-span-2 lg:col-span-2 lg:row-span-2 ${HOVER_LIFT}`}>
-            <DashedBox className="group/diagram relative h-[260px] lg:h-[300px]">
-              <div className="absolute left-1/2 top-[48px] h-[calc(100%-96px)] w-px -translate-x-1/2 border-l border-dashed border-secondary-300" />
-              <div className="absolute left-[90px] right-[90px] top-1/2 h-px -translate-y-1/2 border-t border-dashed border-secondary-300" />
-              <PulseDot tx="0px" ty="-76px" delay="0s" />
-              <PulseDot tx="-130px" ty="0px" delay="0.6s" />
-              <PulseDot tx="130px" ty="0px" delay="1.2s" />
-              <PulseDot tx="0px" ty="76px" delay="1.8s" />
-              <span className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl bg-primary-500 text-white shadow-[0_12px_30px_-8px_rgba(83,58,253,0.6)] transition-transform duration-500 group-hover/diagram:scale-110 group-hover/diagram:rotate-12">
-                <HubIcon style={{ fontSize: 24 }} />
-              </span>
-              <Node className="left-1/2 top-[22px] -translate-x-1/2" color="#29b9bb" label="CRM" />
-              <Node className="left-[14px] top-1/2 -translate-y-1/2" color="#ff7600" label="ERP" />
-              <Node
-                className="right-[14px] top-1/2 -translate-y-1/2"
-                color="#ff7eb0"
-                label="Warehouse"
-              />
-              <Node
-                className="bottom-[22px] left-1/2 -translate-x-1/2"
-                color="#873eff"
-                label="Spreadsheets"
-              />
+            <DashedBox className="group/diagram relative h-auto overflow-hidden sm:h-[260px] lg:h-[300px]">
+              <div className="flex flex-col items-center justify-center gap-6 p-5 sm:h-full sm:flex-row sm:gap-5 sm:p-8">
+                <div className="flex flex-col items-center gap-2.5 sm:items-start">
+                  <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-caption">
+                    Raw systems
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-2 sm:flex-col sm:items-start">
+                    {SEMANTIC_RAW_FIELDS.map((field) => (
+                      <span
+                        key={field.label}
+                        className={`inline-flex w-fit items-center rounded-md border border-dashed border-secondary-300 bg-white px-2.5 py-1 font-mono text-[11px] text-caption ${field.rotate}`}
+                      >
+                        {field.label}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <span className="flex h-11 w-11 shrink-0 rotate-90 items-center justify-center rounded-full bg-primary-500 text-white shadow-[0_12px_30px_-8px_rgba(83,58,253,0.6)] transition-transform duration-500 group-hover/diagram:scale-110 sm:rotate-0">
+                  <HubIcon style={{ fontSize: 20 }} />
+                </span>
+
+                <div className="flex flex-col items-center gap-2.5 sm:items-start">
+                  <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-caption">
+                    Unified graph
+                  </p>
+                  <div className="flex flex-col items-start">
+                    {SEMANTIC_GRAPH.map((node, i) => (
+                      <div key={node.label} className="flex flex-col items-start">
+                        {i > 0 && (
+                          <div className="ml-[13px] flex items-center gap-2 py-1">
+                            <span className="h-4 border-l border-dashed border-secondary-300" />
+                            <span className="text-[10px] italic text-caption">{node.edge}</span>
+                          </div>
+                        )}
+                        <div className="flex items-center gap-1.5 rounded-full border border-secondary-100 bg-white px-2.5 py-1.5 shadow-sm">
+                          <span
+                            className="h-1.5 w-1.5 shrink-0 rounded-full"
+                            style={{ background: node.color }}
+                          />
+                          <span className="text-xs font-medium text-heading">{node.label}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </DashedBox>
             <p className="mt-5 text-[13px] font-semibold uppercase tracking-[0.08em] text-accent-500">
               One Unified Graph
