@@ -235,8 +235,8 @@ export default function Features() {
               On-Premise Deployment
             </p>
             <p className="mt-2 text-sm leading-relaxed text-caption">
-              Deploy the platform within existing infrastructure to keep data
-              in-house and retain complete control over access and security.
+              Superatom is built to work within your infrastructure with
+              access control to your data &amp; systems.
             </p>
           </GlowCard>
 
