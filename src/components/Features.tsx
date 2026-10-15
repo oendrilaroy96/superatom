@@ -102,6 +102,22 @@ const WORKFLOW_STEPS = [
 
 const GENERATIVE_BAR_COUNT = 5;
 
+// The Generative UI card cycles through a few different kinds of output
+// (bar chart, pie chart, plain text) to show that the UI can render whatever
+// shape fits the question, not just charts.
+const GENERATIVE_MODES = ["bars", "pie", "text"] as const;
+type GenerativeMode = (typeof GENERATIVE_MODES)[number];
+const GENERATIVE_MODE_LABEL: Record<GenerativeMode, string> = {
+  bars: "Bar chart",
+  pie: "Pie chart",
+  text: "Generated summary",
+};
+const PIE_SEGMENTS: { label: string; className: string }[] = [
+  { label: "Retail", className: "bg-white" },
+  { label: "Pharma", className: "bg-white/55" },
+  { label: "Logistics", className: "bg-white/25" },
+];
+
 /**
  * Bento-style feature grid (moved out of HowItWorks.tsx into its own
  * homepage section). Column/row spans + source order are chosen so CSS
@@ -115,10 +131,13 @@ const GENERATIVE_BAR_COUNT = 5;
 export default function Features() {
   const [activeStep, setActiveStep] = useState(0);
   const [activeBar, setActiveBar] = useState(3);
+  const [generativeModeIndex, setGenerativeModeIndex] = useState(0);
+  const generativeMode = GENERATIVE_MODES[generativeModeIndex];
 
-  // Cycle which workflow step is "running" and which generated-UI panel is
-  // "active", so the two cards that literally describe automation and
-  // dynamic generation visibly demonstrate it rather than sitting static.
+  // Cycle which workflow step is "running", which generated-UI panel bar is
+  // "active", and which kind of output the Generative UI card is showing, so
+  // the cards that literally describe automation and dynamic generation
+  // visibly demonstrate it rather than sitting static.
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const stepTimer = setInterval(() => {
@@ -127,9 +146,13 @@ export default function Features() {
     const barTimer = setInterval(() => {
       setActiveBar((b) => (b + 1) % GENERATIVE_BAR_COUNT);
     }, 1100);
+    const modeTimer = setInterval(() => {
+      setGenerativeModeIndex((m) => (m + 1) % GENERATIVE_MODES.length);
+    }, 2800);
     return () => {
       clearInterval(stepTimer);
       clearInterval(barTimer);
+      clearInterval(modeTimer);
     };
   }, []);
 
@@ -186,7 +209,7 @@ export default function Features() {
               </div>
               <div className="flex flex-col justify-center gap-6 border-t border-white/10 pt-6 sm:border-l sm:border-t-0 sm:pl-8 sm:pt-0">
                 <div className="transition-transform duration-300 group-hover:translate-x-1">
-                  <p className="font-display text-[34px] font-bold leading-none text-white">
+                  <p className="font-display text-[44px] font-bold leading-none text-white">
                     SOC 2
                   </p>
                   <p className="mt-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-white/40">
@@ -194,7 +217,7 @@ export default function Features() {
                   </p>
                 </div>
                 <div className="transition-transform delay-75 duration-300 group-hover:translate-x-1">
-                  <p className="font-display text-[34px] font-bold leading-none text-white">
+                  <p className="font-display text-[44px] font-bold leading-none text-white">
                     27001
                   </p>
                   <p className="mt-1.5 text-[11px] font-semibold uppercase leading-snug tracking-[0.08em] text-white/40">
@@ -382,8 +405,9 @@ export default function Features() {
             </p>
           </GlowCard>
 
-          {/* 7. Generative UI — gradient card, one panel cycles "active" to
-              demonstrate the UI regenerating itself */}
+          {/* 7. Generative UI — gradient card. The mini panel cycles through
+              a few different output shapes (bars, a pie, plain text) to show
+              the UI renders whatever fits the question, not just charts. */}
           <div
             className={`group relative overflow-hidden rounded-2xl p-6 ${HOVER_LIFT}`}
             style={{
@@ -398,15 +422,55 @@ export default function Features() {
             >
               <AddIcon style={{ fontSize: 18 }} />
             </button>
-            <div className="flex h-[88px] items-end gap-2 rounded-xl border border-dashed border-white/30 bg-white/10 p-3">
-              {Array.from({ length: GENERATIVE_BAR_COUNT }).map((_, i) => (
-                <span
-                  key={i}
-                  className={`flex-1 rounded-md transition-all duration-500 ${
-                    i === activeBar ? "h-9 bg-white" : "h-7 bg-white/25"
-                  }`}
-                />
-              ))}
+            <div className="relative h-[88px] overflow-hidden rounded-xl border border-dashed border-white/30 bg-white/10 p-3">
+              <span className="absolute right-3 top-2 text-[9px] font-bold uppercase tracking-[0.08em] text-white/50">
+                {GENERATIVE_MODE_LABEL[generativeMode]}
+              </span>
+
+              {generativeMode === "bars" && (
+                <div className="flex h-full items-end gap-2">
+                  {Array.from({ length: GENERATIVE_BAR_COUNT }).map((_, i) => (
+                    <span
+                      key={i}
+                      className={`flex-1 rounded-md transition-all duration-500 ${
+                        i === activeBar ? "h-9 bg-white" : "h-7 bg-white/25"
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {generativeMode === "pie" && (
+                <div className="flex h-full items-center gap-4">
+                  <span
+                    className="h-14 w-14 shrink-0 rounded-full border-2 border-white/30"
+                    style={{
+                      background:
+                        "conic-gradient(#fff 0% 45%, rgba(255,255,255,0.55) 45% 75%, rgba(255,255,255,0.25) 75% 100%)",
+                    }}
+                    aria-hidden="true"
+                  />
+                  <div className="flex flex-col gap-1.5">
+                    {PIE_SEGMENTS.map((seg) => (
+                      <div key={seg.label} className="flex items-center gap-1.5">
+                        <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${seg.className}`} />
+                        <span className="text-[11px] font-medium text-white/80">{seg.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {generativeMode === "text" && (
+                <div className="flex h-full flex-col justify-center gap-2.5">
+                  <span className="h-2 w-11/12 rounded-full bg-white/80" />
+                  <span className="h-2 w-full rounded-full bg-white/50" />
+                  <div className="flex items-center gap-1">
+                    <span className="h-2 w-1/2 rounded-full bg-white/80" />
+                    <span className="hiw-caret" style={{ background: "#fff" }} />
+                  </div>
+                </div>
+              )}
             </div>
             <p className="mt-5 font-display text-h3 font-semibold text-white">
               Generative UI
