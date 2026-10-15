@@ -3,11 +3,12 @@ import ShieldIcon from "@mui/icons-material/Shield";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import HubIcon from "@mui/icons-material/Hub";
 import TimelineIcon from "@mui/icons-material/Timeline";
-import LockIcon from "@mui/icons-material/Lock";
+import DnsIcon from "@mui/icons-material/Dns";
 import AddIcon from "@mui/icons-material/Add";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import GlowCard from "./ui/GlowCard";
+import superatomMark from "../assets/Superatom Logo/LogoMark1.png";
 
 /** Lift + shadow a card gets on hover, shared by every tile in the grid below. */
 const HOVER_LIFT =
@@ -206,29 +207,30 @@ export default function Features() {
             </div>
           </div>
 
-          {/* 2. On-Premise Deployment — placeholder rows fill in automatically on a loop */}
-          <GlowCard className={HOVER_LIFT} contentClassName="group/card p-6">
-            <DashedBox className="h-[132px]">
-              <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-md bg-accent-500 text-white shadow-sm transition-transform duration-300 group-hover/card:-rotate-6 group-hover/card:scale-110">
-                <LockIcon style={{ fontSize: 15 }} />
-              </span>
-              <div className="mx-auto flex h-full max-w-[220px] flex-col justify-center gap-2.5 px-4">
-                {[
-                  { color: "#29b9bb", w: "w-3/4" },
-                  { color: "#29b9bb", w: "w-2/3" },
-                  { color: "#b9c4e8", w: "w-4/5" },
-                ].map((row, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <span
-                      className="h-1.5 w-1.5 shrink-0 rounded-full"
-                      style={{ background: row.color }}
-                    />
-                    <span
-                      className={`hiw-bar-fill h-2 rounded-full bg-secondary-100 ${row.w}`}
-                      style={{ "--delay": `${i * 0.35}s` } as CSSProperties}
-                    />
-                  </div>
-                ))}
+          {/* 2. On-Premise Deployment — a dot continuously travels from the
+              Superatom mark to the client's system, landing with a small
+              pulse, to depict Superatom deploying into their environment. */}
+          <GlowCard className={HOVER_LIFT} contentClassName="p-6">
+            <DashedBox className="relative h-[132px]">
+              <p className="absolute left-3 top-3 text-[9px] font-bold uppercase tracking-[0.1em] text-caption">
+                Your infrastructure
+              </p>
+              <div className="flex h-full items-center justify-center gap-4 px-4">
+                <div className="flex flex-col items-center gap-2">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-secondary-100 bg-white p-2 shadow-sm">
+                    <img src={superatomMark} alt="" className="h-full w-full object-contain" />
+                  </span>
+                  <span className="text-[10px] font-semibold text-heading">Superatom</span>
+                </div>
+                <div className="relative h-px w-14 shrink-0 bg-secondary-200 sm:w-20">
+                  <span className="hiw-deploy-dot" />
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <span className="hiw-deploy-land flex h-11 w-11 items-center justify-center rounded-xl bg-accent-500 text-white shadow-sm">
+                    <DnsIcon style={{ fontSize: 20 }} />
+                  </span>
+                  <span className="text-[10px] font-semibold text-heading">Your systems</span>
+                </div>
               </div>
             </DashedBox>
             <p className="mt-5 font-display text-h3 font-semibold text-heading">
