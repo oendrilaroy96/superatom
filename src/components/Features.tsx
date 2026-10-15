@@ -480,7 +480,7 @@ export default function Features() {
             >
               <AddIcon style={{ fontSize: 18 }} />
             </button>
-            <div className="relative h-[88px] overflow-hidden rounded-xl border border-dashed border-white/30 bg-white/10 p-3">
+            <div className="relative h-[120px] overflow-hidden rounded-xl border border-dashed border-white/30 bg-white/10 p-3">
               <span className="absolute right-3 top-2 text-[9px] font-bold uppercase tracking-[0.08em] text-white/50">
                 {GENERATIVE_MODE_LABEL[generativeMode]}
               </span>
