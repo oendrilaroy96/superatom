@@ -76,13 +76,7 @@ const GENERATIVE_BAR_COUNT = 5;
 // Superatom's own semantic-modeling writeup — scattered enterprise data
 // sources run through a five-stage analysis pipeline and resolve into one
 // semantic model, rather than an arbitrary made-up example.
-const SEMANTIC_SOURCES: { label: string; rotate: string }[] = [
-  { label: "ERP", rotate: "-rotate-2" },
-  { label: "Databases", rotate: "rotate-1" },
-  { label: "Warehouses", rotate: "-rotate-1" },
-  { label: "Files", rotate: "rotate-2" },
-  { label: "APIs", rotate: "-rotate-2" },
-];
+const SEMANTIC_SOURCES = ["ERP", "databases", "warehouses", "files", "APIs"];
 const SEMANTIC_STAGES: { label: string }[] = [
   { label: "Schema analysis" },
   { label: "Sample extraction" },
@@ -130,6 +124,11 @@ export default function Features() {
   const [semanticTick, setSemanticTick] = useState(0);
   const semanticPhase = SEMANTIC_PHASES[semanticTick];
   const semanticOutputResolved = semanticPhase >= SEMANTIC_STAGES.length;
+  const semanticProgress = semanticPhase < 0
+    ? 0
+    : semanticOutputResolved
+      ? 1
+      : semanticPhase / (SEMANTIC_STAGES.length - 1);
 
   // Cycle which workflow step is "running", which generated-UI panel bar is
   // "active", which kind of output the Generative UI card is showing, and
@@ -305,82 +304,75 @@ export default function Features() {
               enterprise data sources run through a five-stage analysis
               pipeline and resolve into one semantic model. */}
           <GlowCard className={`sm:col-span-2 lg:col-span-2 lg:row-span-2 ${HOVER_LIFT}`}>
-            <DashedBox className="group/diagram relative h-auto overflow-hidden sm:h-[260px] lg:h-[300px]">
-              <div className="flex flex-col items-center justify-center gap-6 p-5 sm:h-full sm:flex-row sm:gap-5 sm:p-8">
-                <div className="flex flex-col items-center gap-2.5 sm:items-start">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-caption">
-                    Data sources
-                  </p>
-                  <div className="flex flex-wrap justify-center gap-2 sm:flex-col sm:items-start">
-                    {SEMANTIC_SOURCES.map((source, i) => {
-                      const reading = i === semanticPhase;
-                      return (
-                        <span
-                          key={source.label}
-                          className={`inline-flex w-fit items-center rounded-md border px-2.5 py-1 font-mono text-[11px] transition-all duration-500 ${source.rotate} ${
-                            reading
-                              ? "scale-110 border-solid border-primary-500 bg-primary-100/70 text-primary-600 shadow-sm"
-                              : "border-dashed border-secondary-300 bg-white text-caption"
-                          }`}
-                        >
-                          {source.label}
-                        </span>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="flex shrink-0 flex-col items-center gap-2.5">
-                  <span className="hiw-hub-pulse flex h-11 w-11 items-center justify-center rounded-full bg-primary-500 text-white shadow-[0_12px_30px_-8px_rgba(83,58,253,0.6)] transition-transform duration-500 group-hover/diagram:scale-110">
-                    <HubIcon style={{ fontSize: 20 }} />
-                  </span>
-                  <div className="flex items-center gap-1">
-                    {SEMANTIC_STAGES.map((stage, i) => (
-                      <span
-                        key={stage.label}
-                        className="h-1.5 w-1.5 shrink-0 rounded-full transition-colors duration-500"
-                        style={{
-                          background:
-                            i <= semanticPhase || semanticOutputResolved ? "#533afd" : "#C7CEDD",
-                        }}
-                      />
-                    ))}
-                  </div>
-                  <p className="h-7 w-[112px] text-center text-[10px] font-semibold leading-snug text-heading transition-opacity duration-300">
-                    {semanticPhase < 0
-                      ? "Awaiting data…"
-                      : semanticOutputResolved
-                        ? "Pipeline complete"
-                        : SEMANTIC_STAGES[semanticPhase].label}
-                  </p>
-                </div>
-
-                <div className="flex flex-col items-center gap-2.5 sm:items-start">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-caption">
-                    Output
-                  </p>
-                  <div
-                    className={`flex items-center gap-2.5 rounded-xl border px-3 py-2.5 transition-all duration-500 ${
-                      semanticOutputResolved
-                        ? "scale-100 border-secondary-100 bg-white opacity-100 shadow-sm"
-                        : "scale-95 border-dashed border-secondary-200 bg-white/40 opacity-50"
-                    }`}
-                  >
-                    <span
-                      className="h-2 w-2 shrink-0 rounded-full transition-colors duration-500"
-                      style={{ background: semanticOutputResolved ? "#29b9bb" : "#C7CEDD" }}
-                    />
+            <DashedBox className="relative h-auto overflow-hidden sm:h-[230px] lg:h-[260px]">
+              <div className="flex h-full flex-col justify-center gap-8 p-6 sm:p-8">
+                {/* Input / output bookends */}
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-dashed border-secondary-300 bg-white text-caption">
+                      <DnsIcon style={{ fontSize: 16 }} />
+                    </span>
                     <div>
+                      <p className="text-xs font-semibold text-heading">5 source types</p>
+                      <p className="text-[10px] text-caption">{SEMANTIC_SOURCES.join(", ")}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2.5">
+                    <div className="text-right">
                       <p
-                        className={`text-xs transition-colors duration-500 ${
-                          semanticOutputResolved ? "font-medium text-heading" : "text-caption"
+                        className={`text-xs font-semibold transition-colors duration-500 ${
+                          semanticOutputResolved ? "text-heading" : "text-caption"
                         }`}
                       >
                         Semantic Model
                       </p>
                       <p className="text-[10px] text-caption">Unified understanding</p>
                     </div>
+                    <span
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-all duration-500 ${
+                        semanticOutputResolved
+                          ? "scale-105 bg-primary-500 text-white shadow-[0_10px_24px_-8px_rgba(83,58,253,0.6)]"
+                          : "bg-secondary-100 text-caption"
+                      }`}
+                    >
+                      <HubIcon style={{ fontSize: 16 }} />
+                    </span>
                   </div>
+                </div>
+
+                {/* Five-stage progress stepper */}
+                <div>
+                  <div className="relative flex items-center justify-between px-1">
+                    <div className="absolute left-1 right-1 top-1/2 h-0.5 -translate-y-1/2 rounded-full bg-secondary-100" />
+                    <div
+                      className="absolute left-1 top-1/2 h-0.5 -translate-y-1/2 rounded-full bg-primary-500 transition-[width] duration-700 ease-out"
+                      style={{ width: `${semanticProgress * 100}%` }}
+                    />
+                    {SEMANTIC_STAGES.map((stage, i) => {
+                      const done = i <= semanticPhase || semanticOutputResolved;
+                      const active = i === semanticPhase && !semanticOutputResolved;
+                      return (
+                        <span
+                          key={stage.label}
+                          className={`relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 text-[10px] font-bold transition-all duration-500 ${
+                            done
+                              ? "border-primary-500 bg-primary-500 text-white"
+                              : "border-secondary-200 bg-white text-caption"
+                          } ${active ? "scale-125" : ""}`}
+                        >
+                          {i + 1}
+                        </span>
+                      );
+                    })}
+                  </div>
+                  <p className="mt-3 text-center text-xs font-semibold text-heading transition-opacity duration-300">
+                    {semanticPhase < 0
+                      ? "Awaiting data…"
+                      : semanticOutputResolved
+                        ? "Pipeline complete"
+                        : SEMANTIC_STAGES[semanticPhase].label}
+                  </p>
                 </div>
               </div>
             </DashedBox>
