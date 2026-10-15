@@ -72,25 +72,29 @@ const WORKFLOW_STEPS = [
 
 const GENERATIVE_BAR_COUNT = 5;
 
-// Semantic Modeling card: scattered raw system fields on the left, versus
-// the connected graph of real business entities it resolves them into on
-// the right — showing the before/after of what semantic modeling does.
-const SEMANTIC_RAW_FIELDS: { label: string; rotate: string }[] = [
-  { label: "cust_id", rotate: "-rotate-2" },
-  { label: "ord_tbl", rotate: "rotate-1" },
-  { label: "sku_042", rotate: "-rotate-1" },
-  { label: "whs_loc", rotate: "rotate-2" },
+// Semantic Modeling card: mirrors the "How It Works" diagram from
+// Superatom's own semantic-modeling writeup — scattered enterprise data
+// sources run through a five-stage analysis pipeline and resolve into one
+// semantic model, rather than an arbitrary made-up example.
+const SEMANTIC_SOURCES: { label: string; rotate: string }[] = [
+  { label: "ERP", rotate: "-rotate-2" },
+  { label: "Databases", rotate: "rotate-1" },
+  { label: "Warehouses", rotate: "-rotate-1" },
+  { label: "Files", rotate: "rotate-2" },
+  { label: "APIs", rotate: "-rotate-2" },
 ];
-const SEMANTIC_GRAPH: { label: string; color: string; edge?: string }[] = [
-  { label: "Customer", color: "#29b9bb" },
-  { label: "Order", color: "#ff7600", edge: "places" },
-  { label: "Product", color: "#ff7eb0", edge: "contains" },
-  { label: "Warehouse", color: "#873eff", edge: "stocked in" },
+const SEMANTIC_STAGES: { label: string }[] = [
+  { label: "Schema analysis" },
+  { label: "Sample extraction" },
+  { label: "Statistical profiling" },
+  { label: "Domain classification" },
+  { label: "Query generation" },
 ];
-// Drives the build-up animation: -1 = nothing resolved yet, then each raw
-// field/graph node resolves one at a time, holds fully resolved for a beat,
-// then resets to show the graph being built again.
-const SEMANTIC_PHASES = [-1, 0, 1, 2, 3, 3, 3] as const;
+// Drives the build-up animation: -1 = idle, 0-4 = that pipeline stage
+// running (and the matching source "being read"), 5 (held) = the pipeline
+// has finished and the semantic model output is resolved, before the cycle
+// resets and runs again.
+const SEMANTIC_PHASES = [-1, 0, 1, 2, 3, 4, 5, 5, 5] as const;
 
 // The Generative UI card cycles through a few different kinds of output
 // (bar chart, pie chart, plain text) to show that the UI can render whatever
@@ -124,11 +128,12 @@ export default function Features() {
   const [generativeModeIndex, setGenerativeModeIndex] = useState(0);
   const generativeMode = GENERATIVE_MODES[generativeModeIndex];
   const [semanticTick, setSemanticTick] = useState(0);
-  const semanticResolved = SEMANTIC_PHASES[semanticTick];
+  const semanticPhase = SEMANTIC_PHASES[semanticTick];
+  const semanticOutputResolved = semanticPhase >= SEMANTIC_STAGES.length;
 
   // Cycle which workflow step is "running", which generated-UI panel bar is
   // "active", which kind of output the Generative UI card is showing, and
-  // how much of the Semantic Modeling graph has "resolved" so far, so the
+  // how far the Semantic Modeling pipeline has progressed, so the
   // cards that literally describe automation and dynamic generation
   // visibly demonstrate it rather than sitting static.
   useEffect(() => {
@@ -295,102 +300,100 @@ export default function Features() {
             </p>
           </GlowCard>
 
-          {/* 4. Semantic Modeling — spans 2 cols, 2 rows. Shows the before/
-              after of what it actually does: scattered raw system fields on
-              the left resolve into a connected graph of named business
-              entities and relationships on the right. */}
+          {/* 4. Semantic Modeling — spans 2 cols, 2 rows. Mirrors Superatom's
+              own "How It Works" diagram for this capability: scattered
+              enterprise data sources run through a five-stage analysis
+              pipeline and resolve into one semantic model. */}
           <GlowCard className={`sm:col-span-2 lg:col-span-2 lg:row-span-2 ${HOVER_LIFT}`}>
             <DashedBox className="group/diagram relative h-auto overflow-hidden sm:h-[260px] lg:h-[300px]">
               <div className="flex flex-col items-center justify-center gap-6 p-5 sm:h-full sm:flex-row sm:gap-5 sm:p-8">
                 <div className="flex flex-col items-center gap-2.5 sm:items-start">
                   <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-caption">
-                    Raw systems
+                    Data sources
                   </p>
                   <div className="flex flex-wrap justify-center gap-2 sm:flex-col sm:items-start">
-                    {SEMANTIC_RAW_FIELDS.map((field, i) => {
-                      const reading = i === semanticResolved + 1;
+                    {SEMANTIC_SOURCES.map((source, i) => {
+                      const reading = i === semanticPhase;
                       return (
                         <span
-                          key={field.label}
-                          className={`inline-flex w-fit items-center rounded-md border px-2.5 py-1 font-mono text-[11px] transition-all duration-500 ${field.rotate} ${
+                          key={source.label}
+                          className={`inline-flex w-fit items-center rounded-md border px-2.5 py-1 font-mono text-[11px] transition-all duration-500 ${source.rotate} ${
                             reading
                               ? "scale-110 border-solid border-primary-500 bg-primary-100/70 text-primary-600 shadow-sm"
                               : "border-dashed border-secondary-300 bg-white text-caption"
                           }`}
                         >
-                          {field.label}
+                          {source.label}
                         </span>
                       );
                     })}
                   </div>
                 </div>
 
-                <span className="hiw-hub-pulse flex h-11 w-11 shrink-0 rotate-90 items-center justify-center rounded-full bg-primary-500 text-white shadow-[0_12px_30px_-8px_rgba(83,58,253,0.6)] transition-transform duration-500 group-hover/diagram:scale-110 sm:rotate-0">
-                  <HubIcon style={{ fontSize: 20 }} />
-                </span>
+                <div className="flex shrink-0 flex-col items-center gap-2.5">
+                  <span className="hiw-hub-pulse flex h-11 w-11 items-center justify-center rounded-full bg-primary-500 text-white shadow-[0_12px_30px_-8px_rgba(83,58,253,0.6)] transition-transform duration-500 group-hover/diagram:scale-110">
+                    <HubIcon style={{ fontSize: 20 }} />
+                  </span>
+                  <div className="flex items-center gap-1">
+                    {SEMANTIC_STAGES.map((stage, i) => (
+                      <span
+                        key={stage.label}
+                        className="h-1.5 w-1.5 shrink-0 rounded-full transition-colors duration-500"
+                        style={{
+                          background:
+                            i <= semanticPhase || semanticOutputResolved ? "#533afd" : "#C7CEDD",
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <p className="h-7 w-[112px] text-center text-[10px] font-semibold leading-snug text-heading transition-opacity duration-300">
+                    {semanticPhase < 0
+                      ? "Awaiting data…"
+                      : semanticOutputResolved
+                        ? "Pipeline complete"
+                        : SEMANTIC_STAGES[semanticPhase].label}
+                  </p>
+                </div>
 
                 <div className="flex flex-col items-center gap-2.5 sm:items-start">
                   <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-caption">
-                    Unified graph
+                    Output
                   </p>
-                  <div className="flex flex-col items-start">
-                    {SEMANTIC_GRAPH.map((node, i) => {
-                      const resolved = i <= semanticResolved;
-                      return (
-                        <div key={node.label} className="flex flex-col items-start">
-                          {i > 0 && (
-                            <div className="ml-[13px] flex items-center gap-2 py-1">
-                              <span
-                                className="h-4 border-l transition-colors duration-500"
-                                style={{
-                                  borderStyle: resolved ? "solid" : "dashed",
-                                  borderColor: resolved ? node.color : undefined,
-                                }}
-                              />
-                              <span
-                                className={`text-[10px] italic transition-opacity duration-500 ${
-                                  resolved ? "opacity-100" : "opacity-40"
-                                } text-caption`}
-                              >
-                                {node.edge}
-                              </span>
-                            </div>
-                          )}
-                          <div
-                            className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 transition-all duration-500 ${
-                              resolved
-                                ? "scale-100 border-secondary-100 bg-white opacity-100 shadow-sm"
-                                : "scale-95 border-dashed border-secondary-200 bg-white/40 opacity-50"
-                            }`}
-                          >
-                            <span
-                              className="h-1.5 w-1.5 shrink-0 rounded-full transition-colors duration-500"
-                              style={{ background: resolved ? node.color : "#C7CEDD" }}
-                            />
-                            <span
-                              className={`text-xs transition-colors duration-500 ${
-                                resolved ? "font-medium text-heading" : "text-caption"
-                              }`}
-                            >
-                              {node.label}
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
+                  <div
+                    className={`flex items-center gap-2.5 rounded-xl border px-3 py-2.5 transition-all duration-500 ${
+                      semanticOutputResolved
+                        ? "scale-100 border-secondary-100 bg-white opacity-100 shadow-sm"
+                        : "scale-95 border-dashed border-secondary-200 bg-white/40 opacity-50"
+                    }`}
+                  >
+                    <span
+                      className="h-2 w-2 shrink-0 rounded-full transition-colors duration-500"
+                      style={{ background: semanticOutputResolved ? "#29b9bb" : "#C7CEDD" }}
+                    />
+                    <div>
+                      <p
+                        className={`text-xs transition-colors duration-500 ${
+                          semanticOutputResolved ? "font-medium text-heading" : "text-caption"
+                        }`}
+                      >
+                        Semantic Model
+                      </p>
+                      <p className="text-[10px] text-caption">Unified understanding</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </DashedBox>
             <p className="mt-5 text-[13px] font-semibold uppercase tracking-[0.08em] text-accent-500">
-              One Unified Graph
+              Five-Stage Pipeline
             </p>
             <p className="mt-2 font-display text-h3 font-semibold text-heading">
               Semantic Modeling
             </p>
             <p className="mt-2 text-sm leading-relaxed text-caption">
-              Automatically connects and models relationships across multiple
-              enterprise data systems, creating a unified graph of your business.
+              Schema analysis, sampling, statistical profiling, domain
+              classification, and query generation turn ERPs, databases,
+              warehouses, files, and APIs into one queryable semantic model.
             </p>
           </GlowCard>
 
