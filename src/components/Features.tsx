@@ -395,6 +395,17 @@ export default function Features() {
               classification, and query generation turn ERPs, databases,
               warehouses, files, and APIs into one queryable semantic model.
             </p>
+            <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-primary-500/15 bg-primary-100/50 px-3 py-1.5">
+              <span className="text-[11px] font-medium text-caption line-through decoration-secondary-300">
+                3–6 months
+              </span>
+              <span className="text-[11px] text-primary-400" aria-hidden="true">
+                &rarr;
+              </span>
+              <span className="text-[11px] font-bold text-primary-600">
+                ~2 days to model
+              </span>
+            </div>
           </GlowCard>
 
           {/* 5. Workflows — spans 2 cols. Steps auto-cycle to show the
