@@ -209,7 +209,7 @@ export default function Features() {
               </div>
               <div className="flex flex-col justify-center gap-6 border-t border-white/10 pt-6 sm:border-l sm:border-t-0 sm:pl-8 sm:pt-0">
                 <div className="transition-transform duration-300 group-hover:translate-x-1">
-                  <p className="font-display text-[44px] font-bold leading-none text-white">
+                  <p className="font-display text-[44px] font-bold leading-none text-white lg:text-[36px] xl:text-[56px]">
                     SOC 2
                   </p>
                   <p className="mt-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-white/40">
@@ -217,7 +217,7 @@ export default function Features() {
                   </p>
                 </div>
                 <div className="transition-transform delay-75 duration-300 group-hover:translate-x-1">
-                  <p className="font-display text-[44px] font-bold leading-none text-white">
+                  <p className="font-display text-[44px] font-bold leading-none text-white lg:text-[36px] xl:text-[56px]">
                     27001
                   </p>
                   <p className="mt-1.5 text-[11px] font-semibold uppercase leading-snug tracking-[0.08em] text-white/40">
