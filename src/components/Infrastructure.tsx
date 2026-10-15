@@ -28,7 +28,7 @@ const points: { title: string; desc: string; Icon: IconComponent }[] = [
 
 const features: { title: string; desc: string; Icon: IconComponent }[] = [
   {
-    title: "Security & Compliance",
+    title: "Enterprise & Compliance",
     desc: "ISO 27001:2022 certified, with SOC 2 Type I currently in progress, backed by continuous testing and monitoring.",
     Icon: ShieldIcon,
   },
