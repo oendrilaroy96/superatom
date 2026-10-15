@@ -178,8 +178,9 @@ export default function Features() {
                   SOC 2 &amp; ISO Ready
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-white/60">
-                  Enterprise-grade security controls with ISO 27001:2022 and SOC 2
-                  Type I compliance, with continuous testing and monitoring.
+                  Built with rigorous security architecture that combines
+                  automated controls and monitoring with independent
+                  third-party verification.
                 </p>
               </div>
               <div className="flex flex-col justify-center gap-6 border-t border-white/10 pt-6 sm:border-l sm:border-t-0 sm:pl-8 sm:pt-0">
