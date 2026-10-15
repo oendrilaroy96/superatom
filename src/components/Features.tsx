@@ -188,15 +188,17 @@ export default function Features() {
                     SOC 2
                   </p>
                   <p className="mt-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-white/40">
-                    Type I Compliance
+                    Type II Compliant
                   </p>
                 </div>
                 <div className="transition-transform delay-75 duration-300 group-hover:translate-x-1">
                   <p className="font-display text-[34px] font-bold leading-none text-white">
                     27001
                   </p>
-                  <p className="mt-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-white/40">
-                    ISO 27001:2022
+                  <p className="mt-1.5 text-[11px] font-semibold uppercase leading-snug tracking-[0.08em] text-white/40">
+                    ISO 27001
+                    <br />
+                    2022 certified
                   </p>
                 </div>
               </div>
