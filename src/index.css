@@ -537,6 +537,28 @@ body {
 
 /* ================= How It Works feature grid ================= */
 
+/* Semantic Modeling card: the hub icon's glow breathes continuously to
+   suggest it's actively processing/resolving the raw fields into the graph
+   beside it. Only box-shadow animates (never transform) so it never fights
+   the element's own rotate-90/sm:rotate-0 and hover:scale utility classes. */
+.hiw-hub-pulse {
+  animation: hiwHubPulse 2.2s ease-in-out infinite;
+}
+@keyframes hiwHubPulse {
+  0%,
+  100% {
+    box-shadow: 0 12px 30px -8px rgba(83, 58, 253, 0.6);
+  }
+  50% {
+    box-shadow: 0 16px 36px -6px rgba(83, 58, 253, 0.85);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hiw-hub-pulse {
+    animation: none;
+  }
+}
+
 /* On-Premise Deployment card: a dot continuously travels along the line from
    the Superatom mark to the client's system icon, which gives a small pulse
    on arrival, depicting Superatom deploying into the client's environment. */

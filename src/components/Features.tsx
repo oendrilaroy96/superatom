@@ -87,6 +87,10 @@ const SEMANTIC_GRAPH: { label: string; color: string; edge?: string }[] = [
   { label: "Product", color: "#ff7eb0", edge: "contains" },
   { label: "Warehouse", color: "#873eff", edge: "stocked in" },
 ];
+// Drives the build-up animation: -1 = nothing resolved yet, then each raw
+// field/graph node resolves one at a time, holds fully resolved for a beat,
+// then resets to show the graph being built again.
+const SEMANTIC_PHASES = [-1, 0, 1, 2, 3, 3, 3] as const;
 
 // The Generative UI card cycles through a few different kinds of output
 // (bar chart, pie chart, plain text) to show that the UI can render whatever
@@ -119,10 +123,13 @@ export default function Features() {
   const [activeBar, setActiveBar] = useState(3);
   const [generativeModeIndex, setGenerativeModeIndex] = useState(0);
   const generativeMode = GENERATIVE_MODES[generativeModeIndex];
+  const [semanticTick, setSemanticTick] = useState(0);
+  const semanticResolved = SEMANTIC_PHASES[semanticTick];
 
   // Cycle which workflow step is "running", which generated-UI panel bar is
-  // "active", and which kind of output the Generative UI card is showing, so
-  // the cards that literally describe automation and dynamic generation
+  // "active", which kind of output the Generative UI card is showing, and
+  // how much of the Semantic Modeling graph has "resolved" so far, so the
+  // cards that literally describe automation and dynamic generation
   // visibly demonstrate it rather than sitting static.
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -135,10 +142,14 @@ export default function Features() {
     const modeTimer = setInterval(() => {
       setGenerativeModeIndex((m) => (m + 1) % GENERATIVE_MODES.length);
     }, 2800);
+    const semanticTimer = setInterval(() => {
+      setSemanticTick((t) => (t + 1) % SEMANTIC_PHASES.length);
+    }, 700);
     return () => {
       clearInterval(stepTimer);
       clearInterval(barTimer);
       clearInterval(modeTimer);
+      clearInterval(semanticTimer);
     };
   }, []);
 
@@ -296,18 +307,25 @@ export default function Features() {
                     Raw systems
                   </p>
                   <div className="flex flex-wrap justify-center gap-2 sm:flex-col sm:items-start">
-                    {SEMANTIC_RAW_FIELDS.map((field) => (
-                      <span
-                        key={field.label}
-                        className={`inline-flex w-fit items-center rounded-md border border-dashed border-secondary-300 bg-white px-2.5 py-1 font-mono text-[11px] text-caption ${field.rotate}`}
-                      >
-                        {field.label}
-                      </span>
-                    ))}
+                    {SEMANTIC_RAW_FIELDS.map((field, i) => {
+                      const reading = i === semanticResolved + 1;
+                      return (
+                        <span
+                          key={field.label}
+                          className={`inline-flex w-fit items-center rounded-md border px-2.5 py-1 font-mono text-[11px] transition-all duration-500 ${field.rotate} ${
+                            reading
+                              ? "scale-110 border-solid border-primary-500 bg-primary-100/70 text-primary-600 shadow-sm"
+                              : "border-dashed border-secondary-300 bg-white text-caption"
+                          }`}
+                        >
+                          {field.label}
+                        </span>
+                      );
+                    })}
                   </div>
                 </div>
 
-                <span className="flex h-11 w-11 shrink-0 rotate-90 items-center justify-center rounded-full bg-primary-500 text-white shadow-[0_12px_30px_-8px_rgba(83,58,253,0.6)] transition-transform duration-500 group-hover/diagram:scale-110 sm:rotate-0">
+                <span className="hiw-hub-pulse flex h-11 w-11 shrink-0 rotate-90 items-center justify-center rounded-full bg-primary-500 text-white shadow-[0_12px_30px_-8px_rgba(83,58,253,0.6)] transition-transform duration-500 group-hover/diagram:scale-110 sm:rotate-0">
                   <HubIcon style={{ fontSize: 20 }} />
                 </span>
 
@@ -316,23 +334,50 @@ export default function Features() {
                     Unified graph
                   </p>
                   <div className="flex flex-col items-start">
-                    {SEMANTIC_GRAPH.map((node, i) => (
-                      <div key={node.label} className="flex flex-col items-start">
-                        {i > 0 && (
-                          <div className="ml-[13px] flex items-center gap-2 py-1">
-                            <span className="h-4 border-l border-dashed border-secondary-300" />
-                            <span className="text-[10px] italic text-caption">{node.edge}</span>
+                    {SEMANTIC_GRAPH.map((node, i) => {
+                      const resolved = i <= semanticResolved;
+                      return (
+                        <div key={node.label} className="flex flex-col items-start">
+                          {i > 0 && (
+                            <div className="ml-[13px] flex items-center gap-2 py-1">
+                              <span
+                                className="h-4 border-l transition-colors duration-500"
+                                style={{
+                                  borderStyle: resolved ? "solid" : "dashed",
+                                  borderColor: resolved ? node.color : undefined,
+                                }}
+                              />
+                              <span
+                                className={`text-[10px] italic transition-opacity duration-500 ${
+                                  resolved ? "opacity-100" : "opacity-40"
+                                } text-caption`}
+                              >
+                                {node.edge}
+                              </span>
+                            </div>
+                          )}
+                          <div
+                            className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 transition-all duration-500 ${
+                              resolved
+                                ? "scale-100 border-secondary-100 bg-white opacity-100 shadow-sm"
+                                : "scale-95 border-dashed border-secondary-200 bg-white/40 opacity-50"
+                            }`}
+                          >
+                            <span
+                              className="h-1.5 w-1.5 shrink-0 rounded-full transition-colors duration-500"
+                              style={{ background: resolved ? node.color : "#C7CEDD" }}
+                            />
+                            <span
+                              className={`text-xs transition-colors duration-500 ${
+                                resolved ? "font-medium text-heading" : "text-caption"
+                              }`}
+                            >
+                              {node.label}
+                            </span>
                           </div>
-                        )}
-                        <div className="flex items-center gap-1.5 rounded-full border border-secondary-100 bg-white px-2.5 py-1.5 shadow-sm">
-                          <span
-                            className="h-1.5 w-1.5 shrink-0 rounded-full"
-                            style={{ background: node.color }}
-                          />
-                          <span className="text-xs font-medium text-heading">{node.label}</span>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>
