@@ -596,6 +596,69 @@ body {
   }
 }
 
+/* Generative UI card: entrance animations replayed each time the card
+   remounts its example. --d staggers each piece; the question "types" in
+   first, then the chosen component builds, then its caption appears. */
+.genui-type {
+  animation: genuiType 0.6s steps(24, end) both;
+}
+@keyframes genuiType {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+.genui-fade-up {
+  animation: genuiFadeUp 0.45s ease-out both;
+  animation-delay: var(--d, 0s);
+}
+@keyframes genuiFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.genui-grow {
+  transform-origin: bottom;
+  animation: genuiGrow 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--d, 0s);
+}
+@keyframes genuiGrow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+.genui-draw {
+  stroke-dasharray: 1;
+  animation: genuiDraw 0.9s ease-out both;
+  animation-delay: var(--d, 0s);
+}
+@keyframes genuiDraw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .genui-type,
+  .genui-fade-up,
+  .genui-grow,
+  .genui-draw {
+    animation: none;
+  }
+}
+
 /* SuperatomDiagram (About page hero) — ported 1:1 from a standalone
    prototype; see src/components/SuperatomDiagram.tsx for the paired
    script. Classes and keyframes keep the prototype's original names so the

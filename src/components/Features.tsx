@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import ShieldIcon from "@mui/icons-material/Shield";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import TimelineIcon from "@mui/icons-material/Timeline";
@@ -69,8 +69,6 @@ const WORKFLOW_STEPS = [
   { tag: "SEND", label: "Right people, right time" },
 ];
 
-const GENERATIVE_BAR_COUNT = 5;
-
 // Semantic Modeling card: enterprise data sources stream into the semantic
 // model while a ring around it fills one segment per analysis stage (the five
 // stages from Superatom's own semantic-modeling writeup). When the ring
@@ -98,20 +96,22 @@ const SEMANTIC_STAGES: { label: string }[] = [
 // resets and runs again.
 const SEMANTIC_PHASES = [-1, 0, 1, 2, 3, 4, 5, 5, 5] as const;
 
-// The Generative UI card cycles through a few different kinds of output
-// (bar chart, pie chart, plain text) to show that the UI can render whatever
-// shape fits the question, not just charts.
-const GENERATIVE_MODES = ["bars", "pie", "text"] as const;
-type GenerativeMode = (typeof GENERATIVE_MODES)[number];
-const GENERATIVE_MODE_LABEL: Record<GenerativeMode, string> = {
-  bars: "Bar chart",
-  pie: "Pie chart",
-  text: "Generated summary",
-};
-const PIE_SEGMENTS: { label: string; className: string }[] = [
-  { label: "Retail", className: "bg-white" },
-  { label: "Pharma", className: "bg-white/55" },
-  { label: "Logistics", className: "bg-white/25" },
+// Generative UI card: a plain-language question is "typed", then the
+// component Superatom would pick for that data pattern renders under it,
+// following the selection logic from Superatom's own Generative UI writeup
+// (categorical → bar, time series → line, part-to-whole → donut, single
+// value → KPI card).
+const GENERATIVE_EXAMPLES = [
+  { question: "Top products by revenue", component: "Bar chart", pattern: "categorical + values" },
+  { question: "Revenue trend this year", component: "Line chart", pattern: "time series" },
+  { question: "Sales split by channel", component: "Donut chart", pattern: "part-to-whole" },
+  { question: "Revenue this quarter", component: "KPI card", pattern: "single value" },
+] as const;
+const GENERATIVE_BAR_HEIGHTS = [100, 80, 64, 50, 38, 28];
+const GENERATIVE_DONUT = [
+  { label: "Online", share: 48, stroke: "stroke-white", dot: "bg-white" },
+  { label: "Retail", share: 32, stroke: "stroke-white/60", dot: "bg-white/60" },
+  { label: "Partners", share: 20, stroke: "stroke-white/30", dot: "bg-white/30" },
 ];
 
 /**
@@ -126,9 +126,8 @@ const PIE_SEGMENTS: { label: string; className: string }[] = [
  */
 export default function Features() {
   const [activeStep, setActiveStep] = useState(0);
-  const [activeBar, setActiveBar] = useState(3);
-  const [generativeModeIndex, setGenerativeModeIndex] = useState(0);
-  const generativeMode = GENERATIVE_MODES[generativeModeIndex];
+  const [generativeIndex, setGenerativeIndex] = useState(0);
+  const generativeExample = GENERATIVE_EXAMPLES[generativeIndex];
   // Reduced-motion users never get the timer below, so start them on the
   // finished state rather than an empty ring.
   const [semanticTick, setSemanticTick] = useState(() =>
@@ -139,29 +138,24 @@ export default function Features() {
   const semanticPhase = SEMANTIC_PHASES[semanticTick];
   const semanticOutputResolved = semanticPhase >= SEMANTIC_STAGES.length;
 
-  // Cycle which workflow step is "running", which generated-UI panel bar is
-  // "active", which kind of output the Generative UI card is showing, and
-  // how far the Semantic Modeling pipeline has progressed, so the
-  // cards that literally describe automation and dynamic generation
-  // visibly demonstrate it rather than sitting static.
+  // Cycle which workflow step is "running", which question the Generative UI
+  // card is answering, and how far the Semantic Modeling pipeline has
+  // progressed, so the cards that literally describe automation and dynamic
+  // generation visibly demonstrate it rather than sitting static.
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const stepTimer = setInterval(() => {
       setActiveStep((s) => (s + 1) % WORKFLOW_STEPS.length);
     }, 1600);
-    const barTimer = setInterval(() => {
-      setActiveBar((b) => (b + 1) % GENERATIVE_BAR_COUNT);
-    }, 1100);
-    const modeTimer = setInterval(() => {
-      setGenerativeModeIndex((m) => (m + 1) % GENERATIVE_MODES.length);
-    }, 2800);
+    const generativeTimer = setInterval(() => {
+      setGenerativeIndex((g) => (g + 1) % GENERATIVE_EXAMPLES.length);
+    }, 3600);
     const semanticTimer = setInterval(() => {
       setSemanticTick((t) => (t + 1) % SEMANTIC_PHASES.length);
     }, 700);
     return () => {
       clearInterval(stepTimer);
-      clearInterval(barTimer);
-      clearInterval(modeTimer);
+      clearInterval(generativeTimer);
       clearInterval(semanticTimer);
     };
   }, []);
@@ -535,9 +529,10 @@ export default function Features() {
             </p>
           </GlowCard>
 
-          {/* 7. Generative UI — gradient card. The mini panel cycles through
-              a few different output shapes (bars, a pie, plain text) to show
-              the UI renders whatever fits the question, not just charts. */}
+          {/* 7. Generative UI — gradient card. A question is typed, then the
+              component suited to its data pattern renders beneath it. Each
+              example remounts via `key`, replaying the CSS entrance
+              animations (see .genui-* in index.css). */}
           <div
             className={`group relative overflow-hidden rounded-2xl p-6 ${HOVER_LIFT}`}
             style={{
@@ -552,55 +547,121 @@ export default function Features() {
             >
               <AddIcon style={{ fontSize: 18 }} />
             </button>
-            <div className="relative h-[120px] overflow-hidden rounded-xl border border-dashed border-white/30 bg-white/10 p-3">
-              <span className="absolute right-3 top-2 text-[9px] font-bold uppercase tracking-[0.08em] text-white/50">
-                {GENERATIVE_MODE_LABEL[generativeMode]}
-              </span>
+            <div
+              key={generativeIndex}
+              className="@container flex h-[176px] flex-col rounded-xl border border-dashed border-white/30 bg-white/10 p-3"
+            >
+              {/* Question input. mr-8 keeps it clear of the + button. */}
+              <div className="mr-8 flex items-center gap-1.5 rounded-lg bg-white/15 px-2.5 py-1.5">
+                <span className="genui-type line-clamp-2 text-[11px] font-medium leading-snug text-white">
+                  {generativeExample.question}
+                </span>
+                <span className="hiw-caret shrink-0" style={{ background: "#fff", height: 12 }} />
+              </div>
 
-              {generativeMode === "bars" && (
-                <div className="flex h-full items-end gap-2">
-                  {Array.from({ length: GENERATIVE_BAR_COUNT }).map((_, i) => (
-                    <span
-                      key={i}
-                      className={`flex-1 rounded-md transition-all duration-500 ${
-                        i === activeBar ? "h-9 bg-white" : "h-7 bg-white/25"
-                      }`}
-                    />
-                  ))}
-                </div>
-              )}
-
-              {generativeMode === "pie" && (
-                <div className="flex h-full items-center gap-4">
-                  <span
-                    className="h-14 w-14 shrink-0 rounded-full border-2 border-white/30"
-                    style={{
-                      background:
-                        "conic-gradient(#fff 0% 45%, rgba(255,255,255,0.55) 45% 75%, rgba(255,255,255,0.25) 75% 100%)",
-                    }}
-                    aria-hidden="true"
-                  />
-                  <div className="flex flex-col gap-1.5">
-                    {PIE_SEGMENTS.map((seg) => (
-                      <div key={seg.label} className="flex items-center gap-1.5">
-                        <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${seg.className}`} />
-                        <span className="text-[11px] font-medium text-white/80">{seg.label}</span>
-                      </div>
+              <div className="mt-3 min-h-0 flex-1" aria-hidden="true">
+                {generativeExample.component === "Bar chart" && (
+                  <div className="flex h-full items-end gap-1.5">
+                    {GENERATIVE_BAR_HEIGHTS.map((h, i) => (
+                      <span
+                        key={h}
+                        className="genui-grow flex-1 rounded-t-md bg-white"
+                        style={{ height: `${h}%`, opacity: 1 - i * 0.12, "--d": `${0.7 + i * 0.06}s` } as CSSProperties}
+                      />
                     ))}
                   </div>
-                </div>
-              )}
+                )}
 
-              {generativeMode === "text" && (
-                <div className="flex h-full flex-col justify-center gap-2.5">
-                  <span className="h-2 w-11/12 rounded-full bg-white/80" />
-                  <span className="h-2 w-full rounded-full bg-white/50" />
-                  <div className="flex items-center gap-1">
-                    <span className="h-2 w-1/2 rounded-full bg-white/80" />
-                    <span className="hiw-caret" style={{ background: "#fff" }} />
+                {generativeExample.component === "Line chart" && (
+                  <svg viewBox="-4 -4 208 78" preserveAspectRatio="none" className="h-full w-full">
+                    <polygon
+                      points="0,58 33,50 66,54 100,36 133,30 166,18 200,10 200,70 0,70"
+                      className="genui-fade-up fill-white/15"
+                      style={{ "--d": "1s" } as CSSProperties}
+                    />
+                    <polyline
+                      points="0,58 33,50 66,54 100,36 133,30 166,18 200,10"
+                      pathLength={1}
+                      fill="none"
+                      strokeWidth={2.5}
+                      strokeLinejoin="round"
+                      strokeLinecap="round"
+                      className="genui-draw stroke-white"
+                      style={{ "--d": "0.7s" } as CSSProperties}
+                    />
+                  </svg>
+                )}
+
+                {generativeExample.component === "Donut chart" && (
+                  <div className="flex h-full items-center gap-3 @min-[220px]:gap-4">
+                    <svg viewBox="0 0 60 60" className="genui-fade-up h-full max-h-[76px] shrink-0" style={{ "--d": "0.7s" } as CSSProperties}>
+                      <g transform="rotate(-90 30 30)">
+                        {GENERATIVE_DONUT.reduce<{ start: number; els: ReactNode[] }>(
+                          (acc, seg) => {
+                            acc.els.push(
+                              <circle
+                                key={seg.label}
+                                cx={30}
+                                cy={30}
+                                r={22}
+                                fill="none"
+                                strokeWidth={9}
+                                pathLength={100}
+                                strokeDasharray={`${seg.share - 3} ${100 - seg.share + 3}`}
+                                strokeDashoffset={-acc.start}
+                                className={seg.stroke}
+                              />,
+                            );
+                            acc.start += seg.share;
+                            return acc;
+                          },
+                          { start: 0, els: [] },
+                        ).els}
+                      </g>
+                    </svg>
+                    <div className="flex flex-col gap-1.5">
+                      {GENERATIVE_DONUT.map((seg, i) => (
+                        <div
+                          key={seg.label}
+                          className="genui-fade-up flex items-center gap-1.5"
+                          style={{ "--d": `${0.9 + i * 0.1}s` } as CSSProperties}
+                        >
+                          <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${seg.dot}`} />
+                          <span className="text-[11px] font-medium text-white/85">{seg.label}</span>
+                          <span className="hidden text-[11px] text-white/60 @min-[220px]:inline">
+                            {seg.share}%
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+
+                {generativeExample.component === "KPI card" && (
+                  <div
+                    className="genui-fade-up flex h-full flex-col justify-center rounded-lg bg-white/15 px-3"
+                    style={{ "--d": "0.7s" } as CSSProperties}
+                  >
+                    <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-white/70">
+                      Revenue
+                    </p>
+                    <div className="mt-1 flex items-baseline gap-2">
+                      <span className="font-display text-[28px] font-bold leading-none text-white">$2.4M</span>
+                      <span className="rounded-full bg-white/25 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                        +12%
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <p
+                className="genui-fade-up mt-2.5 text-[10px] text-white/75"
+                style={{ "--d": "1.1s" } as CSSProperties}
+              >
+                <span className="font-semibold text-white">&rarr; {generativeExample.component}</span>
+                <span className="hidden @min-[220px]:inline"> · {generativeExample.pattern}</span>
+              </p>
             </div>
             <p className="mt-5 font-display text-h3 font-semibold text-white">
               Generative UI
