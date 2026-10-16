@@ -348,7 +348,7 @@ export default function Features() {
                           {source.label}
                         </text>
                         <circle r={4} fill={source.color} className="motion-reduce:hidden">
-                          <animateMotion dur="2.4s" repeatCount="indefinite" begin={`${i * 0.4}s`}>
+                          <animateMotion dur="2.4s" repeatCount="indefinite" begin={`-${i * 0.4}s`}>
                             <mpath href={`#${pathId}`} />
                           </animateMotion>
                         </circle>
@@ -445,10 +445,7 @@ export default function Features() {
                 </div>
               </div>
             </DashedBox>
-            <p className="mt-5 text-[13px] font-semibold uppercase tracking-[0.08em] text-accent-500">
-              Five-Stage Pipeline
-            </p>
-            <p className="mt-2 font-display text-h3 font-semibold text-heading">
+            <p className="mt-5 font-display text-h3 font-semibold text-heading">
               Semantic Modeling
             </p>
             <p className="mt-2 text-sm leading-relaxed text-caption">
