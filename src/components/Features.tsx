@@ -1,7 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import ShieldIcon from "@mui/icons-material/Shield";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
-import HubIcon from "@mui/icons-material/Hub";
 import TimelineIcon from "@mui/icons-material/Timeline";
 import DnsIcon from "@mui/icons-material/Dns";
 import AddIcon from "@mui/icons-material/Add";
@@ -72,11 +71,20 @@ const WORKFLOW_STEPS = [
 
 const GENERATIVE_BAR_COUNT = 5;
 
-// Semantic Modeling card: mirrors the "How It Works" diagram from
-// Superatom's own semantic-modeling writeup — scattered enterprise data
-// sources run through a five-stage analysis pipeline and resolve into one
-// semantic model, rather than an arbitrary made-up example.
-const SEMANTIC_SOURCES = ["ERP", "databases", "warehouses", "files", "APIs"];
+// Semantic Modeling card: enterprise data sources stream into the semantic
+// model while a ring around it fills one segment per analysis stage (the five
+// stages from Superatom's own semantic-modeling writeup). When the ring
+// closes, the model is ready to query.
+const SEMANTIC_SOURCES = [
+  { label: "ERP", color: "#29b9bb" },
+  { label: "Databases", color: "#ff7600" },
+  { label: "Warehouses", color: "#533afd" },
+  { label: "Files", color: "#ff7eb0" },
+  { label: "APIs", color: "#873eff" },
+];
+const SEMANTIC_RING = { cx: 300, cy: 128, r: 58 };
+const SEMANTIC_RING_CIRCUMFERENCE = 2 * Math.PI * SEMANTIC_RING.r;
+const SEMANTIC_RING_SEGMENT = SEMANTIC_RING_CIRCUMFERENCE / 5;
 const SEMANTIC_STAGES: { label: string }[] = [
   { label: "Schema analysis" },
   { label: "Sample extraction" },
@@ -121,14 +129,15 @@ export default function Features() {
   const [activeBar, setActiveBar] = useState(3);
   const [generativeModeIndex, setGenerativeModeIndex] = useState(0);
   const generativeMode = GENERATIVE_MODES[generativeModeIndex];
-  const [semanticTick, setSemanticTick] = useState(0);
+  // Reduced-motion users never get the timer below, so start them on the
+  // finished state rather than an empty ring.
+  const [semanticTick, setSemanticTick] = useState(() =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? SEMANTIC_PHASES.length - 1
+      : 0,
+  );
   const semanticPhase = SEMANTIC_PHASES[semanticTick];
   const semanticOutputResolved = semanticPhase >= SEMANTIC_STAGES.length;
-  const semanticProgress = semanticPhase < 0
-    ? 0
-    : semanticOutputResolved
-      ? 1
-      : semanticPhase / (SEMANTIC_STAGES.length - 1);
 
   // Cycle which workflow step is "running", which generated-UI panel bar is
   // "active", which kind of output the Generative UI card is showing, and
@@ -299,79 +308,139 @@ export default function Features() {
             </p>
           </GlowCard>
 
-          {/* 4. Semantic Modeling — spans 2 cols, 2 rows. Mirrors Superatom's
-              own "How It Works" diagram for this capability: scattered
-              enterprise data sources run through a five-stage analysis
-              pipeline and resolve into one semantic model. */}
+          {/* 4. Semantic Modeling — spans 2 cols, 2 rows. Sources stream into
+              the model while its ring fills one segment per analysis stage;
+              once closed, a sample question shows the model is queryable.
+              Uses a container query because the card is narrow at some
+              desktop widths too, not just on mobile. */}
           <GlowCard className={`sm:col-span-2 lg:col-span-2 lg:row-span-2 ${HOVER_LIFT}`}>
-            <DashedBox className="relative h-auto overflow-hidden sm:h-[230px] lg:h-[260px]">
-              <div className="flex h-full flex-col justify-center gap-8 p-6 sm:p-8">
-                {/* Input / output bookends */}
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2.5">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-dashed border-secondary-300 bg-white text-caption">
-                      <DnsIcon style={{ fontSize: 16 }} />
-                    </span>
-                    <div>
-                      <p className="text-xs font-semibold text-heading">5 source types</p>
-                      <p className="text-[10px] text-caption">{SEMANTIC_SOURCES.join(", ")}</p>
-                    </div>
-                  </div>
+            <DashedBox className="@container">
+              <div className="flex flex-col items-center gap-4 p-4 @min-[520px]:flex-row @min-[520px]:gap-0 @min-[520px]:py-6 @min-[520px]:pl-3 @min-[520px]:pr-6">
+                <svg
+                  viewBox="0 0 380 256"
+                  className="w-full max-w-[400px] @min-[520px]:w-[68%] @min-[520px]:max-w-none"
+                  aria-hidden="true"
+                >
+                  {SEMANTIC_SOURCES.map((source, i) => {
+                    const y = 32 + i * 48;
+                    const width = 20 + source.label.length * 7.6;
+                    const pathId = `semantic-src-${i}`;
+                    return (
+                      <g key={source.label}>
+                        <path
+                          id={pathId}
+                          d={`M ${width + 12} ${y} C 190 ${y}, 200 ${SEMANTIC_RING.cy}, 234 ${SEMANTIC_RING.cy}`}
+                          fill="none"
+                          strokeWidth={1.2}
+                          strokeDasharray="3 5"
+                          className="stroke-secondary-300"
+                        />
+                        <rect
+                          x={8}
+                          y={y - 14}
+                          width={width}
+                          height={28}
+                          rx={7}
+                          strokeDasharray="3 3"
+                          className="fill-white stroke-secondary-300"
+                        />
+                        <text x={18} y={y + 4} className="fill-caption font-mono text-[12px]">
+                          {source.label}
+                        </text>
+                        <circle r={4} fill={source.color} className="motion-reduce:hidden">
+                          <animateMotion dur="2.4s" repeatCount="indefinite" begin={`${i * 0.4}s`}>
+                            <mpath href={`#${pathId}`} />
+                          </animateMotion>
+                        </circle>
+                      </g>
+                    );
+                  })}
 
-                  <div className="flex items-center gap-2.5">
-                    <div className="text-right">
-                      <p
-                        className={`text-xs font-semibold transition-colors duration-500 ${
-                          semanticOutputResolved ? "text-heading" : "text-caption"
+                  <g transform={`rotate(-90 ${SEMANTIC_RING.cx} ${SEMANTIC_RING.cy})`}>
+                    {SEMANTIC_STAGES.map((stage, i) => (
+                      <circle
+                        key={stage.label}
+                        cx={SEMANTIC_RING.cx}
+                        cy={SEMANTIC_RING.cy}
+                        r={SEMANTIC_RING.r}
+                        fill="none"
+                        strokeWidth={7}
+                        strokeLinecap="round"
+                        strokeDasharray={`${SEMANTIC_RING_SEGMENT - 6} ${SEMANTIC_RING_CIRCUMFERENCE - SEMANTIC_RING_SEGMENT + 6}`}
+                        strokeDashoffset={-i * SEMANTIC_RING_SEGMENT}
+                        className={`transition-colors duration-500 ${
+                          i <= semanticPhase ? "stroke-primary-500" : "stroke-secondary-100"
                         }`}
-                      >
-                        Semantic Model
-                      </p>
-                      <p className="text-[10px] text-caption">Unified understanding</p>
-                    </div>
-                    <span
-                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-all duration-500 ${
-                        semanticOutputResolved
-                          ? "scale-105 bg-primary-500 text-white shadow-[0_10px_24px_-8px_rgba(83,58,253,0.6)]"
-                          : "bg-secondary-100 text-caption"
-                      }`}
-                    >
-                      <HubIcon style={{ fontSize: 16 }} />
-                    </span>
-                  </div>
-                </div>
-
-                {/* Five-stage progress stepper */}
-                <div>
-                  <div className="relative flex items-center justify-between px-1">
-                    <div className="absolute left-1 right-1 top-1/2 h-0.5 -translate-y-1/2 rounded-full bg-secondary-100" />
-                    <div
-                      className="absolute left-1 top-1/2 h-0.5 -translate-y-1/2 rounded-full bg-primary-500 transition-[width] duration-700 ease-out"
-                      style={{ width: `${semanticProgress * 100}%` }}
-                    />
-                    {SEMANTIC_STAGES.map((stage, i) => {
-                      const done = i <= semanticPhase || semanticOutputResolved;
-                      const active = i === semanticPhase && !semanticOutputResolved;
-                      return (
-                        <span
-                          key={stage.label}
-                          className={`relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 text-[10px] font-bold transition-all duration-500 ${
-                            done
-                              ? "border-primary-500 bg-primary-500 text-white"
-                              : "border-secondary-200 bg-white text-caption"
-                          } ${active ? "scale-125" : ""}`}
-                        >
-                          {i + 1}
-                        </span>
-                      );
-                    })}
-                  </div>
-                  <p className="mt-3 text-center text-xs font-semibold text-heading transition-opacity duration-300">
+                      />
+                    ))}
+                  </g>
+                  <circle
+                    cx={SEMANTIC_RING.cx}
+                    cy={SEMANTIC_RING.cy}
+                    r={46}
+                    className={`fill-white transition-colors duration-500 ${
+                      semanticOutputResolved ? "stroke-primary-500" : "stroke-secondary-100"
+                    }`}
+                    style={{
+                      filter: semanticOutputResolved
+                        ? "drop-shadow(0 8px 18px rgba(83,58,253,0.35))"
+                        : "none",
+                    }}
+                  />
+                  <text
+                    x={SEMANTIC_RING.cx}
+                    y={SEMANTIC_RING.cy - 3}
+                    textAnchor="middle"
+                    className="fill-heading font-display text-[13px] font-bold"
+                  >
+                    Semantic
+                  </text>
+                  <text
+                    x={SEMANTIC_RING.cx}
+                    y={SEMANTIC_RING.cy + 13}
+                    textAnchor="middle"
+                    className="fill-heading font-display text-[13px] font-bold"
+                  >
+                    Model
+                  </text>
+                  <text
+                    x={SEMANTIC_RING.cx}
+                    y={SEMANTIC_RING.cy + SEMANTIC_RING.r + 28}
+                    textAnchor="middle"
+                    className="fill-primary-500 text-[11px] font-semibold"
+                  >
                     {semanticPhase < 0
-                      ? "Awaiting data…"
+                      ? "Connecting sources…"
                       : semanticOutputResolved
-                        ? "Pipeline complete"
-                        : SEMANTIC_STAGES[semanticPhase].label}
+                        ? "Model ready"
+                        : `${semanticPhase + 1} · ${SEMANTIC_STAGES[semanticPhase].label}`}
+                  </text>
+                </svg>
+
+                <span
+                  className={`hidden h-px w-5 shrink-0 transition-colors duration-500 @min-[520px]:block ${
+                    semanticOutputResolved ? "bg-primary-500" : "bg-secondary-200"
+                  }`}
+                />
+                <div
+                  className={`w-full max-w-[260px] rounded-xl border bg-white p-3.5 transition-all duration-500 @min-[520px]:w-[32%] @min-[520px]:max-w-none ${
+                    semanticOutputResolved
+                      ? "border-primary-500 shadow-[0_12px_28px_-14px_rgba(83,58,253,0.45)]"
+                      : "border-dashed border-secondary-200 opacity-60"
+                  }`}
+                >
+                  <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-caption">
+                    {semanticOutputResolved ? "Ready to query" : "Building model…"}
+                  </p>
+                  <p className="mt-2 font-display text-[13px] font-semibold leading-snug text-heading">
+                    &ldquo;Which warehouses are low on stock?&rdquo;
+                  </p>
+                  <p
+                    className={`mt-2 text-[11px] font-semibold transition-colors duration-500 ${
+                      semanticOutputResolved ? "text-primary-600" : "text-caption"
+                    }`}
+                  >
+                    Ask in plain language &rarr;
                   </p>
                 </div>
               </div>
