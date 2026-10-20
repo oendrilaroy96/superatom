@@ -1,4 +1,6 @@
 import { useMemo, useState, type ReactNode } from "react";
+import { Link } from "react-router-dom";
+import ArticleIcon from "@mui/icons-material/Article";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import DesignServicesIcon from "@mui/icons-material/DesignServices";
@@ -8,6 +10,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import type { IconComponent } from "../types/icon";
 import { useDarkTransition } from "../context/DarkTransitionContext";
+import { blogIndex } from "../generated/blogIndex";
+import { formatPostDate } from "../lib/blog";
 
 const BRAND_GRADIENT =
   "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)";
@@ -32,9 +36,7 @@ function Eyebrow({ children, dark = false }: { children: ReactNode; dark?: boole
   );
 }
 
-type Category = "Inventory intelligence" | "Procurement" | "Design operations" | "Pharma" | "AI adoption";
-
-const categoryIcon: Record<Category, IconComponent> = {
+const categoryIcon: Record<string, IconComponent> = {
   "Inventory intelligence": Inventory2Icon,
   Procurement: ShoppingCartIcon,
   "Design operations": DesignServicesIcon,
@@ -42,18 +44,21 @@ const categoryIcon: Record<Category, IconComponent> = {
   "AI adoption": AutoAwesomeIcon,
 };
 
-/** No real photography to source, so each article gets a brand-colored
- * placeholder (icon on a gradient wash) instead — consistent with the
- * illustration-box treatment already used across the solutions pages,
- * rather than standing in fake stock photography. */
-function ArticleArt({ category, badge }: { category: Category; badge: string }) {
-  const Icon = categoryIcon[category];
+/** Uses the post's cover image when it has one; otherwise a brand-colored
+ * placeholder (category icon on a gradient wash), consistent with the
+ * illustration-box treatment used across the solutions pages. */
+function ArticleArt({ category, badge, cover }: { category: string; badge: string; cover?: string | null }) {
+  const Icon = categoryIcon[category] ?? ArticleIcon;
   return (
     <div
       className="relative flex h-full w-full items-center justify-center overflow-hidden"
       style={{ backgroundImage: "linear-gradient(135deg, #5B47E0 0%, #2A1C6B 100%)" }}
     >
-      <Icon style={{ fontSize: 40 }} className="text-white/85" />
+      {cover ? (
+        <img src={cover} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+      ) : (
+        <Icon style={{ fontSize: 40 }} className="text-white/85" />
+      )}
       <span className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/10 text-[11px] font-semibold text-white backdrop-blur-sm">
         {badge}
       </span>
@@ -62,21 +67,31 @@ function ArticleArt({ category, badge }: { category: Category; badge: string }) 
 }
 
 type Article = {
+  /** Only Notion posts have a page to open; placeholders don't. */
+  slug?: string;
   badge: string;
-  category: Category;
+  category: string;
   readTime: string;
   title: string;
+  excerpt?: string;
   date: string;
+  publishedMonth?: string;
+  cover?: string | null;
   status: "read" | "soon";
 };
 
-const articles: Article[] = [
+// Shown until the site is built with Notion credentials
+// (see scripts/sync-notion-blog.mjs), so the page isn't empty before setup.
+const placeholderArticles: Article[] = [
   {
     badge: "01",
     category: "Inventory intelligence",
     readTime: "12 min read",
     title: "Inventory Intelligence: Definition and the Scale of the Problem",
+    excerpt:
+      "A framework for FMCG, retail, and supply chain leaders: inventory intelligence as an organizational capability, not a product category.",
     date: "May 14, 2026",
+    publishedMonth: "May 2026",
     status: "read",
   },
   {
@@ -129,21 +144,39 @@ const articles: Article[] = [
   },
 ];
 
-const featured = articles[0];
-const categories: ("All research" | Category)[] = [
-  "All research",
-  "Inventory intelligence",
-  "Procurement",
-  "Design operations",
-  "Pharma",
-  "AI adoption",
-];
+const notionConnected = blogIndex.source === "notion";
+
+const articles: Article[] = notionConnected
+  ? blogIndex.posts.map((post, i) => ({
+      slug: post.slug,
+      badge: String(i + 1).padStart(2, "0"),
+      category: post.category ?? "Insights",
+      readTime: `${post.readMinutes} min read`,
+      title: post.title,
+      excerpt: post.excerpt,
+      date: post.date ? formatPostDate(post.date) : "",
+      publishedMonth: post.date
+        ? new Date(post.date).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" })
+        : undefined,
+      cover: post.cover,
+      status: "read" as const,
+    }))
+  : placeholderArticles;
+
+const featuredSlug = (blogIndex.posts.find((p) => p.featured) ?? blogIndex.posts[0])?.slug;
+const featured: Article | undefined = notionConnected
+  ? articles.find((a) => a.slug === featuredSlug)
+  : articles[0];
+
+const categories = ["All research", ...new Set(articles.map((a) => a.category))];
 
 function ArticleCard({ article, dark = false }: { article: Article; dark?: boolean }) {
-  return (
-    <article className="flex flex-col">
+  const card = (
+    <article className="group flex flex-col">
       <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl">
-        <ArticleArt category={article.category} badge={article.badge} />
+        <div className={`h-full w-full ${article.slug ? "transition-transform duration-500 group-hover:scale-[1.03]" : ""}`}>
+          <ArticleArt category={article.category} badge={article.badge} cover={article.cover} />
+        </div>
       </div>
       <div className="mt-4 flex items-center justify-between">
         <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-primary-500">
@@ -182,10 +215,17 @@ function ArticleCard({ article, dark = false }: { article: Article; dark?: boole
       </div>
     </article>
   );
+  return article.slug ? (
+    <Link to={`/blog/${article.slug}`} className="block rounded-2xl">
+      {card}
+    </Link>
+  ) : (
+    card
+  );
 }
 
 export default function Blog() {
-  const [active, setActive] = useState<(typeof categories)[number]>("All research");
+  const [active, setActive] = useState("All research");
   const [query, setQuery] = useState("");
   const isDark = useDarkTransition();
 
@@ -194,8 +234,8 @@ export default function Blog() {
       active === "All research" ? articles : articles.filter((a) => a.category === active);
     const q = query.trim().toLowerCase();
     if (!q) return byCategory;
-    return byCategory.filter(
-      (a) => a.title.toLowerCase().includes(q) || a.category.toLowerCase().includes(q),
+    return byCategory.filter((a) =>
+      [a.title, a.category, a.excerpt ?? ""].some((field) => field.toLowerCase().includes(q)),
     );
   }, [active, query]);
 
@@ -226,55 +266,68 @@ export default function Blog() {
       </section>
 
       {/* Featured article */}
-      <section className="pb-[120px]">
-        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="mx-auto grid max-w-6xl grid-cols-1 overflow-hidden rounded-[28px] border border-secondary-100 lg:grid-cols-[3fr_2fr]">
-            <div className="relative min-h-[320px]">
-              <ArticleArt category={featured.category} badge={featured.badge} />
-              <span className="absolute left-5 top-5 rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-white backdrop-blur-sm">
-                {featured.category}
-              </span>
-              <div className="absolute bottom-5 right-5 max-w-[220px] rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md">
-                <p className="font-display text-[34px] font-semibold leading-none text-white">
-                  $1.7T
-                </p>
-                <p className="mt-2 text-xs leading-snug text-white/80">
-                  lost to inventory distortion each year
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col justify-between gap-8 bg-page p-8 sm:p-12">
-              <div>
-                <div className="flex items-center gap-3">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary-500">
-                    Research
-                  </p>
-                  <span className="h-px w-6 bg-accent-300" aria-hidden="true" />
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary-500">
-                    {featured.readTime}
-                  </p>
-                </div>
-                <p className="mt-5 font-display text-[28px] font-semibold leading-tight tracking-tight text-heading sm:text-[32px]">
-                  {featured.title}
-                </p>
-                <p className="mt-5 text-sm leading-relaxed text-body">
-                  A framework for FMCG, retail, and supply chain leaders:
-                  inventory intelligence as an organizational capability, not
-                  a product category.
-                </p>
-              </div>
-              <div>
-                <span className="inline-flex items-center gap-3 rounded-full bg-secondary-500 px-6 py-3.5 text-sm font-medium text-white">
-                  Read the article <span aria-hidden="true">&#8599;</span>
+      {featured && (
+        <section className="pb-[120px]">
+          <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+            <div className="mx-auto grid max-w-6xl grid-cols-1 overflow-hidden rounded-[28px] border border-secondary-100 lg:grid-cols-[3fr_2fr]">
+              <div className="relative min-h-[320px]">
+                <ArticleArt category={featured.category} badge={featured.badge} cover={featured.cover} />
+                <span className="absolute left-5 top-5 rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-white backdrop-blur-sm">
+                  {featured.category}
                 </span>
-                <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.1em] text-caption">
-                  Published May 2026
-                </p>
+                {!notionConnected && (
+                  <div className="absolute bottom-5 right-5 max-w-[220px] rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md">
+                    <p className="font-display text-[34px] font-semibold leading-none text-white">
+                      $1.7T
+                    </p>
+                    <p className="mt-2 text-xs leading-snug text-white/80">
+                      lost to inventory distortion each year
+                    </p>
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col justify-between gap-8 bg-page p-8 sm:p-12">
+                <div>
+                  <div className="flex items-center gap-3">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary-500">
+                      Featured
+                    </p>
+                    <span className="h-px w-6 bg-accent-300" aria-hidden="true" />
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary-500">
+                      {featured.readTime}
+                    </p>
+                  </div>
+                  <p className="mt-5 font-display text-[28px] font-semibold leading-tight tracking-tight text-heading sm:text-[32px]">
+                    {featured.title}
+                  </p>
+                  {featured.excerpt && (
+                    <p className="mt-5 text-sm leading-relaxed text-body">{featured.excerpt}</p>
+                  )}
+                </div>
+                <div>
+                  {featured.slug ? (
+                    <Link
+                      to={`/blog/${featured.slug}`}
+                      className="inline-flex items-center gap-3 rounded-full bg-secondary-500 px-6 py-3.5 text-sm font-medium text-white transition-colors hover:bg-secondary-600"
+                    >
+                      Read the article <span aria-hidden="true">&#8599;</span>
+                    </Link>
+                  ) : (
+                    <span className="inline-flex items-center gap-3 rounded-full bg-secondary-500 px-6 py-3.5 text-sm font-medium text-white">
+                      Read the article <span aria-hidden="true">&#8599;</span>
+                    </span>
+                  )}
+                  {featured.publishedMonth && (
+                    <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.1em] text-caption">
+                      Published {featured.publishedMonth}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Latest from the journal */}
       <section
@@ -367,7 +420,7 @@ export default function Blog() {
           {filtered.length > 0 ? (
             <div className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
               {filtered.map((article) => (
-                <ArticleCard key={article.title} article={article} dark={isDark} />
+                <ArticleCard key={article.slug ?? article.title} article={article} dark={isDark} />
               ))}
             </div>
           ) : (
@@ -376,7 +429,11 @@ export default function Blog() {
                 isDark ? "text-white/60" : "text-caption"
               }`}
             >
-              No articles match &ldquo;{query}&rdquo;. Try a different search or category.
+              {articles.length === 0 ? (
+                "No articles published yet. Check back soon."
+              ) : (
+                <>No articles match &ldquo;{query}&rdquo;. Try a different search or category.</>
+              )}
             </p>
           )}
         </div>
