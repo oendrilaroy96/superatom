@@ -10,8 +10,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import type { IconComponent } from "../types/icon";
 import { useDarkTransition } from "../context/DarkTransitionContext";
-import { blogIndex } from "../generated/blogIndex";
-import { formatPostDate } from "../lib/blog";
+import { formatPostDate, posts } from "../lib/blog";
 
 const BRAND_GRADIENT =
   "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)";
@@ -67,7 +66,7 @@ function ArticleArt({ category, badge, cover }: { category: string; badge: strin
 }
 
 type Article = {
-  /** Only Notion posts have a page to open; placeholders don't. */
+  /** Real posts have a page to open; placeholders don't. */
   slug?: string;
   badge: string;
   category: string;
@@ -80,8 +79,8 @@ type Article = {
   status: "read" | "soon";
 };
 
-// Shown until the site is built with Notion credentials
-// (see scripts/sync-notion-blog.mjs), so the page isn't empty before setup.
+// Shown until the first real post is added to content/blog, so the page
+// isn't empty.
 const placeholderArticles: Article[] = [
   {
     badge: "01",
@@ -144,10 +143,10 @@ const placeholderArticles: Article[] = [
   },
 ];
 
-const notionConnected = blogIndex.source === "notion";
+const hasPosts = posts.length > 0;
 
-const articles: Article[] = notionConnected
-  ? blogIndex.posts.map((post, i) => ({
+const articles: Article[] = hasPosts
+  ? posts.map((post, i) => ({
       slug: post.slug,
       badge: String(i + 1).padStart(2, "0"),
       category: post.category ?? "Insights",
@@ -163,8 +162,8 @@ const articles: Article[] = notionConnected
     }))
   : placeholderArticles;
 
-const featuredSlug = (blogIndex.posts.find((p) => p.featured) ?? blogIndex.posts[0])?.slug;
-const featured: Article | undefined = notionConnected
+const featuredSlug = (posts.find((p) => p.featured) ?? posts[0])?.slug;
+const featured: Article | undefined = hasPosts
   ? articles.find((a) => a.slug === featuredSlug)
   : articles[0];
 
@@ -275,7 +274,7 @@ export default function Blog() {
                 <span className="absolute left-5 top-5 rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-white backdrop-blur-sm">
                   {featured.category}
                 </span>
-                {!notionConnected && (
+                {!hasPosts && (
                   <div className="absolute bottom-5 right-5 max-w-[220px] rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md">
                     <p className="font-display text-[34px] font-semibold leading-none text-white">
                       $1.7T

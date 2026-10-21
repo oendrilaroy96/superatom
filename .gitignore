@@ -3,7 +3,3 @@ dist
 dist-ssr
 *.local
 .DS_Store
-
-# Written by scripts/sync-notion-blog.mjs on every dev/build run
-src/generated/
-public/blog-data/

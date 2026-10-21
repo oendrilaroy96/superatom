@@ -4,10 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "blog:sync": "node scripts/sync-notion-blog.mjs",
-    "predev": "npm run blog:sync",
     "dev": "vite",
-    "prebuild": "npm run blog:sync",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview"
