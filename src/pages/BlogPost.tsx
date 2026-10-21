@@ -80,7 +80,7 @@ function Block({ block }: { block: BlogBlock }) {
     case "image":
       return (
         <figure className="mt-10">
-          <img src={block.src} alt={block.caption ?? ""} loading="lazy" className="w-full rounded-2xl" />
+          <img src={block.src} alt={block.alt || block.caption || ""} loading="lazy" className="w-full rounded-2xl" />
           {block.caption && (
             <figcaption className="mt-3 text-center text-sm text-caption">{block.caption}</figcaption>
           )}
@@ -118,9 +118,9 @@ export default function BlogPost() {
             All articles
           </Link>
           <div className="mt-10 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.1em] text-primary-500">
-            {post.category && (
+            {(post.series ?? post.category) && (
               <>
-                <span>{post.category}</span>
+                <span>{post.series ?? post.category}</span>
                 <span className="h-px w-6 bg-accent-300" aria-hidden="true" />
               </>
             )}
@@ -129,6 +129,9 @@ export default function BlogPost() {
           <h1 className="mt-5 font-display text-[36px] font-semibold leading-[1.12] tracking-tight text-heading sm:text-[48px]">
             {post.title}
           </h1>
+          {post.subtitle && (
+            <p className="mt-5 text-lg leading-relaxed text-body sm:text-xl">{post.subtitle}</p>
+          )}
           {post.date && (
             <p className="mt-5 text-sm text-caption">{formatPostDate(post.date)}</p>
           )}

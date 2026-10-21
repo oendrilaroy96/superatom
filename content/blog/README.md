@@ -44,7 +44,9 @@ More text, with **bold**, *italic*, `code` and [links](https://example.com).
 | `title` | yes | A post without a title is skipped. |
 | `date` | recommended | Written as `YYYY-MM-DD`. A **future date hides the post until that day**. |
 | `category` | no | Posts with the same category are grouped under one filter button. |
-| `excerpt` | no | Card summary. If empty, the first paragraph is used. |
+| `series` | no | A label shown above the title, e.g. `Inventory Intelligence — Part 1 of 3`. It replaces the category in that spot. |
+| `subtitle` | no | A standfirst shown under the title. Also used as the card summary when there's no `excerpt`. |
+| `excerpt` | no | Card summary. If empty, the subtitle, then the first paragraph, is used. |
 | `cover` | no | Image path, for example `/blog/cover.jpg`. If empty, a placeholder is shown. |
 | `featured` | no | `true` shows this post big at the top. Without one, the newest post is featured. |
 | `draft` | no | `draft: true` hides the post while you work on it. |
@@ -53,6 +55,8 @@ More text, with **bold**, *italic*, `code` and [links](https://example.com).
 
 Put image files in `public/blog/` and refer to them as `/blog/file-name.jpg`.
 Use `cover:` for the top image, and `![description](/blog/file-name.jpg)` inside the text.
+The text in the square brackets is the image's description for screen readers. To also show a visible
+caption under the image, add it in quotes: `![description](/blog/file-name.jpg "Caption text")`.
 
 ## Supported formatting
 

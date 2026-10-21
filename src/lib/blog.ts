@@ -14,12 +14,16 @@ export type BlogBlock =
   | { type: "heading"; level: 2 | 3 | 4; text: RichText[] }
   | { type: "list"; ordered: boolean; items: RichText[][] }
   | { type: "code"; code: string; language?: string }
-  | { type: "image"; src: string; caption?: string }
+  | { type: "image"; src: string; alt: string; caption?: string }
   | { type: "divider" };
 
 export type BlogPost = {
   slug: string;
   title: string;
+  /** Optional line shown under the title, e.g. "Inventory Intelligence: Part 1 of 3". */
+  series: string | null;
+  /** Optional standfirst shown under the title. */
+  subtitle: string | null;
   excerpt: string;
   category: string | null;
   /** ISO date (YYYY-MM-DD) from the post's front matter. */
@@ -79,7 +83,7 @@ const plainText = (parts: RichText[]) => parts.map((p) => p.text).join("");
 const FENCE = /^```(\w*)\s*$/;
 const HEADING = /^(#{1,4})\s+(.+)$/;
 const DIVIDER = /^(-{3,}|\*{3,}|_{3,})$/;
-const IMAGE = /^!\[([^\]]*)\]\(([^)\s]+)\)$/;
+const IMAGE = /^!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)$/;
 const BULLET = /^\s*[-*]\s+(.*)$/;
 const NUMBERED = /^\s*\d+[.)]\s+(.*)$/;
 
@@ -136,7 +140,7 @@ function parseBlocks(markdown: string): BlogBlock[] {
     const image = line.trim().match(IMAGE);
     if (image) {
       if (/^(\/|https?:\/\/)/.test(image[2])) {
-        blocks.push({ type: "image", src: image[2], caption: image[1] || undefined });
+        blocks.push({ type: "image", src: image[2], alt: image[1], caption: image[3] || undefined });
       }
       i++;
       continue;
@@ -218,7 +222,9 @@ function parsePost(slug: string, source: string): BlogPost | null {
   return {
     slug,
     title: data.title,
-    excerpt: data.excerpt || excerptFrom(blocks),
+    series: data.series || null,
+    subtitle: data.subtitle || null,
+    excerpt: data.excerpt || data.subtitle || excerptFrom(blocks),
     category: data.category || null,
     date: data.date || null,
     readMinutes: Math.max(1, Math.round(words / 225)),
