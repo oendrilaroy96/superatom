@@ -2,7 +2,7 @@
 title: Inventory Intelligence: Definition and the Scale of the Problem
 series: Inventory Intelligence — Part 1 of 3
 subtitle: A framework for FMCG, retail, and supply chain leaders: inventory intelligence as an organizational capability, not a product category.
-date: 2026-10-21
+date: 2026-10-19
 category: Inventory intelligence
 featured: true
 cover: /blog/inventory-intelligence-part-1-cover.webp
