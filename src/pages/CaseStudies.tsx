@@ -115,11 +115,10 @@ export default function CaseStudies() {
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <Eyebrow>Customer outcomes</Eyebrow>
           <h1 className="mt-6 font-display text-[44px] font-semibold leading-[1.1] tracking-tight text-heading sm:text-[58px]">
-            Results,{" "}
+            Real results, from{" "}
             <span className="bg-clip-text text-transparent" style={{ backgroundImage: BRAND_GRADIENT }}>
-              measured
+              real operations.
             </span>
-            . Not promised.
           </h1>
           <p className="mt-10 max-w-xl text-p leading-relaxed text-body">
             A look at how teams are putting Superatom AI to work across
