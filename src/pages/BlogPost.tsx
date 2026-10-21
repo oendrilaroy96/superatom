@@ -229,7 +229,7 @@ export default function BlogPost() {
 
       {/* Dark hero: the header reads its id to switch to its dark look while this is on screen. */}
       <header
-        id="blog-dark-zone"
+        id="article-dark-zone"
         className={`relative overflow-hidden bg-secondary-700 pt-12 ${hasStats ? "pb-24 sm:pb-28" : "pb-16 sm:pb-20"}`}
         style={{
           backgroundImage:

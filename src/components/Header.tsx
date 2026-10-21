@@ -128,9 +128,10 @@ export default function Header() {
   const ctaIsDark = useDarkTransition();
   const location = useLocation();
 
-  // The Solutions pages (Inventory and Procurement Intelligence) and blog
-  // posts each open on a dark navy hero (plus a dark highlights bar right under it) rather
-  // than the usual light background, so the header needs to match it from
+  // The Solutions pages (Inventory and Procurement Intelligence), blog posts
+  // and case studies each open on a dark navy hero (the Solutions pages plus
+  // a dark highlights bar right under it) rather than the usual light
+  // background, so the header needs to match it from
   // the top instead of waiting for the page's own CTA section to scroll
   // into view. Dark stays forced on while any of that dark block (marked
   // by the page's own id, its last/lowest piece) is still visible below
@@ -155,8 +156,8 @@ export default function Header() {
         ? "inventory-dark-zone"
         : location.pathname === "/solutions/procurement-intelligence"
           ? "procurement-dark-zone"
-          : location.pathname.startsWith("/blog/")
-            ? "blog-dark-zone"
+          : location.pathname.startsWith("/blog/") || location.pathname.startsWith("/case-studies/")
+            ? "article-dark-zone"
             : null;
     const update = () => {
       const zone = darkZoneId ? document.getElementById(darkZoneId) : null;
