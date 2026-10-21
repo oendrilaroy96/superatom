@@ -179,7 +179,7 @@ export default function Blog() {
           </h1>
           <div className="mt-10 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
             <p className="max-w-xl text-p leading-relaxed text-body">
-              Clear thinking on inventory, AI, and the systems that keep products moving.
+              Clear thinking on supply chains, AI, and the decisions that keep products moving.
             </p>
             <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-caption">
               Issue 01 / 2026
@@ -237,7 +237,7 @@ export default function Blog() {
         </section>
       )}
 
-      {/* Latest from the journal */}
+      {/* Latest from the blog */}
       <section
         className={`py-[120px] transition-colors duration-700 ease-in-out ${
           isDark ? "bg-secondary-500" : "bg-transparent"
@@ -252,7 +252,7 @@ export default function Blog() {
                   isDark ? "text-white" : "text-heading"
                 }`}
               >
-                Latest from the journal
+                Latest from the blog
               </h2>
             </div>
             <p
