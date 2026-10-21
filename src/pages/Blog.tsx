@@ -241,9 +241,8 @@ export default function Blog() {
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
             <div>
-              <Eyebrow dark={isDark}>01</Eyebrow>
               <h2
-                className={`mt-5 font-display text-[36px] font-semibold tracking-tight transition-colors duration-700 ease-in-out sm:text-[44px] ${
+                className={`font-display text-[36px] font-semibold tracking-tight transition-colors duration-700 ease-in-out sm:text-[44px] ${
                   isDark ? "text-white" : "text-heading"
                 }`}
               >
