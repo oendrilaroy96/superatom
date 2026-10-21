@@ -238,14 +238,6 @@ export default function BlogPost() {
       )}
 
       <div className="mx-auto max-w-[1920px] px-4 pb-[120px] pt-12 sm:px-10 lg:pt-16 xl:px-20">
-        {post.cover && (
-          <img
-            src={post.cover}
-            alt=""
-            className="mx-auto mb-12 aspect-[16/9] w-full max-w-5xl rounded-[28px] object-cover"
-          />
-        )}
-
         <div
           className={`mx-auto grid max-w-[1100px] ${
             showContents ? "lg:grid-cols-[240px_minmax(0,680px)] lg:gap-[72px]" : "lg:grid-cols-[minmax(0,680px)] lg:justify-center"

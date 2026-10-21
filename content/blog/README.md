@@ -47,7 +47,7 @@ More text, with **bold**, *italic*, `code` and [links](https://example.com).
 | `series` | no | A label shown above the title, e.g. `Inventory Intelligence — Part 1 of 3`. It replaces the category in that spot. |
 | `subtitle` | no | A standfirst shown under the title. Also used as the card summary when there's no `excerpt`. |
 | `excerpt` | no | Card summary. If empty, the subtitle, then the first paragraph, is used. |
-| `cover` | no | Image path, for example `/blog/cover.jpg`. If empty, a placeholder is shown. |
+| `cover` | no | Thumbnail for the blog cards, for example `/blog/cover.jpg`. If empty, a placeholder is shown. It is not shown on the post page itself. |
 | `stat1`, `stat2`, `stat3` | no | Up to three headline numbers shown as cards under the title, see "Headline numbers" below. |
 | `featured` | no | `true` shows this post big at the top. Without one, the newest post is featured. |
 | `draft` | no | `draft: true` hides the post while you work on it. |
@@ -71,7 +71,7 @@ text and highlights the section being read. It is built automatically from the h
 ## Images
 
 Put image files in `public/blog/` and refer to them as `/blog/file-name.jpg`.
-Use `cover:` for the top image, and `![description](/blog/file-name.jpg)` inside the text.
+Use `cover:` for the thumbnail on the blog cards, and `![description](/blog/file-name.jpg)` inside the text.
 The text in the square brackets is the image's description for screen readers. To also show a visible
 caption under the image, add it in quotes: `![description](/blog/file-name.jpg "Caption text")`.
 
