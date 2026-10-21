@@ -2,18 +2,50 @@ import { useEffect, type ReactNode } from "react";
 import { Link, useParams } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { caseStudies, getCaseStudy } from "../lib/caseStudies";
+import CaseStudyPhoto from "../components/CaseStudyPhoto";
+import { caseNumber, caseStudies, getCaseStudy } from "../lib/caseStudies";
 import NotFound from "./NotFound";
 
 const BRAND_GRADIENT =
   "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)";
 
-function PanelLabel({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
+const SECTION_HEADING =
+  "font-display text-[38px] font-semibold leading-[1.1] tracking-tight sm:text-[50px] lg:text-[62px]";
+
+/** Page container: the site's side padding, content capped at 1360px like the design. */
+function Container({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <p className={`text-[11px] font-bold uppercase tracking-[0.16em] ${dark ? "text-white/60" : "text-caption"}`}>
-      {children}
-    </p>
+    <div className={`mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20 ${className}`}>
+      <div className="mx-auto max-w-[1360px]">{children}</div>
+    </div>
+  );
+}
+
+/** Two-column section: small "01 / The challenge" label on the left, content on the right. */
+function Chapter({
+  number,
+  label,
+  heading,
+  dark = false,
+  children,
+}: {
+  number: string;
+  label: string;
+  heading: string;
+  dark?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div className="grid gap-6 lg:grid-cols-[190px_minmax(0,1fr)] lg:gap-[70px]">
+      <div className="flex flex-col gap-2 text-[11px] font-medium uppercase tracking-[0.12em]">
+        <p className={dark ? "text-primary-300" : "text-primary-500"}>{number}</p>
+        <p className={dark ? "text-white" : "text-heading"}>{label}</p>
+      </div>
+      <div>
+        <h2 className={`max-w-[850px] ${SECTION_HEADING} ${dark ? "text-white" : "text-heading"}`}>{heading}</h2>
+        <div className="mt-10 lg:mt-[70px]">{children}</div>
+      </div>
+    </div>
   );
 }
 
@@ -32,163 +64,199 @@ export default function CaseStudyDetail() {
 
   if (!study) return <NotFound />;
 
-  const others = caseStudies.filter((s) => s.slug !== study.slug);
+  const index = caseStudies.findIndex((s) => s.slug === study.slug);
+  const next = caseStudies[(index + 1) % caseStudies.length];
+  const nextIndex = (index + 1) % caseStudies.length;
+  const count = String(caseStudies.length).padStart(2, "0");
 
   return (
-    <>
-      {/* Dark hero: the header reads its id to switch to its dark look while this is on screen. */}
+    <article>
+      {/* Hero */}
       <header
-        id="article-dark-zone"
-        className="relative overflow-hidden bg-secondary-700 pb-24 pt-12 sm:pb-28"
+        className="pt-10"
         style={{
-          backgroundImage:
-            "radial-gradient(900px 400px at 80% -10%, rgba(83,58,253,0.45), transparent 60%), radial-gradient(700px 360px at 0% 110%, rgba(255,118,0,0.22), transparent 60%)",
+          backgroundImage: "radial-gradient(520px 360px at 12% 5%, rgba(83,58,253,0.09), transparent 70%)",
         }}
       >
-        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="mx-auto max-w-6xl">
-            <Link
-              to="/case-studies"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-white/70 transition-colors hover:text-white"
-            >
-              <ArrowBackIcon style={{ fontSize: 16 }} />
-              All case studies
-            </Link>
-            <div className="mt-10 flex flex-wrap items-center gap-2">
-              <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-white">
-                {study.industry}
-              </span>
-              <Link
-                to={study.solution.path}
-                className="inline-flex items-center gap-1 rounded-full border border-white/20 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-white/70 transition-colors hover:text-white"
-              >
-                {study.solution.name}
-                <ArrowForwardIcon style={{ fontSize: 12 }} />
-              </Link>
-            </div>
-            <h1 className="mt-6 max-w-4xl font-display text-[36px] font-semibold leading-[1.1] tracking-tight text-white sm:text-[48px] lg:text-[56px]">
-              {study.title}
-            </h1>
-            <p className="mt-6 max-w-3xl text-lg leading-relaxed text-secondary-200">
-              <span className="font-semibold text-white">Customer: </span>
-              {study.customer}
+        <Container>
+          <Link
+            to="/case-studies"
+            className="inline-flex items-center gap-2.5 text-[11px] font-medium uppercase tracking-[0.12em] text-body transition-colors hover:text-heading"
+          >
+            <ArrowBackIcon style={{ fontSize: 18 }} />
+            All case studies
+          </Link>
+
+          <div className="mt-9 flex items-start justify-between border-t border-secondary-100 pt-[22px] text-[11px] font-medium uppercase tracking-[0.12em] text-caption">
+            <p>{study.category}</p>
+            <p>
+              {caseNumber(index)} / {count}
             </p>
           </div>
-        </div>
+
+          <div className="max-w-[1180px] pb-8 pt-12 lg:pt-[54px]">
+            <h1 className="font-display text-[40px] font-semibold leading-[1.04] tracking-tight text-heading sm:text-[64px] lg:text-[84px] lg:tracking-[-0.04em]">
+              {study.title}
+            </h1>
+            <div className="mt-8 h-1.5 w-[100px] rounded-full lg:mt-[34px]" style={{ backgroundImage: BRAND_GRADIENT }} />
+          </div>
+          <p className="max-w-[760px] text-base leading-[1.7] text-body sm:text-xl sm:leading-[1.7]">{study.summary}</p>
+
+          <div className="mt-10 lg:mt-[60px]">
+            <CaseStudyPhoto
+              src={study.image.src}
+              alt={study.image.alt}
+              className="h-[380px] rounded-[28px] border-[10px] border-white shadow-[0_30px_80px_-35px_rgba(13,23,56,0.35)] sm:h-[520px] lg:h-[700px]"
+            >
+              <span className="absolute inset-0 bg-gradient-to-t from-secondary-500/85 to-secondary-500/0 to-[60%]" />
+              <div className="absolute bottom-8 left-6 right-6 sm:left-12 lg:bottom-10 lg:left-[55px]">
+                <p className="font-display text-[64px] font-semibold leading-[0.85] tracking-[-0.06em] text-white sm:text-[96px] lg:text-[120px]">
+                  {study.stat.value}
+                </p>
+                <p className="mt-5 text-[11px] font-medium uppercase tracking-[0.1em] text-white">{study.stat.label}</p>
+              </div>
+            </CaseStudyPhoto>
+          </div>
+
+          <dl className="grid gap-2 py-8 text-[15px] sm:grid-cols-[225px_1fr] sm:px-2.5 lg:py-10">
+            <dt className="text-[10px] font-medium uppercase tracking-[0.1em] text-caption sm:pt-1">Customer profile</dt>
+            <dd className="font-medium text-heading">{study.customer}</dd>
+          </dl>
+        </Container>
       </header>
 
-      <div className="relative z-10 mx-auto -mt-14 max-w-[1920px] px-4 sm:px-10 xl:px-20">
-        <div className="mx-auto max-w-6xl">
-          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-            {study.figures.items.map((item) => (
-              <li
-                key={item.label}
-                className={`rounded-[20px] border border-secondary-100 bg-white p-5 shadow-[0_12px_32px_-16px_rgba(13,23,56,0.25)] ${
-                  study.figures.items.length === 1 ? "col-span-2 sm:col-span-3 lg:col-span-3" : ""
-                }`}
-              >
-                <p
-                  className="bg-clip-text font-display text-[30px] font-bold leading-none tracking-tight text-transparent"
-                  style={{ backgroundImage: BRAND_GRADIENT }}
+      {/* 01 The challenge */}
+      <section className="py-16 lg:py-[145px]">
+        <Container>
+          <Chapter number="01" label="The challenge" heading="The signals were there. The system to act wasn’t.">
+            <ul className="grid gap-4 sm:grid-cols-2">
+              {study.challenge.map((item, i) => (
+                <li
+                  key={item}
+                  className="grid min-h-[160px] grid-cols-[34px_1fr] gap-3.5 rounded-2xl border border-secondary-100 bg-white p-6 shadow-[0_4px_7px_rgba(6,27,49,0.04)] sm:p-[26px]"
                 >
-                  {item.value}
+                  <span className="text-[10px] font-medium leading-[15px] text-primary-500">{caseNumber(i)}</span>
+                  <p className="text-[15px] leading-[1.7] text-body">{item}</p>
+                </li>
+              ))}
+            </ul>
+          </Chapter>
+        </Container>
+      </section>
+
+      {/* Signals strip */}
+      <Container>
+        <ul className="grid overflow-hidden rounded-[24px] bg-primary-100 px-4 sm:grid-cols-3 sm:px-[60px]">
+          {study.signals.map((signal, i) => (
+            <li
+              key={signal.label}
+              className={`flex flex-col items-center border-primary-500/15 px-6 py-10 text-center sm:border-l sm:px-[55px] sm:py-[78px] ${
+                i === study.signals.length - 1 ? "sm:border-r" : ""
+              } ${i > 0 ? "border-t sm:border-t-0" : ""}`}
+            >
+              <p className="font-display text-[56px] font-semibold leading-none tracking-[-0.055em] text-heading lg:text-[82px]">
+                {signal.value}
+              </p>
+              <p className="mt-4 text-[10px] font-medium uppercase tracking-[0.1em] text-body">{signal.label}</p>
+            </li>
+          ))}
+        </ul>
+      </Container>
+
+      {/* 02 The solution */}
+      <section
+        className="relative mt-[100px] bg-secondary-500 py-20 lg:py-[145px]"
+        style={{
+          backgroundImage:
+            "radial-gradient(700px 520px at 12% 12%, rgba(83,58,253,0.4), transparent 62%), radial-gradient(640px 480px at 90% 90%, rgba(255,118,0,0.2), transparent 60%)",
+        }}
+      >
+        <div className="absolute inset-x-0 top-0 h-[3px]" style={{ backgroundImage: BRAND_GRADIENT }} aria-hidden="true" />
+        <Container>
+          <Chapter number="02" label="The solution" heading="From fragmented data to a decision engine." dark>
+            <ol className="flex flex-col gap-3.5">
+              {study.solution.map((step, i) => (
+                <li
+                  key={step.title}
+                  className="grid gap-3 rounded-2xl border border-white/10 bg-white/5 p-6 sm:grid-cols-[42px_1fr] sm:gap-5 sm:p-7"
+                >
+                  <span className="text-[10px] font-medium leading-[15px] text-primary-300">{caseNumber(i)}</span>
+                  <div>
+                    <h3 className="font-display text-2xl font-semibold leading-[1.3] tracking-tight text-white sm:text-[29px]">
+                      {step.title}
+                    </h3>
+                    <p className="mt-3 max-w-[780px] text-base leading-[1.75] text-white/60">{step.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </Chapter>
+        </Container>
+      </section>
+
+      {/* Quote */}
+      <Container className="pt-20 lg:pt-[110px]">
+        <figure
+          className="grid gap-4 rounded-[24px] p-8 sm:p-14 lg:grid-cols-[110px_1fr] lg:gap-[35px] lg:p-[105px]"
+          style={{ backgroundImage: BRAND_GRADIENT }}
+        >
+          <span className="font-display text-[80px] font-semibold leading-[0.7] text-white lg:text-[100px]" aria-hidden="true">
+            “
+          </span>
+          <blockquote className="max-w-[1000px] font-display text-[30px] font-semibold leading-[1.1] tracking-tight text-white sm:text-[46px] lg:text-[66px]">
+            {study.quote}
+          </blockquote>
+        </figure>
+      </Container>
+
+      {/* 03 The result */}
+      <section className="py-16 lg:py-[145px]">
+        <Container>
+          <Chapter number="03" label="The result" heading="Clarity that compounds into action.">
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,411fr)_minmax(0,617fr)]">
+              <div className="rounded-[18px] bg-primary-100 p-8 sm:p-10">
+                <p className="font-display text-[64px] font-semibold leading-[0.9] tracking-[-0.06em] text-heading sm:text-[88px] lg:text-[105px]">
+                  {study.stat.value}
                 </p>
-                <p className="mt-2.5 text-[13px] leading-snug text-caption">{item.label}</p>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.16em] text-caption">
-            {study.figures.kind === "Scale" ? "Scale of the operation" : "Headline result"}
-          </p>
-        </div>
-      </div>
-
-      <section className="pb-[96px] pt-12">
-        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-12">
-            <div className="flex flex-col gap-6 lg:col-span-5">
-              <div className="rounded-[24px] border border-secondary-100 bg-page p-7 sm:p-8">
-                <PanelLabel>The challenge</PanelLabel>
-                <ul className="mt-5 space-y-3.5">
-                  {study.challenge.map((item) => (
-                    <li key={item} className="flex gap-3 text-[15px] leading-relaxed text-body">
-                      <span className="mt-[9px] size-1.5 shrink-0 rounded-full bg-accent-500" aria-hidden="true" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+                <p className="mt-6 max-w-[250px] text-base leading-[1.55] text-body">{study.stat.label}</p>
               </div>
-
-              <div className="rounded-[24px] bg-secondary-500 p-7 sm:p-8">
-                <PanelLabel dark>Results</PanelLabel>
-                <ul className="mt-5 space-y-3.5">
-                  {study.results.map((item) => (
-                    <li key={item} className="flex gap-3 text-[15px] leading-relaxed text-white/90">
-                      <CheckCircleIcon style={{ fontSize: 20, color: "#22d3ee" }} className="mt-0.5 shrink-0" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            <div className="rounded-[24px] border border-secondary-100 bg-white p-7 sm:p-8 lg:col-span-7">
-              <PanelLabel>The solution</PanelLabel>
-              <ul className="mt-5 space-y-6">
-                {study.approach.map((step) => (
-                  <li key={step.lead ?? step.text} className="flex gap-4">
-                    <span
-                      className="mt-2 h-2 w-5 shrink-0 rounded-full"
-                      style={{ backgroundImage: BRAND_GRADIENT }}
-                      aria-hidden="true"
-                    />
-                    <div>
-                      {step.lead && (
-                        <p className="font-display text-lg font-semibold leading-snug tracking-tight text-heading">
-                          {step.lead}
-                        </p>
-                      )}
-                      <p className={`text-[15px] leading-relaxed ${step.lead ? "mt-1.5 text-body" : "text-heading"}`}>
-                        {step.text}
-                      </p>
-                    </div>
+              <ul className="flex flex-col gap-3">
+                {study.results.map((result) => (
+                  <li
+                    key={result}
+                    className="flex flex-1 gap-4 rounded-[14px] border border-secondary-100 bg-white p-[22px] text-[15px] leading-[1.65] text-body"
+                  >
+                    <span className="shrink-0 text-base leading-6 text-primary-500" aria-hidden="true">
+                      ↗
+                    </span>
+                    {result}
                   </li>
                 ))}
               </ul>
             </div>
-          </div>
-        </div>
+          </Chapter>
+        </Container>
       </section>
 
-      {/* More case studies */}
-      <section className="pb-[120px]">
-        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="mx-auto max-w-6xl">
-            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-caption">More case studies</p>
-            <ul className="mt-5 grid gap-4 sm:grid-cols-2">
-              {others.map((other) => (
-                <li key={other.slug}>
-                  <Link
-                    to={`/case-studies/${other.slug}`}
-                    className="group flex h-full items-center gap-4 rounded-2xl border border-secondary-100 bg-white p-5 transition-colors duration-300 hover:border-primary-200 hover:bg-page"
-                  >
-                    <span className="min-w-0 flex-1">
-                      <span className="block text-[10px] font-bold uppercase tracking-[0.1em] text-primary-500">
-                        {other.industry}
-                      </span>
-                      <span className="mt-1.5 block font-display text-base font-semibold leading-snug text-heading">
-                        {other.title}
-                      </span>
-                    </span>
-                    <ArrowForwardIcon style={{ fontSize: 18 }} className="shrink-0 text-primary-500" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
+      {/* Next case study */}
+      <Container className="pb-[100px]">
+        <Link
+          to={`/case-studies/${next.slug}`}
+          className="group block rounded-[24px] border border-secondary-100 bg-white p-8 shadow-[0_4px_7px_rgba(6,27,49,0.04)] transition-shadow duration-300 hover:shadow-[0_18px_40px_-22px_rgba(6,27,49,0.25)] sm:p-12 lg:p-20"
+        >
+          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-primary-500">
+            Next case study / {caseNumber(nextIndex)}
+          </p>
+          <div className="mt-[22px] flex items-end justify-between gap-6">
+            <p className="max-w-[850px] font-display text-[32px] font-semibold leading-[1.08] tracking-tight text-heading sm:text-[48px] lg:text-[66px]">
+              {next.headline}
+            </p>
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white transition-transform duration-300 group-hover:translate-x-1">
+              <ArrowForwardIcon style={{ fontSize: 18 }} />
+            </span>
           </div>
-        </div>
-      </section>
-
-    </>
+        </Link>
+      </Container>
+    </article>
   );
 }

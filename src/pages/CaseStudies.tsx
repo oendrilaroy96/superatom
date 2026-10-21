@@ -1,136 +1,135 @@
-import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { caseStudies, type CaseStudy } from "../lib/caseStudies";
+import CaseStudyPhoto from "../components/CaseStudyPhoto";
+import { caseNumber, caseStudies, type CaseStudy } from "../lib/caseStudies";
 
-const BRAND_GRADIENT =
-  "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)";
-
-/** Small gradient dash + label, the eyebrow treatment used across the other redesigned pages. */
-function Eyebrow({
-  children,
-  align = "left",
-  dark = false,
-}: {
-  children: ReactNode;
-  align?: "left" | "center";
-  dark?: boolean;
-}) {
+function ArrowButton({ color }: { color: string }) {
   return (
-    <div className={`flex items-center gap-2.5 ${align === "center" ? "justify-center" : ""}`}>
-      <span
-        className="h-0.5 w-6 shrink-0 rounded-full"
-        style={{ backgroundImage: "linear-gradient(90deg, #29b9bb, #533afd)" }}
-        aria-hidden="true"
-      />
+    <span
+      className="flex size-11 shrink-0 items-center justify-center rounded-full text-white transition-transform duration-300 group-hover:translate-x-1"
+      style={{ backgroundColor: color }}
+    >
+      <ArrowForwardIcon style={{ fontSize: 18 }} />
+    </span>
+  );
+}
+
+/** Photo with the case number badge in the corner and a soft navy fade at the bottom. */
+function CardPhoto({ study, index, className }: { study: CaseStudy; index: number; className: string }) {
+  return (
+    <CaseStudyPhoto src={study.image.src} alt={study.image.alt} className={`rounded-[17px] ${className}`}>
+      <span className="absolute inset-0 bg-gradient-to-t from-secondary-500/75 to-secondary-500/0 to-[65%]" />
+      <span className="absolute right-4 top-4 flex size-[34px] items-center justify-center rounded-full border border-white/20 bg-white/10 text-[11px] font-medium text-white backdrop-blur-[8px]">
+        {caseNumber(index)}
+      </span>
+    </CaseStudyPhoto>
+  );
+}
+
+function CardLabels({ category }: { category: string }) {
+  return (
+    <div className="flex items-start justify-between gap-4 text-[11px] font-medium uppercase tracking-[0.12em] text-caption">
+      <p>{category}</p>
+      <p className="shrink-0">Case study</p>
+    </div>
+  );
+}
+
+function StatBlock({ study, large }: { study: CaseStudy; large: boolean }) {
+  return (
+    <div>
       <p
-        className={`text-[11px] font-bold uppercase tracking-[0.16em] transition-colors duration-700 ease-in-out ${
-          dark ? "text-white/60" : "text-caption"
+        className={`font-display font-semibold leading-none tracking-tight text-heading ${
+          large ? "text-[30px]" : "text-[25px]"
         }`}
       >
-        {children}
+        {study.stat.value}
       </p>
+      <p className="mt-2 max-w-[190px] text-[10px] leading-[14px] text-caption">{study.stat.label}</p>
     </div>
   );
 }
 
-/** Dark card art: the study's one big number on a brand-colored glow, with its industry icon. */
-function CardArt({ study, index }: { study: CaseStudy; index: number }) {
-  const glows = [
-    "radial-gradient(420px 260px at 85% 0%, rgba(83,58,253,0.5), transparent 65%), radial-gradient(360px 220px at 0% 100%, rgba(255,118,0,0.25), transparent 65%)",
-    "radial-gradient(420px 260px at 15% 0%, rgba(135,62,255,0.5), transparent 65%), radial-gradient(360px 220px at 100% 100%, rgba(255,126,176,0.22), transparent 65%)",
-    "radial-gradient(420px 260px at 85% 100%, rgba(83,58,253,0.5), transparent 65%), radial-gradient(360px 220px at 0% 0%, rgba(34,211,238,0.18), transparent 65%)",
-  ];
-  const { Icon, card } = study;
+const cardShell =
+  "group block overflow-hidden rounded-[24px] border border-secondary-100 bg-white shadow-[0_4px_14px_rgba(6,27,49,0.05)] transition-shadow duration-300 hover:shadow-[0_18px_40px_-22px_rgba(6,27,49,0.25)]";
+
+/** The first, wide card: photo on the left, text on the right. */
+function FeaturedCard({ study }: { study: CaseStudy }) {
   return (
-    <div
-      className="relative flex h-full w-full flex-col justify-between overflow-hidden bg-secondary-700 p-6"
-      style={{ backgroundImage: glows[index % glows.length] }}
-    >
-      <div className="flex items-start justify-between">
-        <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-white backdrop-blur-sm">
-          {study.industry}
-        </span>
-        <span className="flex size-11 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-white">
-          <Icon style={{ fontSize: 22 }} />
-        </span>
+    <Link to={`/case-studies/${study.slug}`} className={`${cardShell} grid lg:min-h-[510px] lg:grid-cols-[1.105fr_1fr]`}>
+      <div className="p-2.5">
+        <CardPhoto study={study} index={0} className="h-[280px] sm:h-[380px] lg:h-full lg:min-h-[490px]" />
       </div>
-      <div>
-        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">
-          {card.kind === "Result" ? "Result" : "Scale"}
-        </p>
-        <p
-          className="mt-2 bg-clip-text font-display text-[52px] font-bold leading-none tracking-tight text-transparent"
-          style={{ backgroundImage: "linear-gradient(90deg, #a899ff 0%, #ff7eb0 60%, #ffaf6b 100%)" }}
-        >
-          {card.value}
-        </p>
-        <p className="mt-2.5 max-w-[240px] text-sm leading-snug text-white/70">{card.label}</p>
+      <div className="flex flex-col p-6 sm:p-10 lg:p-[46px]">
+        <CardLabels category={study.category} />
+        <div className="flex flex-1 items-end pt-10">
+          <h2 className="font-display text-[30px] font-semibold leading-[1.14] tracking-tight text-heading sm:text-[40px] lg:text-[44px]">
+            {study.headline}
+          </h2>
+        </div>
+        <p className="max-w-[540px] pb-6 pt-5 text-[15px] leading-[1.7] text-body">{study.summary}</p>
+        <div className="flex items-end justify-between border-t border-secondary-100 pt-5">
+          <StatBlock study={study} large />
+          <ArrowButton color={study.accent} />
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
-function CaseStudyCard({ study, index }: { study: CaseStudy; index: number }) {
+/** The two smaller cards: photo on top, text underneath. */
+function StandardCard({ study, index }: { study: CaseStudy; index: number }) {
   return (
-    <Link to={`/case-studies/${study.slug}`} className="block h-full rounded-2xl">
-      <article className="group flex h-full flex-col">
-        <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl">
-          <div className="h-full w-full transition-transform duration-500 group-hover:scale-[1.03]">
-            <CardArt study={study} index={index} />
-          </div>
+    <Link to={`/case-studies/${study.slug}`} className={`${cardShell} flex flex-col`}>
+      <div className="p-2.5">
+        <CardPhoto study={study} index={index} className="h-[240px] sm:h-[280px]" />
+      </div>
+      <div className="flex flex-1 flex-col px-6 pb-7 pt-5 sm:px-[26px]">
+        <CardLabels category={study.category} />
+        <h2 className="mt-8 font-display text-[28px] font-semibold leading-[1.14] tracking-tight text-heading sm:text-[34px]">
+          {study.headline}
+        </h2>
+        <p className="flex-1 pb-7 pt-5 text-sm leading-[1.7] text-body">{study.summary}</p>
+        <div className="flex items-end justify-between border-t border-secondary-100 pt-5">
+          <StatBlock study={study} large={false} />
+          <ArrowButton color={study.accent} />
         </div>
-        <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.08em] text-primary-500">
-          {study.solution.name}
-        </p>
-        <div className="flex-1">
-          <p className="mt-3 font-display text-xl font-semibold leading-snug tracking-tight text-heading">
-            {study.title}
-          </p>
-          <p className="mt-3 text-sm leading-relaxed text-caption">{study.customer}</p>
-        </div>
-        <div className="mt-4 flex items-center justify-between border-t border-secondary-100 pt-4">
-          <p className="text-xs text-caption">Customer story</p>
-          <p className="inline-flex items-center gap-1 text-xs font-medium text-heading transition-colors group-hover:text-primary-500">
-            Read case study
-            <ArrowForwardIcon style={{ fontSize: 14 }} />
-          </p>
-        </div>
-      </article>
+      </div>
     </Link>
   );
 }
 
 export default function CaseStudies() {
-  return (
-    <>
-      {/* Hero */}
-      <section className="pb-[72px] pt-[120px]">
-        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <Eyebrow>Customer outcomes</Eyebrow>
-          <h1 className="mt-6 font-display text-[44px] font-semibold leading-[1.1] tracking-tight text-heading sm:text-[58px]">
-            Real results, from{" "}
-            <span className="bg-clip-text text-transparent" style={{ backgroundImage: BRAND_GRADIENT }}>
-              real operations.
-            </span>
-          </h1>
-          <p className="mt-10 max-w-xl text-p leading-relaxed text-body">
-            A look at how teams are putting Superatom AI to work across
-            inventory, procurement, and supply chain decisions.
-          </p>
-        </div>
-      </section>
+  const [first, ...rest] = caseStudies;
 
-      {/* Case study cards */}
-      <section className="pb-[96px]">
-        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-            {caseStudies.map((study, i) => (
-              <CaseStudyCard key={study.slug} study={study} index={i} />
-            ))}
+  return (
+    <section className="pb-[120px] pt-[120px] lg:pt-[150px]">
+      <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+        <div className="mx-auto max-w-[1360px]">
+          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+            <div>
+              <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-primary-500">Featured work</p>
+              <h1 className="mt-3 font-display text-[44px] font-semibold leading-[1.1] tracking-tight text-heading sm:text-[58px]">
+                Intelligence in action
+              </h1>
+            </div>
+            <p className="max-w-[460px] text-sm leading-[1.7] text-body">
+              Explore how connected data, optimization, and intelligent workflows create measurable operational value.
+            </p>
+          </div>
+
+          <div className="mt-12 flex flex-col gap-6">
+            {first && <FeaturedCard study={first} />}
+            {rest.length > 0 && (
+              <div className="grid gap-6 md:grid-cols-2">
+                {rest.map((study, i) => (
+                  <StandardCard key={study.slug} study={study} index={i + 1} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }
