@@ -1,7 +1,8 @@
 import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useParams } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { formatPostDate, getPost, safeHref, type BlogBlock, type RichText } from "../lib/blog";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { formatPostDate, getPost, getSeriesPosts, safeHref, type BlogBlock, type BlogPost as Post, type RichText } from "../lib/blog";
 import NotFound from "./NotFound";
 
 function Rich({ parts }: { parts: RichText[] }) {
@@ -100,6 +101,55 @@ function Block({ block }: { block: BlogBlock }) {
     case "divider":
       return <hr className="mt-12 border-secondary-100" />;
   }
+}
+
+/** Links to every published part of a series, shown after the article. */
+function SeriesNav({ post }: { post: Post }) {
+  const parts = getSeriesPosts(post);
+  const info = post.seriesInfo;
+  if (!info || parts.length < 2) return null;
+  return (
+    <nav aria-label="More in this series" className="mt-16 border-t border-secondary-100 pt-10">
+      <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-caption">More in this series</p>
+      <p className="mt-2 font-display text-xl font-semibold tracking-tight text-heading">{info.name}</p>
+      <ol className="mt-5 space-y-3">
+        {parts.map((part) => {
+          const current = part.slug === post.slug;
+          const body = (
+            <>
+              <span className="w-[72px] shrink-0 text-[11px] font-bold uppercase tracking-[0.1em] text-primary-500">
+                Part {part.seriesInfo!.part}
+              </span>
+              <span className="min-w-0 flex-1 font-display text-base font-semibold leading-snug text-heading">
+                {part.title.startsWith(`${info.name}:`) ? part.title.slice(info.name.length + 1).trim() : part.title}
+              </span>
+              {current ? (
+                <span className="shrink-0 text-xs font-medium text-caption">You&rsquo;re reading this</span>
+              ) : (
+                <ArrowForwardIcon style={{ fontSize: 18 }} className="shrink-0 text-primary-500" />
+              )}
+            </>
+          );
+          return (
+            <li key={part.slug}>
+              {current ? (
+                <div aria-current="page" className="flex items-center gap-4 rounded-2xl border border-secondary-100 bg-page p-5">
+                  {body}
+                </div>
+              ) : (
+                <Link
+                  to={`/blog/${part.slug}`}
+                  className="flex items-center gap-4 rounded-2xl border border-secondary-100 bg-white p-5 transition-colors hover:border-primary-200 hover:bg-page"
+                >
+                  {body}
+                </Link>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  );
 }
 
 export default function BlogPost() {
@@ -274,6 +324,7 @@ export default function BlogPost() {
             {post.blocks.map((block, i) => (
               <Block key={i} block={block} />
             ))}
+            <SeriesNav post={post} />
           </div>
         </div>
       </div>

@@ -19,11 +19,15 @@ export type BlogBlock =
 
 export type BlogStat = { value: string; label: string };
 
+/** A post's place in a multi-part series, read from a `series` like "Inventory Intelligence — Part 2 of 3". */
+export type SeriesInfo = { name: string; part: number; total: number };
+
 export type BlogPost = {
   slug: string;
   title: string;
   /** Optional line shown under the title, e.g. "Inventory Intelligence: Part 1 of 3". */
   series: string | null;
+  seriesInfo: SeriesInfo | null;
   /** Optional standfirst shown under the title. */
   subtitle: string | null;
   excerpt: string;
@@ -218,6 +222,12 @@ function parseFrontMatter(source: string): { data: Record<string, string>; body:
   return { data, body: match[2] };
 }
 
+function parseSeries(series: string | undefined): SeriesInfo | null {
+  const match = series?.match(/^(.*?)\s*[—–-]\s*Part\s+(\d+)\s+of\s+(\d+)\s*$/i);
+  if (!match || !match[1]) return null;
+  return { name: match[1].trim(), part: Number(match[2]), total: Number(match[3]) };
+}
+
 function parseStats(data: Record<string, string>): BlogStat[] {
   return [data.stat1, data.stat2, data.stat3].flatMap((raw) => {
     if (!raw) return [];
@@ -247,6 +257,7 @@ function parsePost(slug: string, source: string): BlogPost | null {
     slug,
     title: data.title,
     series: data.series || null,
+    seriesInfo: parseSeries(data.series),
     subtitle: data.subtitle || null,
     excerpt: data.excerpt || data.subtitle || excerptFrom(blocks),
     category: data.category || null,
@@ -272,3 +283,15 @@ export const posts: BlogPost[] = Object.entries(files)
   .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));
 
 export const getPost = (slug: string) => posts.find((p) => p.slug === slug);
+
+export const partLabel = (post: BlogPost) =>
+  post.seriesInfo ? `Part ${post.seriesInfo.part} of ${post.seriesInfo.total}` : null;
+
+/** Every published part of the series this post belongs to, in reading order. */
+export function getSeriesPosts(post: BlogPost): BlogPost[] {
+  const info = post.seriesInfo;
+  if (!info) return [];
+  return posts
+    .filter((p) => p.seriesInfo?.name.toLowerCase() === info.name.toLowerCase())
+    .sort((a, b) => a.seriesInfo!.part - b.seriesInfo!.part);
+}

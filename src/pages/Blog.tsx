@@ -10,7 +10,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import type { IconComponent } from "../types/icon";
 import { useDarkTransition } from "../context/DarkTransitionContext";
-import { formatPostDate, posts } from "../lib/blog";
+import { formatPostDate, partLabel, posts } from "../lib/blog";
 
 const BRAND_GRADIENT =
   "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)";
@@ -46,7 +46,7 @@ const categoryIcon: Record<string, IconComponent> = {
 /** Uses the post's cover image when it has one; otherwise a brand-colored
  * placeholder (category icon on a gradient wash), consistent with the
  * illustration-box treatment used across the solutions pages. */
-function ArticleArt({ category, badge, cover }: { category: string; badge: string; cover?: string | null }) {
+function ArticleArt({ category, label, cover }: { category: string; label?: string | null; cover?: string | null }) {
   const Icon = categoryIcon[category] ?? ArticleIcon;
   return (
     <div
@@ -58,16 +58,18 @@ function ArticleArt({ category, badge, cover }: { category: string; badge: strin
       ) : (
         <Icon style={{ fontSize: 40 }} className="text-white/85" />
       )}
-      <span className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/10 text-[11px] font-semibold text-white backdrop-blur-sm">
-        {badge}
-      </span>
+      {label && (
+        <span className="absolute left-4 top-4 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-white backdrop-blur-sm">
+          {label}
+        </span>
+      )}
     </div>
   );
 }
 
 type Article = {
   slug: string;
-  badge: string;
+  partLabel: string | null;
   category: string;
   readTime: string;
   title: string;
@@ -77,9 +79,9 @@ type Article = {
   cover: string | null;
 };
 
-const articles: Article[] = posts.map((post, i) => ({
+const articles: Article[] = posts.map((post) => ({
   slug: post.slug,
-  badge: String(i + 1).padStart(2, "0"),
+  partLabel: partLabel(post),
   category: post.category ?? "Insights",
   readTime: `${post.readMinutes} min read`,
   title: post.title,
@@ -102,7 +104,7 @@ function ArticleCard({ article, dark = false }: { article: Article; dark?: boole
     <article className="group flex flex-col">
       <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl">
         <div className="h-full w-full transition-transform duration-500 group-hover:scale-[1.03]">
-          <ArticleArt category={article.category} badge={article.badge} cover={article.cover} />
+          <ArticleArt category={article.category} label={article.partLabel} cover={article.cover} />
         </div>
       </div>
       <div className="mt-4 flex items-center justify-between">
@@ -192,9 +194,10 @@ export default function Blog() {
           <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
             <div className="mx-auto grid max-w-6xl grid-cols-1 overflow-hidden rounded-[28px] border border-secondary-100 lg:grid-cols-[3fr_2fr]">
               <div className="relative min-h-[320px]">
-                <ArticleArt category={featured.category} badge={featured.badge} cover={featured.cover} />
+                <ArticleArt category={featured.category} cover={featured.cover} />
                 <span className="absolute left-5 top-5 rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-white backdrop-blur-sm">
                   {featured.category}
+                  {featured.partLabel && ` · ${featured.partLabel}`}
                 </span>
               </div>
               <div className="flex flex-col justify-between gap-8 bg-page p-8 sm:p-12">

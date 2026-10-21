@@ -4,7 +4,6 @@ series: Inventory Intelligence — Part 1 of 3
 subtitle: A framework for FMCG, retail, and supply chain leaders: inventory intelligence as an organizational capability, not a product category.
 date: 2026-10-19
 category: Inventory intelligence
-featured: true
 cover: /blog/inventory-intelligence-part-1-cover.webp
 stat1: $1.7T | lost each year to stockouts and overstock worldwide
 stat2: 6.2% | of global retail sales, down from 10.4% in 2021
