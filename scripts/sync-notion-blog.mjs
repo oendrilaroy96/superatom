@@ -31,8 +31,14 @@ const IMAGES_DIR = path.join(DATA_DIR, "images");
 const PUBLIC_IMAGES_PATH = "/blog-data/images";
 
 const envFile = path.join(root, ".env.local");
-if (existsSync(envFile) && typeof process.loadEnvFile === "function") {
-  process.loadEnvFile(envFile);
+if (existsSync(envFile)) {
+  if (typeof process.loadEnvFile === "function") {
+    process.loadEnvFile(envFile);
+  } else {
+    console.warn(
+      `[blog] Found .env.local but this Node.js (${process.version}) can't read it. Update to Node 20.12 or newer.`,
+    );
+  }
 }
 
 const token = process.env.NOTION_TOKEN;
