@@ -96,7 +96,7 @@ const articles: Article[] = posts.map((post) => ({
 const featuredSlug = (posts.find((p) => p.featured) ?? posts[0])?.slug;
 const featured = articles.find((a) => a.slug === featuredSlug);
 
-const categories = ["All research", ...new Set(articles.map((a) => a.category))];
+const categories = ["All posts", ...new Set(articles.map((a) => a.category))];
 
 function ArticleCard({ article, dark = false }: { article: Article; dark?: boolean }) {
   return (
@@ -148,13 +148,13 @@ function ArticleCard({ article, dark = false }: { article: Article; dark?: boole
 }
 
 export default function Blog() {
-  const [active, setActive] = useState("All research");
+  const [active, setActive] = useState("All posts");
   const [query, setQuery] = useState("");
   const isDark = useDarkTransition();
 
   const filtered = useMemo(() => {
     const byCategory =
-      active === "All research" ? articles : articles.filter((a) => a.category === active);
+      active === "All posts" ? articles : articles.filter((a) => a.category === active);
     const q = query.trim().toLowerCase();
     if (!q) return byCategory;
     return byCategory.filter((a) =>
@@ -177,14 +177,9 @@ export default function Blog() {
             </span>{" "}
             the alert.
           </h1>
-          <div className="mt-10 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
-            <p className="max-w-xl text-p leading-relaxed text-body">
-              Clear thinking on supply chains, AI, and the decisions that keep products moving.
-            </p>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-caption">
-              Issue 01 / 2026
-            </p>
-          </div>
+          <p className="mt-10 max-w-xl text-p leading-relaxed text-body">
+            Clear thinking on supply chains, AI, and the decisions that keep products moving.
+          </p>
         </div>
       </section>
 
