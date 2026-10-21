@@ -66,114 +66,42 @@ function ArticleArt({ category, badge, cover }: { category: string; badge: strin
 }
 
 type Article = {
-  /** Real posts have a page to open; placeholders don't. */
-  slug?: string;
+  slug: string;
   badge: string;
   category: string;
   readTime: string;
   title: string;
-  excerpt?: string;
+  excerpt: string;
   date: string;
   publishedMonth?: string;
-  cover?: string | null;
-  status: "read" | "soon";
+  cover: string | null;
 };
 
-// Shown until the first real post is added to content/blog, so the page
-// isn't empty.
-const placeholderArticles: Article[] = [
-  {
-    badge: "01",
-    category: "Inventory intelligence",
-    readTime: "12 min read",
-    title: "Inventory Intelligence: Definition and the Scale of the Problem",
-    excerpt:
-      "A framework for FMCG, retail, and supply chain leaders: inventory intelligence as an organizational capability, not a product category.",
-    date: "May 14, 2026",
-    publishedMonth: "May 2026",
-    status: "read",
-  },
-  {
-    badge: "02",
-    category: "Inventory intelligence",
-    readTime: "10 min read",
-    title: "Inventory Intelligence: Why It’s a Discipline and Where Adoption Stands",
-    date: "May 21, 2026",
-    status: "read",
-  },
-  {
-    badge: "03",
-    category: "Inventory intelligence",
-    readTime: "11 min read",
-    title: "Inventory Intelligence: Trends, Risks, and How to Build the Capability",
-    date: "May 28, 2026",
-    status: "read",
-  },
-  {
-    badge: "04",
-    category: "Procurement",
-    readTime: "8 min read",
-    title: "Procurement Intelligence: From Spend Visibility to Better Decisions",
-    date: "June 06, 2026",
-    status: "soon",
-  },
-  {
-    badge: "05",
-    category: "Design operations",
-    readTime: "7 min read",
-    title: "The Hidden Cost of Design Latency",
-    date: "June 13, 2026",
-    status: "soon",
-  },
-  {
-    badge: "06",
-    category: "Pharma",
-    readTime: "9 min read",
-    title: "Pharma Procurement Intelligence: Resilience Beyond Cost",
-    date: "June 20, 2026",
-    status: "soon",
-  },
-  {
-    badge: "07",
-    category: "AI adoption",
-    readTime: "9 min read",
-    title: "Building Trust in AI Recommendations, One Decision at a Time",
-    date: "June 27, 2026",
-    status: "soon",
-  },
-];
-
-const hasPosts = posts.length > 0;
-
-const articles: Article[] = hasPosts
-  ? posts.map((post, i) => ({
-      slug: post.slug,
-      badge: String(i + 1).padStart(2, "0"),
-      category: post.category ?? "Insights",
-      readTime: `${post.readMinutes} min read`,
-      title: post.title,
-      excerpt: post.excerpt,
-      date: post.date ? formatPostDate(post.date) : "",
-      publishedMonth: post.date
-        ? new Date(post.date).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" })
-        : undefined,
-      cover: post.cover,
-      status: "read" as const,
-    }))
-  : placeholderArticles;
+const articles: Article[] = posts.map((post, i) => ({
+  slug: post.slug,
+  badge: String(i + 1).padStart(2, "0"),
+  category: post.category ?? "Insights",
+  readTime: `${post.readMinutes} min read`,
+  title: post.title,
+  excerpt: post.excerpt,
+  date: post.date ? formatPostDate(post.date) : "",
+  publishedMonth: post.date
+    ? new Date(post.date).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" })
+    : undefined,
+  cover: post.cover,
+}));
 
 const featuredSlug = (posts.find((p) => p.featured) ?? posts[0])?.slug;
-const featured: Article | undefined = hasPosts
-  ? articles.find((a) => a.slug === featuredSlug)
-  : articles[0];
+const featured = articles.find((a) => a.slug === featuredSlug);
 
 const categories = ["All research", ...new Set(articles.map((a) => a.category))];
 
 function ArticleCard({ article, dark = false }: { article: Article; dark?: boolean }) {
-  const card = (
+  return (
+    <Link to={`/blog/${article.slug}`} className="block rounded-2xl">
     <article className="group flex flex-col">
       <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl">
-        <div className={`h-full w-full ${article.slug ? "transition-transform duration-500 group-hover:scale-[1.03]" : ""}`}>
+        <div className="h-full w-full transition-transform duration-500 group-hover:scale-[1.03]">
           <ArticleArt category={article.category} badge={article.badge} cover={article.cover} />
         </div>
       </div>
@@ -209,17 +137,11 @@ function ArticleCard({ article, dark = false }: { article: Article; dark?: boole
             dark ? "text-white/50" : "text-caption"
           }`}
         >
-          {article.status === "read" ? "Read article ↗" : "Coming soon"}
+          Read article ↗
         </p>
       </div>
     </article>
-  );
-  return article.slug ? (
-    <Link to={`/blog/${article.slug}`} className="block rounded-2xl">
-      {card}
     </Link>
-  ) : (
-    card
   );
 }
 
@@ -274,16 +196,6 @@ export default function Blog() {
                 <span className="absolute left-5 top-5 rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-white backdrop-blur-sm">
                   {featured.category}
                 </span>
-                {!hasPosts && (
-                  <div className="absolute bottom-5 right-5 max-w-[220px] rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md">
-                    <p className="font-display text-[34px] font-semibold leading-none text-white">
-                      $1.7T
-                    </p>
-                    <p className="mt-2 text-xs leading-snug text-white/80">
-                      lost to inventory distortion each year
-                    </p>
-                  </div>
-                )}
               </div>
               <div className="flex flex-col justify-between gap-8 bg-page p-8 sm:p-12">
                 <div>
@@ -304,18 +216,12 @@ export default function Blog() {
                   )}
                 </div>
                 <div>
-                  {featured.slug ? (
-                    <Link
-                      to={`/blog/${featured.slug}`}
-                      className="inline-flex items-center gap-3 rounded-full bg-secondary-500 px-6 py-3.5 text-sm font-medium text-white transition-colors hover:bg-secondary-600"
-                    >
-                      Read the article <span aria-hidden="true">&#8599;</span>
-                    </Link>
-                  ) : (
-                    <span className="inline-flex items-center gap-3 rounded-full bg-secondary-500 px-6 py-3.5 text-sm font-medium text-white">
-                      Read the article <span aria-hidden="true">&#8599;</span>
-                    </span>
-                  )}
+                  <Link
+                    to={`/blog/${featured.slug}`}
+                    className="inline-flex items-center gap-3 rounded-full bg-secondary-500 px-6 py-3.5 text-sm font-medium text-white transition-colors hover:bg-secondary-600"
+                  >
+                    Read the article <span aria-hidden="true">&#8599;</span>
+                  </Link>
                   {featured.publishedMonth && (
                     <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.1em] text-caption">
                       Published {featured.publishedMonth}
@@ -356,70 +262,72 @@ export default function Blog() {
             </p>
           </div>
 
-          <div
-            className={`mx-auto mt-10 flex max-w-6xl flex-col gap-4 border-y py-4 transition-colors duration-700 ease-in-out lg:flex-row lg:items-center lg:justify-between ${
-              isDark ? "border-white/10" : "border-secondary-100"
-            }`}
-          >
-            <div className="flex flex-wrap gap-2">
-              {categories.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  onClick={() => setActive(c)}
-                  className={`rounded-full px-4 py-2.5 text-xs font-medium transition-colors duration-700 ease-in-out ${
-                    active === c
-                      ? isDark
-                        ? "bg-white text-secondary-500"
-                        : "bg-secondary-500 text-white"
-                      : isDark
-                        ? "text-white/60 hover:bg-white/10"
-                        : "text-caption hover:bg-page"
-                  }`}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
+          {articles.length > 0 && (
+            <div
+              className={`mx-auto mt-10 flex max-w-6xl flex-col gap-4 border-y py-4 transition-colors duration-700 ease-in-out lg:flex-row lg:items-center lg:justify-between ${
+                isDark ? "border-white/10" : "border-secondary-100"
+              }`}
+            >
+              <div className="flex flex-wrap gap-2">
+                {categories.map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => setActive(c)}
+                    className={`rounded-full px-4 py-2.5 text-xs font-medium transition-colors duration-700 ease-in-out ${
+                      active === c
+                        ? isDark
+                          ? "bg-white text-secondary-500"
+                          : "bg-secondary-500 text-white"
+                        : isDark
+                          ? "text-white/60 hover:bg-white/10"
+                          : "text-caption hover:bg-page"
+                    }`}
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
 
-            <div className="relative shrink-0 lg:w-64">
-              <SearchIcon
-                style={{ fontSize: 17 }}
-                className={`pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors duration-700 ease-in-out ${
-                  isDark ? "text-white/50" : "text-caption"
-                }`}
-              />
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search articles"
-                aria-label="Search articles"
-                className={`w-full rounded-full border py-2.5 pl-10 pr-9 text-xs font-medium outline-none transition-colors duration-700 ease-in-out ${
-                  isDark
-                    ? "border-white/15 bg-white/10 text-white placeholder:text-white/50 focus:border-white/30"
-                    : "border-secondary-100 bg-page text-heading placeholder:text-caption focus:border-primary-500/40"
-                }`}
-              />
-              {query && (
-                <button
-                  type="button"
-                  onClick={() => setQuery("")}
-                  aria-label="Clear search"
-                  className={`absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center transition-colors duration-700 ease-in-out ${
-                    isDark ? "text-white/50 hover:text-white" : "text-caption hover:text-heading"
+              <div className="relative shrink-0 lg:w-64">
+                <SearchIcon
+                  style={{ fontSize: 17 }}
+                  className={`pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors duration-700 ease-in-out ${
+                    isDark ? "text-white/50" : "text-caption"
                   }`}
-                >
-                  <CloseIcon style={{ fontSize: 15 }} />
-                </button>
-              )}
+                />
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search articles"
+                  aria-label="Search articles"
+                  className={`w-full rounded-full border py-2.5 pl-10 pr-9 text-xs font-medium outline-none transition-colors duration-700 ease-in-out ${
+                    isDark
+                      ? "border-white/15 bg-white/10 text-white placeholder:text-white/50 focus:border-white/30"
+                      : "border-secondary-100 bg-page text-heading placeholder:text-caption focus:border-primary-500/40"
+                  }`}
+                />
+                {query && (
+                  <button
+                    type="button"
+                    onClick={() => setQuery("")}
+                    aria-label="Clear search"
+                    className={`absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center transition-colors duration-700 ease-in-out ${
+                      isDark ? "text-white/50 hover:text-white" : "text-caption hover:text-heading"
+                    }`}
+                  >
+                    <CloseIcon style={{ fontSize: 15 }} />
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {filtered.length > 0 ? (
             <div className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
               {filtered.map((article) => (
-                <ArticleCard key={article.slug ?? article.title} article={article} dark={isDark} />
+                <ArticleCard key={article.slug} article={article} dark={isDark} />
               ))}
             </div>
           ) : (
