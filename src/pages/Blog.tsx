@@ -100,8 +100,8 @@ const categories = ["All research", ...new Set(articles.map((a) => a.category))]
 
 function ArticleCard({ article, dark = false }: { article: Article; dark?: boolean }) {
   return (
-    <Link to={`/blog/${article.slug}`} className="block rounded-2xl">
-    <article className="group flex flex-col">
+    <Link to={`/blog/${article.slug}`} className="block h-full rounded-2xl">
+    <article className="group flex h-full flex-col">
       <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl">
         <div className="h-full w-full transition-transform duration-500 group-hover:scale-[1.03]">
           <ArticleArt category={article.category} label={article.partLabel} cover={article.cover} />
@@ -120,7 +120,7 @@ function ArticleCard({ article, dark = false }: { article: Article; dark?: boole
         </p>
       </div>
       <p
-        className={`mt-3 font-display text-xl font-semibold leading-snug tracking-tight transition-colors duration-700 ease-in-out ${
+        className={`mt-3 flex-1 font-display text-xl font-semibold leading-snug tracking-tight transition-colors duration-700 ease-in-out ${
           dark ? "text-white" : "text-heading"
         }`}
       >
