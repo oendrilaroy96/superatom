@@ -48,8 +48,25 @@ More text, with **bold**, *italic*, `code` and [links](https://example.com).
 | `subtitle` | no | A standfirst shown under the title. Also used as the card summary when there's no `excerpt`. |
 | `excerpt` | no | Card summary. If empty, the subtitle, then the first paragraph, is used. |
 | `cover` | no | Image path, for example `/blog/cover.jpg`. If empty, a placeholder is shown. |
+| `stat1`, `stat2`, `stat3` | no | Up to three headline numbers shown as cards under the title, see "Headline numbers" below. |
 | `featured` | no | `true` shows this post big at the top. Without one, the newest post is featured. |
 | `draft` | no | `draft: true` hides the post while you work on it. |
+
+## Headline numbers
+
+Each of `stat1`, `stat2`, `stat3` is the big number, then a vertical bar (`|`), then a short caption:
+
+```
+stat1: $1.7T | lost each year to stockouts and overstock worldwide
+stat2: 6.2% | of global retail sales
+```
+
+Leave them out and the post simply has a plain dark header with no cards.
+
+## Contents sidebar
+
+On wide screens, posts with three or more `##` headings get a contents list that stays beside the
+text and highlights the section being read. It is built automatically from the headings.
 
 ## Images
 

@@ -11,11 +11,13 @@ export type RichText = {
 
 export type BlogBlock =
   | { type: "paragraph" | "quote"; text: RichText[] }
-  | { type: "heading"; level: 2 | 3 | 4; text: RichText[] }
+  | { type: "heading"; level: 2 | 3 | 4; text: RichText[]; id: string }
   | { type: "list"; ordered: boolean; items: RichText[][] }
   | { type: "code"; code: string; language?: string }
   | { type: "image"; src: string; alt: string; caption?: string }
   | { type: "divider" };
+
+export type BlogStat = { value: string; label: string };
 
 export type BlogPost = {
   slug: string;
@@ -31,6 +33,8 @@ export type BlogPost = {
   readMinutes: number;
   cover: string | null;
   featured: boolean;
+  /** Up to three headline numbers shown on cards under the title. */
+  stats: BlogStat[];
   blocks: BlogBlock[];
 };
 
@@ -99,9 +103,14 @@ function startsNewBlock(line: string) {
   );
 }
 
+function slugify(text: string) {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "section";
+}
+
 function parseBlocks(markdown: string): BlogBlock[] {
   const lines = markdown.replace(/\r\n?/g, "\n").split("\n");
   const blocks: BlogBlock[] = [];
+  const usedIds = new Set<string>();
   let i = 0;
 
   while (i < lines.length) {
@@ -126,7 +135,12 @@ function parseBlocks(markdown: string): BlogBlock[] {
     if (heading) {
       // The post title is the page's only h1, so # and ## both become h2.
       const level = Math.max(2, heading[1].length) as 2 | 3 | 4;
-      blocks.push({ type: "heading", level, text: parseInline(heading[2].trim()) });
+      const text = parseInline(heading[2].trim());
+      const base = slugify(plainText(text));
+      let id = base;
+      for (let n = 2; usedIds.has(id); n++) id = `${base}-${n}`;
+      usedIds.add(id);
+      blocks.push({ type: "heading", level, text, id });
       i++;
       continue;
     }
@@ -204,6 +218,16 @@ function parseFrontMatter(source: string): { data: Record<string, string>; body:
   return { data, body: match[2] };
 }
 
+function parseStats(data: Record<string, string>): BlogStat[] {
+  return [data.stat1, data.stat2, data.stat3].flatMap((raw) => {
+    if (!raw) return [];
+    const bar = raw.indexOf("|");
+    const value = (bar < 0 ? raw : raw.slice(0, bar)).trim();
+    const label = bar < 0 ? "" : raw.slice(bar + 1).trim();
+    return value ? [{ value, label }] : [];
+  });
+}
+
 function parsePost(slug: string, source: string): BlogPost | null {
   const { data, body } = parseFrontMatter(source);
   if (!data.title) {
@@ -230,6 +254,7 @@ function parsePost(slug: string, source: string): BlogPost | null {
     readMinutes: Math.max(1, Math.round(words / 225)),
     cover: data.cover || null,
     featured: data.featured?.toLowerCase() === "true",
+    stats: parseStats(data),
     blocks,
   };
 }
