@@ -58,7 +58,7 @@ function ArticleArt({ category, badge, cover }: { category: string; badge: strin
       ) : (
         <Icon style={{ fontSize: 40 }} className="text-white/85" />
       )}
-      <span className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/10 text-[11px] font-semibold text-white backdrop-blur-sm">
+      <span className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-secondary-500/75 text-[11px] font-semibold text-white backdrop-blur-sm">
         {badge}
       </span>
     </div>
@@ -193,7 +193,7 @@ export default function Blog() {
             <div className="mx-auto grid max-w-6xl grid-cols-1 overflow-hidden rounded-[28px] border border-secondary-100 lg:grid-cols-[3fr_2fr]">
               <div className="relative min-h-[320px]">
                 <ArticleArt category={featured.category} badge={featured.badge} cover={featured.cover} />
-                <span className="absolute left-5 top-5 rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-white backdrop-blur-sm">
+                <span className="absolute left-5 top-5 rounded-full border border-white/20 bg-secondary-500/75 px-3.5 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-white backdrop-blur-sm">
                   {featured.category}
                 </span>
               </div>
