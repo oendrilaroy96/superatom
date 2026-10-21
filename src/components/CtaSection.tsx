@@ -73,7 +73,9 @@ function OfficeCard({ office }: { office: Office }) {
 export default function CtaSection() {
   const [demoOpen, setDemoOpen] = useState(false);
   const isDark = useDarkTransition();
-  const isAboutPage = useLocation().pathname === "/about";
+  const { pathname } = useLocation();
+  const isAboutPage = pathname === "/about";
+  const isCaseStudies = pathname.startsWith("/case-studies");
 
   return (
     <section
@@ -122,11 +124,14 @@ export default function CtaSection() {
                 Decision Intelligence
               </p>
               <h2 className="mt-3 max-w-xl font-display text-[28px] font-semibold leading-[1.2] text-white sm:text-[34px] lg:text-[40px] lg:leading-[1.15]">
-                See how your data can drive faster, smarter decisions.
+                {isCaseStudies
+                  ? "See what Superatom AI could do for yours."
+                  : "See how your data can drive faster, smarter decisions."}
               </h2>
               <p className="mt-4 max-w-lg text-p text-white/60">
-                Get a personalised walkthrough of Superatom AI built around your business, your data
-                and the decisions that matter most to you.
+                {isCaseStudies
+                  ? "Book a short demo to see how it works on inventory and procurement decisions like these."
+                  : "Get a personalised walkthrough of Superatom AI built around your business, your data and the decisions that matter most to you."}
               </p>
 
               <div className="mt-10 flex flex-wrap items-center gap-3">

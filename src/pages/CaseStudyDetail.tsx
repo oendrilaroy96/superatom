@@ -1,11 +1,8 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { Link, useParams } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import Button from "../components/ui/Button";
-import DemoModal from "../components/DemoModal";
-import { useDarkTransition } from "../context/DarkTransitionContext";
 import { caseStudies, getCaseStudy } from "../lib/caseStudies";
 import NotFound from "./NotFound";
 
@@ -23,8 +20,6 @@ function PanelLabel({ children, dark = false }: { children: ReactNode; dark?: bo
 export default function CaseStudyDetail() {
   const { slug = "" } = useParams();
   const study = getCaseStudy(slug);
-  const isDark = useDarkTransition();
-  const [demoOpen, setDemoOpen] = useState(false);
 
   useEffect(() => {
     if (!study) return;
@@ -165,41 +160,23 @@ export default function CaseStudyDetail() {
         </div>
       </section>
 
-      {/* More case studies + call to action; fades to dark in step with the page's dark footer block. */}
-      <section
-        className={`py-[96px] transition-colors duration-700 ease-in-out ${
-          isDark ? "bg-secondary-500" : "bg-transparent"
-        }`}
-      >
+      {/* More case studies */}
+      <section className="pb-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="mx-auto max-w-6xl">
-            <p
-              className={`text-[11px] font-bold uppercase tracking-[0.16em] transition-colors duration-700 ease-in-out ${
-                isDark ? "text-white/60" : "text-caption"
-              }`}
-            >
-              More case studies
-            </p>
+            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-caption">More case studies</p>
             <ul className="mt-5 grid gap-4 sm:grid-cols-2">
               {others.map((other) => (
                 <li key={other.slug}>
                   <Link
                     to={`/case-studies/${other.slug}`}
-                    className={`group flex h-full items-center gap-4 rounded-2xl border p-5 transition-colors duration-300 ${
-                      isDark
-                        ? "border-white/10 hover:border-white/30 hover:bg-white/5"
-                        : "border-secondary-100 bg-white hover:border-primary-200 hover:bg-page"
-                    }`}
+                    className="group flex h-full items-center gap-4 rounded-2xl border border-secondary-100 bg-white p-5 transition-colors duration-300 hover:border-primary-200 hover:bg-page"
                   >
                     <span className="min-w-0 flex-1">
                       <span className="block text-[10px] font-bold uppercase tracking-[0.1em] text-primary-500">
                         {other.industry}
                       </span>
-                      <span
-                        className={`mt-1.5 block font-display text-base font-semibold leading-snug transition-colors duration-700 ease-in-out ${
-                          isDark ? "text-white" : "text-heading"
-                        }`}
-                      >
+                      <span className="mt-1.5 block font-display text-base font-semibold leading-snug text-heading">
                         {other.title}
                       </span>
                     </span>
@@ -208,31 +185,10 @@ export default function CaseStudyDetail() {
                 </li>
               ))}
             </ul>
-
-            <div className="mt-16 flex flex-col items-center gap-5 text-center">
-              <h2
-                className={`font-display text-[32px] font-semibold leading-[1.15] tracking-tight transition-colors duration-700 ease-in-out sm:text-[40px] ${
-                  isDark ? "text-white" : "text-heading"
-                }`}
-              >
-                See what Superatom AI could do for yours.
-              </h2>
-              <p
-                className={`max-w-md text-sm leading-relaxed transition-colors duration-700 ease-in-out ${
-                  isDark ? "text-white/70" : "text-body"
-                }`}
-              >
-                Book a short demo to see how it works on inventory and procurement decisions like these.
-              </p>
-              <Button variant="primary" onClick={() => setDemoOpen(true)}>
-                Book a demo
-              </Button>
-            </div>
           </div>
         </div>
       </section>
 
-      <DemoModal open={demoOpen} onClose={() => setDemoOpen(false)} />
     </>
   );
 }

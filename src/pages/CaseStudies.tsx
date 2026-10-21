@@ -1,9 +1,6 @@
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import Button from "../components/ui/Button";
-import DemoModal from "../components/DemoModal";
-import { useDarkTransition } from "../context/DarkTransitionContext";
 import { caseStudies, type CaseStudy } from "../lib/caseStudies";
 
 const BRAND_GRADIENT =
@@ -105,9 +102,6 @@ function CaseStudyCard({ study, index }: { study: CaseStudy; index: number }) {
 }
 
 export default function CaseStudies() {
-  const isDark = useDarkTransition();
-  const [demoOpen, setDemoOpen] = useState(false);
-
   return (
     <>
       {/* Hero */}
@@ -137,40 +131,6 @@ export default function CaseStudies() {
           </div>
         </div>
       </section>
-
-      {/* Closing call to action; fades to dark in step with the page's dark footer block. */}
-      <section
-        className={`py-[120px] transition-colors duration-700 ease-in-out ${
-          isDark ? "bg-secondary-500" : "bg-transparent"
-        }`}
-      >
-        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="mx-auto flex max-w-2xl flex-col items-center gap-5 text-center">
-            <Eyebrow align="center" dark={isDark}>
-              Your operation
-            </Eyebrow>
-            <h2
-              className={`font-display text-[32px] font-semibold leading-[1.15] tracking-tight transition-colors duration-700 ease-in-out sm:text-[44px] ${
-                isDark ? "text-white" : "text-heading"
-              }`}
-            >
-              See what Superatom AI could do for yours.
-            </h2>
-            <p
-              className={`max-w-md text-sm leading-relaxed transition-colors duration-700 ease-in-out ${
-                isDark ? "text-white/70" : "text-body"
-              }`}
-            >
-              Book a short demo to see how it works on inventory and procurement decisions like these.
-            </p>
-            <Button variant="primary" onClick={() => setDemoOpen(true)}>
-              Book a demo
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      <DemoModal open={demoOpen} onClose={() => setDemoOpen(false)} />
     </>
   );
 }
