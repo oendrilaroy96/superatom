@@ -5,6 +5,7 @@ subtitle: A framework for FMCG, retail, and supply chain leaders: inventory inte
 date: 2026-10-21
 category: Inventory intelligence
 featured: true
+cover: /blog/inventory-intelligence-part-1-cover.webp
 stat1: $1.7T | lost each year to stockouts and overstock worldwide
 stat2: 6.2% | of global retail sales, down from 10.4% in 2021
 stat3: 65.6% | of that loss comes from out-of-stocks; 34.4% from overstock
