@@ -147,7 +147,7 @@ export default function About() {
                   Speed of Business.
                 </span>
               </h1>
-              <p className="mt-7 max-w-[640px] text-[18px] leading-[1.55] text-body sm:text-[20px]">
+              <p className="mt-7 max-w-xl text-[18px] leading-[1.55] text-body sm:text-[20px]">
                 Superatom AI exists to close the gap between enterprise data,
                 business context, and action.
               </p>
