@@ -102,10 +102,10 @@ function TeamCard({ member }: { member: TeamMember }) {
       <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-secondary-600/95 via-secondary-600/35 to-transparent" />
       <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-2">
         <div>
-          <p className="font-display text-[14px] font-bold leading-tight text-white">
+          <p className="font-display text-[13px] font-bold leading-tight text-white">
             {member.name}
           </p>
-          <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-white/60">
+          <p className="mt-1 text-[9px] font-semibold uppercase tracking-[0.08em] text-white/60">
             {member.role}
           </p>
         </div>
@@ -248,7 +248,7 @@ export default function About() {
                 Kept fixed light-on-dark-scrim regardless of the page's own
                 crossfade, so the cards read consistently. The second column
                 sits lower for the staggered look. */}
-            <div className="grid w-full max-w-[500px] grid-cols-2 gap-3.5 lg:justify-self-end">
+            <div className="grid w-full max-w-[420px] grid-cols-2 gap-3.5 lg:justify-self-end">
               {teamMembers.map((member, i) => (
                 <div key={member.name} className={i % 2 === 1 ? "mt-9" : ""}>
                   <TeamCard member={member} />
