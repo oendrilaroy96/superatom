@@ -347,55 +347,59 @@ export default function About() {
             heading="What We Believe"
           />
 
-          <ol className="mt-12 grid gap-x-7 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-            {beliefs.map((belief, i) => (
-              <li
-                key={belief.title}
-                className={`relative border-t-2 pt-6 transition-colors duration-700 ${
-                  isDark ? "border-white/10" : "border-secondary-100"
-                }`}
-              >
-                <span
-                  className="absolute -top-0.5 left-0 h-[3px] w-11 rounded-full"
-                  style={{ backgroundImage: BRAND_GRADIENT }}
-                  aria-hidden="true"
-                />
-                <span className="block font-display text-[28px] font-semibold leading-none">
-                  <GradientText>{String(i + 1).padStart(2, "0")}</GradientText>
-                </span>
-                <h3
-                  className={`mt-3.5 font-display text-[22px] font-semibold leading-snug tracking-tight transition-colors duration-700 ${
-                    isDark ? "text-white" : "text-heading"
-                  }`}
-                >
-                  {belief.title}
-                </h3>
-                <p
-                  className={`mt-2 text-p transition-colors duration-700 ${
-                    isDark ? "text-white/60" : "text-body"
-                  }`}
-                >
-                  {belief.text}
-                </p>
-              </li>
-            ))}
-          </ol>
-
-          <div
-            className={`mt-[60px] rounded-[28px] border p-8 transition-colors duration-700 sm:p-12 ${
-              isDark
-                ? "border-white/10 bg-white/5"
-                : "border-primary-500/10 bg-primary-100/60"
-            }`}
-          >
-            <p
-              className={`max-w-[1000px] font-display text-[30px] font-semibold leading-[1.15] tracking-tight transition-colors duration-700 sm:text-[34px] lg:text-[40px] ${
-                isDark ? "text-white" : "text-heading"
-              }`}
+          <div className="mt-12 grid gap-6 lg:grid-cols-2 lg:gap-[72px]">
+            <div
+              className="flex min-h-[280px] items-end rounded-[28px] p-8 sm:p-11 lg:min-h-0"
+              style={{
+                backgroundColor: "#533afd",
+                backgroundImage:
+                  "radial-gradient(500px 300px at 100% 0%, rgba(255,126,176,0.45), transparent 65%), radial-gradient(500px 360px at 0% 100%, rgba(135,62,255,0.55), transparent 65%)",
+              }}
             >
-              We believe the future of BI isn&rsquo;t more dashboards.{" "}
-              <GradientText>It&rsquo;s faster, better decisions.</GradientText>
-            </p>
+              <p className="font-display text-[24px] font-semibold leading-[1.2] tracking-tight text-white sm:text-[28px] lg:text-[32px]">
+                We believe the future of BI isn&rsquo;t more dashboards.
+                It&rsquo;s faster, better decisions.
+              </p>
+            </div>
+
+            <ol className="flex flex-col gap-3">
+              {beliefs.map((belief, i) => (
+                <li
+                  key={belief.title}
+                  className={`flex flex-1 items-center gap-[18px] rounded-[18px] border px-6 py-5 transition-colors duration-700 ${
+                    isDark
+                      ? "border-white/10 bg-white/5"
+                      : "border-secondary-100 bg-white"
+                  }`}
+                >
+                  <span
+                    className={`flex size-9 shrink-0 items-center justify-center rounded-full font-display text-[15px] font-bold transition-colors duration-700 ${
+                      isDark
+                        ? "bg-white/10 text-primary-300"
+                        : "bg-primary-100 text-primary-500"
+                    }`}
+                  >
+                    {i + 1}
+                  </span>
+                  <div>
+                    <h3
+                      className={`font-display text-[20px] font-semibold leading-snug tracking-tight transition-colors duration-700 ${
+                        isDark ? "text-white" : "text-heading"
+                      }`}
+                    >
+                      {belief.title}
+                    </h3>
+                    <p
+                      className={`mt-0.5 text-[15px] transition-colors duration-700 ${
+                        isDark ? "text-white/60" : "text-body"
+                      }`}
+                    >
+                      {belief.text}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
       </section>
