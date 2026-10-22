@@ -315,16 +315,16 @@ export default function CaseStudyDetail() {
         </section>
 
         {/* Next case study */}
-        <Container className="pb-[100px]">
+        <Container className="pb-20 lg:pb-[100px]">
           <Link
             to={`/case-studies/${next.slug}`}
-            className="group block rounded-[24px] border border-secondary-100 bg-white p-8 shadow-[0_4px_7px_rgba(6,27,49,0.04)] transition-shadow duration-300 hover:shadow-[0_18px_40px_-22px_rgba(6,27,49,0.25)] sm:p-12 lg:p-20"
+            className="group block rounded-[24px] border border-secondary-100 bg-white p-6 shadow-[0_4px_7px_rgba(6,27,49,0.04)] transition-shadow duration-300 hover:shadow-[0_18px_40px_-22px_rgba(6,27,49,0.25)] sm:p-8 lg:p-10"
           >
             <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-primary-500">
               Next case study / {caseNumber(nextIndex)}
             </p>
-            <div className="mt-[22px] flex items-end justify-between gap-6">
-              <p className="max-w-[850px] font-display text-[26px] font-semibold leading-[1.15] tracking-tight text-heading sm:text-[34px] lg:text-[44px]">
+            <div className="mt-4 flex items-end justify-between gap-6">
+              <p className="max-w-[850px] font-display text-[22px] font-semibold leading-[1.2] tracking-tight text-heading sm:text-[26px] lg:text-[30px]">
                 {next.headline}
               </p>
               <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white transition-transform duration-300 group-hover:translate-x-1">
