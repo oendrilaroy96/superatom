@@ -191,26 +191,26 @@ export default function About() {
       {/* Team: right after the hero: heading and description, then the photos. */}
       <section className="pb-[72px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[0.86fr_1fr] lg:gap-16">
-            <div>
+          <div className="text-center">
+            <div className="flex justify-center">
               <Eyebrow>Our Team</Eyebrow>
-              <h2 className="mt-5 font-display text-[42px] font-semibold leading-[1.15] text-heading sm:text-[48px]">
-                Enterprise depth.
-                <br />
-                <span
-                  className="bg-clip-text text-transparent"
-                  style={{
-                    backgroundImage: BRAND_GRADIENT,
-                    WebkitBoxDecorationBreak: "clone",
-                    boxDecorationBreak: "clone",
-                  }}
-                >
-                  Builder&rsquo;s mindset.
-                </span>
-              </h2>
             </div>
+            <h2 className="mt-5 font-display text-[42px] font-semibold leading-[1.15] text-heading sm:text-[48px]">
+              Enterprise depth.
+              <br />
+              <span
+                className="bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: BRAND_GRADIENT,
+                  WebkitBoxDecorationBreak: "clone",
+                  boxDecorationBreak: "clone",
+                }}
+              >
+                Builder&rsquo;s mindset.
+              </span>
+            </h2>
 
-            <div className="space-y-4 pt-2 text-p leading-relaxed text-body">
+            <div className="mx-auto mt-6 max-w-[960px] space-y-4 text-p leading-relaxed text-body">
               <p>
                 We bring together a diverse team of strategic thinkers,
                 technology experts, and customer-obsessed builders. Our
