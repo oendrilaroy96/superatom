@@ -6,6 +6,7 @@ import SuperatomDiagram from "../components/SuperatomDiagram";
 import { useDarkTransition } from "../context/DarkTransitionContext";
 import prashanthPhoto from "../assets/SuperatomTeams/Prashanth.webp";
 import sharathPhoto from "../assets/SuperatomTeams/Sharath.webp";
+import ashishPhoto from "../assets/SuperatomTeams/Ashish.webp";
 import chetanPhoto from "../assets/SuperatomTeams/Chetan.webp";
 
 const BRAND_GRADIENT =
@@ -50,8 +51,7 @@ const teamMembers: TeamMember[] = [
     name: "Ashish Tandi",
     role: "Co-Founder & CTO",
     linkedin: "https://www.linkedin.com/in/ashishblessing/",
-    photo: null,
-    avatarGradient: ["#cfe3e6", "#8fb3ba"],
+    photo: ashishPhoto,
   },
   {
     name: "Sharath Bhat",
