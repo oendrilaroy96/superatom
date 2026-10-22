@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import GlowCard from "../components/ui/GlowCard";
+import SectionHeading from "../components/ui/SectionHeading";
 import { useDarkTransition } from "../context/DarkTransitionContext";
 import prashanthPhoto from "../assets/SuperatomTeams/Prashanth.webp";
 import sharathPhoto from "../assets/SuperatomTeams/Sharath.webp";
@@ -46,26 +47,6 @@ const teamMembers: TeamMember[] = [
   },
 ];
 
-/** Small gradient dash + label, the eyebrow treatment used throughout this redesign instead of SectionHeading's own colored-text eyebrow. */
-function Eyebrow({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
-  return (
-    <div className="flex items-center gap-3">
-      <span
-        className="h-0.5 w-7 shrink-0 rounded-full"
-        style={{ backgroundImage: BRAND_GRADIENT }}
-        aria-hidden="true"
-      />
-      <p
-        className={`text-[11px] font-bold uppercase tracking-[0.14em] transition-colors duration-700 ease-in-out ${
-          dark ? "text-white/60" : "text-caption"
-        }`}
-      >
-        {children}
-      </p>
-    </div>
-  );
-}
-
 /** Abstract head-and-shoulders silhouette for team members without a photo yet. */
 function AvatarPlaceholder({ colors }: { colors: [string, string] }) {
   return (
@@ -99,10 +80,10 @@ function TeamCard({ member }: { member: TeamMember }) {
       <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-secondary-600/95 via-secondary-600/35 to-transparent" />
       <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-2">
         <div>
-          <p className="font-display text-[13px] font-bold leading-tight text-white">
+          <p className="font-display text-[16px] font-semibold leading-tight text-white">
             {member.name}
           </p>
-          <p className="mt-1 text-[9px] font-semibold uppercase tracking-[0.08em] text-white/60">
+          <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-white/60">
             {member.role}
           </p>
         </div>
@@ -146,52 +127,66 @@ export default function About() {
 
   return (
     <>
-      {/* Hero: text only, filling the first screen. */}
-      <section className="relative flex min-h-[calc(100svh-4rem)] items-center overflow-hidden py-[100px]">
+      {/* Hero: centered like the home page, sized to its content instead of the full screen. */}
+      <section className="relative overflow-hidden pb-14 pt-[72px] sm:pt-[88px]">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -right-20 -top-32 size-[480px] rounded-full bg-primary-500/[0.06] blur-3xl"
         />
-        <div className="relative mx-auto w-full max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end lg:gap-16">
-            <h1 className="max-w-[760px] font-display text-[44px] font-semibold leading-[1.1] tracking-tight text-heading sm:text-[58px] lg:text-[64px]">
-              Decisions at the <GradientText>Speed of Business.</GradientText>
-            </h1>
-            <p className="max-w-[400px] text-p leading-relaxed text-body lg:pb-2">
-              Superatom AI exists to close the gap between enterprise data, business context, and action.
-            </p>
-          </div>
+        <div className="relative mx-auto flex max-w-4xl flex-col items-center px-4 text-center">
+          <p className="mb-3 font-sans text-[13px] font-semibold uppercase tracking-[0.08em] text-secondary-300">
+            About us
+          </p>
+          <h1 className="m-0 mb-4 font-display text-[40px] font-semibold leading-[1.08] tracking-[-0.02em] text-heading sm:text-[56px] lg:text-[72px]">
+            <span className="block">Decisions at the</span>
+            <GradientText>Speed of Business.</GradientText>
+          </h1>
+          <p className="max-w-3xl text-[18px] leading-[1.55] text-body">
+            Superatom AI exists to close the gap between enterprise data, business context, and action.
+          </p>
         </div>
       </section>
 
-      {/* Team photos: first thing after the hero, so they appear after one scroll. */}
-      <section className="pb-[60px]">
+      {/* Our Story: the "60+" is the hook, the story sits beside it. */}
+      <section className="py-[72px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            {teamMembers.map((member) => (
-              <TeamCard key={member.name} member={member} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Our Story */}
-      <section className="relative overflow-hidden py-[100px]">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -left-24 bottom-0 size-[420px] rounded-full bg-[#ff7eb0]/[0.06] blur-3xl"
-        />
-        <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[0.8fr_1fr] lg:gap-16">
-            <div>
-              <Eyebrow>Our Story</Eyebrow>
-              <h2 className="mt-5 font-display text-[36px] font-semibold leading-[1.15] tracking-tight text-heading sm:text-[44px]">
+          <SectionHeading
+            align="center"
+            className="max-w-5xl"
+            eyebrow="Our Story"
+            heading={
+              <>
                 Built from 60+ conversations, <GradientText>not assumptions</GradientText>
-              </h2>
+              </>
+            }
+          />
+
+          <div className="mx-auto mt-8 grid max-w-[1280px] grid-cols-1 overflow-hidden rounded-[28px] border border-secondary-100 bg-white lg:grid-cols-[0.8fr_1.2fr]">
+            <div
+              className="relative flex flex-col justify-between gap-10 overflow-hidden bg-secondary-500 p-8 sm:p-10"
+              style={{
+                backgroundImage:
+                  "radial-gradient(520px 340px at 90% 0%, rgba(83,58,253,0.5), transparent 65%), radial-gradient(420px 300px at 0% 100%, rgba(255,118,0,0.22), transparent 65%)",
+              }}
+            >
+              <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-white/60">
+                Before writing a line of code
+              </p>
+              <div>
+                <p
+                  className="bg-clip-text font-display text-[88px] font-semibold leading-none tracking-[-0.04em] text-transparent sm:text-[112px]"
+                  style={{ backgroundImage: BRAND_GRADIENT }}
+                >
+                  60+
+                </p>
+                <p className="mt-4 max-w-[280px] text-[18px] leading-[1.45] text-white/80">
+                  CIOs around the globe and across industries
+                </p>
+              </div>
             </div>
 
-            <div className="max-w-[780px] space-y-5 text-p leading-relaxed text-body">
-              <p>
+            <div className="space-y-4 p-8 text-p leading-relaxed text-body sm:p-10">
+              <p className="font-display text-h3 font-semibold text-heading">
                 Superatom AI didn’t start with a product. It started with listening.
               </p>
               <p>
@@ -205,14 +200,13 @@ export default function About() {
                 with more confidence than their current BI setup allows. Those conversations with technology and
                 business leaders became our foundation, and they shaped one clear vision:
               </p>
-
-              <div className="relative !mt-7 overflow-hidden rounded-[22px] border border-primary-500/10 bg-white/70 p-7">
+              <div className="relative !mt-6 overflow-hidden rounded-2xl border border-primary-500/10 bg-primary-100/40 p-6">
                 <span
                   className="absolute left-0 top-0 h-full w-[3px]"
                   style={{ backgroundImage: BRAND_GRADIENT }}
                   aria-hidden="true"
                 />
-                <p className="relative font-display text-[20px] font-semibold leading-snug tracking-tight text-heading sm:text-[22px]">
+                <p className="relative font-display text-h3 font-semibold leading-snug tracking-tight text-heading">
                   To transform how enterprises make decisions by bridging the gap between enterprise data,
                   business context, and action.
                 </p>
@@ -222,18 +216,19 @@ export default function About() {
         </div>
       </section>
 
-      {/* Our Team */}
-      <section className="py-[100px]">
+      {/* Our Team: copy beside the heading, photos in one row underneath. */}
+      <section className="py-[72px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[0.8fr_1fr] lg:gap-16">
-            <div>
-              <Eyebrow>Our Team</Eyebrow>
-              <h2 className="mt-5 font-display text-[36px] font-semibold leading-[1.15] tracking-tight text-heading sm:text-[44px]">
-                Enterprise depth. <GradientText>Builder’s mindset.</GradientText>
-              </h2>
-            </div>
-
-            <div className="max-w-[780px] space-y-5 text-p leading-relaxed text-body">
+          <div className="grid grid-cols-1 items-end gap-8 lg:grid-cols-[1fr_1fr] lg:gap-16">
+            <SectionHeading
+              eyebrow="Our Team"
+              heading={
+                <>
+                  Enterprise depth. <GradientText>Builder’s mindset.</GradientText>
+                </>
+              }
+            />
+            <div className="space-y-4 text-p leading-relaxed text-body lg:pb-2">
               <p>
                 We bring together a diverse team of strategic thinkers, technology experts, and
                 customer-obsessed builders. Our collective experience spans building and scaling teams across
@@ -247,39 +242,44 @@ export default function About() {
               </p>
             </div>
           </div>
+
+          <div className="mt-10 grid grid-cols-2 gap-3 lg:grid-cols-4">
+            {teamMembers.map((member) => (
+              <TeamCard key={member.name} member={member} />
+            ))}
+          </div>
         </div>
       </section>
 
       {/* What We Believe: the last section, fading to dark in step with the
           page's dark footer block. */}
       <section
-        className={`py-[100px] transition-colors duration-700 ease-in-out ${
-          isDark ? "bg-secondary-500" : "bg-gradient-to-b from-primary-100/40 to-transparent"
+        className={`py-[72px] transition-colors duration-700 ease-in-out ${
+          isDark ? "bg-secondary-500" : "bg-transparent"
         }`}
       >
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <Eyebrow dark={isDark}>What We Believe</Eyebrow>
+          <SectionHeading theme={isDark ? "dark" : "light"} heading="What We Believe" />
 
-          <ul className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {beliefs.map((belief) => (
+          <ol className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {beliefs.map((belief, i) => (
               <li key={belief.lead}>
-                <GlowCard className="h-full" contentClassName="flex h-full gap-5 p-7">
+                <GlowCard className="h-full" contentClassName="flex h-full flex-col gap-4 p-6">
                   <span
-                    className="mt-1.5 h-1 w-6 shrink-0 rounded-full"
+                    className="bg-clip-text font-display text-[40px] font-semibold leading-none tracking-tight text-transparent"
                     style={{ backgroundImage: BRAND_GRADIENT }}
-                    aria-hidden="true"
-                  />
-                  <p className="text-p leading-relaxed text-body">
-                    <span className="font-display text-[19px] font-semibold text-heading">{belief.lead}</span>{" "}
-                    {belief.text}
-                  </p>
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <p className="font-display text-h3 font-semibold text-heading">{belief.lead}</p>
+                  <p className="text-p leading-relaxed text-body">{belief.text}</p>
                 </GlowCard>
               </li>
             ))}
-          </ul>
+          </ol>
 
           <p
-            className={`mt-16 max-w-[980px] font-display text-[30px] font-semibold leading-[1.2] tracking-tight transition-colors duration-700 ease-in-out sm:text-[40px] lg:text-[48px] ${
+            className={`mt-14 max-w-[1100px] font-display text-[34px] font-semibold leading-[1.15] tracking-tight transition-colors duration-700 ease-in-out sm:text-[46px] lg:text-[58px] ${
               isDark ? "text-white" : "text-heading"
             }`}
           >
