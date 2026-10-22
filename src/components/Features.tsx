@@ -4,6 +4,7 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import TimelineIcon from "@mui/icons-material/Timeline";
 import DnsIcon from "@mui/icons-material/Dns";
 import PersonIcon from "@mui/icons-material/Person";
+import FactCheckIcon from "@mui/icons-material/FactCheck";
 import AddIcon from "@mui/icons-material/Add";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
@@ -35,70 +36,200 @@ function DashedBox({
   );
 }
 
-// Workflows card: a decision is raised, routed to the right person for review
-// and approval, then carried out in the customer's existing enterprise
-// systems. `activeStep` cycles through the three rows.
+// Workflows card: one decision followed from start to finish. It is raised,
+// routed to the right person, reviewed and approved, then carried out in the
+// customer's existing enterprise systems. `activeStep` cycles through the four
+// stages; earlier stages stay lit so the whole path reads left to right.
 const WORKFLOW_STEPS = [
-  { title: "Decision", detail: "Raised by Superatom", Icon: null },
-  { title: "Right person", detail: "Review & approval", Icon: PersonIcon },
-  { title: "Enterprise systems", detail: "Action carried out", Icon: DnsIcon },
+  { title: "Decision raised", Icon: null },
+  { title: "Routed to the right person", Icon: PersonIcon },
+  { title: "Review & approval", Icon: FactCheckIcon },
+  { title: "Runs in your systems", Icon: DnsIcon },
 ] as const;
+
+function WorkflowDetail({ step, reached }: { step: number; reached: boolean }) {
+  const base = `transition-opacity duration-500 ${reached ? "opacity-100" : "opacity-40"}`;
+  if (step === 0) {
+    return (
+      <span className={`${base} rounded-md bg-primary-100 px-2 py-1 text-[11px] font-semibold text-primary-600`}>
+        Reorder recommended
+      </span>
+    );
+  }
+  if (step === 1) {
+    return (
+      <span className={`${base} inline-flex items-center gap-1.5`}>
+        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-secondary-500 text-[9px] font-bold text-white">
+          SP
+        </span>
+        <span className="text-[11px] font-medium text-heading">Supply planner</span>
+      </span>
+    );
+  }
+  if (step === 2) {
+    return (
+      <span className={`${base} inline-flex items-center gap-1.5`}>
+        <span className="rounded-md border border-secondary-200 px-2 py-1 text-[10px] font-semibold text-caption">
+          Reject
+        </span>
+        <span className="rounded-md bg-primary-500 px-2 py-1 text-[10px] font-semibold text-white">Approve</span>
+      </span>
+    );
+  }
+  return (
+    <span className={`${base} inline-flex flex-col items-start gap-1 @min-[460px]:items-center`}>
+      <span className="flex gap-1">
+        {["ERP", "WMS"].map((system) => (
+          <span key={system} className="rounded border border-secondary-200 bg-white px-1.5 py-0.5 font-mono text-[10px] text-caption">
+            {system}
+          </span>
+        ))}
+      </span>
+      <span className="text-[11px] font-medium text-heading">Order created</span>
+    </span>
+  );
+}
 
 function WorkflowDiagram({ activeStep }: { activeStep: number }) {
   return (
-    <ol className="flex flex-col">
+    <ol className="grid gap-5 @min-[460px]:grid-cols-4 @min-[460px]:gap-3">
       {WORKFLOW_STEPS.map((step, i) => {
         const active = i === activeStep;
         const done = i < activeStep;
+        const last = i === WORKFLOW_STEPS.length - 1;
         return (
-          <li key={step.title}>
-            {i > 0 && (
-              <span
-                className={`ml-[26px] block h-4 w-0.5 rounded-full transition-colors duration-500 ${
-                  i <= activeStep ? "bg-primary-500" : "bg-secondary-100"
-                }`}
-                aria-hidden="true"
-              />
+          <li
+            key={step.title}
+            className="relative flex gap-3 @min-[460px]:flex-col @min-[460px]:items-center @min-[460px]:text-center"
+          >
+            {!last && (
+              <>
+                {/* vertical connector (stacked layout) */}
+                <span
+                  className={`absolute left-[17px] top-10 -bottom-5 w-0.5 rounded-full transition-colors duration-500 @min-[460px]:hidden ${
+                    done ? "bg-primary-500" : "bg-secondary-100"
+                  }`}
+                  aria-hidden="true"
+                />
+                {/* horizontal connector, from this node to the next */}
+                <span
+                  className={`absolute top-[17px] hidden h-0.5 rounded-full transition-colors duration-500 @min-[460px]:block ${
+                    done ? "bg-primary-500" : "bg-secondary-100"
+                  }`}
+                  style={{ left: "calc(50% + 26px)", right: "calc(26px - 50% - 0.75rem)" }}
+                  aria-hidden="true"
+                />
+              </>
             )}
-            <div
-              className={`flex items-center gap-3 rounded-lg border px-3 py-2.5 transition-all duration-500 ${
+            <span
+              className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-500 ${
                 active
-                  ? "scale-[1.03] border-secondary-500 bg-secondary-500 shadow-[0_10px_24px_-10px_rgba(13,23,56,0.4)]"
-                  : "border-secondary-100 bg-white"
+                  ? "scale-110 border-secondary-500 bg-secondary-500 shadow-[0_10px_24px_-10px_rgba(13,23,56,0.5)]"
+                  : done
+                    ? "border-primary-500 bg-primary-500"
+                    : "border-secondary-100 bg-white"
               }`}
             >
+              {done ? (
+                <CheckIcon style={{ fontSize: 18 }} className="text-white" />
+              ) : step.Icon ? (
+                <step.Icon style={{ fontSize: 18 }} className={active ? "text-white" : "text-secondary-300"} />
+              ) : (
+                <img src={superatomMark} alt="" className={`h-5 w-5 object-contain ${active ? "" : "opacity-60"}`} />
+              )}
+            </span>
+            <span className="flex min-w-0 flex-col gap-2 @min-[460px]:items-center">
               <span
-                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md transition-colors duration-500 ${
-                  active ? "bg-white" : "bg-primary-100 text-primary-500"
+                className={`text-xs font-semibold leading-snug transition-colors duration-500 ${
+                  active || done ? "text-heading" : "text-caption"
                 }`}
               >
-                {step.Icon ? (
-                  <step.Icon style={{ fontSize: 18 }} className={active ? "text-secondary-500" : ""} />
-                ) : (
-                  <img src={superatomMark} alt="" className="h-5 w-5 object-contain" />
-                )}
+                {step.title}
               </span>
-              <span className="min-w-0 flex-1">
-                <span className={`block text-xs font-semibold ${active ? "text-white" : "text-heading"}`}>
-                  {step.title}
-                </span>
-                <span className={`block text-[11px] ${active ? "text-white/60" : "text-caption"}`}>
-                  {step.detail}
-                </span>
-              </span>
-              <span
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full transition-all duration-500 ${
-                  done ? "scale-100 bg-primary-500 text-white" : "scale-50 opacity-0"
-                }`}
-                aria-hidden="true"
-              >
-                <CheckIcon style={{ fontSize: 13 }} />
-              </span>
-            </div>
+              <WorkflowDetail step={i} reached={active || done} />
+            </span>
           </li>
         );
       })}
     </ol>
+  );
+}
+
+// Optimization Engine card: a handful of options are checked against the
+// real-world constraints one by one; the ones that break a constraint are
+// ruled out and the best remaining option is recommended.
+const OPTIMIZATION_CONSTRAINTS = ["Budget", "Capacity", "Lead time"];
+const OPTIMIZATION_OPTIONS = [
+  { name: "Option A", note: "Over budget", ok: false },
+  { name: "Option B", note: "Best value", ok: true },
+  { name: "Option C", note: "Over capacity", ok: false },
+];
+/** Ticks: 0 idle, 1-3 checking A/B/C, 4 recommendation shown, 5 hold. */
+const OPTIMIZATION_TICKS = 6;
+const OPTIMIZATION_DONE = 4;
+
+function OptimizationDiagram({ tick }: { tick: number }) {
+  const finished = tick >= OPTIMIZATION_DONE;
+  return (
+    <div className="@container flex flex-col gap-3">
+      <div>
+        <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-caption">Real-world constraints</p>
+        <div className="mt-1.5 flex flex-wrap gap-1">
+          {OPTIMIZATION_CONSTRAINTS.map((constraint) => (
+            <span
+              key={constraint}
+              className="rounded-full border border-secondary-100 bg-white px-2 py-0.5 text-[10px] font-medium text-heading"
+            >
+              {constraint}
+            </span>
+          ))}
+        </div>
+      </div>
+      <ul className="flex flex-col gap-1.5">
+        {OPTIMIZATION_OPTIONS.map((option, i) => {
+          const checked = tick >= i + 1;
+          const winner = option.ok && finished;
+          return (
+            <li
+              key={option.name}
+              className={`flex items-center gap-2 rounded-lg border px-2.5 py-1.5 text-[11px] transition-all duration-500 ${
+                winner
+                  ? "border-primary-500 bg-primary-500 text-white shadow-[0_10px_22px_-12px_rgba(83,58,253,0.7)]"
+                  : checked && !option.ok
+                    ? "border-secondary-100 bg-white/60 text-caption"
+                    : "border-secondary-100 bg-white text-heading"
+              }`}
+            >
+              <span
+                className={`whitespace-nowrap font-semibold ${
+                  checked && !option.ok ? "line-through decoration-secondary-300" : ""
+                }`}
+              >
+                {option.name}
+              </span>
+              <span className={`ml-auto hidden truncate @min-[200px]:block ${winner ? "text-white/80" : "text-caption"}`}>
+                {checked ? option.note : "Checking…"}
+              </span>
+              <span
+                className={`ml-auto flex h-4 w-4 shrink-0 items-center justify-center rounded-full transition-opacity duration-500 @min-[200px]:ml-0 ${
+                  checked ? "opacity-100" : "opacity-0"
+                } ${winner ? "bg-white text-primary-500" : option.ok ? "bg-primary-100 text-primary-500" : "bg-secondary-100 text-secondary-400"}`}
+              >
+                {option.ok ? <CheckIcon style={{ fontSize: 11 }} /> : <CloseIcon style={{ fontSize: 10 }} />}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+      <p
+        className={`self-start rounded-full border border-primary-500/20 bg-white px-3 py-1 text-[11px] font-semibold text-primary-500 shadow-sm transition-opacity duration-500 ${
+          finished ? "opacity-100" : "opacity-0"
+        }`}
+        aria-hidden={!finished}
+      >
+        Recommended action
+      </p>
+    </div>
   );
 }
 
@@ -163,6 +294,9 @@ const GENERATIVE_DONUT = [
  */
 export default function Features() {
   const [activeStep, setActiveStep] = useState(0);
+  const [optimizationTick, setOptimizationTick] = useState(() =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches ? OPTIMIZATION_DONE : 0,
+  );
   const [generativeIndex, setGenerativeIndex] = useState(0);
   const generativeExample = GENERATIVE_EXAMPLES[generativeIndex];
   // Reduced-motion users never get the timer below, so start them on the
@@ -183,7 +317,10 @@ export default function Features() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const stepTimer = setInterval(() => {
       setActiveStep((s) => (s + 1) % WORKFLOW_STEPS.length);
-    }, 1600);
+    }, 1800);
+    const optimizationTimer = setInterval(() => {
+      setOptimizationTick((t) => (t + 1) % OPTIMIZATION_TICKS);
+    }, 1000);
     const generativeTimer = setInterval(() => {
       setGenerativeIndex((g) => (g + 1) % GENERATIVE_EXAMPLES.length);
     }, 3600);
@@ -192,6 +329,7 @@ export default function Features() {
     }, 700);
     return () => {
       clearInterval(stepTimer);
+      clearInterval(optimizationTimer);
       clearInterval(generativeTimer);
       clearInterval(semanticTimer);
     };
@@ -309,28 +447,12 @@ export default function Features() {
             </p>
           </GlowCard>
 
-          {/* 3. Optimization Engine — recommended path wins over two
-              considered-and-rejected branches, with a live pulsing check. */}
+          {/* 3. Optimization Engine — options are checked against the
+              constraints one by one, then the best feasible one is
+              recommended. */}
           <GlowCard className={HOVER_LIFT}>
-            <DashedBox className="relative h-[150px]">
-              <div className="absolute bottom-[20px] left-[44px] right-[84px] top-[20px] rounded-md border border-dashed border-secondary-200" />
-              <div className="absolute left-[16px] right-[44px] top-1/2 h-0.5 -translate-y-1/2 bg-primary-500" />
-              <span className="absolute left-[10px] top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-secondary-500" />
-              <span className="absolute right-[84px] top-[20px] flex h-4 w-4 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-secondary-200 bg-white text-secondary-300">
-                <CloseIcon style={{ fontSize: 10 }} />
-              </span>
-              <span className="absolute bottom-[20px] right-[84px] flex h-4 w-4 translate-x-[-50%] translate-y-1/2 items-center justify-center rounded-full border border-secondary-200 bg-white text-secondary-300">
-                <CloseIcon style={{ fontSize: 10 }} />
-              </span>
-              <span className="absolute right-[10px] top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-400 opacity-40" />
-                <span className="relative flex h-7 w-7 items-center justify-center rounded-full bg-primary-500 text-white shadow-[0_0_0_6px_rgba(83,58,253,0.15)]">
-                  <CheckIcon style={{ fontSize: 16 }} />
-                </span>
-              </span>
-              <span className="absolute left-1/2 top-[64%] -translate-x-1/2 whitespace-nowrap rounded-full border border-secondary-100 bg-white px-3 py-1 text-xs font-semibold text-primary-500 shadow-sm">
-                Recommended
-              </span>
+            <DashedBox className="p-3.5">
+              <OptimizationDiagram tick={optimizationTick} />
             </DashedBox>
             <p className="mt-5 font-display text-h3 font-semibold text-heading">
               Optimization Engine
@@ -538,9 +660,9 @@ export default function Features() {
               pipeline actually running. */}
           <GlowCard
             className={`sm:col-span-2 lg:col-span-2 ${HOVER_LIFT}`}
-            contentClassName="flex h-full flex-col gap-6 p-6 sm:flex-row sm:items-center"
+            contentClassName="flex h-full flex-col gap-6 p-6"
           >
-            <div className="sm:flex-1">
+            <div>
               <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
                 <TimelineIcon style={{ fontSize: 22 }} />
               </span>
@@ -553,7 +675,7 @@ export default function Features() {
                 for review and approval.
               </p>
             </div>
-            <DashedBox className="p-4 sm:w-[260px]">
+            <DashedBox className="@container px-4 py-5">
               <WorkflowDiagram activeStep={activeStep} />
             </DashedBox>
           </GlowCard>
