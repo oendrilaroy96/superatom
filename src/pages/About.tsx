@@ -248,7 +248,7 @@ export default function About() {
                 Kept fixed light-on-dark-scrim regardless of the page's own
                 crossfade, so the cards read consistently. The second column
                 sits lower for the staggered look. */}
-            <div className="grid grid-cols-2 gap-3.5">
+            <div className="grid w-full max-w-[500px] grid-cols-2 gap-3.5 lg:justify-self-end">
               {teamMembers.map((member, i) => (
                 <div key={member.name} className={i % 2 === 1 ? "mt-9" : ""}>
                   <TeamCard member={member} />
