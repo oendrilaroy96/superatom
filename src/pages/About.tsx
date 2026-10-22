@@ -203,7 +203,7 @@ export default function About() {
               </span>
             </h2>
 
-            <div className="mx-auto mt-6 max-w-[960px] space-y-4 text-p leading-relaxed text-body">
+            <div className="mx-auto mt-6 max-w-4xl space-y-4 text-p leading-relaxed text-body">
               <p>
                 We bring together a diverse team of strategic thinkers,
                 technology experts, and customer-obsessed builders. Our
