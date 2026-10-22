@@ -189,7 +189,7 @@ export default function About() {
               </a>
             </div>
 
-            <div className="mx-auto w-full max-w-[960px] min-[1360px]:max-w-none min-[1440px]:-mr-[72px] min-[1440px]:w-[calc(100%+72px)]">
+            <div className="mx-auto w-full max-w-[960px] min-[1360px]:max-w-none min-[1440px]:-ml-10 min-[1440px]:w-[calc(100%+40px)]">
               <SuperatomDiagram />
             </div>
           </div>
