@@ -3,7 +3,6 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import SectionHeading from "../components/ui/SectionHeading";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import SuperatomDiagram from "../components/SuperatomDiagram";
-import GlowCard from "../components/ui/GlowCard";
 import { useDarkTransition } from "../context/DarkTransitionContext";
 import prashanthPhoto from "../assets/SuperatomTeams/Prashanth.webp";
 import sharathPhoto from "../assets/SuperatomTeams/Sharath.webp";
@@ -20,6 +19,25 @@ type TeamMember = {
   /** Diagonal gradient stops for members without a photo yet. */
   avatarGradient?: [string, string];
 };
+
+const beliefs = [
+  {
+    title: "Listen first, build second.",
+    text: "Real customer problems shape our product, not trends.",
+  },
+  {
+    title: "Continuous learning.",
+    text: "Every customer conversation makes us sharper.",
+  },
+  {
+    title: "Disciplined execution.",
+    text: "We would rather promise less and deliver more.",
+  },
+  {
+    title: "Customer success above all.",
+    text: "Outcomes our customers can measure are the only ones that count.",
+  },
+];
 
 const teamMembers: TeamMember[] = [
   {
@@ -319,30 +337,66 @@ export default function About() {
       {/* What we believe: the last section, fading to dark in step with the
           page's dark footer block. */}
       <section
-        className={`py-[72px] transition-colors duration-700 ease-in-out ${
-          isDark
-            ? "bg-secondary-500"
-            : "bg-gradient-to-b from-primary-100/40 to-transparent"
+        className={`py-[100px] transition-colors duration-700 ease-in-out ${
+          isDark ? "bg-secondary-500" : "bg-transparent"
         }`}
       >
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <SectionHeading
             theme={isDark ? "dark" : "light"}
-            heading="What we believe"
+            heading="What We Believe"
           />
-          <GlowCard className="mt-12" contentClassName="p-8">
-            <p className="font-display text-[22px] font-normal leading-snug tracking-tight text-body sm:text-[26px] lg:text-[30px]">
-              We believe phenomenal outcomes are built through{" "}
-              <span
-                className="text-heading"
-                style={{ boxShadow: "inset 0 -2px 0 0 #ff7eb0" }}
+
+          <ol className="mt-12 grid gap-x-7 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+            {beliefs.map((belief, i) => (
+              <li
+                key={belief.title}
+                className={`relative border-t-2 pt-6 transition-colors duration-700 ${
+                  isDark ? "border-white/10" : "border-secondary-100"
+                }`}
               >
-                continuous learning
-              </span>
-              , disciplined execution, and an unwavering commitment to customer
-              success.
+                <span
+                  className="absolute -top-0.5 left-0 h-[3px] w-11 rounded-full"
+                  style={{ backgroundImage: BRAND_GRADIENT }}
+                  aria-hidden="true"
+                />
+                <span className="block font-display text-[28px] font-semibold leading-none">
+                  <GradientText>{String(i + 1).padStart(2, "0")}</GradientText>
+                </span>
+                <h3
+                  className={`mt-3.5 font-display text-[22px] font-semibold leading-snug tracking-tight transition-colors duration-700 ${
+                    isDark ? "text-white" : "text-heading"
+                  }`}
+                >
+                  {belief.title}
+                </h3>
+                <p
+                  className={`mt-2 text-p transition-colors duration-700 ${
+                    isDark ? "text-white/60" : "text-body"
+                  }`}
+                >
+                  {belief.text}
+                </p>
+              </li>
+            ))}
+          </ol>
+
+          <div
+            className={`mt-[60px] rounded-[28px] border p-8 transition-colors duration-700 sm:p-12 ${
+              isDark
+                ? "border-white/10 bg-white/5"
+                : "border-primary-500/10 bg-primary-100/60"
+            }`}
+          >
+            <p
+              className={`max-w-[1000px] font-display text-[30px] font-semibold leading-[1.15] tracking-tight transition-colors duration-700 sm:text-[34px] lg:text-[40px] ${
+                isDark ? "text-white" : "text-heading"
+              }`}
+            >
+              We believe the future of BI isn&rsquo;t more dashboards.{" "}
+              <GradientText>It&rsquo;s faster, better decisions.</GradientText>
             </p>
-          </GlowCard>
+          </div>
         </div>
       </section>
     </>
