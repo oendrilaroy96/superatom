@@ -326,7 +326,7 @@ export default function About() {
               style={{ backgroundImage: BRAND_GRADIENT }}
               aria-hidden="true"
             />
-            <p className="relative font-display text-[20px] font-semibold leading-snug tracking-tight text-heading sm:text-[22px]">
+            <p className="relative font-display text-[17px] font-semibold leading-snug tracking-tight text-heading sm:text-[19px]">
               To transform how enterprises make decisions by bridging the gap
               between enterprise data, business context, and action.
             </p>
