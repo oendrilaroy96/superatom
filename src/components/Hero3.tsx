@@ -21,7 +21,7 @@ const ZOOM_MAX_SCALE = 1.35;
  * underneath the still-visible, still-zoomed video. This pushes the next
  * section down by more than that overflow, closing the gap with room to spare.
  */
-const SECTION_GAP_PX = 110;
+const SECTION_GAP_PX = 84;
 
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
