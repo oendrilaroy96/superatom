@@ -349,7 +349,7 @@ export default function About() {
 
           <div className="mt-12 grid gap-6 lg:grid-cols-2 lg:gap-[72px]">
             <div
-              className="flex min-h-[200px] items-end rounded-[28px] p-8 sm:p-10 lg:min-h-[260px] lg:self-start"
+              className="flex min-h-[200px] items-end rounded-[28px] p-8 sm:p-10"
               style={{
                 backgroundColor: "#533afd",
                 backgroundImage:
@@ -366,7 +366,7 @@ export default function About() {
               {beliefs.map((belief, i) => (
                 <li
                   key={belief.title}
-                  className={`flex flex-1 items-center gap-[18px] rounded-[18px] border px-6 py-5 transition-colors duration-700 ${
+                  className={`flex flex-1 items-center gap-[18px] rounded-[18px] border px-6 py-4 transition-colors duration-700 ${
                     isDark
                       ? "border-white/10 bg-white/5"
                       : "border-secondary-100 bg-white"
