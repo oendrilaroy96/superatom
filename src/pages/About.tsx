@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import SectionHeading from "../components/ui/SectionHeading";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import GlowCard from "../components/ui/GlowCard";
-import SuperatomDiagram from "../components/SuperatomDiagram";
 import { useDarkTransition } from "../context/DarkTransitionContext";
 import prashanthPhoto from "../assets/SuperatomTeams/Prashanth.webp";
 import sharathPhoto from "../assets/SuperatomTeams/Sharath.webp";
@@ -129,75 +128,54 @@ export default function About() {
 
   return (
     <>
-      <section className="relative overflow-hidden py-[120px]">
+      {/* Hero */}
+      <section className="relative overflow-hidden pb-[96px] pt-[72px] sm:pt-[96px]">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -right-20 -top-32 size-[480px] rounded-full bg-primary-500/[0.06] blur-3xl"
         />
         <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.3fr_1.4fr] lg:gap-10">
-            <div>
-              <Eyebrow>About Superatom AI</Eyebrow>
-              <SectionHeading
-                align="left"
-                theme="light"
-                size="lg"
-                heading={
-                  <>
-                    Every great outcome starts with{" "}
-                    <span
-                      className="bg-clip-text text-transparent"
-                      style={{
-                        backgroundImage: BRAND_GRADIENT,
-                        WebkitBoxDecorationBreak: "clone",
-                        boxDecorationBreak: "clone",
-                      }}
-                    >
-                      an informed decision.
-                    </span>
-                  </>
-                }
-              />
-
-              <div className="mt-6 space-y-4 text-p text-body">
-                <p>
-                  Just as a cluster of atoms can combine to behave as a
-                  single, unified entity known as a superatom, we at
-                  Superatom AI believe that great enterprises are built on
-                  the power of connected data and data driven decisions.
-                </p>
-                <p>
-                  We are building the intelligence layer that brings
-                  together fragmented enterprise data, bridges the gap
-                  between data and actionable insights, and enables
-                  enterprises to make better decisions faster.
-                </p>
-              </div>
-
-              <div className="mt-8 flex gap-4">
-                <span
-                  className="w-[3px] shrink-0 rounded-full"
-                  style={{ backgroundImage: BRAND_GRADIENT }}
-                  aria-hidden="true"
-                />
-                <div>
-                  <p className="font-display text-h3 font-semibold text-primary-500">
-                    Decide Fast. Decide Right. Every Time.
-                  </p>
-                  <p className="mt-1 text-h5 font-semibold uppercase tracking-[0.5px] text-caption">
-                    That&rsquo;s the idea behind Superatom.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <SuperatomDiagram />
-          </div>
+          <Eyebrow>About Superatom AI</Eyebrow>
+          <h1 className="mt-7 max-w-[980px] font-display text-[44px] font-semibold leading-[1.08] tracking-[-0.02em] text-heading sm:text-[60px] lg:text-[72px]">
+            <span className="block">Decisions at the</span>
+            <span
+              className="bg-clip-text text-transparent"
+              style={{
+                backgroundImage: BRAND_GRADIENT,
+                WebkitBoxDecorationBreak: "clone",
+                boxDecorationBreak: "clone",
+              }}
+            >
+              Speed of Business.
+            </span>
+          </h1>
+          <p className="mt-7 max-w-[640px] text-[18px] leading-[1.55] text-body sm:text-[20px]">
+            Superatom AI exists to close the gap between enterprise data, business context, and action.
+          </p>
+          <a
+            href="#our-journey"
+            onClick={(e) => {
+              const target = document.getElementById("our-journey");
+              if (!target) return;
+              e.preventDefault();
+              target.scrollIntoView({
+                behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+                block: "start",
+              });
+            }}
+            className="group mt-9 inline-flex items-center gap-3 text-base font-semibold text-primary-500 transition-colors hover:text-primary-600"
+          >
+            Discover our story
+            <ArrowForwardIcon
+              style={{ fontSize: 20 }}
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            />
+          </a>
         </div>
       </section>
 
       {/* Our Journey */}
-      <section className="relative overflow-hidden py-[120px]">
+      <section id="our-journey" className="relative scroll-mt-16 overflow-hidden py-[120px]">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -left-24 bottom-0 size-[420px] rounded-full bg-[#ff7eb0]/[0.06] blur-3xl"
