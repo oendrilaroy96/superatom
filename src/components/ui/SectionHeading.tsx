@@ -16,6 +16,8 @@ type SectionHeadingProps = {
   /** "dark" for sections on a dark (e.g. secondary-500) background: swaps heading/description/eyebrow to light-on-dark colors. */
   theme?: Theme;
   className?: string;
+  /** Overrides the shared heading size for the rare section that needs a smaller one. */
+  headingClassName?: string;
   descriptionClassName?: string;
 };
 
@@ -57,6 +59,7 @@ export default function SectionHeading({
   align = "left",
   theme = "light",
   className = "",
+  headingClassName,
   descriptionClassName = "",
 }: SectionHeadingProps) {
   return (
@@ -71,7 +74,7 @@ export default function SectionHeading({
         </p>
       )}
       <Heading
-        className={`font-display font-semibold transition-colors duration-700 ${headingColors[theme]} ${headingSizes[size]} ${headingGap[size]}`}
+        className={`font-display font-semibold transition-colors duration-700 ${headingColors[theme]} ${headingClassName ?? headingSizes[size]} ${headingGap[size]}`}
       >
         {heading}
       </Heading>

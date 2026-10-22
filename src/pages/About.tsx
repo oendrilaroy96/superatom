@@ -345,6 +345,7 @@ export default function About() {
           <SectionHeading
             theme={isDark ? "dark" : "light"}
             heading="What We Believe"
+            headingClassName="text-[32px] leading-[1.15] sm:text-[40px]"
           />
 
           <div className="mt-12 grid gap-6 lg:grid-cols-2 lg:gap-[72px]">
