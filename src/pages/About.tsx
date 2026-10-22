@@ -56,13 +56,7 @@ const teamMembers: TeamMember[] = [
 ];
 
 /** Small gradient dash + label, the eyebrow treatment used throughout this redesign instead of SectionHeading's own colored-text eyebrow. */
-function Eyebrow({
-  children,
-  dark = false,
-}: {
-  children: ReactNode;
-  dark?: boolean;
-}) {
+function Eyebrow({ children }: { children: ReactNode }) {
   return (
     <div className="flex items-center gap-3">
       <span
@@ -70,11 +64,7 @@ function Eyebrow({
         style={{ backgroundImage: BRAND_GRADIENT }}
         aria-hidden="true"
       />
-      <p
-        className={`text-[11px] font-bold uppercase tracking-[0.14em] transition-colors duration-700 ease-in-out ${
-          dark ? "text-white/60" : "text-caption"
-        }`}
-      >
+      <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-caption">
         {children}
       </p>
     </div>
@@ -235,13 +225,114 @@ export default function About() {
         </div>
       </section>
 
-      {/* Our Team */}
-      <section className="bg-gradient-to-b from-primary-100/40 to-transparent py-[72px]">
+      {/* Our Journey */}
+      <section
+        id="our-journey"
+        className="relative scroll-mt-16 overflow-hidden py-[72px]"
+      >
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -left-24 bottom-0 size-[420px] rounded-full bg-[#ff7eb0]/[0.06] blur-3xl"
+        />
+        <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+          <div className="grid grid-cols-1 items-start gap-y-8 lg:grid-cols-[0.42fr_1fr] lg:gap-x-12 lg:gap-y-12">
+            <Eyebrow>Our Journey</Eyebrow>
+
+            <h2 className="font-display text-[42px] font-semibold leading-[1.15] text-heading sm:text-[48px]">
+              Listening first.
+              <br />
+              <span
+                className="bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: BRAND_GRADIENT,
+                  WebkitBoxDecorationBreak: "clone",
+                  boxDecorationBreak: "clone",
+                }}
+              >
+                Building with purpose.
+              </span>
+            </h2>
+
+            <div className="relative flex h-60 flex-col items-start justify-end overflow-hidden rounded-[22px] border border-primary-500/10 bg-gradient-to-br from-white to-primary-100/50 p-7">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-8 -top-10 size-28 rounded-full border border-dashed border-primary-500/30"
+              >
+                <span className="absolute -left-1 top-12 size-2 rounded-full border-2 border-white bg-primary-500 shadow-sm" />
+                <span className="absolute left-20 top-[76px] size-2 rounded-full border-2 border-white bg-[#873eff] shadow-sm" />
+                <span className="absolute left-6 top-0 size-2 rounded-full border-2 border-white bg-accent-500 shadow-sm" />
+              </div>
+              <p className="font-display text-[70px] font-semibold leading-none tracking-tight text-heading">
+                60<span className="text-primary-500">+</span>
+              </p>
+              <p className="mt-4 font-display text-[13px] font-bold text-heading">
+                CIO conversations
+              </p>
+              <p className="mt-1 text-[10px] uppercase tracking-[0.1em] text-caption">
+                Across the globe
+              </p>
+            </div>
+
+            <div className="max-w-[780px]">
+              <p className="text-p leading-relaxed text-body">
+                Superatom AI began with conversations with 60+ CIOs across the
+                globe, helping us deeply understand the enterprise BI landscape,
+                the challenges faced by business analytics teams, and the
+                growing need for faster, more effective decision-making.
+              </p>
+
+              <div
+                className="my-6 flex items-center gap-1.5"
+                aria-hidden="true"
+              >
+                <span className="size-[5px] rounded-full bg-primary-500" />
+                <span className="size-[5px] rounded-full bg-[#873eff]" />
+                <span className="size-[5px] rounded-full bg-accent-500" />
+              </div>
+
+              <p className="text-p leading-relaxed text-body">
+                These conversations with technology and business leaders laid
+                the foundation for our vision:
+              </p>
+
+              <div className="relative mt-6 overflow-hidden rounded-[22px] border border-primary-500/10 bg-white/70 p-7">
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute top-0 right-6 select-none font-display text-[90px] font-bold leading-none text-primary-500/10"
+                >
+                  &rdquo;
+                </span>
+                <span
+                  className="absolute left-0 top-0 h-full w-[3px]"
+                  style={{ backgroundImage: BRAND_GRADIENT }}
+                  aria-hidden="true"
+                />
+                <p className="relative font-display text-[20px] font-semibold leading-snug tracking-tight text-heading sm:text-[22px]">
+                  To transform how enterprises make decisions by bridging the
+                  gap between enterprise data, business context, and action.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        className={`py-[72px] transition-colors duration-700 ease-in-out ${
+          isDark
+            ? "bg-secondary-500"
+            : "bg-gradient-to-b from-primary-100/40 to-transparent"
+        }`}
+      >
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[0.86fr_1fr] lg:gap-16">
             <div>
               <Eyebrow>Our Team</Eyebrow>
-              <h2 className="mt-5 font-display text-[42px] font-semibold leading-[1.15] sm:text-[48px] text-heading">
+              <h2
+                className={`mt-5 font-display text-[42px] font-semibold leading-[1.15] transition-colors duration-700 ease-in-out sm:text-[48px] ${
+                  isDark ? "text-white" : "text-heading"
+                }`}
+              >
                 Enterprise expertise.
                 <br />
                 <span
@@ -257,7 +348,11 @@ export default function About() {
               </h2>
             </div>
 
-            <div className="space-y-4 pt-2 text-p leading-relaxed text-body">
+            <div
+              className={`space-y-4 pt-2 text-p leading-relaxed transition-colors duration-700 ease-in-out ${
+                isDark ? "text-white/70" : "text-body"
+              }`}
+            >
               <p>
                 We bring together a diverse team of strategic thinkers,
                 technology experts, and customer-obsessed builders. Our
@@ -294,112 +389,6 @@ export default function About() {
               success.
             </p>
           </GlowCard>
-        </div>
-      </section>
-
-      {/* Our Journey */}
-      <section
-        id="our-journey"
-        className={`relative scroll-mt-16 overflow-hidden py-[72px] transition-colors duration-700 ease-in-out ${
-          isDark ? "bg-secondary-500" : "bg-transparent"
-        }`}
-      >
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -left-24 bottom-0 size-[420px] rounded-full bg-[#ff7eb0]/[0.06] blur-3xl"
-        />
-        <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 items-start gap-y-8 lg:grid-cols-[0.42fr_1fr] lg:gap-x-12 lg:gap-y-12">
-            <Eyebrow dark={isDark}>Our Journey</Eyebrow>
-
-            <h2
-              className={`font-display text-[42px] font-semibold leading-[1.15] transition-colors duration-700 ease-in-out sm:text-[48px] ${
-                isDark ? "text-white" : "text-heading"
-              }`}
-            >
-              Listening first.
-              <br />
-              <span
-                className="bg-clip-text text-transparent"
-                style={{
-                  backgroundImage: BRAND_GRADIENT,
-                  WebkitBoxDecorationBreak: "clone",
-                  boxDecorationBreak: "clone",
-                }}
-              >
-                Building with purpose.
-              </span>
-            </h2>
-
-            <div className="relative flex h-60 flex-col items-start justify-end overflow-hidden rounded-[22px] border border-primary-500/10 bg-gradient-to-br from-white to-[#efecff] p-7">
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute -right-8 -top-10 size-28 rounded-full border border-dashed border-primary-500/30"
-              >
-                <span className="absolute -left-1 top-12 size-2 rounded-full border-2 border-white bg-primary-500 shadow-sm" />
-                <span className="absolute left-20 top-[76px] size-2 rounded-full border-2 border-white bg-[#873eff] shadow-sm" />
-                <span className="absolute left-6 top-0 size-2 rounded-full border-2 border-white bg-accent-500 shadow-sm" />
-              </div>
-              <p className="font-display text-[70px] font-semibold leading-none tracking-tight text-heading">
-                60<span className="text-primary-500">+</span>
-              </p>
-              <p className="mt-4 font-display text-[13px] font-bold text-heading">
-                CIO conversations
-              </p>
-              <p className="mt-1 text-[10px] uppercase tracking-[0.1em] text-caption">
-                Across the globe
-              </p>
-            </div>
-
-            <div className="max-w-[780px]">
-              <p
-                className={`text-p leading-relaxed transition-colors duration-700 ease-in-out ${
-                  isDark ? "text-white/70" : "text-body"
-                }`}
-              >
-                Superatom AI began with conversations with 60+ CIOs across the
-                globe, helping us deeply understand the enterprise BI landscape,
-                the challenges faced by business analytics teams, and the
-                growing need for faster, more effective decision-making.
-              </p>
-
-              <div
-                className="my-6 flex items-center gap-1.5"
-                aria-hidden="true"
-              >
-                <span className="size-[5px] rounded-full bg-primary-500" />
-                <span className="size-[5px] rounded-full bg-[#873eff]" />
-                <span className="size-[5px] rounded-full bg-accent-500" />
-              </div>
-
-              <p
-                className={`text-p leading-relaxed transition-colors duration-700 ease-in-out ${
-                  isDark ? "text-white/70" : "text-body"
-                }`}
-              >
-                These conversations with technology and business leaders laid
-                the foundation for our vision:
-              </p>
-
-              <div className="relative mt-6 overflow-hidden rounded-[22px] border border-primary-500/10 bg-white p-7">
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute top-0 right-6 select-none font-display text-[90px] font-bold leading-none text-primary-500/10"
-                >
-                  &rdquo;
-                </span>
-                <span
-                  className="absolute left-0 top-0 h-full w-[3px]"
-                  style={{ backgroundImage: BRAND_GRADIENT }}
-                  aria-hidden="true"
-                />
-                <p className="relative font-display text-[20px] font-semibold leading-snug tracking-tight text-heading sm:text-[22px]">
-                  To transform how enterprises make decisions by bridging the
-                  gap between enterprise data, business context, and action.
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
     </>
