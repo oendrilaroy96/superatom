@@ -24,8 +24,8 @@ const EASE = "cubic-bezier(.22,1,.36,1)";
 
 /** Colours: one soft purple family for the connected state, with the brand gradient on the centre. */
 const THEME = {
-  scatteredFill: "#F3F5FB",
-  scatteredStroke: "#B9C4E8",
+  scatteredFill: "#F7F5FF",
+  scatteredStroke: "#D5CCFF",
   scatteredLabel: "#4A5568",
   connectedFill: "#FFFFFF",
   connectedStroke: "#A899FF",
