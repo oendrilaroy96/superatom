@@ -383,14 +383,14 @@ export default function About() {
                   </span>
                   <div>
                     <h3
-                      className={`font-display text-[20px] font-semibold leading-snug tracking-tight transition-colors duration-700 ${
+                      className={`font-display text-[18px] font-semibold leading-snug tracking-tight transition-colors duration-700 ${
                         isDark ? "text-white" : "text-heading"
                       }`}
                     >
                       {belief.title}
                     </h3>
                     <p
-                      className={`mt-0.5 text-[15px] transition-colors duration-700 ${
+                      className={`mt-0.5 text-[14px] transition-colors duration-700 ${
                         isDark ? "text-white/60" : "text-body"
                       }`}
                     >
