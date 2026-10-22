@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CaseStudyPhoto from "../components/CaseStudyPhoto";
+import SectionHeading from "../components/ui/SectionHeading";
 import { useDarkTransition } from "../context/DarkTransitionContext";
 import { caseNumber, caseStudies, type CaseStudy } from "../lib/caseStudies";
 
@@ -16,9 +17,21 @@ function ArrowButton({ color }: { color: string }) {
 }
 
 /** Photo with the case number badge in the corner and a soft navy fade at the bottom. */
-function CardPhoto({ study, index, className }: { study: CaseStudy; index: number; className: string }) {
+function CardPhoto({
+  study,
+  index,
+  className,
+}: {
+  study: CaseStudy;
+  index: number;
+  className: string;
+}) {
   return (
-    <CaseStudyPhoto src={study.image.src} alt={study.image.alt} className={`rounded-[17px] ${className}`}>
+    <CaseStudyPhoto
+      src={study.image.src}
+      alt={study.image.alt}
+      className={`rounded-[17px] ${className}`}
+    >
       <span className="absolute inset-0 bg-gradient-to-t from-secondary-500/75 to-secondary-500/0 to-[65%]" />
       <span className="absolute right-4 top-4 flex size-[34px] items-center justify-center rounded-full border border-white/20 bg-white/10 text-[11px] font-medium text-white backdrop-blur-[8px]">
         {caseNumber(index)}
@@ -46,7 +59,9 @@ function StatBlock({ study, large }: { study: CaseStudy; large: boolean }) {
       >
         {study.stat.value}
       </p>
-      <p className="mt-2 max-w-[190px] text-[10px] leading-[14px] text-caption">{study.stat.label}</p>
+      <p className="mt-2 max-w-[190px] text-[10px] leading-[14px] text-caption">
+        {study.stat.label}
+      </p>
     </div>
   );
 }
@@ -57,9 +72,16 @@ const cardShell =
 /** The first, wide card: photo on the left, text on the right. */
 function FeaturedCard({ study }: { study: CaseStudy }) {
   return (
-    <Link to={`/case-studies/${study.slug}`} className={`${cardShell} grid lg:min-h-[510px] lg:grid-cols-[1.105fr_1fr]`}>
+    <Link
+      to={`/case-studies/${study.slug}`}
+      className={`${cardShell} grid lg:min-h-[510px] lg:grid-cols-[1.105fr_1fr]`}
+    >
       <div className="p-2.5">
-        <CardPhoto study={study} index={0} className="h-[280px] sm:h-[380px] lg:h-full lg:min-h-[490px]" />
+        <CardPhoto
+          study={study}
+          index={0}
+          className="h-[280px] sm:h-[380px] lg:h-full lg:min-h-[490px]"
+        />
       </div>
       <div className="flex flex-col p-6 sm:p-10 lg:p-[46px]">
         <CardLabels category={study.category} />
@@ -68,7 +90,9 @@ function FeaturedCard({ study }: { study: CaseStudy }) {
             {study.headline}
           </h2>
         </div>
-        <p className="max-w-[540px] pb-6 pt-5 text-[15px] leading-[1.7] text-body">{study.summary}</p>
+        <p className="max-w-[540px] pb-6 pt-5 text-[15px] leading-[1.7] text-body">
+          {study.summary}
+        </p>
         <div className="flex items-end justify-between border-t border-secondary-100 pt-5">
           <StatBlock study={study} large />
           <ArrowButton color={study.accent} />
@@ -81,16 +105,25 @@ function FeaturedCard({ study }: { study: CaseStudy }) {
 /** The two smaller cards: photo on top, text underneath. */
 function StandardCard({ study, index }: { study: CaseStudy; index: number }) {
   return (
-    <Link to={`/case-studies/${study.slug}`} className={`${cardShell} flex flex-col`}>
+    <Link
+      to={`/case-studies/${study.slug}`}
+      className={`${cardShell} flex flex-col`}
+    >
       <div className="p-2.5">
-        <CardPhoto study={study} index={index} className="h-[240px] sm:h-[280px]" />
+        <CardPhoto
+          study={study}
+          index={index}
+          className="h-[240px] sm:h-[280px]"
+        />
       </div>
       <div className="flex flex-1 flex-col px-6 pb-7 pt-5 sm:px-[26px]">
         <CardLabels category={study.category} />
         <h2 className="mt-8 font-display text-[24px] font-semibold leading-[1.2] tracking-tight text-heading sm:text-[28px]">
           {study.headline}
         </h2>
-        <p className="flex-1 pb-7 pt-5 text-sm leading-[1.7] text-body">{study.summary}</p>
+        <p className="flex-1 pb-7 pt-5 text-sm leading-[1.7] text-body">
+          {study.summary}
+        </p>
         <div className="flex items-end justify-between border-t border-secondary-100 pt-5">
           <StatBlock study={study} large={false} />
           <ArrowButton color={study.accent} />
@@ -112,31 +145,14 @@ export default function CaseStudies() {
     >
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
         <div className="mx-auto max-w-[1360px]">
-          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-            <div>
-              <p
-                className={`text-[11px] font-medium uppercase tracking-[0.12em] transition-colors duration-700 ease-in-out ${
-                  isDark ? "text-primary-300" : "text-primary-500"
-                }`}
-              >
-                Featured work
-              </p>
-              <h1
-                className={`mt-3 font-display text-[44px] font-semibold leading-[1.1] tracking-tight transition-colors duration-700 ease-in-out sm:text-[58px] ${
-                  isDark ? "text-white" : "text-heading"
-                }`}
-              >
-                Intelligence in action
-              </h1>
-            </div>
-            <p
-              className={`max-w-[460px] text-sm leading-[1.7] transition-colors duration-700 ease-in-out ${
-                isDark ? "text-white/70" : "text-body"
-              }`}
-            >
-              Explore how connected data, optimization, and intelligent workflows create measurable operational value.
-            </p>
-          </div>
+          <SectionHeading
+            headingAs="h1"
+            theme={isDark ? "dark" : "light"}
+            eyebrow="Featured work"
+            heading="Intelligence in action"
+            description="Explore how connected data, optimization, and intelligent workflows create measurable operational value."
+            descriptionClassName="max-w-xl"
+          />
 
           <div className="mt-12 flex flex-col gap-6">
             {first && <FeaturedCard study={first} />}

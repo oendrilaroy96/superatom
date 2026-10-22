@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import SectionHeading from "../components/ui/SectionHeading";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import SuperatomDiagram from "../components/SuperatomDiagram";
 import GlowCard from "../components/ui/GlowCard";
@@ -47,22 +48,6 @@ const teamMembers: TeamMember[] = [
     photo: chetanPhoto,
   },
 ];
-
-/** Small gradient dash + label, the eyebrow treatment used throughout this redesign instead of SectionHeading's own colored-text eyebrow. */
-function Eyebrow({ children }: { children: ReactNode }) {
-  return (
-    <div className="flex items-center gap-3">
-      <span
-        className="h-0.5 w-7 shrink-0 rounded-full"
-        style={{ backgroundImage: BRAND_GRADIENT }}
-        aria-hidden="true"
-      />
-      <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-caption">
-        {children}
-      </p>
-    </div>
-  );
-}
 
 /** Abstract head-and-shoulders silhouette for team members without a photo yet. */
 function AvatarPlaceholder({ colors }: { colors: [string, string] }) {
@@ -114,6 +99,22 @@ function TeamCard({ member }: { member: TeamMember }) {
   );
 }
 
+/** Gradient-filled text that keeps its fill across line wraps. */
+function GradientText({ children }: { children: ReactNode }) {
+  return (
+    <span
+      className="bg-clip-text text-transparent"
+      style={{
+        backgroundImage: BRAND_GRADIENT,
+        WebkitBoxDecorationBreak: "clone",
+        boxDecorationBreak: "clone",
+      }}
+    >
+      {children}
+    </span>
+  );
+}
+
 export default function About() {
   // Crossfades this section's own background from light to dark in sync
   // with the shared scroll threshold, the same pattern Testimonial uses on
@@ -125,7 +126,7 @@ export default function About() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden py-[80px]">
+      <section className="relative overflow-hidden py-[100px]">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -right-20 -top-32 size-[480px] rounded-full bg-primary-500/[0.06] blur-3xl"
@@ -133,24 +134,18 @@ export default function About() {
         <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="grid grid-cols-1 items-center gap-12 min-[1360px]:grid-cols-[1.25fr_1fr] min-[1360px]:gap-6">
             <div>
-              <Eyebrow>About Superatom AI</Eyebrow>
-              <h1 className="mt-7 max-w-[980px] font-display text-[42px] font-semibold leading-[1.08] tracking-[-0.02em] text-heading sm:text-[58px]">
-                <span className="block">Decisions at the</span>
-                <span
-                  className="bg-clip-text text-transparent"
-                  style={{
-                    backgroundImage: BRAND_GRADIENT,
-                    WebkitBoxDecorationBreak: "clone",
-                    boxDecorationBreak: "clone",
-                  }}
-                >
-                  Speed of Business.
-                </span>
-              </h1>
-              <p className="mt-7 max-w-lg text-[18px] leading-[1.55] text-body sm:text-[20px]">
-                Superatom AI exists to close the gap between enterprise data,
-                business context, and action.
-              </p>
+              <SectionHeading
+                headingAs="h1"
+                eyebrow="About Superatom AI"
+                heading={
+                  <>
+                    <span className="block">Decisions at the</span>
+                    <GradientText>Speed of Business.</GradientText>
+                  </>
+                }
+                description="Superatom AI exists to close the gap between enterprise data, business context, and action."
+                descriptionClassName="max-w-lg"
+              />
               <a
                 href="#our-journey"
                 onClick={(e) => {
@@ -186,42 +181,36 @@ export default function About() {
       {/* Team: right after the hero: heading and description, then the photos. */}
       <section className="pb-[72px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="text-center">
-            <div className="flex justify-center">
-              <Eyebrow>Our Team</Eyebrow>
-            </div>
-            <h2 className="mt-5 font-display text-[42px] font-semibold leading-[1.15] text-heading sm:text-[58px]">
-              Enterprise depth.
-              <br />
-              <span
-                className="bg-clip-text text-transparent"
-                style={{
-                  backgroundImage: BRAND_GRADIENT,
-                  WebkitBoxDecorationBreak: "clone",
-                  boxDecorationBreak: "clone",
-                }}
-              >
-                Builder&rsquo;s mindset.
+          <SectionHeading
+            align="center"
+            className="max-w-4xl"
+            eyebrow="Our Team"
+            heading={
+              <>
+                Enterprise depth.
+                <br />
+                <GradientText>Builder&rsquo;s mindset.</GradientText>
+              </>
+            }
+            description={
+              <span className="block space-y-4">
+                <span className="block">
+                  We bring together a diverse team of strategic thinkers,
+                  technology experts, and customer-obsessed builders. Our
+                  collective experience spans building and scaling teams across
+                  geographies, developing enterprise-grade products, GTM experts
+                  and building startups from the ground up.
+                </span>
+                <span className="block">
+                  With experience across organizations such as Blue Yonder, DHL,
+                  and Pine Labs, alongside entrepreneurial experience and
+                  backgrounds from prestigious institutions, including the IITs,
+                  our team combines enterprise expertise with a builder&rsquo;s
+                  mindset.
+                </span>
               </span>
-            </h2>
-
-            <div className="mx-auto mt-6 max-w-4xl space-y-4 text-p leading-relaxed text-body">
-              <p>
-                We bring together a diverse team of strategic thinkers,
-                technology experts, and customer-obsessed builders. Our
-                collective experience spans building and scaling teams across
-                geographies, developing enterprise-grade products, GTM experts
-                and building startups from the ground up.
-              </p>
-              <p>
-                With experience across organizations such as Blue Yonder, DHL,
-                and Pine Labs, alongside entrepreneurial experience and
-                backgrounds from prestigious institutions, including the IITs,
-                our team combines enterprise expertise with a builder&rsquo;s
-                mindset.
-              </p>
-            </div>
-          </div>
+            }
+          />
 
           <div className="mt-12" />
           {/* Team directory: full-bleed photo with a bottom gradient scrim
@@ -272,24 +261,18 @@ export default function About() {
           className="pointer-events-none absolute -left-24 bottom-0 size-[420px] rounded-full bg-[#ff7eb0]/[0.06] blur-3xl"
         />
         <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 items-start gap-y-8 lg:grid-cols-[0.42fr_1fr] lg:gap-x-12 lg:gap-y-12">
-            <Eyebrow>Our Journey</Eyebrow>
+          <SectionHeading
+            eyebrow="Our Journey"
+            heading={
+              <>
+                Listening first.
+                <br />
+                <GradientText>Building with purpose.</GradientText>
+              </>
+            }
+          />
 
-            <h2 className="font-display text-[42px] font-semibold leading-[1.15] text-heading sm:text-[58px]">
-              Listening first.
-              <br />
-              <span
-                className="bg-clip-text text-transparent"
-                style={{
-                  backgroundImage: BRAND_GRADIENT,
-                  WebkitBoxDecorationBreak: "clone",
-                  boxDecorationBreak: "clone",
-                }}
-              >
-                Building with purpose.
-              </span>
-            </h2>
-
+          <div className="mt-12 grid grid-cols-1 items-start gap-y-8 lg:grid-cols-[0.42fr_1fr] lg:gap-x-12">
             <div className="relative flex h-60 flex-col items-start justify-end overflow-hidden rounded-[22px] border border-primary-500/10 bg-gradient-to-br from-white to-primary-100/50 p-7">
               <div
                 aria-hidden="true"
@@ -364,10 +347,11 @@ export default function About() {
         }`}
       >
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <GlowCard contentClassName="grid grid-cols-1 gap-4 p-8 sm:grid-cols-[370px_1fr] sm:gap-12">
-            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-caption">
-              What we believe
-            </p>
+          <SectionHeading
+            theme={isDark ? "dark" : "light"}
+            heading="What we believe"
+          />
+          <GlowCard className="mt-12" contentClassName="p-8">
             <p className="font-display text-[22px] font-normal leading-snug tracking-tight text-body sm:text-[26px] lg:text-[30px]">
               We believe phenomenal outcomes are built through{" "}
               <span

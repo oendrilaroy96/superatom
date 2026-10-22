@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import ArticleIcon from "@mui/icons-material/Article";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
@@ -9,31 +9,12 @@ import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import type { IconComponent } from "../types/icon";
+import SectionHeading from "../components/ui/SectionHeading";
 import { useDarkTransition } from "../context/DarkTransitionContext";
 import { formatPostDate, partLabel, posts } from "../lib/blog";
 
 const BRAND_GRADIENT =
   "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)";
-
-/** Small gradient dash + label, matching the eyebrow treatment used on the solutions pages. */
-function Eyebrow({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
-  return (
-    <div className="flex items-center gap-2.5">
-      <span
-        className="h-0.5 w-7 shrink-0 rounded-full"
-        style={{ backgroundImage: BRAND_GRADIENT }}
-        aria-hidden="true"
-      />
-      <p
-        className={`text-[11px] font-bold uppercase tracking-[0.16em] transition-colors duration-700 ease-in-out ${
-          dark ? "text-white/60" : "text-caption"
-        }`}
-      >
-        {children}
-      </p>
-    </div>
-  );
-}
 
 const categoryIcon: Record<string, IconComponent> = {
   "Inventory intelligence": Inventory2Icon,
@@ -46,15 +27,30 @@ const categoryIcon: Record<string, IconComponent> = {
 /** Uses the post's cover image when it has one; otherwise a brand-colored
  * placeholder (category icon on a gradient wash), consistent with the
  * illustration-box treatment used across the solutions pages. */
-function ArticleArt({ category, label, cover }: { category: string; label?: string | null; cover?: string | null }) {
+function ArticleArt({
+  category,
+  label,
+  cover,
+}: {
+  category: string;
+  label?: string | null;
+  cover?: string | null;
+}) {
   const Icon = categoryIcon[category] ?? ArticleIcon;
   return (
     <div
       className="relative flex h-full w-full items-center justify-center overflow-hidden"
-      style={{ backgroundImage: "linear-gradient(135deg, #5B47E0 0%, #2A1C6B 100%)" }}
+      style={{
+        backgroundImage: "linear-gradient(135deg, #5B47E0 0%, #2A1C6B 100%)",
+      }}
     >
       {cover ? (
-        <img src={cover} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+        <img
+          src={cover}
+          alt=""
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
       ) : (
         <Icon style={{ fontSize: 40 }} className="text-white/85" />
       )}
@@ -88,7 +84,11 @@ const articles: Article[] = posts.map((post) => ({
   excerpt: post.excerpt,
   date: post.date ? formatPostDate(post.date) : "",
   publishedMonth: post.date
-    ? new Date(post.date).toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" })
+    ? new Date(post.date).toLocaleDateString("en-US", {
+        month: "long",
+        year: "numeric",
+        timeZone: "UTC",
+      })
     : undefined,
   cover: post.cover,
 }));
@@ -98,51 +98,63 @@ const featured = articles.find((a) => a.slug === featuredSlug);
 
 const categories = ["All posts", ...new Set(articles.map((a) => a.category))];
 
-function ArticleCard({ article, dark = false }: { article: Article; dark?: boolean }) {
+function ArticleCard({
+  article,
+  dark = false,
+}: {
+  article: Article;
+  dark?: boolean;
+}) {
   return (
     <Link to={`/blog/${article.slug}`} className="block h-full rounded-2xl">
-    <article className="group flex h-full flex-col">
-      <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl">
-        <div className="h-full w-full transition-transform duration-500 group-hover:scale-[1.03]">
-          <ArticleArt category={article.category} label={article.partLabel} cover={article.cover} />
+      <article className="group flex h-full flex-col">
+        <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl">
+          <div className="h-full w-full transition-transform duration-500 group-hover:scale-[1.03]">
+            <ArticleArt
+              category={article.category}
+              label={article.partLabel}
+              cover={article.cover}
+            />
+          </div>
         </div>
-      </div>
-      <div className="mt-4 flex items-center justify-between">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-primary-500">
-          {article.category}
-        </p>
+        <div className="mt-4 flex items-center justify-between">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-primary-500">
+            {article.category}
+          </p>
+          <p
+            className={`text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors duration-700 ease-in-out ${
+              dark ? "text-white/50" : "text-caption"
+            }`}
+          >
+            {article.readTime}
+          </p>
+        </div>
         <p
-          className={`text-[11px] font-semibold uppercase tracking-[0.08em] transition-colors duration-700 ease-in-out ${
-            dark ? "text-white/50" : "text-caption"
+          className={`mt-3 flex-1 font-display text-xl font-semibold leading-snug tracking-tight transition-colors duration-700 ease-in-out ${
+            dark ? "text-white" : "text-heading"
           }`}
         >
-          {article.readTime}
+          {article.title}
         </p>
-      </div>
-      <p
-        className={`mt-3 flex-1 font-display text-xl font-semibold leading-snug tracking-tight transition-colors duration-700 ease-in-out ${
-          dark ? "text-white" : "text-heading"
-        }`}
-      >
-        {article.title}
-      </p>
-      <div
-        className={`mt-4 flex items-center justify-between border-t pt-4 transition-colors duration-700 ease-in-out ${
-          dark ? "border-white/10" : "border-secondary-100"
-        }`}
-      >
-        <p className={`text-xs transition-colors duration-700 ease-in-out ${dark ? "text-white/50" : "text-caption"}`}>
-          {article.date}
-        </p>
-        <p
-          className={`text-xs font-medium transition-colors duration-700 ease-in-out ${
-            dark ? "text-white/50" : "text-caption"
+        <div
+          className={`mt-4 flex items-center justify-between border-t pt-4 transition-colors duration-700 ease-in-out ${
+            dark ? "border-white/10" : "border-secondary-100"
           }`}
         >
-          Read article ↗
-        </p>
-      </div>
-    </article>
+          <p
+            className={`text-xs transition-colors duration-700 ease-in-out ${dark ? "text-white/50" : "text-caption"}`}
+          >
+            {article.date}
+          </p>
+          <p
+            className={`text-xs font-medium transition-colors duration-700 ease-in-out ${
+              dark ? "text-white/50" : "text-caption"
+            }`}
+          >
+            Read article ↗
+          </p>
+        </div>
+      </article>
     </Link>
   );
 }
@@ -154,11 +166,15 @@ export default function Blog() {
 
   const filtered = useMemo(() => {
     const byCategory =
-      active === "All posts" ? articles : articles.filter((a) => a.category === active);
+      active === "All posts"
+        ? articles
+        : articles.filter((a) => a.category === active);
     const q = query.trim().toLowerCase();
     if (!q) return byCategory;
     return byCategory.filter((a) =>
-      [a.title, a.category, a.excerpt ?? ""].some((field) => field.toLowerCase().includes(q)),
+      [a.title, a.category, a.excerpt ?? ""].some((field) =>
+        field.toLowerCase().includes(q),
+      ),
     );
   }, [active, query]);
 
@@ -167,19 +183,26 @@ export default function Blog() {
       {/* Hero */}
       <section className="pb-[88px] pt-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <Eyebrow>Field notes for modern operators</Eyebrow>
-          <h1 className="mt-6 font-display text-[44px] font-semibold leading-[1.1] tracking-tight text-heading sm:text-[58px]">
-            Better decisions
-            <br />
-            start{" "}
-            <span className="bg-clip-text text-transparent" style={{ backgroundImage: BRAND_GRADIENT }}>
-              before
-            </span>{" "}
-            the alert.
-          </h1>
-          <p className="mt-10 max-w-xl text-p leading-relaxed text-body">
-            Clear thinking on supply chains, AI, and the decisions that keep products moving.
-          </p>
+          <SectionHeading
+            headingAs="h1"
+            eyebrow="Field notes for modern operators"
+            heading={
+              <>
+                Better decisions
+                <br />
+                start{" "}
+                <span
+                  className="bg-clip-text text-transparent"
+                  style={{ backgroundImage: BRAND_GRADIENT }}
+                >
+                  before
+                </span>{" "}
+                the alert.
+              </>
+            }
+            description="Clear thinking on supply chains, AI, and the decisions that keep products moving."
+            descriptionClassName="max-w-xl"
+          />
         </div>
       </section>
 
@@ -189,7 +212,10 @@ export default function Blog() {
           <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
             <div className="mx-auto grid max-w-6xl grid-cols-1 overflow-hidden rounded-[28px] border border-secondary-100 lg:grid-cols-[3fr_2fr]">
               <div className="relative min-h-[320px]">
-                <ArticleArt category={featured.category} cover={featured.cover} />
+                <ArticleArt
+                  category={featured.category}
+                  cover={featured.cover}
+                />
                 <span className="absolute left-5 top-5 rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-white backdrop-blur-sm">
                   {featured.category}
                   {featured.partLabel && ` · ${featured.partLabel}`}
@@ -201,7 +227,10 @@ export default function Blog() {
                     <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary-500">
                       Featured
                     </p>
-                    <span className="h-px w-6 bg-accent-300" aria-hidden="true" />
+                    <span
+                      className="h-px w-6 bg-accent-300"
+                      aria-hidden="true"
+                    />
                     <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary-500">
                       {featured.readTime}
                     </p>
@@ -210,7 +239,9 @@ export default function Blog() {
                     {featured.title}
                   </p>
                   {featured.excerpt && (
-                    <p className="mt-5 text-sm leading-relaxed text-body">{featured.excerpt}</p>
+                    <p className="mt-5 text-sm leading-relaxed text-body">
+                      {featured.excerpt}
+                    </p>
                   )}
                 </div>
                 <div>
@@ -239,24 +270,13 @@ export default function Blog() {
         }`}
       >
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
-            <div>
-              <h2
-                className={`font-display text-[36px] font-semibold tracking-tight transition-colors duration-700 ease-in-out sm:text-[44px] ${
-                  isDark ? "text-white" : "text-heading"
-                }`}
-              >
-                Latest from the blog
-              </h2>
-            </div>
-            <p
-              className={`max-w-[430px] text-sm leading-relaxed transition-colors duration-700 ease-in-out ${
-                isDark ? "text-white/70" : "text-body"
-              }`}
-            >
-              Research and practical thinking across inventory, procurement,
-              design operations, and regulated supply chains.
-            </p>
+          <div className="mx-auto max-w-6xl">
+            <SectionHeading
+              theme={isDark ? "dark" : "light"}
+              heading="Latest from the blog"
+              description="Research and practical thinking across inventory, procurement, design operations, and regulated supply chains."
+              descriptionClassName="max-w-xl"
+            />
           </div>
 
           {articles.length > 0 && (
@@ -311,7 +331,9 @@ export default function Blog() {
                     onClick={() => setQuery("")}
                     aria-label="Clear search"
                     className={`absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center transition-colors duration-700 ease-in-out ${
-                      isDark ? "text-white/50 hover:text-white" : "text-caption hover:text-heading"
+                      isDark
+                        ? "text-white/50 hover:text-white"
+                        : "text-caption hover:text-heading"
                     }`}
                   >
                     <CloseIcon style={{ fontSize: 15 }} />
@@ -324,7 +346,11 @@ export default function Blog() {
           {filtered.length > 0 ? (
             <div className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
               {filtered.map((article) => (
-                <ArticleCard key={article.slug} article={article} dark={isDark} />
+                <ArticleCard
+                  key={article.slug}
+                  article={article}
+                  dark={isDark}
+                />
               ))}
             </div>
           ) : (
@@ -336,7 +362,10 @@ export default function Blog() {
               {articles.length === 0 ? (
                 "No articles published yet. Check back soon."
               ) : (
-                <>No articles match &ldquo;{query}&rdquo;. Try a different search or category.</>
+                <>
+                  No articles match &ldquo;{query}&rdquo;. Try a different
+                  search or category.
+                </>
               )}
             </p>
           )}

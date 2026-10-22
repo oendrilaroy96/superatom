@@ -7,6 +7,8 @@ type Theme = "light" | "dark";
 type SectionHeadingProps = {
   eyebrow?: ReactNode;
   heading: ReactNode;
+  /** Use "h1" for a page's main heading. */
+  headingAs?: "h1" | "h2";
   description?: ReactNode;
   eyebrowColor?: EyebrowColor;
   size?: HeadingSize;
@@ -22,10 +24,12 @@ const eyebrowColors: Record<Theme, Record<EyebrowColor, string>> = {
   dark: { primary: "text-primary-300", accent: "text-accent-400" },
 };
 
+// 58px from the small breakpoint up; scaled down on phones so long headings fit.
 const headingSizes: Record<HeadingSize, string> = {
-  default: "mt-3 text-[58px] leading-[1.15]",
-  lg: "mt-4 text-[58px] leading-[1.15]",
+  default: "text-[40px] leading-[1.15] sm:text-[58px]",
+  lg: "text-[40px] leading-[1.15] sm:text-[58px]",
 };
+const headingGap: Record<HeadingSize, string> = { default: "mt-3", lg: "mt-4" };
 
 const headingColors: Record<Theme, string> = {
   light: "text-heading",
@@ -46,6 +50,7 @@ const descriptionColors: Record<Theme, string> = {
 export default function SectionHeading({
   eyebrow,
   heading,
+  headingAs: Heading = "h2",
   description,
   eyebrowColor = "primary",
   size = "default",
@@ -65,11 +70,11 @@ export default function SectionHeading({
           {eyebrow}
         </p>
       )}
-      <h2
-        className={`font-display font-semibold transition-colors duration-700 ${headingColors[theme]} ${headingSizes[size]}`}
+      <Heading
+        className={`font-display font-semibold transition-colors duration-700 ${headingColors[theme]} ${headingSizes[size]} ${headingGap[size]}`}
       >
         {heading}
-      </h2>
+      </Heading>
       {description && (
         <p
           className={`text-p mt-4 transition-colors duration-700 ${descriptionColors[theme]} ${descriptionClassName}`}

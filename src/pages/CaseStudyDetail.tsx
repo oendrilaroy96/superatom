@@ -4,15 +4,12 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CaseStudyPhoto from "../components/CaseStudyPhoto";
 import { useDarkTransition } from "../context/DarkTransitionContext";
+import SectionHeading from "../components/ui/SectionHeading";
 import { caseNumber, caseStudies, getCaseStudy } from "../lib/caseStudies";
 import NotFound from "./NotFound";
 
 const BRAND_GRADIENT =
   "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)";
-
-const SECTION_HEADING =
-  "font-display text-[32px] font-semibold leading-[1.15] tracking-tight sm:text-[40px] lg:text-[48px]";
-
 /** Page container: the site's side padding, content capped at 1360px like the design. */
 function Container({
   children,
@@ -45,29 +42,14 @@ function Chapter({
   children: ReactNode;
 }) {
   return (
-    <div className="grid gap-6 lg:grid-cols-[190px_minmax(0,1fr)] lg:gap-[70px]">
-      <div className="flex flex-col gap-2 text-[11px] font-medium uppercase tracking-[0.12em]">
-        <p
-          className={`transition-colors duration-700 ease-in-out ${dark ? "text-primary-300" : "text-primary-500"}`}
-        >
-          {number}
-        </p>
-        <p
-          className={`transition-colors duration-700 ease-in-out ${dark ? "text-white" : "text-heading"}`}
-        >
-          {label}
-        </p>
-      </div>
-      <div>
-        <h2
-          className={`max-w-[850px] transition-colors duration-700 ease-in-out ${SECTION_HEADING} ${
-            dark ? "text-white" : "text-heading"
-          }`}
-        >
-          {heading}
-        </h2>
-        <div className="mt-10 lg:mt-[70px]">{children}</div>
-      </div>
+    <div>
+      <SectionHeading
+        theme={dark ? "dark" : "light"}
+        eyebrow={`${number} · ${label}`}
+        heading={heading}
+        className="max-w-[850px]"
+      />
+      <div className="mt-12">{children}</div>
     </div>
   );
 }
@@ -119,18 +101,15 @@ export default function CaseStudyDetail() {
             </p>
           </div>
 
-          <div className="max-w-[1180px] pb-8 pt-12 lg:pt-[54px]">
-            <h1 className="font-display text-[36px] font-semibold leading-[1.1] tracking-tight text-heading sm:text-[48px] lg:text-[58px]">
-              {study.title}
-            </h1>
-            <div
-              className="mt-8 h-1.5 w-[100px] rounded-full lg:mt-[34px]"
-              style={{ backgroundImage: BRAND_GRADIENT }}
+          <div className="pb-8 pt-12 lg:pt-[54px]">
+            <SectionHeading
+              headingAs="h1"
+              heading={study.title}
+              description={study.summary}
+              descriptionClassName="max-w-3xl"
+              className="max-w-[1180px]"
             />
           </div>
-          <p className="max-w-[760px] text-base leading-[1.7] text-body sm:text-xl sm:leading-[1.7]">
-            {study.summary}
-          </p>
 
           <div className="mt-10 lg:mt-[60px]">
             <CaseStudyPhoto
