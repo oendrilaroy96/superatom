@@ -153,14 +153,13 @@ export default function About() {
 
   return (
     <>
-      {/* Hero, with the team photos directly underneath so they come into
-          view after a single scroll. */}
-      <section className="relative overflow-hidden pb-14 pt-[110px] lg:pb-[72px] lg:pt-[130px]">
+      {/* Hero: text only, filling the first screen. */}
+      <section className="relative flex min-h-[calc(100svh-4rem)] items-center overflow-hidden py-[100px]">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -right-20 -top-32 size-[480px] rounded-full bg-primary-500/[0.06] blur-3xl"
         />
-        <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+        <div className="relative mx-auto w-full max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end lg:gap-16">
             <h1 className="max-w-[760px] font-display text-[44px] font-semibold leading-[1.1] tracking-tight text-heading sm:text-[58px] lg:text-[64px]">
               Decisions at the <GradientText>Speed of Business.</GradientText>
@@ -169,8 +168,13 @@ export default function About() {
               Superatom AI exists to close the gap between enterprise data, business context, and action.
             </p>
           </div>
+        </div>
+      </section>
 
-          <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+      {/* Team photos: first thing after the hero, so they appear after one scroll. */}
+      <section className="pb-[60px]">
+        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             {teamMembers.map((member) => (
               <TeamCard key={member.name} member={member} />
             ))}
