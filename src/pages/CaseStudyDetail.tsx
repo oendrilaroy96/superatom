@@ -196,17 +196,21 @@ export default function CaseStudyDetail() {
 
       {/* Quote */}
       <Container className="pt-20 lg:pt-[110px]">
-        <figure
-          className="grid gap-4 rounded-[24px] p-8 sm:p-14 lg:grid-cols-[110px_1fr] lg:gap-[35px] lg:p-[105px]"
-          style={{ backgroundImage: BRAND_GRADIENT }}
-        >
-          <span className="font-display text-[80px] font-semibold leading-[0.7] text-white lg:text-[100px]" aria-hidden="true">
-            “
-          </span>
-          <blockquote className="max-w-[1000px] font-display text-[26px] font-semibold leading-[1.2] tracking-tight text-white sm:text-[34px] lg:text-[44px]">
-            {study.quote}
-          </blockquote>
-        </figure>
+        <CaseStudyPhoto src={study.image.src} alt="" className="rounded-[24px]">
+          <span
+            className="absolute inset-0 opacity-[0.8]"
+            style={{ backgroundImage: BRAND_GRADIENT }}
+            aria-hidden="true"
+          />
+          <figure className="relative grid gap-4 p-8 sm:p-14 lg:grid-cols-[110px_1fr] lg:gap-[35px] lg:p-[105px]">
+            <span className="font-display text-[80px] font-semibold leading-[0.7] text-white lg:text-[100px]" aria-hidden="true">
+              “
+            </span>
+            <blockquote className="max-w-[1000px] font-display text-[26px] font-semibold leading-[1.2] tracking-tight text-white sm:text-[34px] lg:text-[44px]">
+              {study.quote}
+            </blockquote>
+          </figure>
+        </CaseStudyPhoto>
       </Container>
 
       {/* 03 The result */}
