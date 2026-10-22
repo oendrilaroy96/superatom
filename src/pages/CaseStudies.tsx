@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CaseStudyPhoto from "../components/CaseStudyPhoto";
+import { useDarkTransition } from "../context/DarkTransitionContext";
 import { caseNumber, caseStudies, type CaseStudy } from "../lib/caseStudies";
 
 function ArrowButton({ color }: { color: string }) {
@@ -101,19 +102,38 @@ function StandardCard({ study, index }: { study: CaseStudy; index: number }) {
 
 export default function CaseStudies() {
   const [first, ...rest] = caseStudies;
+  const isDark = useDarkTransition();
 
   return (
-    <section className="pb-[120px] pt-[120px] lg:pt-[150px]">
+    <section
+      className={`pb-[120px] pt-[120px] transition-colors duration-700 ease-in-out lg:pt-[150px] ${
+        isDark ? "bg-secondary-500" : "bg-transparent"
+      }`}
+    >
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
         <div className="mx-auto max-w-[1360px]">
           <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
             <div>
-              <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-primary-500">Featured work</p>
-              <h1 className="mt-3 font-display text-[44px] font-semibold leading-[1.1] tracking-tight text-heading sm:text-[58px]">
+              <p
+                className={`text-[11px] font-medium uppercase tracking-[0.12em] transition-colors duration-700 ease-in-out ${
+                  isDark ? "text-primary-300" : "text-primary-500"
+                }`}
+              >
+                Featured work
+              </p>
+              <h1
+                className={`mt-3 font-display text-[44px] font-semibold leading-[1.1] tracking-tight transition-colors duration-700 ease-in-out sm:text-[58px] ${
+                  isDark ? "text-white" : "text-heading"
+                }`}
+              >
                 Intelligence in action
               </h1>
             </div>
-            <p className="max-w-[460px] text-sm leading-[1.7] text-body">
+            <p
+              className={`max-w-[460px] text-sm leading-[1.7] transition-colors duration-700 ease-in-out ${
+                isDark ? "text-white/70" : "text-body"
+              }`}
+            >
               Explore how connected data, optimization, and intelligent workflows create measurable operational value.
             </p>
           </div>
