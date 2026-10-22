@@ -188,9 +188,47 @@ export default function About() {
         </div>
       </section>
 
-      {/* Team: right after the hero. */}
+      {/* Team: right after the hero: heading and description, then the photos. */}
       <section className="pb-[72px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+          <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[0.86fr_1fr] lg:gap-16">
+            <div>
+              <Eyebrow>Our Team</Eyebrow>
+              <h2 className="mt-5 font-display text-[42px] font-semibold leading-[1.15] text-heading sm:text-[48px]">
+                Enterprise expertise.
+                <br />
+                <span
+                  className="bg-clip-text text-transparent"
+                  style={{
+                    backgroundImage: BRAND_GRADIENT,
+                    WebkitBoxDecorationBreak: "clone",
+                    boxDecorationBreak: "clone",
+                  }}
+                >
+                  Builder&rsquo;s mindset.
+                </span>
+              </h2>
+            </div>
+
+            <div className="space-y-4 pt-2 text-p leading-relaxed text-body">
+              <p>
+                We bring together a diverse team of strategic thinkers,
+                technology experts, and customer-obsessed builders. Our
+                collective experience spans building and scaling teams across
+                geographies, developing enterprise-grade products, GTM experts
+                and building startups from the ground up.
+              </p>
+              <p>
+                With experience across organizations such as Blue Yonder, DHL,
+                and Pine Labs, alongside entrepreneurial experience and
+                backgrounds from prestigious institutions, including the IITs,
+                our team combines enterprise expertise with a builder&rsquo;s
+                mindset.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-12" />
           {/* Team directory: full-bleed photo with a bottom gradient scrim
               carrying the name/role/LinkedIn badge over the image itself,
               matching the redesigned portrait-card treatment. Kept fixed
@@ -317,6 +355,8 @@ export default function About() {
         </div>
       </section>
 
+      {/* What we believe: the last section, fading to dark in step with the
+          page's dark footer block. */}
       <section
         className={`py-[72px] transition-colors duration-700 ease-in-out ${
           isDark
@@ -325,55 +365,7 @@ export default function About() {
         }`}
       >
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[0.86fr_1fr] lg:gap-16">
-            <div>
-              <Eyebrow>Our Team</Eyebrow>
-              <h2
-                className={`mt-5 font-display text-[42px] font-semibold leading-[1.15] transition-colors duration-700 ease-in-out sm:text-[48px] ${
-                  isDark ? "text-white" : "text-heading"
-                }`}
-              >
-                Enterprise expertise.
-                <br />
-                <span
-                  className="bg-clip-text text-transparent"
-                  style={{
-                    backgroundImage: BRAND_GRADIENT,
-                    WebkitBoxDecorationBreak: "clone",
-                    boxDecorationBreak: "clone",
-                  }}
-                >
-                  Builder&rsquo;s mindset.
-                </span>
-              </h2>
-            </div>
-
-            <div
-              className={`space-y-4 pt-2 text-p leading-relaxed transition-colors duration-700 ease-in-out ${
-                isDark ? "text-white/70" : "text-body"
-              }`}
-            >
-              <p>
-                We bring together a diverse team of strategic thinkers,
-                technology experts, and customer-obsessed builders. Our
-                collective experience spans building and scaling teams across
-                geographies, developing enterprise-grade products, GTM experts
-                and building startups from the ground up.
-              </p>
-              <p>
-                With experience across organizations such as Blue Yonder, DHL,
-                and Pine Labs, alongside entrepreneurial experience and
-                backgrounds from prestigious institutions, including the IITs,
-                our team combines enterprise expertise with a builder&rsquo;s
-                mindset.
-              </p>
-            </div>
-          </div>
-
-          <GlowCard
-            className="mt-12"
-            contentClassName="grid grid-cols-1 gap-4 p-8 sm:grid-cols-[370px_1fr] sm:gap-12"
-          >
+          <GlowCard contentClassName="grid grid-cols-1 gap-4 p-8 sm:grid-cols-[370px_1fr] sm:gap-12">
             <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-caption">
               What we believe
             </p>
