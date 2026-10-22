@@ -504,13 +504,10 @@ export default function Features() {
               knowledge Superatom captures sit in their own rows so the
               longer copy has room instead of being squeezed into one cell. */}
           <GlowCard className={`sm:col-span-2 lg:col-span-2 lg:row-span-2 ${HOVER_LIFT}`} contentClassName="flex h-full flex-col p-6 sm:p-8">
-            <div className="flex items-start justify-between">
-              <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-accent-500">
-                Captured Context
-              </p>
-              <AutoStoriesIcon style={{ fontSize: 20 }} className="text-primary-500" />
-            </div>
-            <p className="mt-2 font-display text-h3 font-semibold text-heading">
+            <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
+              <AutoStoriesIcon style={{ fontSize: 22 }} />
+            </span>
+            <p className="mt-4 font-display text-h3 font-semibold text-heading">
               Enterprise Knowledge
             </p>
             <p className="mt-3 max-w-[560px] text-sm leading-relaxed text-caption">
