@@ -131,10 +131,10 @@ export default function About() {
           className="pointer-events-none absolute -right-20 -top-32 size-[480px] rounded-full bg-primary-500/[0.06] blur-3xl"
         />
         <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.55fr_1.25fr] lg:gap-10">
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.1fr_1.4fr] lg:gap-6">
             <div>
               <Eyebrow>About Superatom AI</Eyebrow>
-              <h1 className="mt-7 max-w-[980px] font-display text-[44px] font-semibold leading-[1.08] tracking-[-0.02em] text-heading sm:text-[56px] lg:text-[46px] xl:text-[54px]">
+              <h1 className="mt-7 max-w-[980px] font-display text-[44px] font-semibold leading-[1.08] tracking-[-0.02em] text-heading sm:text-[56px] lg:text-[36px] xl:text-[44px] min-[1400px]:text-[48px]">
                 <span className="block">Decisions at the</span>
                 <span
                   className="bg-clip-text text-transparent"
