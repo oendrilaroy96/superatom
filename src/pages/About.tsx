@@ -247,7 +247,7 @@ export default function About() {
               carrying the name/role/LinkedIn badge over the image itself.
               Kept fixed light-on-dark-scrim regardless of the page's own
               crossfade, so the cards read consistently. */}
-          <div className="mt-12 grid grid-cols-2 gap-3.5 lg:grid-cols-4 lg:gap-4">
+          <div className="mt-12 grid max-w-[960px] grid-cols-2 gap-3.5 lg:grid-cols-4 lg:gap-4">
             {teamMembers.map((member) => (
               <TeamCard key={member.name} member={member} />
             ))}
