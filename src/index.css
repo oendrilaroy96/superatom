@@ -689,7 +689,7 @@ body {
   /* #5b6472 (the site's --color-caption) rather than the prototype's
      #9aa3ae: that shade was tuned for the prototype's dark card, which no
      longer wraps this diagram now that it sits directly on the page. */
-  color: #5b6472;
+  color: var(--cap, #5b6472);
   opacity: 0;
   transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }

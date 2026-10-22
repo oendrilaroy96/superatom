@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import SuperatomDiagram from "../components/SuperatomDiagram";
+import SuperatomDiagram, { type DiagramVariant } from "../components/SuperatomDiagram";
 import GlowCard from "../components/ui/GlowCard";
 import { useDarkTransition } from "../context/DarkTransitionContext";
 import prashanthPhoto from "../assets/SuperatomTeams/Prashanth.webp";
@@ -176,7 +176,7 @@ export default function About() {
               </a>
             </div>
 
-            <SuperatomDiagram />
+            <SuperatomDiagram variant={(new URLSearchParams(window.location.search).get("diagram") as DiagramVariant | null) ?? "classic"} />
           </div>
         </div>
       </section>
