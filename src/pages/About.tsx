@@ -350,7 +350,7 @@ export default function About() {
 
           <div className="mt-12 grid gap-6 lg:grid-cols-2 lg:gap-[72px]">
             <div
-              className="flex min-h-[280px] items-end rounded-[28px] p-8 sm:p-11 lg:min-h-0"
+              className="flex min-h-[200px] items-end rounded-[28px] p-8 sm:p-10 lg:min-h-[260px] lg:self-start"
               style={{
                 backgroundColor: "#533afd",
                 backgroundImage:
