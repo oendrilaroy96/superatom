@@ -107,6 +107,11 @@ const GENERATIVE_EXAMPLES = [
   { question: "Sales split by channel", component: "Donut chart", pattern: "part-to-whole" },
   { question: "Revenue this quarter", component: "KPI card", pattern: "single value" },
 ] as const;
+const KNOWLEDGE_LEVELS = [
+  { n: "01", title: "Institutional Knowledge", text: "Unwritten rules and business definitions." },
+  { n: "02", title: "Experiential Knowledge", text: "Lessons from past decisions." },
+  { n: "03", title: "Operational Knowledge", text: "How work gets done day to day." },
+] as const;
 const GENERATIVE_BAR_HEIGHTS = [100, 80, 64, 50, 38, 28];
 const GENERATIVE_DONUT = [
   { label: "Online", share: 48, stroke: "stroke-white", dot: "bg-white" },
@@ -118,11 +123,10 @@ const GENERATIVE_DONUT = [
  * Bento-style feature grid (moved out of HowItWorks.tsx into its own
  * homepage section). Column/row spans + source order are chosen so CSS
  * Grid's default auto-placement lands every card in the right cell without
- * explicit grid-column/row-start values: SOC2 (2x1) + On-Premise (1x1) +
- * Tribal (1x1) fill row 1; Semantic Modeling (2x2) starts row 2 and
- * reserves cols 1-2 through row 3; Workflows (2x1) then auto-fills cols
- * 3-4 of row 2; Optimization Engine and Generative UI (1x1 each) fill
- * cols 3-4 of row 3.
+ * explicit grid-column/row-start values (4 columns, 4 rows): SOC2 (2x1) +
+ * On-Premise (1x1) + Optimization Engine (1x1) fill row 1; Semantic Modeling
+ * (2x2) and Enterprise Knowledge (2x2) share rows 2-3; Workflows (2x1) and
+ * Generative UI (2x1) fill row 4.
  */
 export default function Features() {
   const [activeStep, setActiveStep] = useState(0);
@@ -272,36 +276,35 @@ export default function Features() {
             </p>
           </GlowCard>
 
-          {/* 3. Tribal Knowledge — each row highlights on its own hover */}
+          {/* 3. Optimization Engine — recommended path wins over two
+              considered-and-rejected branches, with a live pulsing check. */}
           <GlowCard className={HOVER_LIFT}>
-            <div className="flex items-start justify-between">
-              <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-accent-500">
-                Captured Context
-              </p>
-              <AutoStoriesIcon style={{ fontSize: 20 }} className="text-primary-500" />
-            </div>
-            <p className="mt-2 font-display text-h3 font-semibold text-heading">
-              Tribal Knowledge
+            <DashedBox className="relative h-[150px]">
+              <div className="absolute bottom-[20px] left-[44px] right-[84px] top-[20px] rounded-md border border-dashed border-secondary-200" />
+              <div className="absolute left-[16px] right-[44px] top-1/2 h-0.5 -translate-y-1/2 bg-primary-500" />
+              <span className="absolute left-[10px] top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-secondary-500" />
+              <span className="absolute right-[84px] top-[20px] flex h-4 w-4 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-secondary-200 bg-white text-secondary-300">
+                <CloseIcon style={{ fontSize: 10 }} />
+              </span>
+              <span className="absolute bottom-[20px] right-[84px] flex h-4 w-4 translate-x-[-50%] translate-y-1/2 items-center justify-center rounded-full border border-secondary-200 bg-white text-secondary-300">
+                <CloseIcon style={{ fontSize: 10 }} />
+              </span>
+              <span className="absolute right-[10px] top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-400 opacity-40" />
+                <span className="relative flex h-7 w-7 items-center justify-center rounded-full bg-primary-500 text-white shadow-[0_0_0_6px_rgba(83,58,253,0.15)]">
+                  <CheckIcon style={{ fontSize: 16 }} />
+                </span>
+              </span>
+              <span className="absolute left-1/2 top-[64%] -translate-x-1/2 whitespace-nowrap rounded-full border border-secondary-100 bg-white px-3 py-1 text-xs font-semibold text-primary-500 shadow-sm">
+                Recommended
+              </span>
+            </DashedBox>
+            <p className="mt-5 font-display text-h3 font-semibold text-heading">
+              Optimization Engine
             </p>
-            <div className="mt-4 divide-y divide-secondary-100 rounded-lg border border-secondary-100">
-              {[
-                { n: "01", label: "Unwritten rules" },
-                { n: "02", label: "Past lessons" },
-                { n: "03", label: "Operational realities" },
-              ].map((item) => (
-                <div
-                  key={item.n}
-                  className="flex items-center gap-3 px-3 py-2.5 transition-colors duration-200 hover:bg-primary-100"
-                >
-                  <span className="font-display text-[11px] font-semibold text-primary-400">
-                    {item.n}
-                  </span>
-                  <span className="text-sm font-medium text-heading">{item.label}</span>
-                </div>
-              ))}
-            </div>
-            <p className="mt-4 text-sm leading-relaxed text-caption">
-              Answers that reflect how the business truly works.
+            <p className="mt-2 text-sm leading-relaxed text-caption">
+              The engine recommends the best course of action for complex
+              business decisions, within real-world constraints.
             </p>
           </GlowCard>
 
@@ -463,11 +466,48 @@ export default function Features() {
             </div>
           </GlowCard>
 
-          {/* 5. Workflows — spans 2 cols. Steps auto-cycle to show the
+          {/* Enterprise Knowledge — spans 2 cols, 2 rows. The three levels of
+              knowledge Superatom captures sit in their own rows so the
+              longer copy has room instead of being squeezed into one cell. */}
+          <GlowCard className={`sm:col-span-2 lg:col-span-2 lg:row-span-2 ${HOVER_LIFT}`} contentClassName="flex h-full flex-col p-6 sm:p-8">
+            <div className="flex items-start justify-between">
+              <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-accent-500">
+                Captured Context
+              </p>
+              <AutoStoriesIcon style={{ fontSize: 20 }} className="text-primary-500" />
+            </div>
+            <p className="mt-2 font-display text-h3 font-semibold text-heading">
+              Enterprise Knowledge
+            </p>
+            <p className="mt-3 max-w-[560px] text-sm leading-relaxed text-caption">
+              Every business has knowledge built over years of experience, much
+              of it held by people who understand its processes, exceptions, and
+              ways of working. Superatom captures and operationalizes this
+              knowledge across three levels:
+            </p>
+            <div className="mt-6 flex flex-1 flex-col justify-end gap-3">
+              {KNOWLEDGE_LEVELS.map((level) => (
+                <div
+                  key={level.n}
+                  className="flex items-start gap-4 rounded-xl border border-secondary-100 bg-white px-4 py-4 transition-colors duration-200 hover:border-primary-200 hover:bg-primary-100/60"
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-100 font-display text-[12px] font-bold text-primary-500">
+                    {level.n}
+                  </span>
+                  <div>
+                    <p className="font-display text-base font-semibold text-heading">{level.title}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-caption">{level.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </GlowCard>
+
+          {/* 6. Workflows — spans 2 cols. Steps auto-cycle to show the
               pipeline actually running. */}
           <GlowCard
             className={`sm:col-span-2 lg:col-span-2 ${HOVER_LIFT}`}
-            contentClassName="flex flex-col gap-6 p-6 sm:flex-row sm:items-center"
+            contentClassName="flex h-full flex-col gap-6 p-6 sm:flex-row sm:items-center"
           >
             <div className="sm:flex-1">
               <span className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-100 text-primary-500">
@@ -500,44 +540,12 @@ export default function Features() {
             </DashedBox>
           </GlowCard>
 
-          {/* 6. Optimization Engine — recommended path wins over two
-              considered-and-rejected branches, with a live pulsing check. */}
-          <GlowCard className={HOVER_LIFT}>
-            <DashedBox className="relative h-[150px]">
-              <div className="absolute bottom-[20px] left-[44px] right-[84px] top-[20px] rounded-md border border-dashed border-secondary-200" />
-              <div className="absolute left-[16px] right-[44px] top-1/2 h-0.5 -translate-y-1/2 bg-primary-500" />
-              <span className="absolute left-[10px] top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-secondary-500" />
-              <span className="absolute right-[84px] top-[20px] flex h-4 w-4 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-secondary-200 bg-white text-secondary-300">
-                <CloseIcon style={{ fontSize: 10 }} />
-              </span>
-              <span className="absolute bottom-[20px] right-[84px] flex h-4 w-4 translate-x-[-50%] translate-y-1/2 items-center justify-center rounded-full border border-secondary-200 bg-white text-secondary-300">
-                <CloseIcon style={{ fontSize: 10 }} />
-              </span>
-              <span className="absolute right-[10px] top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-400 opacity-40" />
-                <span className="relative flex h-7 w-7 items-center justify-center rounded-full bg-primary-500 text-white shadow-[0_0_0_6px_rgba(83,58,253,0.15)]">
-                  <CheckIcon style={{ fontSize: 16 }} />
-                </span>
-              </span>
-              <span className="absolute left-1/2 top-[64%] -translate-x-1/2 whitespace-nowrap rounded-full border border-secondary-100 bg-white px-3 py-1 text-xs font-semibold text-primary-500 shadow-sm">
-                Recommended
-              </span>
-            </DashedBox>
-            <p className="mt-5 font-display text-h3 font-semibold text-heading">
-              Optimization Engine
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-caption">
-              The engine recommends the best course of action for complex
-              business decisions, within real-world constraints.
-            </p>
-          </GlowCard>
-
-          {/* 7. Generative UI — gradient card. A question is typed, then the
+          {/* 7. Generative UI — spans 2 cols, gradient card. A question is typed, then the
               component suited to its data pattern renders beneath it. Each
               example remounts via `key`, replaying the CSS entrance
               animations (see .genui-* in index.css). */}
           <div
-            className={`group relative overflow-hidden rounded-2xl p-6 ${HOVER_LIFT}`}
+            className={`group relative overflow-hidden rounded-2xl p-6 sm:col-span-2 lg:col-span-2 ${HOVER_LIFT}`}
             style={{
               background:
                 "linear-gradient(135deg, #533afd 0%, #873eff 40%, #ff7eb0 75%, #ff7600 100%)",
