@@ -56,16 +56,7 @@ function WorkflowDetail({ step, reached }: { step: number; reached: boolean }) {
       </span>
     );
   }
-  if (step === 1) {
-    return (
-      <span className={`${base} inline-flex items-center gap-1.5`}>
-        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-secondary-500 text-[9px] font-bold text-white">
-          SP
-        </span>
-        <span className="text-[11px] font-medium text-heading">Supply planner</span>
-      </span>
-    );
-  }
+  if (step === 1) return null;
   if (step === 2) {
     return (
       <span className={`${base} inline-flex items-center gap-1.5`}>
