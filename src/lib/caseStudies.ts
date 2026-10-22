@@ -35,7 +35,7 @@ export const caseStudies: CaseStudy[] = [
       "A machine-learning and optimization system that identifies stranded stock, calculates the right transfers, and moves inventory only when the economics make sense.",
     stat: { value: "$50M+", label: "dead and excess inventory identified" },
     image: {
-      src: "/case-studies/distribution-center.jpg",
+      src: "/case-studies/distribution-center.webp",
       alt: "Aerial view of a modern distribution center filled with shipping containers",
     },
     accent: "#533afd",
@@ -85,7 +85,7 @@ export const caseStudies: CaseStudy[] = [
       "A centralized decision platform that gives planning and commercial teams one workflow for identifying, acting on, and learning from slow-moving and obsolete stock.",
     stat: { value: "7.9M", label: "retail outlets in the distribution network" },
     image: {
-      src: "/case-studies/warehouse-aisles.jpg",
+      src: "/case-studies/warehouse-aisles.webp",
       alt: "Tall warehouse aisles lined with blue shelves and inventory",
     },
     accent: "#ff7eb0",
@@ -136,7 +136,7 @@ export const caseStudies: CaseStudy[] = [
       "A connected intelligence layer across four legacy ERPs that aligns pricing, vendor procurement, margins, and live transportation operations.",
     stat: { value: "140+", label: "branches with real-time visibility" },
     image: {
-      src: "/case-studies/freight-trucks.jpg",
+      src: "/case-studies/freight-trucks.webp",
       alt: "Fleet of freight trucks parked at a logistics facility",
     },
     accent: "#ff7600",
