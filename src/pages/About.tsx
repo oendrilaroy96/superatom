@@ -44,13 +44,6 @@ const teamMembers: TeamMember[] = [
     linkedin: "https://www.linkedin.com/in/chetan-sai-1720a8174/",
     photo: chetanPhoto,
   },
-  {
-    name: "Gopinadh Boppudi",
-    role: "Head of Engineering",
-    linkedin: "https://www.linkedin.com/in/gopinadh-boppudi-8730751b0/",
-    photo: null,
-    avatarGradient: ["#d6d9f0", "#9ba3d4"],
-  },
 ];
 
 /** Small gradient dash + label, the eyebrow treatment used throughout this redesign instead of SectionHeading's own colored-text eyebrow. */
@@ -174,7 +167,7 @@ export default function About() {
       {/* Team photos: first thing after the hero, so they appear after one scroll. */}
       <section className="pb-[60px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             {teamMembers.map((member) => (
               <TeamCard key={member.name} member={member} />
             ))}
