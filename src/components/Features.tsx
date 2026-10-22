@@ -234,30 +234,33 @@ export default function Features() {
             </div>
           </div>
 
-          {/* 2. On-Premise Deployment — a dot continuously travels from the
-              Superatom mark to the client's system, landing with a small
-              pulse, to depict Superatom deploying into their environment. */}
+          {/* 2. On-Premise Deployment — the Superatom logo continuously travels
+              from the left into the client's system, which pulses as it
+              lands, to depict Superatom deploying into their environment. */}
           <GlowCard className={HOVER_LIFT} contentClassName="p-6">
             <DashedBox className="relative h-[132px]">
               <p className="absolute left-3 top-3 text-[9px] font-bold uppercase tracking-[0.1em] text-caption">
                 Your infrastructure
               </p>
-              <div className="flex h-full items-center justify-center gap-4 px-4">
-                <div className="flex flex-col items-center gap-2">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-secondary-100 bg-white p-2 shadow-sm">
-                    <img src={superatomMark} alt="" className="h-full w-full object-contain" />
-                  </span>
+              <div className="relative h-full">
+                {/* Where the logo starts: an empty slot that stays put */}
+                <div className="absolute left-3 top-1/2 -mt-8 flex w-16 flex-col items-center gap-2">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-dashed border-secondary-200" />
                   <span className="text-[10px] font-semibold text-heading">Superatom</span>
                 </div>
-                <div className="relative h-px w-14 shrink-0 bg-secondary-200 sm:w-20">
-                  <span className="hiw-deploy-dot" />
-                </div>
-                <div className="flex flex-col items-center gap-2">
+                <span
+                  className="absolute left-[76px] right-[76px] top-1/2 -mt-2.5 h-px bg-secondary-200"
+                  aria-hidden="true"
+                />
+                <div className="absolute right-3 top-1/2 -mt-8 flex w-16 flex-col items-center gap-2">
                   <span className="hiw-deploy-land flex h-11 w-11 items-center justify-center rounded-xl bg-accent-500 text-white shadow-sm">
                     <DnsIcon style={{ fontSize: 20 }} />
                   </span>
                   <span className="text-[10px] font-semibold text-heading">Your systems</span>
                 </div>
+                <span className="hiw-deploy-logo flex h-11 w-11 items-center justify-center rounded-xl border border-secondary-100 bg-white p-2 shadow-sm">
+                  <img src={superatomMark} alt="" className="h-full w-full object-contain" />
+                </span>
               </div>
             </DashedBox>
             <p className="mt-5 font-display text-h3 font-semibold text-heading">
