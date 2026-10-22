@@ -195,7 +195,7 @@ export default function About() {
             <div>
               <Eyebrow>Our Team</Eyebrow>
               <h2 className="mt-5 font-display text-[42px] font-semibold leading-[1.15] text-heading sm:text-[48px]">
-                Enterprise expertise.
+                Enterprise depth.
                 <br />
                 <span
                   className="bg-clip-text text-transparent"
