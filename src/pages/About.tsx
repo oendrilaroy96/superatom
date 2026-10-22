@@ -196,40 +196,39 @@ export default function About() {
         </div>
       </section>
 
-      {/* Team: heading and text on the left, a staggered 2x2 photo grid on the
-          right (stacked on smaller screens). */}
+      {/* Team: heading on the left, the two paragraphs on the right, then the
+          four portraits in a row underneath. */}
       <section className="py-[100px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center lg:gap-[72px]">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-[72px]">
+            <SectionHeading
+              eyebrow="Our Team"
+              heading={
+                <>
+                  Enterprise depth.
+                  <br />
+                  <GradientText>Builder&rsquo;s mindset.</GradientText>
+                </>
+              }
+            />
+
             <div>
-              <SectionHeading
-                eyebrow="Our Team"
-                heading={
-                  <>
-                    Enterprise depth.
-                    <br />
-                    <GradientText>Builder&rsquo;s mindset.</GradientText>
-                  </>
-                }
-                description={
-                  <span className="block space-y-4">
-                    <span className="block">
-                      We bring together a diverse team of strategic thinkers,
-                      technology experts, and customer-obsessed builders. Our
-                      collective experience spans building and scaling teams
-                      across geographies, developing enterprise-grade products,
-                      GTM experts and building startups from the ground up.
-                    </span>
-                    <span className="block">
-                      With experience across organizations such as Blue Yonder,
-                      DHL, and Pine Labs, alongside entrepreneurial experience
-                      and backgrounds from prestigious institutions, including
-                      the IITs, our team combines enterprise expertise with a
-                      builder&rsquo;s mindset.
-                    </span>
-                  </span>
-                }
-              />
+              <div className="space-y-4 text-p text-body">
+                <p>
+                  We bring together a diverse team of strategic thinkers,
+                  technology experts, and customer-obsessed builders. Our
+                  collective experience spans building and scaling teams across
+                  geographies, developing enterprise-grade products, GTM experts
+                  and building startups from the ground up.
+                </p>
+                <p>
+                  With experience across organizations such as Blue Yonder, DHL,
+                  and Pine Labs, alongside entrepreneurial experience and
+                  backgrounds from prestigious institutions, including the IITs,
+                  our team combines enterprise expertise with a builder&rsquo;s
+                  mindset.
+                </p>
+              </div>
 
               <div className="mt-8 flex items-center gap-3">
                 <span
@@ -242,19 +241,16 @@ export default function About() {
                 </p>
               </div>
             </div>
+          </div>
 
-            {/* Team directory: full-bleed photo with a bottom gradient scrim
-                carrying the name/role/LinkedIn badge over the image itself.
-                Kept fixed light-on-dark-scrim regardless of the page's own
-                crossfade, so the cards read consistently. The second column
-                sits lower for the staggered look. */}
-            <div className="grid w-full max-w-[420px] grid-cols-2 gap-3.5 lg:justify-self-end">
-              {teamMembers.map((member, i) => (
-                <div key={member.name} className={i % 2 === 1 ? "mt-9" : ""}>
-                  <TeamCard member={member} />
-                </div>
-              ))}
-            </div>
+          {/* Team directory: full-bleed photo with a bottom gradient scrim
+              carrying the name/role/LinkedIn badge over the image itself.
+              Kept fixed light-on-dark-scrim regardless of the page's own
+              crossfade, so the cards read consistently. */}
+          <div className="mt-12 grid grid-cols-2 gap-3.5 lg:grid-cols-4 lg:gap-4">
+            {teamMembers.map((member) => (
+              <TeamCard key={member.name} member={member} />
+            ))}
           </div>
         </div>
       </section>
