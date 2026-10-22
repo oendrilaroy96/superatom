@@ -102,10 +102,10 @@ function TeamCard({ member }: { member: TeamMember }) {
       <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-secondary-600/95 via-secondary-600/35 to-transparent" />
       <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-2">
         <div>
-          <p className="font-display text-[13px] font-bold leading-tight text-white">
+          <p className="font-display text-[14px] font-bold leading-tight text-white">
             {member.name}
           </p>
-          <p className="mt-1 text-[9px] font-semibold uppercase tracking-[0.08em] text-white/60">
+          <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-white/60">
             {member.role}
           </p>
         </div>
@@ -196,74 +196,65 @@ export default function About() {
         </div>
       </section>
 
-      {/* Team: right after the hero: heading and description, then the photos. */}
+      {/* Team: heading and text on the left, a staggered 2x2 photo grid on the
+          right (stacked on smaller screens). */}
       <section className="py-[100px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <SectionHeading
-            className="max-w-4xl"
-            eyebrow="Our Team"
-            heading={
-              <>
-                Enterprise depth.
-                <br />
-                <GradientText>Builder&rsquo;s mindset.</GradientText>
-              </>
-            }
-            description={
-              <span className="block space-y-4">
-                <span className="block">
-                  We bring together a diverse team of strategic thinkers,
-                  technology experts, and customer-obsessed builders. Our
-                  collective experience spans building and scaling teams across
-                  geographies, developing enterprise-grade products, GTM experts
-                  and building startups from the ground up.
-                </span>
-                <span className="block">
-                  With experience across organizations such as Blue Yonder, DHL,
-                  and Pine Labs, alongside entrepreneurial experience and
-                  backgrounds from prestigious institutions, including the IITs,
-                  our team combines enterprise expertise with a builder&rsquo;s
-                  mindset.
-                </span>
-              </span>
-            }
-          />
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center lg:gap-[72px]">
+            <div>
+              <SectionHeading
+                eyebrow="Our Team"
+                heading={
+                  <>
+                    Enterprise depth.
+                    <br />
+                    <GradientText>Builder&rsquo;s mindset.</GradientText>
+                  </>
+                }
+                description={
+                  <span className="block space-y-4">
+                    <span className="block">
+                      We bring together a diverse team of strategic thinkers,
+                      technology experts, and customer-obsessed builders. Our
+                      collective experience spans building and scaling teams
+                      across geographies, developing enterprise-grade products,
+                      GTM experts and building startups from the ground up.
+                    </span>
+                    <span className="block">
+                      With experience across organizations such as Blue Yonder,
+                      DHL, and Pine Labs, alongside entrepreneurial experience
+                      and backgrounds from prestigious institutions, including
+                      the IITs, our team combines enterprise expertise with a
+                      builder&rsquo;s mindset.
+                    </span>
+                  </span>
+                }
+              />
 
-          <div className="mt-12" />
-          {/* Team directory: full-bleed photo with a bottom gradient scrim
-              carrying the name/role/LinkedIn badge over the image itself,
-              matching the redesigned portrait-card treatment. Kept fixed
-              light-on-dark-scrim regardless of the section's own crossfade
-              (same pattern as the previous card design), so the cards read
-              consistently rather than dimming into the page background. */}
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[9px] font-bold uppercase tracking-[0.1em] text-caption">
-            <p>The people behind Superatom</p>
-            <span aria-hidden="true">&middot;</span>
-            <p>One team &middot; One mission</p>
-          </div>
-
-          <div className="mt-5 flex flex-wrap justify-center gap-3">
-            {teamMembers.map((member) => (
-              // Same card width the five-up row had: 5 columns on desktop,
-              // 3 on tablet, 2 on phones, so four members sit centered.
-              <div
-                key={member.name}
-                className="w-[calc((100%-12px)/2)] sm:w-[calc((100%-24px)/3)] lg:w-[calc((100%-48px)/5)]"
-              >
-                <TeamCard member={member} />
+              <div className="mt-8 flex items-center gap-3">
+                <span
+                  className="h-0.5 w-8 shrink-0 rounded-full"
+                  style={{ backgroundImage: BRAND_GRADIENT }}
+                  aria-hidden="true"
+                />
+                <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-caption">
+                  Four perspectives. One shared ambition.
+                </p>
               </div>
-            ))}
-          </div>
+            </div>
 
-          <div className="mt-8 flex items-center justify-center gap-3">
-            <span
-              className="h-0.5 w-8 shrink-0 rounded-full"
-              style={{ backgroundImage: BRAND_GRADIENT }}
-              aria-hidden="true"
-            />
-            <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-caption">
-              Four perspectives. One shared ambition.
-            </p>
+            {/* Team directory: full-bleed photo with a bottom gradient scrim
+                carrying the name/role/LinkedIn badge over the image itself.
+                Kept fixed light-on-dark-scrim regardless of the page's own
+                crossfade, so the cards read consistently. The second column
+                sits lower for the staggered look. */}
+            <div className="grid grid-cols-2 gap-3.5">
+              {teamMembers.map((member, i) => (
+                <div key={member.name} className={i % 2 === 1 ? "mt-9" : ""}>
+                  <TeamCard member={member} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
