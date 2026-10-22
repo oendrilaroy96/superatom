@@ -22,9 +22,11 @@ const CORE_R = 58;
 const NODE_R = 34;
 const EASE = "cubic-bezier(.22,1,.36,1)";
 
-export type DiagramVariant = "classic" | "brand" | "night" | "filled";
+export type DiagramVariant = "classic" | "brand" | "night" | "filled" | "soft1" | "soft2" | "soft3";
 
 const SOURCE_COLORS = ["#29b9bb", "#ff7600", "#533afd", "#ff7eb0", "#873eff", "#486ffd"];
+const SOFT_STROKES = ["#8FD6D7", "#FFB87A", "#A899FF", "#FFB3CF", "#C3A3FF", "#9DB1FF"];
+const SOFT_FILLS = ["#F0FAFA", "#FFF6EE", "#F4F2FF", "#FFF2F7", "#F7F1FF", "#F1F4FF"];
 
 type Theme = {
   scatteredFill: string;
@@ -79,6 +81,67 @@ const THEMES: Record<DiagramVariant, Theme> = {
     haloFill: "#C7BDFF",
     haloOpacity: 0.55,
     ring: "#873EFF",
+    coreText: "#FFFFFF",
+    arrow: "#FF7600",
+    outBox: "url(#satom-out-grad)",
+    outTitle: "#061B31",
+    outSub: "#533AFD",
+    caption: "",
+    wrapper: "",
+    gradients: true,
+  },
+  // Toned-down versions of "brand" for the connected state.
+  // soft1: one colour family (purple tints), orange only on the result arrow.
+  soft1: {
+    scatteredFill: "#F3F5FB",
+    scatteredStroke: "#B9C4E8",
+    connected: () => ({ fill: "#FFFFFF", stroke: "#A899FF", label: "#061B31" }),
+    scatteredLabel: "#4A5568",
+    bond: () => "#A899FF",
+    core: "url(#satom-core-grad)",
+    haloFill: "#C7BDFF",
+    haloOpacity: 0.5,
+    ring: "#A899FF",
+    coreText: "#FFFFFF",
+    arrow: "#533AFD",
+    outBox: "#E5E1FF",
+    outTitle: "#061B31",
+    outSub: "#533AFD",
+    caption: "",
+    wrapper: "",
+    gradients: true,
+  },
+  // soft2: the six brand colours kept, but pale: tinted fills and light outlines.
+  soft2: {
+    scatteredFill: "#F3F5FB",
+    scatteredStroke: "#B9C4E8",
+    connected: (i) => ({ fill: SOFT_FILLS[i], stroke: SOFT_STROKES[i], label: "#061B31" }),
+    scatteredLabel: "#4A5568",
+    bond: (i) => SOFT_STROKES[i],
+    core: "url(#satom-core-grad)",
+    haloFill: "#C7BDFF",
+    haloOpacity: 0.45,
+    ring: "#C7BDFF",
+    coreText: "#FFFFFF",
+    arrow: "#873EFF",
+    outBox: "#E5E1FF",
+    outTitle: "#061B31",
+    outSub: "#533AFD",
+    caption: "",
+    wrapper: "",
+    gradients: true,
+  },
+  // soft3: neutral grey-blue nodes and lines; colour only in the centre and the result.
+  soft3: {
+    scatteredFill: "#F3F5FB",
+    scatteredStroke: "#B9C4E8",
+    connected: () => ({ fill: "#FFFFFF", stroke: "#B9C4E8", label: "#061B31" }),
+    scatteredLabel: "#4A5568",
+    bond: () => "#B9C4E8",
+    core: "url(#satom-core-grad)",
+    haloFill: "#C7BDFF",
+    haloOpacity: 0.5,
+    ring: "#B9C4E8",
     coreText: "#FFFFFF",
     arrow: "#FF7600",
     outBox: "url(#satom-out-grad)",
