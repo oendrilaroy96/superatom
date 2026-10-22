@@ -150,7 +150,7 @@ export default function About() {
           className="pointer-events-none absolute -right-20 -top-32 size-[480px] rounded-full bg-primary-500/[0.06] blur-3xl"
         />
         <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 items-center gap-12 min-[1360px]:grid-cols-[1.25fr_1fr] min-[1360px]:gap-6">
+          <div className="grid grid-cols-1 items-center gap-12 min-[1360px]:grid-cols-[1.25fr_1fr] min-[1360px]:gap-6 min-[1440px]:grid-cols-[1fr_1fr]">
             <div>
               <SectionHeading
                 headingAs="h1"
@@ -189,7 +189,7 @@ export default function About() {
               </a>
             </div>
 
-            <div className="mx-auto w-full max-w-[720px] min-[1360px]:max-w-none">
+            <div className="mx-auto w-full max-w-[840px] min-[1360px]:max-w-none min-[1920px]:max-w-[860px]">
               <SuperatomDiagram />
             </div>
           </div>
