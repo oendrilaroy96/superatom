@@ -147,9 +147,9 @@ export default function About() {
                 descriptionClassName="max-w-lg"
               />
               <a
-                href="#our-journey"
+                href="#our-story"
                 onClick={(e) => {
-                  const target = document.getElementById("our-journey");
+                  const target = document.getElementById("our-story");
                   if (!target) return;
                   e.preventDefault();
                   target.scrollIntoView({
@@ -251,88 +251,67 @@ export default function About() {
         </div>
       </section>
 
-      {/* Our Journey */}
+      {/* Our Story */}
       <section
-        id="our-journey"
-        className="relative scroll-mt-16 overflow-hidden py-[72px]"
+        id="our-story"
+        className="relative scroll-mt-16 overflow-hidden py-[100px]"
       >
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -left-24 bottom-0 size-[420px] rounded-full bg-[#ff7eb0]/[0.06] blur-3xl"
         />
         <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <SectionHeading
-            eyebrow="Our Journey"
-            heading={
-              <>
-                Listening first.
-                <br />
-                <GradientText>Building with purpose.</GradientText>
-              </>
-            }
-          />
-
-          <div className="mt-12 grid grid-cols-1 items-start gap-y-8 lg:grid-cols-[0.42fr_1fr] lg:gap-x-12">
-            <div className="relative flex h-60 flex-col items-start justify-end overflow-hidden rounded-[22px] border border-primary-500/10 bg-gradient-to-br from-white to-primary-100/50 p-7">
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute -right-8 -top-10 size-28 rounded-full border border-dashed border-primary-500/30"
-              >
-                <span className="absolute -left-1 top-12 size-2 rounded-full border-2 border-white bg-primary-500 shadow-sm" />
-                <span className="absolute left-20 top-[76px] size-2 rounded-full border-2 border-white bg-[#873eff] shadow-sm" />
-                <span className="absolute left-6 top-0 size-2 rounded-full border-2 border-white bg-accent-500 shadow-sm" />
-              </div>
-              <p className="font-display text-[70px] font-semibold leading-none tracking-tight text-heading">
-                60<span className="text-primary-500">+</span>
-              </p>
-              <p className="mt-4 font-display text-[13px] font-bold text-heading">
-                CIO conversations
-              </p>
-              <p className="mt-1 text-[10px] uppercase tracking-[0.1em] text-caption">
-                Across the globe
-              </p>
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-[72px]">
+            <div className="lg:sticky lg:top-28">
+              <SectionHeading
+                eyebrow="Our Story"
+                heading={
+                  <>
+                    Built from 60+ conversations,{" "}
+                    <GradientText>not assumptions</GradientText>
+                  </>
+                }
+              />
             </div>
 
-            <div className="max-w-[780px]">
-              <p className="text-p leading-relaxed text-body">
-                Superatom AI began with conversations with 60+ CIOs across the
-                globe, helping us deeply understand the enterprise BI landscape,
-                the challenges faced by business analytics teams, and the
-                growing need for faster, more effective decision-making.
+            <div className="space-y-[18px] text-p leading-relaxed text-body">
+              <p className="font-display text-[24px] font-semibold leading-[1.3] tracking-tight text-heading sm:text-[28px]">
+                Superatom AI didn&rsquo;t start with a product. It started with
+                listening.
               </p>
-
-              <div
-                className="my-6 flex items-center gap-1.5"
-                aria-hidden="true"
-              >
-                <span className="size-[5px] rounded-full bg-primary-500" />
-                <span className="size-[5px] rounded-full bg-[#873eff]" />
-                <span className="size-[5px] rounded-full bg-accent-500" />
-              </div>
-
-              <p className="text-p leading-relaxed text-body">
-                These conversations with technology and business leaders laid
-                the foundation for our vision:
+              <p>
+                Before writing a line of code, we spoke with more than 60+ CIOs
+                around the globe and across industries.
               </p>
-
-              <div className="relative mt-6 overflow-hidden rounded-[22px] border border-primary-500/10 bg-white/70 p-7">
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute top-0 right-6 select-none font-display text-[90px] font-bold leading-none text-primary-500/10"
-                >
-                  &rdquo;
-                </span>
-                <span
-                  className="absolute left-0 top-0 h-full w-[3px]"
-                  style={{ backgroundImage: BRAND_GRADIENT }}
-                  aria-hidden="true"
-                />
-                <p className="relative font-display text-[20px] font-semibold leading-snug tracking-tight text-heading sm:text-[22px]">
-                  To transform how enterprises make decisions by bridging the
-                  gap between enterprise data, business context, and action.
-                </p>
-              </div>
+              <p>
+                We wanted to understand how enterprises really use business
+                intelligence: what works, what breaks, and where decisions get
+                stuck. The same themes kept coming up. Business analytics teams
+                are stretched thin. Dashboards multiply while answers slow down.
+                Leaders need to decide faster and with more confidence than
+                their current BI setup allows. Those conversations with
+                technology and business leaders became our foundation, and they
+                shaped one clear vision:
+              </p>
             </div>
+          </div>
+
+          <div className="relative mt-12 overflow-hidden rounded-[22px] border border-primary-500/10 bg-white p-7 sm:px-8">
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute right-6 top-0 select-none font-display text-[90px] font-bold leading-none text-primary-500/10"
+            >
+              &rdquo;
+            </span>
+            <span
+              className="absolute left-0 top-0 h-full w-[3px]"
+              style={{ backgroundImage: BRAND_GRADIENT }}
+              aria-hidden="true"
+            />
+            <p className="relative font-display text-[20px] font-semibold leading-snug tracking-tight text-heading sm:text-[22px]">
+              To transform how enterprises make decisions by bridging the gap
+              between enterprise data, business context, and action.
+            </p>
           </div>
         </div>
       </section>
