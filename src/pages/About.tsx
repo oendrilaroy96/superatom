@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import SuperatomDiagram from "../components/SuperatomDiagram";
 import GlowCard from "../components/ui/GlowCard";
 import { useDarkTransition } from "../context/DarkTransitionContext";
 import prashanthPhoto from "../assets/SuperatomTeams/Prashanth.webp";
@@ -75,7 +76,9 @@ function AvatarPlaceholder({ colors }: { colors: [string, string] }) {
   return (
     <div
       className="absolute inset-0"
-      style={{ backgroundImage: `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 100%)` }}
+      style={{
+        backgroundImage: `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 100%)`,
+      }}
     >
       <div className="absolute bottom-0 left-1/2 h-[55%] w-[85%] -translate-x-1/2 rounded-t-full bg-white/10 shadow-[inset_-12px_-10px_28px_rgba(11,22,40,0.3)]" />
       <div className="absolute left-1/2 top-[34%] h-[30%] w-[30%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/15 shadow-[inset_-10px_-8px_22px_rgba(11,22,40,0.3)]" />
@@ -135,47 +138,61 @@ export default function About() {
           className="pointer-events-none absolute -right-20 -top-32 size-[480px] rounded-full bg-primary-500/[0.06] blur-3xl"
         />
         <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <Eyebrow>About Superatom AI</Eyebrow>
-          <h1 className="mt-7 max-w-[980px] font-display text-[44px] font-semibold leading-[1.08] tracking-[-0.02em] text-heading sm:text-[60px] lg:text-[72px]">
-            <span className="block">Decisions at the</span>
-            <span
-              className="bg-clip-text text-transparent"
-              style={{
-                backgroundImage: BRAND_GRADIENT,
-                WebkitBoxDecorationBreak: "clone",
-                boxDecorationBreak: "clone",
-              }}
-            >
-              Speed of Business.
-            </span>
-          </h1>
-          <p className="mt-7 max-w-[640px] text-[18px] leading-[1.55] text-body sm:text-[20px]">
-            Superatom AI exists to close the gap between enterprise data, business context, and action.
-          </p>
-          <a
-            href="#our-journey"
-            onClick={(e) => {
-              const target = document.getElementById("our-journey");
-              if (!target) return;
-              e.preventDefault();
-              target.scrollIntoView({
-                behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-                block: "start",
-              });
-            }}
-            className="group mt-9 inline-flex items-center gap-3 text-base font-semibold text-primary-500 transition-colors hover:text-primary-600"
-          >
-            Discover our story
-            <ArrowForwardIcon
-              style={{ fontSize: 20 }}
-              className="transition-transform duration-300 group-hover:translate-x-1"
-            />
-          </a>
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.55fr_1.25fr] lg:gap-10">
+            <div>
+              <Eyebrow>About Superatom AI</Eyebrow>
+              <h1 className="mt-7 max-w-[980px] font-display text-[44px] font-semibold leading-[1.08] tracking-[-0.02em] text-heading sm:text-[56px] lg:text-[46px] xl:text-[54px]">
+                <span className="block">Decisions at the</span>
+                <span
+                  className="bg-clip-text text-transparent"
+                  style={{
+                    backgroundImage: BRAND_GRADIENT,
+                    WebkitBoxDecorationBreak: "clone",
+                    boxDecorationBreak: "clone",
+                  }}
+                >
+                  Speed of Business.
+                </span>
+              </h1>
+              <p className="mt-7 max-w-[640px] text-[18px] leading-[1.55] text-body sm:text-[20px]">
+                Superatom AI exists to close the gap between enterprise data,
+                business context, and action.
+              </p>
+              <a
+                href="#our-journey"
+                onClick={(e) => {
+                  const target = document.getElementById("our-journey");
+                  if (!target) return;
+                  e.preventDefault();
+                  target.scrollIntoView({
+                    behavior: window.matchMedia(
+                      "(prefers-reduced-motion: reduce)",
+                    ).matches
+                      ? "auto"
+                      : "smooth",
+                    block: "start",
+                  });
+                }}
+                className="group mt-9 inline-flex items-center gap-3 text-base font-semibold text-primary-500 transition-colors hover:text-primary-600"
+              >
+                Discover our story
+                <ArrowForwardIcon
+                  style={{ fontSize: 20 }}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </a>
+            </div>
+
+            <SuperatomDiagram />
+          </div>
         </div>
       </section>
 
       {/* Our Journey */}
-      <section id="our-journey" className="relative scroll-mt-16 overflow-hidden py-[120px]">
+      <section
+        id="our-journey"
+        className="relative scroll-mt-16 overflow-hidden py-[120px]"
+      >
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -left-24 bottom-0 size-[420px] rounded-full bg-[#ff7eb0]/[0.06] blur-3xl"
@@ -221,22 +238,24 @@ export default function About() {
 
             <div className="max-w-[780px]">
               <p className="text-p leading-relaxed text-body">
-                Superatom AI began with conversations with 60+ CIOs across
-                the globe, helping us deeply understand the enterprise BI
-                landscape, the challenges faced by business analytics
-                teams, and the growing need for faster, more effective
-                decision-making.
+                Superatom AI began with conversations with 60+ CIOs across the
+                globe, helping us deeply understand the enterprise BI landscape,
+                the challenges faced by business analytics teams, and the
+                growing need for faster, more effective decision-making.
               </p>
 
-              <div className="my-6 flex items-center gap-1.5" aria-hidden="true">
+              <div
+                className="my-6 flex items-center gap-1.5"
+                aria-hidden="true"
+              >
                 <span className="size-[5px] rounded-full bg-primary-500" />
                 <span className="size-[5px] rounded-full bg-[#873eff]" />
                 <span className="size-[5px] rounded-full bg-accent-500" />
               </div>
 
               <p className="text-p leading-relaxed text-body">
-                These conversations with technology and business leaders
-                laid the foundation for our vision:
+                These conversations with technology and business leaders laid
+                the foundation for our vision:
               </p>
 
               <div className="relative mt-6 overflow-hidden rounded-[22px] border border-primary-500/10 bg-white/70 p-7">
@@ -252,9 +271,8 @@ export default function About() {
                   aria-hidden="true"
                 />
                 <p className="relative font-display text-[20px] font-semibold leading-snug tracking-tight text-heading sm:text-[22px]">
-                  To transform how enterprises make decisions by bridging
-                  the gap between enterprise data, business context, and
-                  action.
+                  To transform how enterprises make decisions by bridging the
+                  gap between enterprise data, business context, and action.
                 </p>
               </div>
             </div>
@@ -263,16 +281,20 @@ export default function About() {
       </section>
 
       <section
-        className={`py-[120px] transition-colors duration-700 ease-in-out ${isDark ? "bg-secondary-500" : "bg-gradient-to-b from-primary-100/40 to-transparent"
-          }`}
+        className={`py-[120px] transition-colors duration-700 ease-in-out ${
+          isDark
+            ? "bg-secondary-500"
+            : "bg-gradient-to-b from-primary-100/40 to-transparent"
+        }`}
       >
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[0.86fr_1fr] lg:gap-16">
             <div>
               <Eyebrow>Our Team</Eyebrow>
               <h2
-                className={`mt-5 font-display text-[42px] font-semibold leading-[1.15] transition-colors duration-700 ease-in-out sm:text-[48px] ${isDark ? "text-white" : "text-heading"
-                  }`}
+                className={`mt-5 font-display text-[42px] font-semibold leading-[1.15] transition-colors duration-700 ease-in-out sm:text-[48px] ${
+                  isDark ? "text-white" : "text-heading"
+                }`}
               >
                 Enterprise expertise.
                 <br />
@@ -290,22 +312,23 @@ export default function About() {
             </div>
 
             <div
-              className={`space-y-4 pt-2 text-p leading-relaxed transition-colors duration-700 ease-in-out ${isDark ? "text-white/70" : "text-body"
-                }`}
+              className={`space-y-4 pt-2 text-p leading-relaxed transition-colors duration-700 ease-in-out ${
+                isDark ? "text-white/70" : "text-body"
+              }`}
             >
               <p>
                 We bring together a diverse team of strategic thinkers,
                 technology experts, and customer-obsessed builders. Our
-                collective experience spans building and scaling teams
-                across geographies, developing enterprise-grade products,
-                GTM experts and building startups from the ground up.
+                collective experience spans building and scaling teams across
+                geographies, developing enterprise-grade products, GTM experts
+                and building startups from the ground up.
               </p>
               <p>
-                With experience across organizations such as Blue
-                Yonder, DHL, and Pine Labs, alongside entrepreneurial
-                experience and backgrounds from prestigious
-                institutions, including the IITs, our team combines
-                enterprise expertise with a builder&rsquo;s mindset.
+                With experience across organizations such as Blue Yonder, DHL,
+                and Pine Labs, alongside entrepreneurial experience and
+                backgrounds from prestigious institutions, including the IITs,
+                our team combines enterprise expertise with a builder&rsquo;s
+                mindset.
               </p>
             </div>
           </div>
@@ -325,8 +348,8 @@ export default function About() {
               >
                 continuous learning
               </span>
-              , disciplined execution, and an unwavering commitment to
-              customer success.
+              , disciplined execution, and an unwavering commitment to customer
+              success.
             </p>
           </GlowCard>
 
@@ -338,14 +361,16 @@ export default function About() {
               consistently rather than dimming into the page background. */}
           <div className="mt-20 flex items-center justify-between gap-4">
             <p
-              className={`text-[9px] font-bold uppercase tracking-[0.1em] transition-colors duration-700 ease-in-out ${isDark ? "text-white/40" : "text-caption"
-                }`}
+              className={`text-[9px] font-bold uppercase tracking-[0.1em] transition-colors duration-700 ease-in-out ${
+                isDark ? "text-white/40" : "text-caption"
+              }`}
             >
               The people behind Superatom
             </p>
             <p
-              className={`text-[9px] font-bold uppercase tracking-[0.1em] transition-colors duration-700 ease-in-out ${isDark ? "text-white/40" : "text-caption"
-                }`}
+              className={`text-[9px] font-bold uppercase tracking-[0.1em] transition-colors duration-700 ease-in-out ${
+                isDark ? "text-white/40" : "text-caption"
+              }`}
             >
               One team &middot; One mission
             </p>
@@ -364,8 +389,9 @@ export default function About() {
               aria-hidden="true"
             />
             <p
-              className={`text-[11px] font-bold uppercase tracking-[0.08em] transition-colors duration-700 ease-in-out ${isDark ? "text-white/40" : "text-caption"
-                }`}
+              className={`text-[11px] font-bold uppercase tracking-[0.08em] transition-colors duration-700 ease-in-out ${
+                isDark ? "text-white/40" : "text-caption"
+              }`}
             >
               Five perspectives. One shared ambition.
             </p>
