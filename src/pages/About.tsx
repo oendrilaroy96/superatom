@@ -131,10 +131,10 @@ export default function About() {
           className="pointer-events-none absolute -right-20 -top-32 size-[480px] rounded-full bg-primary-500/[0.06] blur-3xl"
         />
         <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.1fr_1.4fr] lg:gap-6">
+          <div className="grid grid-cols-1 items-center gap-12 min-[1360px]:grid-cols-[1.25fr_1fr] min-[1360px]:gap-6">
             <div>
               <Eyebrow>About Superatom AI</Eyebrow>
-              <h1 className="mt-7 max-w-[980px] font-display text-[44px] font-semibold leading-[1.08] tracking-[-0.02em] text-heading sm:text-[56px] lg:text-[36px] xl:text-[44px] min-[1400px]:text-[48px]">
+              <h1 className="mt-7 max-w-[980px] font-display text-[42px] font-semibold leading-[1.08] tracking-[-0.02em] text-heading sm:text-[58px]">
                 <span className="block">Decisions at the</span>
                 <span
                   className="bg-clip-text text-transparent"
@@ -176,7 +176,9 @@ export default function About() {
               </a>
             </div>
 
-            <SuperatomDiagram />
+            <div className="mx-auto w-full max-w-[720px] min-[1360px]:max-w-none">
+              <SuperatomDiagram />
+            </div>
           </div>
         </div>
       </section>
@@ -188,7 +190,7 @@ export default function About() {
             <div className="flex justify-center">
               <Eyebrow>Our Team</Eyebrow>
             </div>
-            <h2 className="mt-5 font-display text-[42px] font-semibold leading-[1.15] text-heading sm:text-[48px]">
+            <h2 className="mt-5 font-display text-[42px] font-semibold leading-[1.15] text-heading sm:text-[58px]">
               Enterprise depth.
               <br />
               <span
@@ -273,7 +275,7 @@ export default function About() {
           <div className="grid grid-cols-1 items-start gap-y-8 lg:grid-cols-[0.42fr_1fr] lg:gap-x-12 lg:gap-y-12">
             <Eyebrow>Our Journey</Eyebrow>
 
-            <h2 className="font-display text-[42px] font-semibold leading-[1.15] text-heading sm:text-[48px]">
+            <h2 className="font-display text-[42px] font-semibold leading-[1.15] text-heading sm:text-[58px]">
               Listening first.
               <br />
               <span
