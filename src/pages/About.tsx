@@ -197,10 +197,9 @@ export default function About() {
       </section>
 
       {/* Team: right after the hero: heading and description, then the photos. */}
-      <section className="pb-[72px]">
+      <section className="py-[100px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <SectionHeading
-            align="center"
             className="max-w-4xl"
             eyebrow="Our Team"
             heading={
