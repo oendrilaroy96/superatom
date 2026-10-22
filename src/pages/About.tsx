@@ -125,12 +125,12 @@ export default function About() {
   return (
     <>
       {/* Hero */}
-      <section className="relative flex min-h-[calc(100svh-4rem)] items-center overflow-hidden py-[56px]">
+      <section className="relative overflow-hidden py-[80px]">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -right-20 -top-32 size-[480px] rounded-full bg-primary-500/[0.06] blur-3xl"
         />
-        <div className="relative mx-auto w-full max-w-[1920px] px-4 sm:px-10 xl:px-20">
+        <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="grid grid-cols-1 items-center gap-12 min-[1360px]:grid-cols-[1.25fr_1fr] min-[1360px]:gap-6">
             <div>
               <Eyebrow>About Superatom AI</Eyebrow>
