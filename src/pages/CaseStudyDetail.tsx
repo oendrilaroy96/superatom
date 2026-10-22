@@ -10,7 +10,7 @@ const BRAND_GRADIENT =
   "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)";
 
 const SECTION_HEADING =
-  "font-display text-[38px] font-semibold leading-[1.1] tracking-tight sm:text-[50px] lg:text-[62px]";
+  "font-display text-[32px] font-semibold leading-[1.15] tracking-tight sm:text-[40px] lg:text-[48px]";
 
 /** Page container: the site's side padding, content capped at 1360px like the design. */
 function Container({ children, className = "" }: { children: ReactNode; className?: string }) {
@@ -95,7 +95,7 @@ export default function CaseStudyDetail() {
           </div>
 
           <div className="max-w-[1180px] pb-8 pt-12 lg:pt-[54px]">
-            <h1 className="font-display text-[40px] font-semibold leading-[1.04] tracking-tight text-heading sm:text-[64px] lg:text-[84px] lg:tracking-[-0.04em]">
+            <h1 className="font-display text-[36px] font-semibold leading-[1.1] tracking-tight text-heading sm:text-[48px] lg:text-[58px]">
               {study.title}
             </h1>
             <div className="mt-8 h-1.5 w-[100px] rounded-full lg:mt-[34px]" style={{ backgroundImage: BRAND_GRADIENT }} />
@@ -182,7 +182,7 @@ export default function CaseStudyDetail() {
                 >
                   <span className="text-[10px] font-medium leading-[15px] text-primary-300">{caseNumber(i)}</span>
                   <div>
-                    <h3 className="font-display text-2xl font-semibold leading-[1.3] tracking-tight text-white sm:text-[29px]">
+                    <h3 className="font-display text-xl font-semibold leading-[1.3] tracking-tight text-white sm:text-[24px]">
                       {step.title}
                     </h3>
                     <p className="mt-3 max-w-[780px] text-base leading-[1.75] text-white/60">{step.text}</p>
@@ -203,7 +203,7 @@ export default function CaseStudyDetail() {
           <span className="font-display text-[80px] font-semibold leading-[0.7] text-white lg:text-[100px]" aria-hidden="true">
             “
           </span>
-          <blockquote className="max-w-[1000px] font-display text-[30px] font-semibold leading-[1.1] tracking-tight text-white sm:text-[46px] lg:text-[66px]">
+          <blockquote className="max-w-[1000px] font-display text-[26px] font-semibold leading-[1.2] tracking-tight text-white sm:text-[34px] lg:text-[44px]">
             {study.quote}
           </blockquote>
         </figure>
@@ -248,7 +248,7 @@ export default function CaseStudyDetail() {
             Next case study / {caseNumber(nextIndex)}
           </p>
           <div className="mt-[22px] flex items-end justify-between gap-6">
-            <p className="max-w-[850px] font-display text-[32px] font-semibold leading-[1.08] tracking-tight text-heading sm:text-[48px] lg:text-[66px]">
+            <p className="max-w-[850px] font-display text-[26px] font-semibold leading-[1.15] tracking-tight text-heading sm:text-[34px] lg:text-[44px]">
               {next.headline}
             </p>
             <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white transition-transform duration-300 group-hover:translate-x-1">

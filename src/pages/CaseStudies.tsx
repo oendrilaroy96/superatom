@@ -63,7 +63,7 @@ function FeaturedCard({ study }: { study: CaseStudy }) {
       <div className="flex flex-col p-6 sm:p-10 lg:p-[46px]">
         <CardLabels category={study.category} />
         <div className="flex flex-1 items-end pt-10">
-          <h2 className="font-display text-[30px] font-semibold leading-[1.14] tracking-tight text-heading sm:text-[40px] lg:text-[44px]">
+          <h2 className="font-display text-[28px] font-semibold leading-[1.18] tracking-tight text-heading sm:text-[34px] lg:text-[38px]">
             {study.headline}
           </h2>
         </div>
@@ -86,7 +86,7 @@ function StandardCard({ study, index }: { study: CaseStudy; index: number }) {
       </div>
       <div className="flex flex-1 flex-col px-6 pb-7 pt-5 sm:px-[26px]">
         <CardLabels category={study.category} />
-        <h2 className="mt-8 font-display text-[28px] font-semibold leading-[1.14] tracking-tight text-heading sm:text-[34px]">
+        <h2 className="mt-8 font-display text-[24px] font-semibold leading-[1.2] tracking-tight text-heading sm:text-[28px]">
           {study.headline}
         </h2>
         <p className="flex-1 pb-7 pt-5 text-sm leading-[1.7] text-body">{study.summary}</p>
