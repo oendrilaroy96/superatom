@@ -164,17 +164,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* Team photos: first thing after the hero, so they appear after one scroll. */}
-      <section className="pb-[60px]">
-        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            {teamMembers.map((member) => (
-              <TeamCard key={member.name} member={member} />
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Our Story */}
       <section className="relative overflow-hidden py-[100px]">
         <div
@@ -218,6 +207,17 @@ export default function About() {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Team photos: between Our Story and Our Team. */}
+      <section className="pb-[60px]">
+        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            {teamMembers.map((member) => (
+              <TeamCard key={member.name} member={member} />
+            ))}
           </div>
         </div>
       </section>
