@@ -3,6 +3,7 @@ import ShieldIcon from "@mui/icons-material/Shield";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import TimelineIcon from "@mui/icons-material/Timeline";
 import DnsIcon from "@mui/icons-material/Dns";
+import PersonIcon from "@mui/icons-material/Person";
 import AddIcon from "@mui/icons-material/Add";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
@@ -34,40 +35,72 @@ function DashedBox({
   );
 }
 
-function FlowStep({
-  tag,
-  tagClassName,
-  label,
-  active = false,
-}: {
-  tag: string;
-  tagClassName: string;
-  label: string;
-  active?: boolean;
-}) {
+// Workflows card: a decision is raised, routed to the right person for review
+// and approval, then carried out in the customer's existing enterprise
+// systems. `activeStep` cycles through the three rows.
+const WORKFLOW_STEPS = [
+  { title: "Decision", detail: "Raised by Superatom", Icon: null },
+  { title: "Right person", detail: "Review & approval", Icon: PersonIcon },
+  { title: "Enterprise systems", detail: "Action carried out", Icon: DnsIcon },
+] as const;
+
+function WorkflowDiagram({ activeStep }: { activeStep: number }) {
   return (
-    <div
-      className={`flex items-center gap-2.5 rounded-lg border px-3 py-2 transition-all duration-500 ${
-        active
-          ? "scale-[1.03] border-secondary-500 bg-secondary-500 shadow-[0_10px_24px_-10px_rgba(13,23,56,0.4)]"
-          : "border-secondary-100 bg-white"
-      }`}
-    >
-      <span className={`shrink-0 rounded px-2 py-0.5 text-[10px] font-bold ${tagClassName}`}>
-        {tag}
-      </span>
-      <span className={`text-xs font-medium ${active ? "text-white" : "text-heading"}`}>
-        {label}
-      </span>
-    </div>
+    <ol className="flex flex-col">
+      {WORKFLOW_STEPS.map((step, i) => {
+        const active = i === activeStep;
+        const done = i < activeStep;
+        return (
+          <li key={step.title}>
+            {i > 0 && (
+              <span
+                className={`ml-[26px] block h-4 w-0.5 rounded-full transition-colors duration-500 ${
+                  i <= activeStep ? "bg-primary-500" : "bg-secondary-100"
+                }`}
+                aria-hidden="true"
+              />
+            )}
+            <div
+              className={`flex items-center gap-3 rounded-lg border px-3 py-2.5 transition-all duration-500 ${
+                active
+                  ? "scale-[1.03] border-secondary-500 bg-secondary-500 shadow-[0_10px_24px_-10px_rgba(13,23,56,0.4)]"
+                  : "border-secondary-100 bg-white"
+              }`}
+            >
+              <span
+                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md transition-colors duration-500 ${
+                  active ? "bg-white" : "bg-primary-100 text-primary-500"
+                }`}
+              >
+                {step.Icon ? (
+                  <step.Icon style={{ fontSize: 18 }} className={active ? "text-secondary-500" : ""} />
+                ) : (
+                  <img src={superatomMark} alt="" className="h-5 w-5 object-contain" />
+                )}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className={`block text-xs font-semibold ${active ? "text-white" : "text-heading"}`}>
+                  {step.title}
+                </span>
+                <span className={`block text-[11px] ${active ? "text-white/60" : "text-caption"}`}>
+                  {step.detail}
+                </span>
+              </span>
+              <span
+                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full transition-all duration-500 ${
+                  done ? "scale-100 bg-primary-500 text-white" : "scale-50 opacity-0"
+                }`}
+                aria-hidden="true"
+              >
+                <CheckIcon style={{ fontSize: 13 }} />
+              </span>
+            </div>
+          </li>
+        );
+      })}
+    </ol>
   );
 }
-
-const WORKFLOW_STEPS = [
-  { tag: "RUN", label: "Repeatable analysis" },
-  { tag: "ACT", label: "Automated actions" },
-  { tag: "SEND", label: "Right people, right time" },
-];
 
 // Semantic Modeling card: enterprise data sources stream into the semantic
 // model while a ring around it fills one segment per analysis stage (the five
@@ -446,12 +479,13 @@ export default function Features() {
               </div>
             </DashedBox>
             <p className="mt-5 font-display text-h3 font-semibold text-heading">
-              Semantic Modeling
+              Semantic Modelling
             </p>
             <p className="mt-2 text-sm leading-relaxed text-caption">
-              Schema analysis, sampling, statistical profiling, domain
-              classification, and query generation turn ERPs, databases,
-              warehouses, files, and APIs into one queryable semantic model.
+              Superatom unifies data from your ERPs, databases, data
+              warehouses, files, and APIs. It analyzes structures,
+              relationships, patterns, and business context to build a unified
+              semantic model of your business in 3 days instead of 3–6 months.
             </p>
             <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-primary-500/15 bg-primary-100/50 px-3 py-1.5">
               <span className="text-[11px] font-medium text-caption line-through decoration-secondary-300">
@@ -461,7 +495,7 @@ export default function Features() {
                 &rarr;
               </span>
               <span className="text-[11px] font-bold text-primary-600">
-                ~2 days to model
+                3 days to model
               </span>
             </div>
           </GlowCard>
@@ -517,26 +551,13 @@ export default function Features() {
                 Workflows
               </p>
               <p className="mt-2 text-sm leading-relaxed text-caption">
-                Automate repeatable analysis and actions to deliver the right
-                insights to the right people at the right time.
+                Superatom turns decisions into action through your existing
+                enterprise systems, routing each decision to the right person
+                for review and approval.
               </p>
             </div>
             <DashedBox className="p-4 sm:w-[260px]">
-              <div className="flex flex-col gap-3">
-                {WORKFLOW_STEPS.map((step, i) => (
-                  <FlowStep
-                    key={step.tag}
-                    tag={step.tag}
-                    label={step.label}
-                    active={i === activeStep}
-                    tagClassName={
-                      i === activeStep
-                        ? "bg-accent-500 text-white"
-                        : "bg-primary-100 text-primary-500"
-                    }
-                  />
-                ))}
-              </div>
+              <WorkflowDiagram activeStep={activeStep} />
             </DashedBox>
           </GlowCard>
 
