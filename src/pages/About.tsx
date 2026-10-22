@@ -132,7 +132,7 @@ export default function About() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden pb-[96px] pt-[72px] sm:pt-[96px]">
+      <section className="relative overflow-hidden pb-[56px] pt-[56px] sm:pt-[72px]">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -right-20 -top-32 size-[480px] rounded-full bg-primary-500/[0.06] blur-3xl"
@@ -188,17 +188,54 @@ export default function About() {
         </div>
       </section>
 
+      {/* Team: right after the hero. */}
+      <section className="pb-[72px]">
+        <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+          {/* Team directory: full-bleed photo with a bottom gradient scrim
+              carrying the name/role/LinkedIn badge over the image itself,
+              matching the redesigned portrait-card treatment. Kept fixed
+              light-on-dark-scrim regardless of the section's own crossfade
+              (same pattern as the previous card design), so the cards read
+              consistently rather than dimming into the page background. */}
+          <div className="flex items-center justify-between gap-4">
+            <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-caption">
+              The people behind Superatom
+            </p>
+            <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-caption">
+              One team &middot; One mission
+            </p>
+          </div>
+
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {teamMembers.map((member) => (
+              <TeamCard key={member.name} member={member} />
+            ))}
+          </div>
+
+          <div className="mt-8 flex items-center gap-3">
+            <span
+              className="h-0.5 w-8 shrink-0 rounded-full"
+              style={{ backgroundImage: BRAND_GRADIENT }}
+              aria-hidden="true"
+            />
+            <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-caption">
+              Five perspectives. One shared ambition.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Our Journey */}
       <section
         id="our-journey"
-        className="relative scroll-mt-16 overflow-hidden py-[120px]"
+        className="relative scroll-mt-16 overflow-hidden py-[72px]"
       >
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -left-24 bottom-0 size-[420px] rounded-full bg-[#ff7eb0]/[0.06] blur-3xl"
         />
         <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 items-start gap-y-8 lg:grid-cols-[0.42fr_1fr] lg:gap-x-12 lg:gap-y-[78px]">
+          <div className="grid grid-cols-1 items-start gap-y-8 lg:grid-cols-[0.42fr_1fr] lg:gap-x-12 lg:gap-y-12">
             <Eyebrow>Our Journey</Eyebrow>
 
             <h2 className="font-display text-[42px] font-semibold leading-[1.15] text-heading sm:text-[48px]">
@@ -281,7 +318,7 @@ export default function About() {
       </section>
 
       <section
-        className={`py-[120px] transition-colors duration-700 ease-in-out ${
+        className={`py-[72px] transition-colors duration-700 ease-in-out ${
           isDark
             ? "bg-secondary-500"
             : "bg-gradient-to-b from-primary-100/40 to-transparent"
@@ -334,7 +371,7 @@ export default function About() {
           </div>
 
           <GlowCard
-            className="mt-20"
+            className="mt-12"
             contentClassName="grid grid-cols-1 gap-4 p-8 sm:grid-cols-[370px_1fr] sm:gap-12"
           >
             <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-caption">
@@ -352,50 +389,6 @@ export default function About() {
               success.
             </p>
           </GlowCard>
-
-          {/* Team directory: full-bleed photo with a bottom gradient scrim
-              carrying the name/role/LinkedIn badge over the image itself,
-              matching the redesigned portrait-card treatment. Kept fixed
-              light-on-dark-scrim regardless of the section's own crossfade
-              (same pattern as the previous card design), so the cards read
-              consistently rather than dimming into the page background. */}
-          <div className="mt-20 flex items-center justify-between gap-4">
-            <p
-              className={`text-[9px] font-bold uppercase tracking-[0.1em] transition-colors duration-700 ease-in-out ${
-                isDark ? "text-white/40" : "text-caption"
-              }`}
-            >
-              The people behind Superatom
-            </p>
-            <p
-              className={`text-[9px] font-bold uppercase tracking-[0.1em] transition-colors duration-700 ease-in-out ${
-                isDark ? "text-white/40" : "text-caption"
-              }`}
-            >
-              One team &middot; One mission
-            </p>
-          </div>
-
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-            {teamMembers.map((member) => (
-              <TeamCard key={member.name} member={member} />
-            ))}
-          </div>
-
-          <div className="mt-8 flex items-center gap-3">
-            <span
-              className="h-0.5 w-8 shrink-0 rounded-full"
-              style={{ backgroundImage: BRAND_GRADIENT }}
-              aria-hidden="true"
-            />
-            <p
-              className={`text-[11px] font-bold uppercase tracking-[0.08em] transition-colors duration-700 ease-in-out ${
-                isDark ? "text-white/40" : "text-caption"
-              }`}
-            >
-              Five perspectives. One shared ambition.
-            </p>
-          </div>
         </div>
       </section>
     </>
