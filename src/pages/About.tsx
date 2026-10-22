@@ -200,7 +200,7 @@ export default function About() {
           right (stacked on smaller screens). */}
       <section className="py-[100px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center lg:gap-[72px]">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center lg:gap-[72px]">
             <div>
               <SectionHeading
                 eyebrow="Our Team"
