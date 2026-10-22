@@ -262,7 +262,7 @@ export default function About() {
         />
         <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-[72px]">
-            <div className="lg:sticky lg:top-28">
+            <div>
               <SectionHeading
                 eyebrow="Our Story"
                 heading={
