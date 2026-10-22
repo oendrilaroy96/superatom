@@ -22,177 +22,25 @@ const CORE_R = 58;
 const NODE_R = 34;
 const EASE = "cubic-bezier(.22,1,.36,1)";
 
-export type DiagramVariant = "classic" | "brand" | "night" | "filled" | "soft1" | "soft2" | "soft3";
-
-const SOURCE_COLORS = ["#29b9bb", "#ff7600", "#533afd", "#ff7eb0", "#873eff", "#486ffd"];
-const SOFT_STROKES = ["#8FD6D7", "#FFB87A", "#A899FF", "#FFB3CF", "#C3A3FF", "#9DB1FF"];
-const SOFT_FILLS = ["#F0FAFA", "#FFF6EE", "#F4F2FF", "#FFF2F7", "#F7F1FF", "#F1F4FF"];
-
-type Theme = {
-  scatteredFill: string;
-  scatteredStroke: string;
-  /** Node styling once connected, per source index. */
-  connected: (i: number) => { fill: string; stroke: string; label: string };
-  scatteredLabel: string;
-  bond: (i: number) => string;
-  core: string;
-  haloFill: string;
-  haloOpacity: number;
-  ring: string;
-  coreText: string;
-  arrow: string;
-  outBox: string;
-  outTitle: string;
-  outSub: string;
-  caption: string;
-  /** Extra classes on the wrapper (a dark panel for "night"). */
-  wrapper: string;
-  gradients: boolean;
-};
-
-const THEMES: Record<DiagramVariant, Theme> = {
-  classic: {
-    scatteredFill: "#E5EDF5",
-    scatteredStroke: "#8792A2",
-    connected: () => ({ fill: "#FFFFFF", stroke: "#C9A8E8", label: "#061B31" }),
-    scatteredLabel: "#061B31",
-    bond: () => "#7B6CFF",
-    core: "#533AFD",
-    haloFill: "#8E8CC2",
-    haloOpacity: 0.75,
-    ring: "#533AFD",
-    coreText: "#FFFFFF",
-    arrow: "#533AFD",
-    outBox: "#E5E1FF",
-    outTitle: "#061B31",
-    outSub: "#533AFD",
-    caption: "",
-    wrapper: "",
-    gradients: false,
-  },
-  // Each source keeps its own brand colour; core, flow and result use the brand gradient.
-  brand: {
-    scatteredFill: "#F3F5FB",
-    scatteredStroke: "#B9C4E8",
-    connected: (i) => ({ fill: "#FFFFFF", stroke: SOURCE_COLORS[i], label: "#061B31" }),
-    scatteredLabel: "#4A5568",
-    bond: (i) => SOURCE_COLORS[i],
-    core: "url(#satom-core-grad)",
-    haloFill: "#C7BDFF",
-    haloOpacity: 0.55,
-    ring: "#873EFF",
-    coreText: "#FFFFFF",
-    arrow: "#FF7600",
-    outBox: "url(#satom-out-grad)",
-    outTitle: "#061B31",
-    outSub: "#533AFD",
-    caption: "",
-    wrapper: "",
-    gradients: true,
-  },
-  // Toned-down versions of "brand" for the connected state.
-  // soft1: one colour family (purple tints), orange only on the result arrow.
-  soft1: {
-    scatteredFill: "#F3F5FB",
-    scatteredStroke: "#B9C4E8",
-    connected: () => ({ fill: "#FFFFFF", stroke: "#A899FF", label: "#061B31" }),
-    scatteredLabel: "#4A5568",
-    bond: () => "#A899FF",
-    core: "url(#satom-core-grad)",
-    haloFill: "#C7BDFF",
-    haloOpacity: 0.5,
-    ring: "#A899FF",
-    coreText: "#FFFFFF",
-    arrow: "#533AFD",
-    outBox: "#E5E1FF",
-    outTitle: "#061B31",
-    outSub: "#533AFD",
-    caption: "",
-    wrapper: "",
-    gradients: true,
-  },
-  // soft2: the six brand colours kept, but pale: tinted fills and light outlines.
-  soft2: {
-    scatteredFill: "#F3F5FB",
-    scatteredStroke: "#B9C4E8",
-    connected: (i) => ({ fill: SOFT_FILLS[i], stroke: SOFT_STROKES[i], label: "#061B31" }),
-    scatteredLabel: "#4A5568",
-    bond: (i) => SOFT_STROKES[i],
-    core: "url(#satom-core-grad)",
-    haloFill: "#C7BDFF",
-    haloOpacity: 0.45,
-    ring: "#C7BDFF",
-    coreText: "#FFFFFF",
-    arrow: "#873EFF",
-    outBox: "#E5E1FF",
-    outTitle: "#061B31",
-    outSub: "#533AFD",
-    caption: "",
-    wrapper: "",
-    gradients: true,
-  },
-  // soft3: neutral grey-blue nodes and lines; colour only in the centre and the result.
-  soft3: {
-    scatteredFill: "#F3F5FB",
-    scatteredStroke: "#B9C4E8",
-    connected: () => ({ fill: "#FFFFFF", stroke: "#B9C4E8", label: "#061B31" }),
-    scatteredLabel: "#4A5568",
-    bond: () => "#B9C4E8",
-    core: "url(#satom-core-grad)",
-    haloFill: "#C7BDFF",
-    haloOpacity: 0.5,
-    ring: "#B9C4E8",
-    coreText: "#FFFFFF",
-    arrow: "#FF7600",
-    outBox: "url(#satom-out-grad)",
-    outTitle: "#061B31",
-    outSub: "#533AFD",
-    caption: "",
-    wrapper: "",
-    gradients: true,
-  },
-  // Dark navy panel with glowing nodes, like the site's dark sections.
-  night: {
-    scatteredFill: "#16204A",
-    scatteredStroke: "#5A6D95",
-    connected: (i) => ({ fill: "#16204A", stroke: SOURCE_COLORS[i], label: "#FFFFFF" }),
-    scatteredLabel: "#B9C4E8",
-    bond: (i) => SOURCE_COLORS[i],
-    core: "url(#satom-core-grad)",
-    haloFill: "#533AFD",
-    haloOpacity: 0.35,
-    ring: "#8D9EC9",
-    coreText: "#FFFFFF",
-    arrow: "#FF7600",
-    outBox: "rgba(255,255,255,0.08)",
-    outTitle: "#FFFFFF",
-    outSub: "#FFAF6B",
-    caption: "#B9C4E8",
-    wrapper:
-      "rounded-[28px] border border-white/10 bg-secondary-700 px-4 sm:px-8 [background-image:radial-gradient(600px_320px_at_85%_0%,rgba(83,58,253,0.45),transparent_65%),radial-gradient(500px_300px_at_0%_100%,rgba(255,118,0,0.2),transparent_65%)]",
-    gradients: true,
-  },
-  // Solid colour-filled nodes with white labels.
-  filled: {
-    scatteredFill: "#DDE3F2",
-    scatteredStroke: "#DDE3F2",
-    connected: (i) => ({ fill: SOURCE_COLORS[i], stroke: SOURCE_COLORS[i], label: "#FFFFFF" }),
-    scatteredLabel: "#4A5568",
-    bond: (i) => SOURCE_COLORS[i],
-    core: "#0D1738",
-    haloFill: "#8E8CC2",
-    haloOpacity: 0.35,
-    ring: "#0D1738",
-    coreText: "#FFFFFF",
-    arrow: "#0D1738",
-    outBox: "#0D1738",
-    outTitle: "#FFFFFF",
-    outSub: "#FFAF6B",
-    caption: "",
-    wrapper: "",
-    gradients: false,
-  },
-};
+/** Colours: one soft purple family for the connected state, with the brand gradient on the centre. */
+const THEME = {
+  scatteredFill: "#F3F5FB",
+  scatteredStroke: "#B9C4E8",
+  scatteredLabel: "#4A5568",
+  connectedFill: "#FFFFFF",
+  connectedStroke: "#A899FF",
+  label: "#061B31",
+  bond: "#A899FF",
+  core: "url(#satom-core-grad)",
+  haloFill: "#C7BDFF",
+  haloOpacity: 0.5,
+  ring: "#A899FF",
+  coreText: "#FFFFFF",
+  arrow: "#533AFD",
+  outBox: "#E5E1FF",
+  outTitle: "#061B31",
+  outSub: "#533AFD",
+} as const;
 
 /**
  * Six enterprise data sources scatter, orbit, and bond to a central
@@ -204,8 +52,8 @@ const THEMES: Record<DiagramVariant, Theme> = {
  * component's own container instead of `document`, and the mount/unmount
  * is made idempotent for StrictMode's dev double-invoke.
  */
-export default function SuperatomDiagram({ variant = "classic" }: { variant?: DiagramVariant }) {
-  const theme = THEMES[variant];
+export default function SuperatomDiagram() {
+  const theme = THEME;
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -213,11 +61,15 @@ export default function SuperatomDiagram({ variant = "classic" }: { variant?: Di
     if (!root) return;
 
     const ns = "http://www.w3.org/2000/svg";
-    const $ = <T extends Element>(id: string) => root.querySelector(`#${id}`) as T;
+    const $ = <T extends Element>(id: string) =>
+      root.querySelector(`#${id}`) as T;
 
     const orbit = SOURCES.map((_, i) => {
       const a = ((30 + i * 60) * Math.PI) / 180;
-      return [CX + ORBIT_R * Math.cos(a), CY + ORBIT_R * Math.sin(a)] as [number, number];
+      return [CX + ORBIT_R * Math.cos(a), CY + ORBIT_R * Math.sin(a)] as [
+        number,
+        number,
+      ];
     });
 
     const bondsGroup = $<SVGGElement>("bonds");
@@ -234,7 +86,6 @@ export default function SuperatomDiagram({ variant = "classic" }: { variant?: Di
     nodesGroup.innerHTML = "";
     capEl.innerHTML = "";
 
-    let bonds_i = 0;
     const bonds = orbit.map((p) => {
       const d = Math.hypot(p[0] - CX, p[1] - CY);
       const line = document.createElementNS(ns, "line");
@@ -243,7 +94,7 @@ export default function SuperatomDiagram({ variant = "classic" }: { variant?: Di
       line.setAttribute("x2", String(CX + ((p[0] - CX) * (d - NODE_R)) / d));
       line.setAttribute("y2", String(CY + ((p[1] - CY) * (d - NODE_R)) / d));
       line.setAttribute("pathLength", "1");
-      line.setAttribute("stroke", theme.bond(bonds_i++));
+      line.setAttribute("stroke", theme.bond);
       line.setAttribute("stroke-dasharray", "1");
       line.style.strokeDashoffset = "1";
       bondsGroup.appendChild(line);
@@ -277,12 +128,17 @@ export default function SuperatomDiagram({ variant = "classic" }: { variant?: Di
         const circle = inner.querySelector("circle") as SVGCircleElement;
         g.style.transform = `translate(${p[0]}px,${p[1]}px)`;
         inner.setAttribute("class", connected ? "" : "flt");
-        const c = theme.connected(i);
-        circle.setAttribute("fill", connected ? c.fill : theme.scatteredFill);
-        circle.setAttribute("stroke", connected ? c.stroke : theme.scatteredStroke);
+        circle.setAttribute(
+          "fill",
+          connected ? theme.connectedFill : theme.scatteredFill,
+        );
+        circle.setAttribute(
+          "stroke",
+          connected ? theme.connectedStroke : theme.scatteredStroke,
+        );
         (inner.querySelector("text") as SVGTextElement).setAttribute(
           "fill",
-          connected ? c.label : theme.scatteredLabel,
+          connected ? theme.label : theme.scatteredLabel,
         );
       });
       bonds.forEach((line, i) => {
@@ -290,7 +146,10 @@ export default function SuperatomDiagram({ variant = "classic" }: { variant?: Di
         line.style.strokeDashoffset = connected ? "0" : "1";
       });
       ringEl.setAttribute("opacity", connected ? ".55" : "0");
-      haloEl.setAttribute("opacity", connected ? String(theme.haloOpacity) : "0");
+      haloEl.setAttribute(
+        "opacity",
+        connected ? String(theme.haloOpacity) : "0",
+      );
       haloEl.setAttribute("class", `halo fade${unified ? " br" : ""}`);
       coreEl.setAttribute("opacity", connected ? "1" : ".55");
       outEl.style.transitionDelay = `${unified ? 300 : 0}ms`;
@@ -321,31 +180,30 @@ export default function SuperatomDiagram({ variant = "classic" }: { variant?: Di
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [theme]);
+  }, []);
 
   return (
-    <div ref={rootRef} className={`satom-diag ${theme.wrapper}`}>
+    <div ref={rootRef} className="satom-diag">
       <div className="mx-auto flex flex-col gap-3 py-8">
-        <svg viewBox="0 0 680 380" role="img" aria-labelledby="satom-diag-t satom-diag-d">
-          <title id="satom-diag-t">Superatom AI: from fragmented data to decisions</title>
+        <svg
+          viewBox="0 0 680 380"
+          role="img"
+          aria-labelledby="satom-diag-t satom-diag-d"
+        >
+          <title id="satom-diag-t">
+            Superatom AI: from fragmented data to decisions
+          </title>
           <desc id="satom-diag-d">
-            Six enterprise data sources move from scattered positions into orbit around Superatom AI,
-            bond to it, and flow out as better, faster decisions.
+            Six enterprise data sources move from scattered positions into orbit
+            around Superatom AI, bond to it, and flow out as better, faster
+            decisions.
           </desc>
           <defs>
-            {theme.gradients && (
-              <>
-                <linearGradient id="satom-core-grad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stopColor="#533AFD" />
-                  <stop offset="0.55" stopColor="#873EFF" />
-                  <stop offset="1" stopColor="#FF7EB0" />
-                </linearGradient>
-                <linearGradient id="satom-out-grad" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0" stopColor="#E5E1FF" />
-                  <stop offset="1" stopColor="#FFE9D6" />
-                </linearGradient>
-              </>
-            )}
+            <linearGradient id="satom-core-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#533AFD" />
+              <stop offset="0.55" stopColor="#873EFF" />
+              <stop offset="1" stopColor="#FF7EB0" />
+            </linearGradient>
             <marker
               id="satom-diag-arrow"
               viewBox="0 0 10 10"
@@ -377,10 +235,34 @@ export default function SuperatomDiagram({ variant = "classic" }: { variant?: Di
             strokeDasharray="7 7"
             opacity={0}
           />
-          <circle id="halo" className="halo fade" cx={CX} cy={CY} r={76} fill={theme.haloFill} opacity={0} />
+          <circle
+            id="halo"
+            className="halo fade"
+            cx={CX}
+            cy={CY}
+            r={76}
+            fill={theme.haloFill}
+            opacity={0}
+          />
           <g id="bonds" strokeWidth={2.5} strokeLinecap="round" />
-          <circle id="core" className="fade" cx={CX} cy={CY} r={CORE_R} fill={theme.core} opacity={0.55} />
-          <text x={CX} y={CY} textAnchor="middle" dominantBaseline="central" fill={theme.coreText} fontSize={16} fontWeight={600}>
+          <circle
+            id="core"
+            className="fade"
+            cx={CX}
+            cy={CY}
+            r={CORE_R}
+            fill={theme.core}
+            opacity={0.55}
+          />
+          <text
+            x={CX}
+            y={CY}
+            textAnchor="middle"
+            dominantBaseline="central"
+            fill={theme.coreText}
+            fontSize={16}
+            fontWeight={600}
+          >
             Superatom AI
           </text>
           <g id="out" className="fade" opacity={0}>
@@ -396,17 +278,40 @@ export default function SuperatomDiagram({ variant = "classic" }: { variant?: Di
               strokeDasharray="0.5 9.5"
               markerEnd="url(#satom-diag-arrow)"
             />
-            <rect x={500} y={158} width={148} height={64} rx={12} fill={theme.outBox} />
-            <text x={574} y={180} textAnchor="middle" dominantBaseline="central" fill={theme.outTitle} fontSize={16} fontWeight={600}>
+            <rect
+              x={500}
+              y={158}
+              width={148}
+              height={64}
+              rx={12}
+              fill={theme.outBox}
+            />
+            <text
+              x={574}
+              y={180}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fill={theme.outTitle}
+              fontSize={16}
+              fontWeight={600}
+            >
               Decisions
             </text>
-            <text x={574} y={202} textAnchor="middle" dominantBaseline="central" fill={theme.outSub} fontSize={13.5} fontWeight={500}>
+            <text
+              x={574}
+              y={202}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fill={theme.outSub}
+              fontSize={13.5}
+              fontWeight={500}
+            >
               Better, faster
             </text>
           </g>
           <g id="nodes" />
         </svg>
-        <div className="cap" id="cap" aria-live="polite" style={theme.caption ? ({ "--cap": theme.caption } as React.CSSProperties) : undefined} />
+        <div className="cap" id="cap" aria-live="polite" />
       </div>
     </div>
   );
