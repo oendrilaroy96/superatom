@@ -356,7 +356,7 @@ export default function About() {
                   "radial-gradient(500px 300px at 100% 0%, rgba(255,126,176,0.45), transparent 65%), radial-gradient(500px 360px at 0% 100%, rgba(135,62,255,0.55), transparent 65%)",
               }}
             >
-              <p className="font-display text-[24px] font-semibold leading-[1.2] tracking-tight text-white sm:text-[28px] lg:text-[32px]">
+              <p className="font-display text-[20px] font-semibold leading-[1.25] tracking-tight text-white sm:text-[22px] lg:text-[26px]">
                 We believe the future of BI isn&rsquo;t more dashboards.
                 It&rsquo;s faster, better decisions.
               </p>
