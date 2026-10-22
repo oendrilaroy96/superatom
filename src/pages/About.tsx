@@ -46,13 +46,6 @@ const teamMembers: TeamMember[] = [
     linkedin: "https://www.linkedin.com/in/chetan-sai-1720a8174/",
     photo: chetanPhoto,
   },
-  {
-    name: "Gopinadh Boppudi",
-    role: "Head of Engineering",
-    linkedin: "https://www.linkedin.com/in/gopinadh-boppudi-8730751b0/",
-    photo: null,
-    avatarGradient: ["#d6d9f0", "#9ba3d4"],
-  },
 ];
 
 /** Small gradient dash + label, the eyebrow treatment used throughout this redesign instead of SectionHeading's own colored-text eyebrow. */
@@ -235,29 +228,33 @@ export default function About() {
               light-on-dark-scrim regardless of the section's own crossfade
               (same pattern as the previous card design), so the cards read
               consistently rather than dimming into the page background. */}
-          <div className="flex items-center justify-between gap-4">
-            <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-caption">
-              The people behind Superatom
-            </p>
-            <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-caption">
-              One team &middot; One mission
-            </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[9px] font-bold uppercase tracking-[0.1em] text-caption">
+            <p>The people behind Superatom</p>
+            <span aria-hidden="true">&middot;</span>
+            <p>One team &middot; One mission</p>
           </div>
 
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="mt-5 flex flex-wrap justify-center gap-3">
             {teamMembers.map((member) => (
-              <TeamCard key={member.name} member={member} />
+              // Same card width the five-up row had: 5 columns on desktop,
+              // 3 on tablet, 2 on phones, so four members sit centered.
+              <div
+                key={member.name}
+                className="w-[calc((100%-12px)/2)] sm:w-[calc((100%-24px)/3)] lg:w-[calc((100%-48px)/5)]"
+              >
+                <TeamCard member={member} />
+              </div>
             ))}
           </div>
 
-          <div className="mt-8 flex items-center gap-3">
+          <div className="mt-8 flex items-center justify-center gap-3">
             <span
               className="h-0.5 w-8 shrink-0 rounded-full"
               style={{ backgroundImage: BRAND_GRADIENT }}
               aria-hidden="true"
             />
             <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-caption">
-              Five perspectives. One shared ambition.
+              Four perspectives. One shared ambition.
             </p>
           </div>
         </div>
