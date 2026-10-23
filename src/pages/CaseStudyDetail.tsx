@@ -282,37 +282,40 @@ export default function CaseStudyDetail() {
           </Container>
         </section>
 
-        {/* Next case study: narrower and right-aligned; it fades to the dark
-            style together with the rest of this block. */}
+        {/* Next case study: same width and position as the result rows above it
+            (second column of the result grid on desktop, full width below),
+            and it fades to the dark style together with the rest of this block. */}
         <Container className="pb-20 lg:pb-[100px]">
-          <Link
-            to={`/case-studies/${next.slug}`}
-            className={`group ml-auto block max-w-[720px] rounded-[18px] border p-4 transition-[background-color,border-color,box-shadow] duration-700 ease-in-out sm:p-5 lg:px-6 lg:py-5 ${
-              isDark
-                ? "border-white/10 bg-white/5 hover:bg-white/10"
-                : "border-secondary-100 bg-white shadow-[0_4px_7px_rgba(6,27,49,0.04)] hover:shadow-[0_18px_40px_-22px_rgba(6,27,49,0.25)]"
-            }`}
-          >
-            <p
-              className={`text-[10px] font-medium uppercase tracking-[0.12em] transition-colors duration-700 ${
-                isDark ? "text-primary-300" : "text-primary-500"
+          <div className="lg:grid lg:grid-cols-[minmax(0,411fr)_minmax(0,617fr)] lg:gap-6">
+            <Link
+              to={`/case-studies/${next.slug}`}
+              className={`group block rounded-[18px] border p-4 lg:col-start-2 transition-[background-color,border-color,box-shadow] duration-700 ease-in-out sm:p-5 lg:px-6 lg:py-5 ${
+                isDark
+                  ? "border-white/10 bg-white/5 hover:bg-white/10"
+                  : "border-secondary-100 bg-white shadow-[0_4px_7px_rgba(6,27,49,0.04)] hover:shadow-[0_18px_40px_-22px_rgba(6,27,49,0.25)]"
               }`}
             >
-              Next case study
-            </p>
-            <div className="mt-2.5 flex items-center justify-between gap-6">
               <p
-                className={`font-display text-[16px] font-semibold leading-[1.25] tracking-tight transition-colors duration-700 sm:text-[18px] lg:text-[20px] ${
-                  isDark ? "text-white" : "text-heading"
+                className={`text-[10px] font-medium uppercase tracking-[0.12em] transition-colors duration-700 ${
+                  isDark ? "text-primary-300" : "text-primary-500"
                 }`}
               >
-                {next.headline}
+                Next case study
               </p>
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white transition-transform duration-300 group-hover:translate-x-1">
-                <ArrowForwardIcon style={{ fontSize: 16 }} />
-              </span>
-            </div>
-          </Link>
+              <div className="mt-2.5 flex items-center justify-between gap-6">
+                <p
+                  className={`font-display text-[16px] font-semibold leading-[1.25] tracking-tight transition-colors duration-700 sm:text-[18px] lg:text-[20px] ${
+                    isDark ? "text-white" : "text-heading"
+                  }`}
+                >
+                  {next.headline}
+                </p>
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white transition-transform duration-300 group-hover:translate-x-1">
+                  <ArrowForwardIcon style={{ fontSize: 16 }} />
+                </span>
+              </div>
+            </Link>
+          </div>
         </Container>
       </div>
     </article>
