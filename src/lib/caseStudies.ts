@@ -9,8 +9,6 @@ export type CaseStudy = {
   title: string;
   /** Short headline used on the list card and in "Next case study". */
   headline: string;
-  /** One-paragraph summary used on the list card and under the page title. */
-  summary: string;
   /** Headline number, shown on the list card, over the photo and in the result section. */
   stat: { value: string; label: string };
   image: { src: string; alt: string };
@@ -30,8 +28,6 @@ export const caseStudies: CaseStudy[] = [
     category: "Inventory intelligence",
     title: "Inventory Optimization & Redistribution Intelligence",
     headline: "Turning trapped inventory into working capital.",
-    summary:
-      "A machine-learning and optimization system that identifies stranded stock, calculates the right transfers, and moves inventory only when the economics make sense.",
     stat: { value: "$50+M", label: "in dead/excess inventory identified" },
     image: {
       src: "/case-studies/distribution-center.webp",
@@ -77,8 +73,6 @@ export const caseStudies: CaseStudy[] = [
     category: "Value recovery",
     title: "SLOB Inventory Optimization & Value Recovery Intelligence",
     headline: "From spreadsheet firefighting to proactive value recovery.",
-    summary:
-      "A centralized decision platform that gives planning and commercial teams one workflow for identifying, acting on, and learning from slow-moving and obsolete stock.",
     stat: {
       value: "7.9M",
       label: "retail outlets in the distribution network",
@@ -122,8 +116,6 @@ export const caseStudies: CaseStudy[] = [
     category: "Transportation intelligence",
     title: "Transportation Procurement & Operations Intelligence",
     headline: "A single operating view across 140+ branches.",
-    summary:
-      "A connected intelligence layer across four legacy ERPs that aligns pricing, vendor procurement, margins, and live transportation operations.",
     stat: { value: "140+", label: "branches with real-time visibility" },
     image: {
       src: "/case-studies/freight-trucks.webp",

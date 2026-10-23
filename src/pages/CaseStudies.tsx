@@ -85,14 +85,11 @@ function FeaturedCard({ study }: { study: CaseStudy }) {
       </div>
       <div className="flex flex-col p-6 sm:p-10 lg:p-[46px]">
         <CardLabels category={study.category} />
-        <div className="flex flex-1 items-end pt-10">
+        <div className="flex flex-1 items-end pb-8 pt-10">
           <h2 className="font-display text-[28px] font-semibold leading-[1.18] tracking-tight text-heading sm:text-[34px] lg:text-[38px]">
             {study.headline}
           </h2>
         </div>
-        <p className="max-w-[540px] pb-6 pt-5 text-[15px] leading-[1.7] text-body">
-          {study.summary}
-        </p>
         <div className="flex items-end justify-between border-t border-secondary-100 pt-5">
           <StatBlock study={study} large />
           <ArrowButton color={study.accent} />
@@ -118,13 +115,10 @@ function StandardCard({ study, index }: { study: CaseStudy; index: number }) {
       </div>
       <div className="flex flex-1 flex-col px-6 pb-7 pt-5 sm:px-[26px]">
         <CardLabels category={study.category} />
-        <h2 className="mt-8 font-display text-[24px] font-semibold leading-[1.2] tracking-tight text-heading sm:text-[28px]">
+        <h2 className="mb-8 mt-8 font-display text-[24px] font-semibold leading-[1.2] tracking-tight text-heading sm:text-[28px]">
           {study.headline}
         </h2>
-        <p className="flex-1 pb-7 pt-5 text-sm leading-[1.7] text-body">
-          {study.summary}
-        </p>
-        <div className="flex items-end justify-between border-t border-secondary-100 pt-5">
+        <div className="mt-auto flex items-end justify-between border-t border-secondary-100 pt-5">
           <StatBlock study={study} large={false} />
           <ArrowButton color={study.accent} />
         </div>

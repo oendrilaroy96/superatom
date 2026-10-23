@@ -105,8 +105,6 @@ export default function CaseStudyDetail() {
             <SectionHeading
               headingAs="h1"
               heading={study.title}
-              description={study.summary}
-              descriptionClassName="max-w-3xl"
               className="max-w-[1180px]"
             />
           </div>
