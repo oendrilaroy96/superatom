@@ -111,18 +111,18 @@ export default function CaseStudyDetail() {
             />
           </div>
 
-          <div className="mt-10 lg:mt-[60px]">
+          <div className="mt-8 lg:mt-10">
             <CaseStudyPhoto
               src={study.image.src}
               alt={study.image.alt}
-              className="h-[380px] rounded-[28px] border-[10px] border-white shadow-[0_30px_80px_-35px_rgba(13,23,56,0.35)] sm:h-[520px] lg:h-[700px]"
+              className="h-[240px] rounded-[24px] border-[6px] border-white shadow-[0_24px_60px_-30px_rgba(13,23,56,0.35)] sm:h-[300px] lg:h-[360px]"
             >
               <span className="absolute inset-0 bg-gradient-to-t from-secondary-500/85 to-secondary-500/0 to-[60%]" />
-              <div className="absolute bottom-8 left-6 right-6 sm:left-12 lg:bottom-10 lg:left-[55px]">
-                <p className="font-display text-[64px] font-semibold leading-[0.85] tracking-[-0.06em] text-white sm:text-[96px] lg:text-[120px]">
+              <div className="absolute bottom-5 left-5 right-5 sm:left-8 lg:bottom-7 lg:left-10">
+                <p className="font-display text-[48px] font-semibold leading-[0.85] tracking-[-0.06em] text-white sm:text-[64px] lg:text-[80px]">
                   {study.stat.value}
                 </p>
-                <p className="mt-5 text-[11px] font-medium uppercase tracking-[0.1em] text-white">
+                <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.1em] text-white">
                   {study.stat.label}
                 </p>
               </div>
