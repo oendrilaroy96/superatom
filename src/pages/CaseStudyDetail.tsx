@@ -178,30 +178,9 @@ export default function CaseStudyDetail() {
         </Container>
       </section>
 
-      {/* Signals strip */}
-      <Container>
-        <ul className="grid overflow-hidden rounded-[20px] bg-primary-100 px-4 sm:grid-cols-3 sm:px-8">
-          {study.signals.map((signal, i) => (
-            <li
-              key={signal.label}
-              className={`flex flex-col items-center border-primary-500/15 px-6 py-8 text-center sm:border-l sm:px-8 sm:py-10 ${
-                i === study.signals.length - 1 ? "sm:border-r" : ""
-              } ${i > 0 ? "border-t sm:border-t-0" : ""}`}
-            >
-              <p className="font-display text-[40px] font-semibold leading-none tracking-[-0.05em] text-heading lg:text-[52px]">
-                {signal.value}
-              </p>
-              <p className="mt-3 text-[10px] font-medium uppercase tracking-[0.1em] text-body">
-                {signal.label}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </Container>
-
       {/* 02 The solution */}
       <section
-        className="relative mt-[100px] bg-secondary-500 py-20 lg:py-[145px]"
+        className="relative bg-secondary-500 py-20 lg:py-[145px]"
         style={{
           backgroundImage:
             "radial-gradient(700px 520px at 12% 12%, rgba(83,58,253,0.4), transparent 62%), radial-gradient(640px 480px at 90% 90%, rgba(255,118,0,0.2), transparent 60%)",

@@ -18,8 +18,6 @@ export type CaseStudy = {
   accent: string;
   customer: string;
   challenge: string[];
-  /** Three short figures in the lavender strip under the challenge. */
-  signals: { value: string; label: string }[];
   /** `text` is optional: some case studies list one-line solution points. */
   solution: { title: string; text?: string }[];
   quote: string;
@@ -47,11 +45,6 @@ export const caseStudies: CaseStudy[] = [
       "Difficulty identifying slow-moving and excess inventory",
       "Capital tied up in unsold products",
       "A highly complex, large-scale supply chain",
-    ],
-    signals: [
-      { value: "ML", label: "inventory classification" },
-      { value: "ROI", label: "transfer decisions" },
-      { value: "E2E", label: "approval workflow" },
     ],
     solution: [
       {
@@ -104,11 +97,6 @@ export const caseStudies: CaseStudy[] = [
       "Limited visibility into liquidation effectiveness and decision history.",
       "Slow, reactive inventory disposition decisions.",
     ],
-    signals: [
-      { value: "1K+", label: "SKUs managed" },
-      { value: "21", label: "plants connected" },
-      { value: "26", label: "C&FAs" },
-    ],
     solution: [
       { title: "Centralized SLOB Decision Intelligence Platform." },
       {
@@ -148,11 +136,6 @@ export const caseStudies: CaseStudy[] = [
       "Fluctuating vehicle hiring costs, margins impacted by pricing pressure",
       "Manual vendor learning, inconsistent price benchmarking for negotiations",
       "No real time tracking of indents, placements, bookings and loads",
-    ],
-    signals: [
-      { value: "4", label: "legacy ERPs unified" },
-      { value: "Live", label: "operations tracking" },
-      { value: "ML", label: "rate benchmarks" },
     ],
     solution: [
       {
