@@ -132,9 +132,9 @@ export default function CaseStudies() {
           <SectionHeading
             headingAs="h1"
             theme={isDark ? "dark" : "light"}
-            eyebrow="Featured work"
-            heading="Intelligence in action"
-            description="Explore how connected data, optimization, and intelligent workflows create measurable operational value."
+            eyebrow="Case Studies"
+            heading="Real results, from real operations."
+            description="See how enterprises use Superatom AI to turn fragmented data into faster, better inventory and procurement decisions."
             descriptionClassName="max-w-xl"
           />
 
