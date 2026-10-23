@@ -253,7 +253,7 @@ export default function CaseStudyDetail() {
               dark={isDark}
             >
               <div className="grid gap-6 lg:grid-cols-[minmax(0,411fr)_minmax(0,617fr)]">
-                <div className="rounded-[18px] bg-primary-100 p-8 sm:p-10">
+                <div className="flex flex-col justify-end rounded-[18px] bg-primary-100 p-8 sm:p-10">
                   <p className="font-display text-[64px] font-semibold leading-[0.9] tracking-[-0.06em] text-heading sm:text-[88px] lg:text-[105px]">
                     {study.stat.value}
                   </p>
