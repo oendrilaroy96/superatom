@@ -129,33 +129,48 @@ export default function CaseStudyDetail() {
             </CaseStudyPhoto>
           </div>
 
-          <dl className="grid gap-2 py-8 text-[15px] sm:grid-cols-[225px_1fr] sm:px-2.5 lg:py-10">
-            <dt className="text-[10px] font-medium uppercase tracking-[0.1em] text-caption sm:pt-1">
-              Customer profile
-            </dt>
-            <dd className="font-medium text-heading">{study.customer}</dd>
-          </dl>
+          <div className="relative mt-8 overflow-hidden rounded-[22px] border border-primary-500/15 bg-primary-100/60 py-6 pl-7 pr-6 sm:py-7 sm:pl-9 sm:pr-8 lg:mt-10">
+            <span
+              className="absolute left-0 top-0 h-full w-1.5"
+              style={{ backgroundImage: BRAND_GRADIENT }}
+              aria-hidden="true"
+            />
+            <dl className="grid items-center gap-2 sm:grid-cols-[225px_1fr] sm:gap-6">
+              <dt className="text-[12px] font-semibold uppercase tracking-[0.12em] text-primary-500">
+                Customer profile
+              </dt>
+              <dd className="font-display text-[22px] font-semibold leading-snug tracking-tight text-heading sm:text-[28px]">
+                {study.customer}
+              </dd>
+            </dl>
+          </div>
+          <div className="pb-10 lg:pb-12" />
         </Container>
       </header>
 
       {/* 01 The challenge */}
-      <section className="py-16 lg:py-[145px]">
+      <section className="py-16 lg:py-[100px]">
         <Container>
           <Chapter
             number="01"
             label="The challenge"
             heading="The signals were there. The system to act wasn’t."
           >
-            <ul className="grid gap-4 sm:grid-cols-2">
+            <ul className="grid gap-3 sm:grid-cols-2">
               {study.challenge.map((item, i) => (
                 <li
                   key={item}
-                  className="grid min-h-[160px] grid-cols-[34px_1fr] gap-3.5 rounded-2xl border border-secondary-100 bg-white p-6 shadow-[0_4px_7px_rgba(6,27,49,0.04)] sm:p-[26px]"
+                  className={`grid grid-cols-[34px_1fr] items-start gap-3.5 rounded-2xl border border-secondary-100 bg-white p-5 shadow-[0_4px_7px_rgba(6,27,49,0.04)] sm:px-6 ${
+                    study.challenge.length % 2 === 1 &&
+                    i === study.challenge.length - 1
+                      ? "sm:col-span-2"
+                      : ""
+                  }`}
                 >
-                  <span className="text-[10px] font-medium leading-[15px] text-primary-500">
+                  <span className="pt-1 text-[10px] font-medium leading-[15px] text-primary-500">
                     {caseNumber(i)}
                   </span>
-                  <p className="text-[15px] leading-[1.7] text-body">{item}</p>
+                  <p className="text-base leading-[1.6] text-body">{item}</p>
                 </li>
               ))}
             </ul>
@@ -208,7 +223,7 @@ export default function CaseStudyDetail() {
               {study.solution.map((step, i) => (
                 <li
                   key={step.title}
-                  className="grid gap-3 rounded-2xl border border-white/10 bg-white/5 p-6 sm:grid-cols-[42px_1fr] sm:gap-5 sm:p-7"
+                  className="grid gap-3 rounded-2xl border border-white/10 bg-white/5 p-6 sm:grid-cols-[42px_1fr] sm:items-start sm:gap-5 sm:p-7"
                 >
                   <span className="text-[10px] font-medium leading-[15px] text-primary-300">
                     {caseNumber(i)}
@@ -217,9 +232,11 @@ export default function CaseStudyDetail() {
                     <h3 className="font-display text-xl font-semibold leading-[1.3] tracking-tight text-white sm:text-[24px]">
                       {step.title}
                     </h3>
-                    <p className="mt-3 max-w-[780px] text-base leading-[1.75] text-white/60">
-                      {step.text}
-                    </p>
+                    {step.text && (
+                      <p className="mt-3 max-w-[780px] text-base leading-[1.75] text-white/60">
+                        {step.text}
+                      </p>
+                    )}
                   </div>
                 </li>
               ))}
