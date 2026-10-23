@@ -291,17 +291,17 @@ export default function CaseStudyDetail() {
         <Container className="pb-20 lg:pb-[100px]">
           <Link
             to={`/case-studies/${next.slug}`}
-            className="group block rounded-[24px] border border-secondary-100 bg-white p-6 shadow-[0_4px_7px_rgba(6,27,49,0.04)] transition-shadow duration-300 hover:shadow-[0_18px_40px_-22px_rgba(6,27,49,0.25)] sm:p-8 lg:p-10"
+            className="group block rounded-[18px] border border-secondary-100 bg-white p-4 shadow-[0_4px_7px_rgba(6,27,49,0.04)] transition-shadow duration-300 hover:shadow-[0_18px_40px_-22px_rgba(6,27,49,0.25)] sm:p-5 lg:px-6 lg:py-5"
           >
-            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-primary-500">
+            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-primary-500">
               Next case study / {caseNumber(nextIndex)}
             </p>
-            <div className="mt-4 flex items-end justify-between gap-6">
-              <p className="max-w-[850px] font-display text-[22px] font-semibold leading-[1.2] tracking-tight text-heading sm:text-[26px] lg:text-[30px]">
+            <div className="mt-2.5 flex items-center justify-between gap-6">
+              <p className="max-w-[850px] font-display text-[16px] font-semibold leading-[1.25] tracking-tight text-heading sm:text-[18px] lg:text-[20px]">
                 {next.headline}
               </p>
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white transition-transform duration-300 group-hover:translate-x-1">
-                <ArrowForwardIcon style={{ fontSize: 18 }} />
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white transition-transform duration-300 group-hover:translate-x-1">
+                <ArrowForwardIcon style={{ fontSize: 16 }} />
               </span>
             </div>
           </Link>
