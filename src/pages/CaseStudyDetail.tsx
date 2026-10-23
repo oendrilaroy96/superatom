@@ -72,8 +72,6 @@ export default function CaseStudyDetail() {
 
   const index = caseStudies.findIndex((s) => s.slug === study.slug);
   const next = caseStudies[(index + 1) % caseStudies.length];
-  const nextIndex = (index + 1) % caseStudies.length;
-  const count = String(caseStudies.length).padStart(2, "0");
 
   return (
     <article>
@@ -96,9 +94,6 @@ export default function CaseStudyDetail() {
 
           <div className="mt-9 flex items-start justify-between border-t border-secondary-100 pt-[22px] text-[11px] font-medium uppercase tracking-[0.12em] text-caption">
             <p>{study.category}</p>
-            <p>
-              {caseNumber(index)} / {count}
-            </p>
           </div>
 
           <div className="pb-8 pt-12 lg:pt-[54px]">
@@ -294,7 +289,7 @@ export default function CaseStudyDetail() {
             className="group block rounded-[18px] border border-secondary-100 bg-white p-4 shadow-[0_4px_7px_rgba(6,27,49,0.04)] transition-shadow duration-300 hover:shadow-[0_18px_40px_-22px_rgba(6,27,49,0.25)] sm:p-5 lg:px-6 lg:py-5"
           >
             <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-primary-500">
-              Next case study / {caseNumber(nextIndex)}
+              Next case study
             </p>
             <div className="mt-2.5 flex items-center justify-between gap-6">
               <p className="max-w-[850px] font-display text-[16px] font-semibold leading-[1.25] tracking-tight text-heading sm:text-[18px] lg:text-[20px]">
