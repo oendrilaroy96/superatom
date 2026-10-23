@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import SectionHeading from "../components/ui/SectionHeading";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import SuperatomDiagram from "../components/SuperatomDiagram";
 import { useDarkTransition } from "../context/DarkTransitionContext";
 import prashanthPhoto from "../assets/SuperatomTeams/Prashanth.webp";
@@ -36,51 +37,6 @@ const beliefs = [
   {
     title: "Customer success above all.",
     text: "Outcomes our customers can measure are the only ones that count.",
-  },
-];
-
-const iconProps = {
-  width: 22,
-  height: 22,
-  viewBox: "0 0 24 24",
-  fill: "none",
-  stroke: "currentColor",
-  strokeWidth: 1.8,
-  strokeLinecap: "round" as const,
-  strokeLinejoin: "round" as const,
-  "aria-hidden": true,
-};
-
-/** The three themes that kept coming up in the CIO conversations. */
-const storyThemes: { text: string; icon: ReactNode }[] = [
-  {
-    text: "Business analytics teams are stretched thin.",
-    icon: (
-      <svg {...iconProps}>
-        <circle cx="9" cy="8" r="3.5" />
-        <path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5" />
-        <path d="M16 5.5a3 3 0 0 1 0 5.6M18 14.8c2 .5 3.2 2.2 3.5 5.2" />
-      </svg>
-    ),
-  },
-  {
-    text: "Dashboards multiply while answers slow down.",
-    icon: (
-      <svg {...iconProps}>
-        <rect x="3" y="3" width="8" height="8" rx="1.5" />
-        <rect x="13" y="3" width="8" height="5" rx="1.5" />
-        <rect x="13" y="10" width="8" height="11" rx="1.5" />
-        <rect x="3" y="13" width="8" height="8" rx="1.5" />
-      </svg>
-    ),
-  },
-  {
-    text: "Leaders need to decide faster and with more confidence than their current BI setup allows.",
-    icon: (
-      <svg {...iconProps}>
-        <path d="M13 2 4 14h7l-1 8 9-12h-7z" />
-      </svg>
-    ),
   },
 ];
 
@@ -187,87 +143,54 @@ export default function About() {
 
   return (
     <>
-      {/* Hero: Our Story. Heading and diagram on top, then the story in short pieces. */}
+      {/* Hero */}
       <section className="relative overflow-hidden py-[100px]">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-20 -top-32 size-[480px] rounded-full bg-primary-500/[0.06] blur-3xl"
+        />
         <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
+          <div className="grid grid-cols-1 items-center gap-12 min-[1360px]:grid-cols-[1.25fr_1fr] min-[1360px]:gap-6 min-[1440px]:grid-cols-[1fr_1fr]">
             <div>
               <SectionHeading
                 headingAs="h1"
-                eyebrow="Our Story"
+                eyebrow="About Superatom AI"
                 heading={
                   <>
-                    Built from 60+ conversations,{" "}
-                    <GradientText>not assumptions</GradientText>
+                    <span className="block">Decisions at the</span>
+                    <GradientText>Speed of Business.</GradientText>
                   </>
                 }
+                description="Superatom AI exists to close the gap between enterprise data, business context, and action."
+                descriptionClassName="max-w-lg"
               />
-              <p className="mt-6 font-display text-[24px] font-semibold leading-[1.3] tracking-tight text-heading sm:text-[28px]">
-                Superatom AI didn&rsquo;t start with a product. It started with
-                listening.
-              </p>
-              <p className="mt-3 text-p text-body">
-                Before writing a line of code, we spoke with more than{" "}
-                <span className="font-display text-[24px] font-bold leading-none">
-                  <GradientText>60+</GradientText>
-                </span>{" "}
-                CIOs around the globe and across industries.
-              </p>
+              <a
+                href="#our-story"
+                onClick={(e) => {
+                  const target = document.getElementById("our-story");
+                  if (!target) return;
+                  e.preventDefault();
+                  target.scrollIntoView({
+                    behavior: window.matchMedia(
+                      "(prefers-reduced-motion: reduce)",
+                    ).matches
+                      ? "auto"
+                      : "smooth",
+                    block: "start",
+                  });
+                }}
+                className="group mt-9 inline-flex items-center gap-3 text-base font-semibold text-primary-500 transition-colors hover:text-primary-600"
+              >
+                Discover our story
+                <ArrowForwardIcon
+                  style={{ fontSize: 20 }}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </a>
             </div>
 
-            <div className="mx-auto w-full max-w-[720px] lg:max-w-none">
+            <div className="mx-auto w-full max-w-[960px] min-[1360px]:max-w-none min-[1440px]:-ml-10 min-[1440px]:w-[calc(100%+40px)]">
               <SuperatomDiagram />
-            </div>
-          </div>
-
-          <div className="mt-12 max-w-[820px]">
-            <p className="font-display text-[20px] font-semibold leading-snug tracking-tight text-heading">
-              We wanted to understand how enterprises really use business
-              intelligence: what works, what breaks, and where decisions get
-              stuck.
-            </p>
-            <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.08em] text-caption">
-              The same themes kept coming up.
-            </p>
-          </div>
-
-          <ul className="mt-5 grid gap-3.5 md:grid-cols-3">
-            {storyThemes.map((theme) => (
-              <li
-                key={theme.text}
-                className="rounded-[20px] border border-secondary-100 bg-white p-5 shadow-[0_4px_7px_rgba(6,27,49,0.04)] sm:p-6"
-              >
-                <span className="flex size-11 items-center justify-center rounded-[14px] bg-primary-100 text-primary-500">
-                  {theme.icon}
-                </span>
-                <p className="mt-4 font-display text-[17px] font-semibold leading-snug tracking-tight text-heading">
-                  {theme.text}
-                </p>
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-9 grid grid-cols-1 items-center gap-4 lg:grid-cols-[1fr_1.2fr] lg:gap-10">
-            <p className="text-[18px] leading-relaxed text-body">
-              Those conversations with technology and business leaders became
-              our foundation, and they shaped one clear vision:
-            </p>
-            <div className="relative overflow-hidden rounded-[22px] border border-primary-500/10 bg-white p-7 sm:px-8">
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute right-6 top-0 select-none font-display text-[90px] font-bold leading-none text-primary-500/10"
-              >
-                &rdquo;
-              </span>
-              <span
-                className="absolute left-0 top-0 h-full w-[3px]"
-                style={{ backgroundImage: BRAND_GRADIENT }}
-                aria-hidden="true"
-              />
-              <p className="relative font-display text-[17px] font-semibold leading-snug tracking-tight text-heading sm:text-[19px]">
-                To transform how enterprises make decisions by bridging the gap
-                between enterprise data, business context, and action.
-              </p>
             </div>
           </div>
         </div>
@@ -328,6 +251,71 @@ export default function About() {
             {teamMembers.map((member) => (
               <TeamCard key={member.name} member={member} />
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Our Story */}
+      <section
+        id="our-story"
+        className="relative scroll-mt-16 overflow-hidden py-[100px]"
+      >
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -left-24 bottom-0 size-[420px] rounded-full bg-[#ff7eb0]/[0.06] blur-3xl"
+        />
+        <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-[72px]">
+            <div>
+              <SectionHeading
+                eyebrow="Our Story"
+                heading={
+                  <>
+                    Built from 60+ conversations,{" "}
+                    <GradientText>not assumptions</GradientText>
+                  </>
+                }
+              />
+            </div>
+
+            <div className="space-y-[18px] text-p leading-relaxed text-body">
+              <p className="font-display text-[24px] font-semibold leading-[1.3] tracking-tight text-heading sm:text-[28px]">
+                Superatom AI didn&rsquo;t start with a product. It started with
+                listening.
+              </p>
+              <p>
+                Before writing a line of code, we spoke with more than 60+ CIOs
+                around the globe and across industries.
+              </p>
+              <p>
+                We wanted to understand how enterprises really use business
+                intelligence: what works, what breaks, and where decisions get
+                stuck. The same themes kept coming up. Business analytics teams
+                are stretched thin. Dashboards multiply while answers slow down.
+                Leaders need to decide faster and with more confidence than
+                their current BI setup allows. Those conversations with
+                technology and business leaders became our foundation, and they
+                shaped one clear vision:
+              </p>
+            </div>
+          </div>
+
+          <div className="relative mt-12 overflow-hidden rounded-[22px] border border-primary-500/10 bg-white p-7 sm:px-8">
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute right-6 top-0 select-none font-display text-[90px] font-bold leading-none text-primary-500/10"
+            >
+              &rdquo;
+            </span>
+            <span
+              className="absolute left-0 top-0 h-full w-[3px]"
+              style={{ backgroundImage: BRAND_GRADIENT }}
+              aria-hidden="true"
+            />
+            <p className="relative font-display text-[17px] font-semibold leading-snug tracking-tight text-heading sm:text-[19px]">
+              To transform how enterprises make decisions by bridging the gap
+              between enterprise data, business context, and action.
+            </p>
           </div>
         </div>
       </section>
