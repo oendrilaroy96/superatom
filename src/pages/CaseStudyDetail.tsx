@@ -156,27 +156,23 @@ export default function CaseStudyDetail() {
             label="The challenge"
             heading="The signals were there. The system to act wasn’t."
           >
-            {/* Two columns on tablets; on desktop five points split 3 + 2, anything else stays two across. */}
-            <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
-              {study.challenge.map((item, i) => {
-                const count = study.challenge.length;
-                const span =
-                  count === 5 && i < 3 ? "lg:col-span-2" : "lg:col-span-3";
-                const last = count % 2 === 1 && i === count - 1;
-                return (
-                  <li
-                    key={item}
-                    className={`grid grid-cols-[34px_1fr] items-start gap-3.5 rounded-2xl border border-secondary-100 bg-white p-5 shadow-[0_4px_7px_rgba(6,27,49,0.04)] sm:px-6 ${span} ${
-                      last ? "sm:col-span-2" : ""
-                    }`}
-                  >
-                    <span className="pt-1 text-[10px] font-medium leading-[15px] text-primary-500">
-                      {caseNumber(i)}
-                    </span>
-                    <p className="text-base leading-[1.6] text-body">{item}</p>
-                  </li>
-                );
-              })}
+            <ul className="grid gap-3 sm:grid-cols-2">
+              {study.challenge.map((item, i) => (
+                <li
+                  key={item}
+                  className={`grid grid-cols-[34px_1fr] items-start gap-3.5 rounded-2xl border border-secondary-100 bg-white p-5 shadow-[0_4px_7px_rgba(6,27,49,0.04)] sm:px-6 ${
+                    study.challenge.length % 2 === 1 &&
+                    i === study.challenge.length - 1
+                      ? "sm:col-span-2"
+                      : ""
+                  }`}
+                >
+                  <span className="pt-1 text-[10px] font-medium leading-[15px] text-primary-500">
+                    {caseNumber(i)}
+                  </span>
+                  <p className="text-base leading-[1.6] text-body">{item}</p>
+                </li>
+              ))}
             </ul>
           </Chapter>
         </Container>
