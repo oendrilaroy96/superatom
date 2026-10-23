@@ -165,18 +165,18 @@ export default function CaseStudyDetail() {
 
       {/* Signals strip */}
       <Container>
-        <ul className="grid overflow-hidden rounded-[24px] bg-primary-100 px-4 sm:grid-cols-3 sm:px-[60px]">
+        <ul className="grid overflow-hidden rounded-[20px] bg-primary-100 px-4 sm:grid-cols-3 sm:px-8">
           {study.signals.map((signal, i) => (
             <li
               key={signal.label}
-              className={`flex flex-col items-center border-primary-500/15 px-6 py-10 text-center sm:border-l sm:px-[55px] sm:py-[78px] ${
+              className={`flex flex-col items-center border-primary-500/15 px-6 py-8 text-center sm:border-l sm:px-8 sm:py-10 ${
                 i === study.signals.length - 1 ? "sm:border-r" : ""
               } ${i > 0 ? "border-t sm:border-t-0" : ""}`}
             >
-              <p className="font-display text-[56px] font-semibold leading-none tracking-[-0.055em] text-heading lg:text-[82px]">
+              <p className="font-display text-[40px] font-semibold leading-none tracking-[-0.05em] text-heading lg:text-[52px]">
                 {signal.value}
               </p>
-              <p className="mt-4 text-[10px] font-medium uppercase tracking-[0.1em] text-body">
+              <p className="mt-3 text-[10px] font-medium uppercase tracking-[0.1em] text-body">
                 {signal.label}
               </p>
             </li>
