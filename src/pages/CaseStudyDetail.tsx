@@ -282,17 +282,30 @@ export default function CaseStudyDetail() {
           </Container>
         </section>
 
-        {/* Next case study */}
+        {/* Next case study: narrower and right-aligned; it fades to the dark
+            style together with the rest of this block. */}
         <Container className="pb-20 lg:pb-[100px]">
           <Link
             to={`/case-studies/${next.slug}`}
-            className="group block rounded-[18px] border border-secondary-100 bg-white p-4 shadow-[0_4px_7px_rgba(6,27,49,0.04)] transition-shadow duration-300 hover:shadow-[0_18px_40px_-22px_rgba(6,27,49,0.25)] sm:p-5 lg:px-6 lg:py-5"
+            className={`group ml-auto block max-w-[720px] rounded-[18px] border p-4 transition-[background-color,border-color,box-shadow] duration-700 ease-in-out sm:p-5 lg:px-6 lg:py-5 ${
+              isDark
+                ? "border-white/10 bg-white/5 hover:bg-white/10"
+                : "border-secondary-100 bg-white shadow-[0_4px_7px_rgba(6,27,49,0.04)] hover:shadow-[0_18px_40px_-22px_rgba(6,27,49,0.25)]"
+            }`}
           >
-            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-primary-500">
+            <p
+              className={`text-[10px] font-medium uppercase tracking-[0.12em] transition-colors duration-700 ${
+                isDark ? "text-primary-300" : "text-primary-500"
+              }`}
+            >
               Next case study
             </p>
             <div className="mt-2.5 flex items-center justify-between gap-6">
-              <p className="max-w-[850px] font-display text-[16px] font-semibold leading-[1.25] tracking-tight text-heading sm:text-[18px] lg:text-[20px]">
+              <p
+                className={`font-display text-[16px] font-semibold leading-[1.25] tracking-tight transition-colors duration-700 sm:text-[18px] lg:text-[20px] ${
+                  isDark ? "text-white" : "text-heading"
+                }`}
+              >
                 {next.headline}
               </p>
               <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary-500 text-white transition-transform duration-300 group-hover:translate-x-1">
