@@ -3,7 +3,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CaseStudyPhoto from "../components/CaseStudyPhoto";
 import SectionHeading from "../components/ui/SectionHeading";
 import { useDarkTransition } from "../context/DarkTransitionContext";
-import { caseNumber, caseStudies, type CaseStudy } from "../lib/caseStudies";
+import { caseStudies, type CaseStudy } from "../lib/caseStudies";
 
 function ArrowButton({ color }: { color: string }) {
   return (
@@ -16,14 +16,12 @@ function ArrowButton({ color }: { color: string }) {
   );
 }
 
-/** Photo with the case number badge in the corner and a soft navy fade at the bottom. */
+/** Photo with a soft navy fade at the bottom. */
 function CardPhoto({
   study,
-  index,
   className,
 }: {
   study: CaseStudy;
-  index: number;
   className: string;
 }) {
   return (
@@ -33,9 +31,6 @@ function CardPhoto({
       className={`rounded-[17px] ${className}`}
     >
       <span className="absolute inset-0 bg-gradient-to-t from-secondary-500/75 to-secondary-500/0 to-[65%]" />
-      <span className="absolute right-4 top-4 flex size-[34px] items-center justify-center rounded-full border border-white/20 bg-white/10 text-[11px] font-medium text-white backdrop-blur-[8px]">
-        {caseNumber(index)}
-      </span>
     </CaseStudyPhoto>
   );
 }
@@ -79,7 +74,6 @@ function FeaturedCard({ study }: { study: CaseStudy }) {
       <div className="p-2.5">
         <CardPhoto
           study={study}
-          index={0}
           className="h-[280px] sm:h-[380px] lg:h-full lg:min-h-[490px]"
         />
       </div>
@@ -100,18 +94,14 @@ function FeaturedCard({ study }: { study: CaseStudy }) {
 }
 
 /** The two smaller cards: photo on top, text underneath. */
-function StandardCard({ study, index }: { study: CaseStudy; index: number }) {
+function StandardCard({ study }: { study: CaseStudy }) {
   return (
     <Link
       to={`/case-studies/${study.slug}`}
       className={`${cardShell} flex flex-col`}
     >
       <div className="p-2.5">
-        <CardPhoto
-          study={study}
-          index={index}
-          className="h-[240px] sm:h-[280px]"
-        />
+        <CardPhoto study={study} className="h-[240px] sm:h-[280px]" />
       </div>
       <div className="flex flex-1 flex-col px-6 pb-7 pt-5 sm:px-[26px]">
         <CardLabels category={study.category} />
@@ -152,8 +142,8 @@ export default function CaseStudies() {
             {first && <FeaturedCard study={first} />}
             {rest.length > 0 && (
               <div className="grid gap-6 md:grid-cols-2">
-                {rest.map((study, i) => (
-                  <StandardCard key={study.slug} study={study} index={i + 1} />
+                {rest.map((study) => (
+                  <StandardCard key={study.slug} study={study} />
                 ))}
               </div>
             )}
