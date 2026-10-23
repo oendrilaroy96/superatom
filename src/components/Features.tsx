@@ -9,7 +9,7 @@ import AddIcon from "@mui/icons-material/Add";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import GlowCard from "./ui/GlowCard";
-import superatomMark from "../assets/Superatom Logo/LogoMark1.png";
+import superatomMark from "../assets/superatom-mark.png";
 
 /** Lift + shadow a card gets on hover, shared by every tile in the grid below. */
 const HOVER_LIFT =

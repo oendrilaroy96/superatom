@@ -37,7 +37,7 @@ function ChevronDown() {
 function Logo({ isDark }: { isDark: boolean }) {
   return (
     <Link to="/" className="flex shrink-0 items-center">
-      <img src={isDark ? logoWhite : logo} alt="Superatom AI" className="h-6 w-auto" />
+      <img src={isDark ? logoWhite : logo} alt="Superatom AI" className="h-7 w-auto" />
     </Link>
   );
 }
