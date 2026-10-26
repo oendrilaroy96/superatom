@@ -131,6 +131,7 @@ export default function CaseStudies() {
         <div className="mx-auto max-w-[1360px]">
           <SectionHeading
             headingAs="h1"
+            animate
             theme={isDark ? "dark" : "light"}
             eyebrow="Case Studies"
             heading="Real results, from real operations."

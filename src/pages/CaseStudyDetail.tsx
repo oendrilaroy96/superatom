@@ -99,6 +99,7 @@ export default function CaseStudyDetail() {
           <div className="pb-8 pt-12 lg:pt-[54px]">
             <SectionHeading
               headingAs="h1"
+              animate
               heading={study.title}
               className="max-w-[1180px]"
             />

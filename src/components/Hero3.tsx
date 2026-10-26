@@ -3,6 +3,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Button from "./ui/Button";
 import DemoModal from "./DemoModal";
+import Reveal from "./ui/Reveal";
 
 /** Extra scroll distance (px) beyond one viewport, controlling how far you scroll before the pin releases and the next section scrolls up into view. */
 const SCROLL_EXTRA_PX = 959;
@@ -30,10 +31,17 @@ const ease = (t: number) => t * t * (3 - 2 * t);
 function HeroCopy({ onBookDemo }: { onBookDemo: () => void }) {
   return (
     <div className="mx-auto flex max-w-4xl flex-col items-center px-4 text-center">
-      <p className="mb-3 font-sans text-[13px] font-semibold uppercase tracking-[0.08em] text-secondary-300">
+      <Reveal
+        as="p"
+        className="mb-3 font-sans text-[13px] font-semibold uppercase tracking-[0.08em] text-secondary-300"
+      >
         Decision intelligence for enterprises
-      </p>
-      <h1 className="hero2-heading m-0 mb-4 font-display font-semibold leading-[1.08] tracking-[-0.02em] text-heading">
+      </Reveal>
+      <Reveal
+        as="h1"
+        delay={0.1}
+        className="hero2-heading m-0 mb-4 font-display font-semibold leading-[1.08] tracking-[-0.02em] text-heading"
+      >
         <span className="block">Decide Fast, Decide Right,</span>
         <span
           className="bg-clip-text text-transparent"
@@ -46,22 +54,27 @@ function HeroCopy({ onBookDemo }: { onBookDemo: () => void }) {
         >
           Every time
         </span>
-      </h1>
-      <p className="mb-6 max-w-3xl text-[18px] leading-[1.55] text-body">
-        Superatom AI connects and synchronizes data across enterprise
-        system of records (ERP&rsquo;s) and Data systems, to create a
-        unified intelligence layer. It delivers actionable insights and
-        intelligence, and enables you to execute the decisions through
-        workflows.
-      </p>
-      <Button
-        variant="primary"
-        iconRight={<ArrowForwardIcon style={{ fontSize: 18 }} />}
-        className="shadow-[0_10px_30px_-10px_rgba(83,58,253,0.35)] transition-transform hover:-translate-y-px"
-        onClick={onBookDemo}
+      </Reveal>
+      <Reveal
+        as="p"
+        delay={0.2}
+        className="mb-6 max-w-3xl text-[18px] leading-[1.55] text-body"
       >
-        Book a demo
-      </Button>
+        Superatom AI connects and synchronizes data across enterprise system of
+        records (ERP&rsquo;s) and Data systems, to create a unified intelligence
+        layer. It delivers actionable insights and intelligence, and enables you
+        to execute the decisions through workflows.
+      </Reveal>
+      <Reveal delay={0.3}>
+        <Button
+          variant="primary"
+          iconRight={<ArrowForwardIcon style={{ fontSize: 18 }} />}
+          className="shadow-[0_10px_30px_-10px_rgba(83,58,253,0.35)] transition-transform hover:-translate-y-px"
+          onClick={onBookDemo}
+        >
+          Book a demo
+        </Button>
+      </Reveal>
     </div>
   );
 }
@@ -164,11 +177,18 @@ export default function Hero3() {
 
   return (
     <>
-      <section ref={sectionRef} className="relative isolate" style={{ height: `calc(100vh + ${SCROLL_EXTRA_PX}px)` }}>
+      <section
+        ref={sectionRef}
+        className="relative isolate"
+        style={{ height: `calc(100vh + ${SCROLL_EXTRA_PX}px)` }}
+      >
         <div className="sticky top-16 z-[1] pt-14" style={textStyle}>
           <HeroCopy onBookDemo={() => setDemoOpen(true)} />
         </div>
-        <div className="sticky top-[176px] z-[2] mx-auto mt-16 w-full max-w-[900px] px-4" style={videoStyle}>
+        <div
+          className="sticky top-[176px] z-[2] mx-auto mt-16 w-full max-w-[900px] px-4"
+          style={videoStyle}
+        >
           <VideoCard />
         </div>
       </section>

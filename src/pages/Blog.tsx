@@ -180,7 +180,7 @@ export default function Blog() {
       {/* Hero */}
       <section className="pb-[88px] pt-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <SectionHeading headingAs="h1" heading="Blog" />
+          <SectionHeading headingAs="h1" heading="Blog" animate />
         </div>
       </section>
 

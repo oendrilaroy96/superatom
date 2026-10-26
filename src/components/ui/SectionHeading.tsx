@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Reveal from "./Reveal";
 
 type EyebrowColor = "primary" | "accent";
 type HeadingSize = "default" | "lg";
@@ -16,6 +17,8 @@ type SectionHeadingProps = {
   /** "dark" for sections on a dark (e.g. secondary-500) background: swaps heading/description/eyebrow to light-on-dark colors. */
   theme?: Theme;
   className?: string;
+  /** Fade the eyebrow, heading and description in one after another when the heading first appears (use on the first heading of a page). */
+  animate?: boolean;
   /** Overrides the shared heading size for the rare section that needs a smaller one. */
   headingClassName?: string;
   descriptionClassName?: string;
@@ -59,6 +62,7 @@ export default function SectionHeading({
   align = "left",
   theme = "light",
   className = "",
+  animate = false,
   headingClassName,
   descriptionClassName = "",
 }: SectionHeadingProps) {
@@ -67,23 +71,31 @@ export default function SectionHeading({
       className={`${align === "center" ? "mx-auto text-center" : ""} ${className}`}
     >
       {eyebrow && (
-        <p
+        <Reveal
+          as="p"
+          disabled={!animate}
           className={`text-h5 font-semibold uppercase tracking-[0.5px] transition-colors duration-700 ${eyebrowColors[theme][eyebrowColor]}`}
         >
           {eyebrow}
-        </p>
+        </Reveal>
       )}
-      <Heading
+      <Reveal
+        as={Heading}
+        delay={0.08}
+        disabled={!animate}
         className={`font-display font-semibold transition-colors duration-700 ${headingColors[theme]} ${headingClassName ?? headingSizes[size]} ${headingGap[size]}`}
       >
         {heading}
-      </Heading>
+      </Reveal>
       {description && (
-        <p
+        <Reveal
+          as="p"
+          delay={0.16}
+          disabled={!animate}
           className={`text-p mt-4 transition-colors duration-700 ${descriptionColors[theme]} ${descriptionClassName}`}
         >
           {description}
-        </p>
+        </Reveal>
       )}
     </div>
   );

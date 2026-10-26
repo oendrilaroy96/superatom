@@ -13,6 +13,7 @@ import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
 import type { IconComponent } from "../types/icon";
 import Button from "../components/ui/Button";
+import Reveal from "../components/ui/Reveal";
 import GlowCard from "../components/ui/GlowCard";
 import SectionHeading from "../components/ui/SectionHeading";
 import DemoModal from "../components/DemoModal";
@@ -625,10 +626,10 @@ export default function ProcurementIntelligence() {
           <div className="relative mx-auto w-full max-w-[1920px] px-4 sm:px-10 xl:px-20">
             <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
               <div>
-                <p className="text-h5 font-semibold uppercase tracking-[0.5px] text-primary-300">
+                <Reveal as="p" className="text-h5 font-semibold uppercase tracking-[0.5px] text-primary-300">
                   Procurement Intelligence
-                </p>
-                <h1 className="mt-4 font-display text-[44px] font-bold leading-[1.1] text-white sm:text-[56px] lg:text-[64px]">
+                </Reveal>
+                <Reveal as="h1" delay={0.1} className="mt-4 font-display text-[44px] font-bold leading-[1.1] text-white sm:text-[56px] lg:text-[64px]">
                   Smarter procurement.
                   <br />
                   <span
@@ -640,12 +641,13 @@ export default function ProcurementIntelligence() {
                   >
                     Greater value.
                   </span>
-                </h1>
-                <p className="mt-6 max-w-lg text-[18px] leading-[1.55] text-white/70">
+                </Reveal>
+                <Reveal as="p" delay={0.2} className="mt-6 max-w-lg text-[18px] leading-[1.55] text-white/70">
                   Superatom brings together your data, business context, rules, and policies to help you
                   make and automate better procurement decisions — from supplier selection to contracting,
                   ordering and risk management.
-                </p>
+                </Reveal>
+                <Reveal delay={0.3}>
                 <Button
                   variant="accentOutline"
                   iconRight={<ArrowForwardIcon style={{ fontSize: 18 }} />}
@@ -654,6 +656,7 @@ export default function ProcurementIntelligence() {
                 >
                   Book a demo
                 </Button>
+                </Reveal>
               </div>
 
               <div className="mx-auto w-full max-w-sm lg:mx-0 lg:ml-auto lg:max-w-xl lg:-translate-y-16">

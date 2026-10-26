@@ -123,6 +123,7 @@ export default function FAQ() {
           align="center"
           theme="light"
           eyebrow="FAQ"
+          animate
           eyebrowColor="primary"
           heading="Frequently asked questions"
           className="mx-auto max-w-2xl"

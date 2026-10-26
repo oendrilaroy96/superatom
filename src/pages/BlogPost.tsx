@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { formatPostDate, getPost, getSeriesPosts, safeHref, type BlogBlock, type BlogPost as Post, type RichText } from "../lib/blog";
+import Reveal from "../components/ui/Reveal";
 import NotFound from "./NotFound";
 
 function Rich({ parts }: { parts: RichText[] }) {
@@ -245,7 +246,7 @@ export default function BlogPost() {
               <ArrowBackIcon style={{ fontSize: 16 }} />
               All articles
             </Link>
-            <div className="mt-10 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-bold uppercase tracking-[0.16em] text-white/60">
+            <Reveal className="mt-10 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-bold uppercase tracking-[0.16em] text-white/60">
               <span className="h-0.5 w-7 shrink-0 rounded-full" style={{ backgroundImage: BRAND_GRADIENT }} aria-hidden="true" />
               {(post.series ?? post.category) && (
                 <>
@@ -254,14 +255,14 @@ export default function BlogPost() {
                 </>
               )}
               <span>{post.readMinutes} min read</span>
-            </div>
-            <h1 className="mt-5 max-w-[860px] font-display text-[36px] font-semibold leading-[1.1] tracking-tight text-white sm:text-[48px] lg:text-[56px]">
+            </Reveal>
+            <Reveal as="h1" delay={0.1} className="mt-5 max-w-[860px] font-display text-[36px] font-semibold leading-[1.1] tracking-tight text-white sm:text-[48px] lg:text-[56px]">
               {post.title}
-            </h1>
+            </Reveal>
             {post.subtitle && (
-              <p className="mt-5 max-w-[720px] text-lg leading-relaxed text-secondary-200 sm:text-xl">{post.subtitle}</p>
+              <Reveal as="p" delay={0.2} className="mt-5 max-w-[720px] text-lg leading-relaxed text-secondary-200 sm:text-xl">{post.subtitle}</Reveal>
             )}
-            {post.date && <p className="mt-6 text-sm text-secondary-300">{formatPostDate(post.date)}</p>}
+            {post.date && <Reveal as="p" delay={0.3} className="mt-6 text-sm text-secondary-300">{formatPostDate(post.date)}</Reveal>}
           </div>
         </div>
       </header>

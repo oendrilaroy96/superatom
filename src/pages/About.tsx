@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import SectionHeading from "../components/ui/SectionHeading";
+import Reveal from "../components/ui/Reveal";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import SuperatomDiagram from "../components/SuperatomDiagram";
 import { useDarkTransition } from "../context/DarkTransitionContext";
@@ -154,6 +155,7 @@ export default function About() {
             <div>
               <SectionHeading
                 headingAs="h1"
+                animate
                 eyebrow="About Superatom AI"
                 heading={
                   <>
@@ -164,29 +166,31 @@ export default function About() {
                 description="Superatom AI exists to close the gap between enterprise data, business context, and action."
                 descriptionClassName="max-w-lg"
               />
-              <a
-                href="#our-story"
-                onClick={(e) => {
-                  const target = document.getElementById("our-story");
-                  if (!target) return;
-                  e.preventDefault();
-                  target.scrollIntoView({
-                    behavior: window.matchMedia(
-                      "(prefers-reduced-motion: reduce)",
-                    ).matches
-                      ? "auto"
-                      : "smooth",
-                    block: "start",
-                  });
-                }}
-                className="group mt-9 inline-flex items-center gap-3 text-base font-semibold text-primary-500 transition-colors hover:text-primary-600"
-              >
-                Discover our story
-                <ArrowForwardIcon
-                  style={{ fontSize: 20 }}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
-                />
-              </a>
+              <Reveal as="div" delay={0.24} className="mt-9">
+                <a
+                  href="#our-story"
+                  onClick={(e) => {
+                    const target = document.getElementById("our-story");
+                    if (!target) return;
+                    e.preventDefault();
+                    target.scrollIntoView({
+                      behavior: window.matchMedia(
+                        "(prefers-reduced-motion: reduce)",
+                      ).matches
+                        ? "auto"
+                        : "smooth",
+                      block: "start",
+                    });
+                  }}
+                  className="group inline-flex items-center gap-3 text-base font-semibold text-primary-500 transition-colors hover:text-primary-600"
+                >
+                  Discover our story
+                  <ArrowForwardIcon
+                    style={{ fontSize: 20 }}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </a>
+              </Reveal>
             </div>
 
             <div className="mx-auto w-full max-w-[960px] min-[1360px]:max-w-none min-[1440px]:-ml-10 min-[1440px]:w-[calc(100%+40px)]">
