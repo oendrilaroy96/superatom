@@ -13,9 +13,6 @@ import SectionHeading from "../components/ui/SectionHeading";
 import { useDarkTransition } from "../context/DarkTransitionContext";
 import { formatPostDate, partLabel, posts } from "../lib/blog";
 
-const BRAND_GRADIENT =
-  "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)";
-
 const categoryIcon: Record<string, IconComponent> = {
   "Inventory intelligence": Inventory2Icon,
   Procurement: ShoppingCartIcon,
@@ -183,26 +180,7 @@ export default function Blog() {
       {/* Hero */}
       <section className="pb-[88px] pt-[120px]">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-          <SectionHeading
-            headingAs="h1"
-            eyebrow="Field notes for modern operators"
-            heading={
-              <>
-                Better decisions
-                <br />
-                start{" "}
-                <span
-                  className="bg-clip-text text-transparent"
-                  style={{ backgroundImage: BRAND_GRADIENT }}
-                >
-                  before
-                </span>{" "}
-                the alert.
-              </>
-            }
-            description="Clear thinking on supply chains, AI, and the decisions that keep products moving."
-            descriptionClassName="max-w-xl"
-          />
+          <SectionHeading headingAs="h1" heading="Blog" />
         </div>
       </section>
 
