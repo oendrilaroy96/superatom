@@ -9,7 +9,7 @@ import { finishPreloading } from "../lib/preloader";
  * Usage: render <Preloader /> once at the top of your app (e.g. in App.tsx).
  */
 
-const ANIMATION_MS = 1450; // time for the logo reveal to finish
+const ANIMATION_MS = 1900; // time for the logo reveal to finish, plus a short hold on the finished logo
 const FADE_MS = 350; // must match the CSS transition on .sa-loader
 
 const css = `.sa-loader{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#FFFFFF;transition:opacity .35s ease,visibility .35s ease}

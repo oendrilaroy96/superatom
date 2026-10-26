@@ -4,10 +4,15 @@ import { useSyncExternalStore } from "react";
 let active = true;
 const listeners = new Set<() => void>();
 
+/** Milliseconds after the overlay starts to fade before the page text starts, so the logo is gone first. */
+const TEXT_START_DELAY_MS = 200;
+
 /** Called by the preloader when its overlay starts to fade out. */
 export const finishPreloading = () => {
-  active = false;
-  listeners.forEach((l) => l());
+  window.setTimeout(() => {
+    active = false;
+    listeners.forEach((l) => l());
+  }, TEXT_START_DELAY_MS);
 };
 
 const subscribe = (l: () => void) => {
