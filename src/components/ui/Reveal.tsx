@@ -1,5 +1,6 @@
 import type { ComponentProps } from "react";
 import { m } from "motion/react";
+import { usePreloaderDone } from "../../lib/preloader";
 
 const tags = { div: m.div, p: m.p, h1: m.h1, h2: m.h2, span: m.span } as const;
 
@@ -27,11 +28,17 @@ export default function Reveal<T extends keyof typeof tags = "div">({
   ...props
 }: RevealProps<T>) {
   const Tag = tags[as ?? "div"] as typeof m.div;
+  // On the first page load, hold the text back until the preloader clears.
+  const ready = usePreloaderDone();
   return (
     <Tag
       initial={disabled ? false : { opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+      animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+      transition={{
+        duration: 0.7,
+        delay,
+        ease: [0.22, 1, 0.36, 1],
+      }}
       {...(props as ComponentProps<typeof m.div>)}
     />
   );

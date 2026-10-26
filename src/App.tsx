@@ -4,6 +4,7 @@ import { LazyMotion, MotionConfig, domAnimation } from "motion/react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import ScrollToTop from "./components/ScrollToTop";
+import Preloader from "./components/Preloader";
 import Home from "./pages/Home";
 
 // Every page except the home page loads on demand, so the first visit downloads less.
@@ -26,6 +27,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 function App() {
   return (
     <LazyMotion features={domAnimation} strict>
+      <Preloader />
       <MotionConfig reducedMotion="user">
         <ReactLenis root>
           <BrowserRouter>
