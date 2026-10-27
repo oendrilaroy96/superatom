@@ -134,8 +134,8 @@ export default function CaseStudies() {
             animate
             theme={isDark ? "dark" : "light"}
             eyebrow="Case Studies"
-            heading="Real results, from real operations."
-            description="See how enterprises use Superatom AI to turn fragmented data into faster, better inventory and procurement decisions."
+            heading="See fast decisions in action."
+            description="How enterprises turn fragmented inventory and procurement data into faster, more confident decisions with Superatom AI."
             descriptionClassName="max-w-xl"
           />
 
