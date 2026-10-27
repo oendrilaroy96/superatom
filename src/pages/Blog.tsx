@@ -105,7 +105,7 @@ function ArticleCard({
   return (
     <Link to={`/blog/${article.slug}`} className="block h-full rounded-2xl">
       <article className="group flex h-full flex-col">
-        <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl">
+        <div className="aspect-[16/9] w-full overflow-hidden rounded-2xl">
           <div className="h-full w-full transition-transform duration-500 group-hover:scale-[1.03]">
             <ArticleArt
               category={article.category}
