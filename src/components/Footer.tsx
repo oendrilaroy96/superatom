@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import EmailIcon from "@mui/icons-material/Email";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import XIcon from "@mui/icons-material/X";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import type { IconComponent } from "../types/icon";
 import logo from "../assets/logo-white.png";
@@ -34,6 +35,7 @@ const columns: { heading: string; links: { name: string; path?: string }[] }[] =
 const socials: { label: string; Icon: IconComponent; href: string }[] = [
   { label: "Email", Icon: EmailIcon, href: "#" },
   { label: "LinkedIn", Icon: LinkedInIcon, href: "https://www.linkedin.com/company/superatom-0ai/posts/" },
+  { label: "X (Twitter)", Icon: XIcon, href: "https://x.com/SuperatomA22530" },
   { label: "YouTube", Icon: YouTubeIcon, href: "https://www.youtube.com/@SuperatomAI" },
 ];
 
