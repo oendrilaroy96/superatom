@@ -231,17 +231,6 @@ export default function About() {
                   mindset.
                 </p>
               </div>
-
-              <div className="mt-8 flex items-center gap-3">
-                <span
-                  className="h-0.5 w-8 shrink-0 rounded-full"
-                  style={{ backgroundImage: BRAND_GRADIENT }}
-                  aria-hidden="true"
-                />
-                <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-caption">
-                  Four perspectives. One shared ambition.
-                </p>
-              </div>
             </div>
           </div>
 
