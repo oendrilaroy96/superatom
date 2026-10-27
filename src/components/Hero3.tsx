@@ -60,10 +60,10 @@ function HeroCopy({ onBookDemo }: { onBookDemo: () => void }) {
         delay={0.2}
         className="mb-6 max-w-3xl text-[18px] leading-[1.55] text-body"
       >
-        Superatom AI connects and synchronizes data across enterprise system of
-        records (ERP&rsquo;s) and Data systems, to create a unified intelligence
-        layer. It delivers actionable insights and intelligence, and enables you
-        to execute the decisions through workflows.
+        Superatom AI connects across enterprise system of records (ERP&rsquo;s)
+        and Data systems, to create a unified intelligence layer. It delivers
+        actionable insights and intelligence and enables you to execute the
+        decisions through workflows.
       </Reveal>
       <Reveal delay={0.3}>
         <Button
