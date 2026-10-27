@@ -1,16 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import bluelinx from "../assets/logos/bluelinx.png";
-import mindlabs from "../assets/logos/mindlabs.png";
-import seshaasai from "../assets/logos/seshaasai.png";
+import coldchain from "../assets/logos/coldchain.png";
+import dabur from "../assets/logos/dabur.png";
+import fusion5 from "../assets/logos/fusion5.png";
+import totalgroup from "../assets/logos/totalgroup.png";
+import intercont from "../assets/logos/intercont.png";
 import { useDarkTransition } from "../context/DarkTransitionContext";
 
-// BlueLinx's wordmark is much wider per unit height than the other two, so
-// at a shared height it visually dominates the row — sized down here so its
-// rendered width lines up with the others instead.
+// Each logo has a different shape (BlueLinx is a very wide wordmark, Dabur is
+// nearly square), so heights are set per logo to give them a similar visual
+// weight in the row.
 const customers: { name: string; logo: string; heightClass?: string }[] = [
   { name: "BlueLinx", logo: bluelinx, heightClass: "h-5 sm:h-6 xl:h-7" },
-  { name: "mindlabs.cloud", logo: mindlabs },
-  { name: "Seshaasai", logo: seshaasai },
+  { name: "Cold Chain Technologies", logo: coldchain, heightClass: "h-9 sm:h-10 xl:h-12" },
+  { name: "Dabur", logo: dabur, heightClass: "h-12 sm:h-14 xl:h-16" },
+  { name: "Fusion5", logo: fusion5, heightClass: "h-9 sm:h-10 xl:h-12" },
+  { name: "Total Group", logo: totalgroup, heightClass: "h-9 sm:h-10 xl:h-12" },
+  { name: "Intercont", logo: intercont, heightClass: "h-6 sm:h-7 xl:h-8" },
 ];
 
 /** How fast the marquee scrolls, independent of how wide the track ends up. */
