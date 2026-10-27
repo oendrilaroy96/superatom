@@ -25,6 +25,21 @@ const resources: { name: string; blurb: string; Icon: IconComponent; path?: stri
   { name: "Case Studies", blurb: "Customer outcomes, as they publish.", Icon: AnalyticsIcon, path: "/case-studies" },
 ];
 
+/** Colour and underline for a top-level nav item; `active` marks the section of the page being viewed. */
+function navItemClass(active: boolean, isDark: boolean) {
+  const colour = active
+    ? isDark
+      ? "text-white"
+      : "text-primary-500"
+    : isDark
+      ? "text-white/70 hover:text-white"
+      : "text-body hover:text-heading";
+  const bar = `after:absolute after:inset-x-0 after:-bottom-[22px] after:h-0.5 after:rounded-full after:transition-opacity after:duration-300 ${
+    isDark ? "after:bg-white" : "after:bg-primary-500"
+  } ${active ? "after:opacity-100" : "after:opacity-0"}`;
+  return `relative text-[13.5px] transition-colors duration-700 ease-in-out ${colour} ${bar}`;
+}
+
 function ChevronDown() {
   return (
     <KeyboardArrowDownIcon
@@ -47,8 +62,10 @@ function DropdownNavItem({
   items,
   columns = 1,
   isDark,
+  active = false,
 }: {
   label: string;
+  active?: boolean;
   items: { name: string; blurb: string; Icon: IconComponent; path?: string }[];
   columns?: 1 | 2;
   isDark: boolean;
@@ -71,11 +88,7 @@ function DropdownNavItem({
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      <button
-        className={`flex items-center gap-1 text-[13.5px] transition-colors duration-700 ease-in-out ${
-          isDark ? "text-white/70 hover:text-white" : "text-body hover:text-heading"
-        }`}
-      >
+      <button className={`flex items-center gap-1 ${navItemClass(active, isDark)}`}>
         {label}
         <ChevronDown />
       </button>
@@ -103,10 +116,12 @@ function DropdownNavItem({
                 </span>
               </>
             );
-            const className =
-              "flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-primary-100/40";
+            const current = !!item.path && location.pathname.startsWith(item.path);
+            const className = `flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-primary-100/40 ${
+              current ? "bg-primary-100/60" : ""
+            }`;
             return item.path ? (
-              <Link key={item.name} to={item.path} className={className}>
+              <Link key={item.name} to={item.path} className={className} aria-current={current ? "page" : undefined}>
                 {content}
               </Link>
             ) : (
@@ -174,6 +189,11 @@ export default function Header() {
 
   const isDark = heroZoneDark || ctaIsDark;
 
+  const path = location.pathname;
+  const inSolutions = path.startsWith("/solutions");
+  const inResources = path.startsWith("/blog") || path.startsWith("/case-studies");
+  const inAbout = path.startsWith("/about");
+
   // Normally the unscrolled header can stay fully transparent and just let
   // whatever's directly behind it (always that page's own hero) show
   // through. That trick doesn't work for heroZoneDark: the header is sticky
@@ -197,13 +217,12 @@ export default function Header() {
         <Logo isDark={isDark} />
 
         <nav className="hidden items-center gap-[30px] lg:flex">
-          <DropdownNavItem label="Solutions" items={solutions} isDark={isDark} />
-          <DropdownNavItem label="Resources" items={resources} isDark={isDark} />
+          <DropdownNavItem label="Solutions" items={solutions} isDark={isDark} active={inSolutions} />
+          <DropdownNavItem label="Resources" items={resources} isDark={isDark} active={inResources} />
           <Link
             to="/about"
-            className={`text-[13.5px] transition-colors duration-700 ease-in-out ${
-              isDark ? "text-white/70 hover:text-white" : "text-body hover:text-heading"
-            }`}
+            aria-current={inAbout ? "page" : undefined}
+            className={navItemClass(inAbout, isDark)}
           >
             About us
           </Link>
@@ -227,15 +246,16 @@ export default function Header() {
       {mobileOpen && (
         <div className="border-t border-secondary-100 bg-white px-4 py-4 sm:px-10 lg:hidden">
           <nav className="flex flex-col gap-4">
-            <a href="#" className="text-sm font-medium text-body">
+            <a href="#" className={`text-sm font-medium ${inSolutions ? "text-primary-500" : "text-body"}`}>
               Solutions
             </a>
-            <a href="#" className="text-sm font-medium text-body">
+            <a href="#" className={`text-sm font-medium ${inResources ? "text-primary-500" : "text-body"}`}>
               Resources
             </a>
             <Link
               to="/about"
-              className="text-sm font-medium text-body"
+              aria-current={inAbout ? "page" : undefined}
+              className={`text-sm font-medium ${inAbout ? "text-primary-500" : "text-body"}`}
               onClick={() => setMobileOpen(false)}
             >
               About us
