@@ -466,9 +466,14 @@ body {
 .customers-marquee-track {
   display: flex;
   align-items: center;
-  gap: 80px;
+  /* Spacing is a margin on each logo, not a flex gap, so the track's two
+     halves are exactly equal and the loop restarts without a jump. */
+  --logo-gap: 44px;
   width: max-content;
   animation: customers-scroll 24s linear infinite;
+}
+.customers-marquee-track > img {
+  margin-right: var(--logo-gap);
 }
 .customers-marquee:hover .customers-marquee-track {
   animation-play-state: paused;
@@ -483,7 +488,7 @@ body {
 }
 @media (min-width: 640px) {
   .customers-marquee-track {
-    gap: 112px;
+    --logo-gap: 64px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
