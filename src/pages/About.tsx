@@ -89,7 +89,7 @@ function TeamCard({ member }: { member: TeamMember }) {
       href={member.linkedin}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative block aspect-[3/4] overflow-hidden rounded-2xl border border-secondary-100 bg-white"
+      className="group relative block aspect-[5/6] overflow-hidden rounded-2xl border border-secondary-100 bg-white"
     >
       {member.photo ? (
         <img
@@ -101,17 +101,17 @@ function TeamCard({ member }: { member: TeamMember }) {
         <AvatarPlaceholder colors={member.avatarGradient!} />
       )}
       <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-secondary-600/95 via-secondary-600/35 to-transparent" />
-      <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-2">
+      <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 sm:inset-x-5 sm:bottom-5">
         <div>
-          <p className="font-display text-[13px] font-bold leading-tight text-white">
+          <p className="font-display text-[15px] font-bold leading-tight text-white sm:text-[19px]">
             {member.name}
           </p>
-          <p className="mt-1 text-[9px] font-semibold uppercase tracking-[0.08em] text-white/60">
+          <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-white/65 sm:text-[11px]">
             {member.role}
           </p>
         </div>
-        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-white/20 bg-white/10 text-white transition-transform duration-200 group-hover:scale-110">
-          <LinkedInIcon style={{ fontSize: 15 }} />
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-white/20 bg-white/10 text-white transition-transform duration-200 group-hover:scale-110 sm:size-11">
+          <LinkedInIcon className="!text-[20px] sm:!text-[24px]" />
         </span>
       </div>
     </a>
