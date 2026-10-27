@@ -341,7 +341,7 @@ export default function Features() {
         <div className="grid grid-cols-1 gap-[18px] sm:grid-cols-2 lg:grid-cols-4">
           {/* 1. SOC 2 & ISO Ready — dark hero card */}
           <div
-            className={`group relative overflow-hidden rounded-2xl bg-secondary-500 p-8 sm:col-span-2 lg:col-span-2 ${HOVER_LIFT}`}
+            className={`group relative flex flex-col overflow-hidden rounded-2xl bg-secondary-500 p-8 sm:col-span-2 lg:col-span-2 ${HOVER_LIFT}`}
           >
             <div
               className="absolute inset-x-0 top-0 h-1 bg-[length:200%_100%] transition-[background-position] duration-700 group-hover:bg-right"
@@ -351,8 +351,8 @@ export default function Features() {
                 backgroundPosition: "left",
               }}
             />
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
-              <div>
+            <div className="grid flex-1 grid-cols-1 gap-8 sm:grid-cols-2">
+              <div className="flex flex-col">
                 <span className="flex h-11 w-11 items-center justify-center rounded-md border border-white/15 transition-transform duration-300 group-hover:scale-110 group-hover:border-accent-400">
                   <ShieldIcon style={{ fontSize: 20 }} className="text-accent-400" />
                 </span>
@@ -368,7 +368,7 @@ export default function Features() {
                     Continuous testing &amp; monitoring
                   </span>
                 </div>
-                <p className="mt-4 font-display text-h3 font-semibold text-white">
+                <p className="mt-auto pt-6 font-display text-h3 font-semibold text-white">
                   SOC 2 &amp; ISO Ready
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-white/60">
