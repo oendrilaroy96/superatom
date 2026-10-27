@@ -8,17 +8,19 @@ import totalgroup from "../assets/logos/totalgroup.png";
 import intercont from "../assets/logos/intercont.png";
 import { useDarkTransition } from "../context/DarkTransitionContext";
 
-// Each logo has a different shape (BlueLinx is a very wide wordmark, Dabur is
-// nearly square), so heights are set per logo to give them a similar visual
-// weight in the row.
-const customers: { name: string; logo: string; heightClass?: string }[] = [
-  { name: "BlueLinx", logo: bluelinx, heightClass: "h-5 sm:h-6 xl:h-7" },
-  { name: "Cold Chain Technologies", logo: coldchain, heightClass: "h-9 sm:h-10 xl:h-12" },
-  { name: "Dabur", logo: dabur, heightClass: "h-12 sm:h-14 xl:h-16" },
-  { name: "Fusion5", logo: fusion5, heightClass: "h-9 sm:h-10 xl:h-12" },
-  { name: "Total Group", logo: totalgroup, heightClass: "h-9 sm:h-10 xl:h-12" },
-  { name: "Intercont", logo: intercont, heightClass: "h-6 sm:h-7 xl:h-8" },
-  { name: "mindlabs.cloud", logo: mindlabs },
+// Logos come in very different shapes (BlueLinx is a thin wide wordmark, Dabur
+// is nearly square), so one shared height would make some look huge and others
+// tiny. `height` is each logo's height in px on large screens, chosen so every
+// logo covers a similar visual area (wide ones shorter, compact ones taller);
+// smaller screens scale all of them together via --logo-scale.
+const customers: { name: string; logo: string; height: number }[] = [
+  { name: "BlueLinx", logo: bluelinx, height: 22 },
+  { name: "Cold Chain Technologies", logo: coldchain, height: 46 },
+  { name: "Dabur", logo: dabur, height: 62 },
+  { name: "Fusion5", logo: fusion5, height: 38 },
+  { name: "Total Group", logo: totalgroup, height: 38 },
+  { name: "Intercont", logo: intercont, height: 34 },
+  { name: "mindlabs.cloud", logo: mindlabs, height: 28 },
 ];
 
 /** How fast the marquee scrolls, independent of how wide the track ends up. */
@@ -34,12 +36,12 @@ const lap = Array.from({ length: LAPS }, () => customers).flat();
 function CustomerLogo({
   name,
   logo,
-  heightClass = "h-8 sm:h-9 xl:h-11",
+  height,
   isDark,
 }: {
   name: string;
   logo: string;
-  heightClass?: string;
+  height: number;
   isDark: boolean;
 }) {
   return (
@@ -52,7 +54,8 @@ function CustomerLogo({
       // background, so invert them once isDark flips true.
       className={`w-auto shrink-0 object-contain opacity-60 grayscale transition duration-200 hover:opacity-100 hover:grayscale-0 ${
         isDark ? "invert" : ""
-      } ${heightClass}`}
+      }`}
+      style={{ height: `calc(${height}px * var(--logo-scale))` }}
     />
   );
 }
@@ -93,7 +96,7 @@ export default function Customers() {
           <span className="sr-only">{customers.map((c) => c.name).join(", ")}</span>
           <div
             ref={trackRef}
-            className="customers-marquee-track"
+            className="customers-marquee-track [--logo-scale:0.7] sm:[--logo-scale:0.85] xl:[--logo-scale:1]"
             aria-hidden="true"
             style={{ animationDuration: `${duration}s` }}
           >
@@ -102,7 +105,7 @@ export default function Customers() {
                 key={`a-${i}-${c.name}`}
                 name={c.name}
                 logo={c.logo}
-                heightClass={c.heightClass}
+                height={c.height}
                 isDark={isDark}
               />
             ))}
@@ -111,7 +114,7 @@ export default function Customers() {
                 key={`b-${i}-${c.name}`}
                 name={c.name}
                 logo={c.logo}
-                heightClass={c.heightClass}
+                height={c.height}
                 isDark={isDark}
               />
             ))}
