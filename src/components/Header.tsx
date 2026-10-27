@@ -25,31 +25,19 @@ const resources: { name: string; blurb: string; Icon: IconComponent; path?: stri
   { name: "Case Studies", blurb: "Customer outcomes, as they publish.", Icon: AnalyticsIcon, path: "/case-studies" },
 ];
 
-/** Colour and top bar for a top-level nav item; `active` marks the section of the page being viewed. */
+/** Colour and top bar for a top-level nav item; `active` marks the section of the page being viewed. The bar spans the width of the label. */
 function navItemClass(active: boolean, isDark: boolean) {
   const colour = active
     ? isDark
-      ? "text-white"
-      : "text-heading"
+      ? "text-accent-400"
+      : "text-primary-500"
     : isDark
       ? "text-white/70 hover:text-white"
       : "text-body hover:text-heading";
-  const bar = `before:absolute before:left-1/2 before:-top-[22px] before:h-[3px] before:w-[22px] before:-translate-x-1/2 before:rounded-b-[3px] before:transition-opacity before:duration-300 ${
+  const bar = `before:absolute before:inset-x-0 before:-top-[22px] before:h-1 before:rounded-b-[4px] before:transition-opacity before:duration-300 ${
     isDark ? "before:bg-accent-500" : "before:bg-primary-500"
   } ${active ? "before:opacity-100" : "before:opacity-0"}`;
   return `relative text-[13.5px] transition-colors duration-700 ease-in-out ${colour} ${bar}`;
-}
-
-/** Label that turns bolder when active without changing its width (a hidden bold copy reserves the space). */
-function NavLabel({ active, children }: { active: boolean; children: string }) {
-  return (
-    <span className="inline-grid">
-      <span className={`col-start-1 row-start-1 ${active ? "font-semibold" : ""}`}>{children}</span>
-      <span className="col-start-1 row-start-1 font-semibold opacity-0" aria-hidden="true">
-        {children}
-      </span>
-    </span>
-  );
 }
 
 function ChevronDown() {
@@ -101,7 +89,7 @@ function DropdownNavItem({
       onMouseLeave={() => setOpen(false)}
     >
       <button className={`flex items-center gap-1 ${navItemClass(active, isDark)}`}>
-        <NavLabel active={active}>{label}</NavLabel>
+        {label}
         <ChevronDown />
       </button>
       <div
@@ -236,7 +224,7 @@ export default function Header() {
             aria-current={inAbout ? "page" : undefined}
             className={navItemClass(inAbout, isDark)}
           >
-            <NavLabel active={inAbout}>About us</NavLabel>
+            About us
           </Link>
         </nav>
 
