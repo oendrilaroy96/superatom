@@ -4,7 +4,7 @@ series: Inventory Intelligence — Part 2 of 3
 subtitle: Continued from Part 1, which covered the definition of inventory intelligence and the $1.7 trillion cost of not having it.
 date: 2026-10-20
 category: Inventory intelligence
-cover: /blog/inventory-intelligence-part-2-cover.webp
+cover: /blog/inventory-intelligence-part-2-cover-v2.webp
 stat1: <25% | of retailers have deployed AI or ML in the areas most tied to inventory distortion
 stat2: 2.3x | higher sales growth for retailers using AI and ML in these areas
 stat3: 76% | of deployers report positive results from AI in demand planning

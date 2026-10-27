@@ -51,7 +51,8 @@ function ArticleArt({
       ) : (
         <Icon style={{ fontSize: 40 }} className="text-white/85" />
       )}
-      {label && (
+      {/* Covers already print their own "Part N of 3", so the label is only for posts without a cover. */}
+      {label && !cover && (
         <span className="absolute bottom-4 left-4 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-white backdrop-blur-sm">
           {label}
         </span>
