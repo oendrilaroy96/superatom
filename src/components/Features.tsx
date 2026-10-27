@@ -352,7 +352,7 @@ export default function Features() {
               }}
             />
             <div className="grid flex-1 grid-cols-1 gap-8 sm:grid-cols-2">
-              <div className="flex flex-col">
+              <div className="flex flex-col justify-center">
                 <span className="flex h-11 w-11 items-center justify-center rounded-md border border-white/15 transition-transform duration-300 group-hover:scale-110 group-hover:border-accent-400">
                   <ShieldIcon style={{ fontSize: 20 }} className="text-accent-400" />
                 </span>
@@ -368,7 +368,7 @@ export default function Features() {
                     Continuous testing &amp; monitoring
                   </span>
                 </div>
-                <p className="mt-auto pt-6 font-display text-h3 font-semibold text-white">
+                <p className="mt-4 font-display text-h3 font-semibold text-white">
                   SOC 2 &amp; ISO Ready
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-white/60">
