@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import bluelinx from "../assets/logos/bluelinx.png";
+import mindlabs from "../assets/logos/mindlabs.png";
 import coldchain from "../assets/logos/coldchain.png";
 import dabur from "../assets/logos/dabur.png";
 import fusion5 from "../assets/logos/fusion5.png";
@@ -12,6 +13,7 @@ import { useDarkTransition } from "../context/DarkTransitionContext";
 // weight in the row.
 const customers: { name: string; logo: string; heightClass?: string }[] = [
   { name: "BlueLinx", logo: bluelinx, heightClass: "h-5 sm:h-6 xl:h-7" },
+  { name: "mindlabs.cloud", logo: mindlabs },
   { name: "Cold Chain Technologies", logo: coldchain, heightClass: "h-9 sm:h-10 xl:h-12" },
   { name: "Dabur", logo: dabur, heightClass: "h-12 sm:h-14 xl:h-16" },
   { name: "Fusion5", logo: fusion5, heightClass: "h-9 sm:h-10 xl:h-12" },
