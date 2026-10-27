@@ -788,3 +788,15 @@ body {
 .legal-doc-dark .border-secondary-100 {
   border-color: rgba(255, 255, 255, 0.1);
 }
+
+/* Blog post body: text colours switch to the dark palette together with the page's dark footer block. */
+.blog-prose :is(p, li, h2, h3, h4, strong, blockquote, a, code, figcaption) {
+  transition: color 0.7s ease-in-out, background-color 0.7s ease-in-out;
+}
+.blog-prose.is-dark :is(p, li) { color: rgb(255 255 255 / 0.72); }
+.blog-prose.is-dark :is(h2, h3, h4, strong, blockquote) { color: #fff; }
+.blog-prose.is-dark code { color: #fff; background-color: rgb(255 255 255 / 0.12); }
+.blog-prose.is-dark a { color: var(--color-primary-300); }
+.blog-prose.is-dark figcaption { color: rgb(255 255 255 / 0.55); }
+.blog-prose.is-dark hr { border-color: rgb(255 255 255 / 0.12); }
+.blog-prose.is-dark li::marker { color: var(--color-primary-300); }

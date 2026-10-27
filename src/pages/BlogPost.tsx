@@ -4,6 +4,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { formatPostDate, getPost, getSeriesPosts, safeHref, type BlogBlock, type BlogPost as Post, type RichText } from "../lib/blog";
 import Reveal from "../components/ui/Reveal";
+import { useDarkTransition } from "../context/DarkTransitionContext";
 import NotFound from "./NotFound";
 
 function Rich({ parts }: { parts: RichText[] }) {
@@ -105,42 +106,49 @@ function Block({ block }: { block: BlogBlock }) {
 }
 
 /** Links to every published part of a series, shown after the article. */
-function SeriesNav({ post }: { post: Post }) {
+function SeriesNav({ post, dark }: { post: Post; dark: boolean }) {
   const parts = getSeriesPosts(post);
   const info = post.seriesInfo;
   if (!info || parts.length < 2) return null;
   return (
-    <nav aria-label="More in this series" className="mt-16 border-t border-secondary-100 pt-10">
-      <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-caption">More in this series</p>
-      <p className="mt-2 font-display text-xl font-semibold tracking-tight text-heading">{info.name}</p>
+    <nav
+      aria-label="More in this series"
+      className={`mt-16 border-t pt-10 transition-colors duration-700 ${dark ? "border-white/10" : "border-secondary-100"}`}
+    >
+      <p className={`text-[11px] font-bold uppercase tracking-[0.16em] transition-colors duration-700 ${dark ? "text-white/60" : "text-caption"}`}>
+        More in this series
+      </p>
+      <p className={`mt-2 font-display text-xl font-semibold tracking-tight transition-colors duration-700 ${dark ? "text-white" : "text-heading"}`}>
+        {info.name}
+      </p>
       <ol className="mt-5 space-y-3">
         {parts.map((part) => {
           const current = part.slug === post.slug;
           const body = (
             <>
-              <span className="w-[72px] shrink-0 text-[11px] font-bold uppercase tracking-[0.1em] text-primary-500">
+              <span className={`w-[72px] shrink-0 text-[11px] font-bold uppercase tracking-[0.1em] ${dark ? "text-primary-300" : "text-primary-500"}`}>
                 Part {part.seriesInfo!.part}
               </span>
-              <span className="min-w-0 flex-1 font-display text-base font-semibold leading-snug text-heading">
+              <span className={`min-w-0 flex-1 font-display text-base font-semibold leading-snug ${dark ? "text-white" : "text-heading"}`}>
                 {part.title.startsWith(`${info.name}:`) ? part.title.slice(info.name.length + 1).trim() : part.title}
               </span>
               {current ? (
-                <span className="shrink-0 text-xs font-medium text-caption">You&rsquo;re reading this</span>
+                <span className={`shrink-0 text-xs font-medium ${dark ? "text-white/60" : "text-caption"}`}>You&rsquo;re reading this</span>
               ) : (
-                <ArrowForwardIcon style={{ fontSize: 18 }} className="shrink-0 text-primary-500" />
+                <ArrowForwardIcon style={{ fontSize: 18 }} className={`shrink-0 ${dark ? "text-primary-300" : "text-primary-500"}`} />
               )}
             </>
           );
           return (
             <li key={part.slug}>
               {current ? (
-                <div aria-current="page" className="flex items-center gap-4 rounded-2xl border border-secondary-100 bg-page p-5">
+                <div aria-current="page" className={`flex items-center gap-4 rounded-2xl border p-5 transition-colors duration-700 ${dark ? "border-white/10 bg-white/10" : "border-secondary-100 bg-page"}`}>
                   {body}
                 </div>
               ) : (
                 <Link
                   to={`/blog/${part.slug}`}
-                  className="flex items-center gap-4 rounded-2xl border border-secondary-100 bg-white p-5 transition-colors hover:border-primary-200 hover:bg-page"
+                  className={`flex items-center gap-4 rounded-2xl border p-5 transition-colors duration-700 ${dark ? "border-white/10 bg-white/5 hover:bg-white/10" : "border-secondary-100 bg-white hover:border-primary-200 hover:bg-page"}`}
                 >
                   {body}
                 </Link>
@@ -156,6 +164,7 @@ function SeriesNav({ post }: { post: Post }) {
 export default function BlogPost() {
   const { slug = "" } = useParams();
   const post = getPost(slug);
+  const isDark = useDarkTransition();
   const articleRef = useRef<HTMLElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -288,7 +297,7 @@ export default function BlogPost() {
         </div>
       )}
 
-      <div className="mx-auto max-w-[1920px] px-4 pb-[120px] pt-12 sm:px-10 lg:pt-16 xl:px-20">
+      <div className={`mx-auto max-w-[1920px] px-4 pb-[120px] pt-12 transition-colors duration-700 ease-in-out sm:px-10 lg:pt-16 xl:px-20 ${isDark ? "bg-secondary-500" : "bg-transparent"}`}>
         <div
           className={`mx-auto grid max-w-[1100px] ${
             showContents ? "lg:grid-cols-[240px_minmax(0,680px)] lg:gap-[72px]" : "lg:grid-cols-[minmax(0,680px)] lg:justify-center"
@@ -296,7 +305,7 @@ export default function BlogPost() {
         >
           {showContents && (
             <aside className="hidden lg:sticky lg:top-24 lg:block lg:self-start">
-              <h2 className="text-[11px] font-bold uppercase tracking-[0.16em] text-caption">Contents</h2>
+              <h2 className={`text-[11px] font-bold uppercase tracking-[0.16em] transition-colors duration-700 ${isDark ? "text-white/60" : "text-caption"}`}>Contents</h2>
               <nav aria-label="Contents" className="mt-4 flex flex-col">
                 {sections.map((section) => {
                   const active = section.id === activeId;
@@ -306,10 +315,12 @@ export default function BlogPost() {
                       href={`#${section.id}`}
                       onClick={jumpTo(section.id)}
                       aria-current={active ? "location" : undefined}
-                      className={`border-l-2 py-2 pl-3.5 text-sm leading-snug transition-colors ${
+                      className={`border-l-2 py-2 pl-3.5 text-sm leading-snug transition-colors duration-700 ${
                         active
-                          ? "border-primary-500 font-semibold text-heading"
-                          : "border-secondary-100 text-caption hover:text-heading"
+                          ? `border-primary-500 font-semibold ${isDark ? "text-white" : "text-heading"}`
+                          : isDark
+                            ? "border-white/10 text-white/55 hover:text-white"
+                            : "border-secondary-100 text-caption hover:text-heading"
                       }`}
                     >
                       <Rich parts={section.text} />
@@ -317,15 +328,17 @@ export default function BlogPost() {
                   );
                 })}
               </nav>
-              <p className="mt-7 text-[13px] text-caption">{post.readMinutes} min read</p>
+              <p className={`mt-7 text-[13px] transition-colors duration-700 ${isDark ? "text-white/55" : "text-caption"}`}>{post.readMinutes} min read</p>
             </aside>
           )}
 
-          <div className="[&>*:first-child]:mt-0">
-            {post.blocks.map((block, i) => (
-              <Block key={i} block={block} />
-            ))}
-            <SeriesNav post={post} />
+          <div>
+            <div className={`blog-prose [&>*:first-child]:mt-0 ${isDark ? "is-dark" : ""}`}>
+              {post.blocks.map((block, i) => (
+                <Block key={i} block={block} />
+              ))}
+            </div>
+            <SeriesNav post={post} dark={isDark} />
           </div>
         </div>
       </div>

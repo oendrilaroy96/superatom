@@ -109,7 +109,7 @@ function TeamCard({ member }: { member: TeamMember }) {
           {member.role}
         </p>
       </div>
-      <span className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-lg border border-white/30 bg-secondary-500/75 text-white backdrop-blur-[6px] transition-transform duration-200 group-hover:scale-110 sm:right-4 sm:top-4 sm:size-11">
+      <span className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-lg border border-white/30 bg-secondary-500/75 text-white backdrop-blur-[6px] transition-[transform,opacity] duration-200 group-hover:scale-110 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-focus-visible:opacity-100 sm:right-4 sm:top-4 sm:size-11">
         <LinkedInIcon className="!text-[20px] sm:!text-[24px]" />
       </span>
     </a>
