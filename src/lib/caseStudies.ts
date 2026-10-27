@@ -103,7 +103,7 @@ export const caseStudies: CaseStudy[] = [
       },
     ],
     quote:
-      "Every ageing SKU became a visible decision—not a forgotten row in a spreadsheet.",
+      "Every ageing SKU became a visible decision. Not a forgotten row in a spreadsheet.",
     results: [
       "Single source of truth for SLOB decisions.",
       "Reduced manual effort and process inefficiencies.",
@@ -151,7 +151,7 @@ export const caseStudies: CaseStudy[] = [
         text: "Tracked indents, vehicle placements, bookings and load status across branches to identify pending activities, delays and operational exceptions.",
       },
     ],
-    quote: "One network view—from the price promised to the load delivered.",
+    quote: "One network view from the price promised to the load delivered.",
     results: [
       "Real time branch-level financial and operational metrics across 140+ branches",
       "Dynamic pricing visibility with corrected rates for sales teams",

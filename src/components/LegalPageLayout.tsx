@@ -63,7 +63,7 @@ type LegalPageLayoutProps = {
  * Shared chrome for long legal documents: a hero (title + intro) followed by
  * a sticky left-hand table of contents next to the numbered sections, with
  * scrollspy highlighting the section currently in view. Reused across
- * Privacy Policy, Terms of Service, and any future legal page so they all
+ * Privacy Policy, Terms of Service and any future legal page so they all
  * get the same navigation for free.
  */
 export default function LegalPageLayout({

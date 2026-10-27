@@ -43,13 +43,13 @@ const THEME = {
 } as const;
 
 /**
- * Six enterprise data sources scatter, orbit, and bond to a central
+ * Six enterprise data sources scatter, orbit and bond to a central
  * "Superatom AI" node before flowing out as "Decisions" — ported 1:1 from a
  * standalone prototype (see the paired keyframes/classes in index.css,
  * .satom-diag prefix). The choreography (node positions, bond dasharray
  * reveal, caption rotation) is imperative DOM work, not React state, so it
  * stays close to the original script; only the lookups are scoped to this
- * component's own container instead of `document`, and the mount/unmount
+ * component's own container instead of `document` and the mount/unmount
  * is made idempotent for StrictMode's dev double-invoke.
  */
 export default function SuperatomDiagram() {
@@ -195,7 +195,7 @@ export default function SuperatomDiagram() {
           </title>
           <desc id="satom-diag-d">
             Six enterprise data sources move from scattered positions into orbit
-            around Superatom AI, bond to it, and flow out as better, faster
+            around Superatom AI, bond to it and flow out as better, faster
             decisions.
           </desc>
           <defs>

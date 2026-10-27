@@ -21,9 +21,9 @@ const intro = (
   <p className="text-sm leading-relaxed text-body">
     By accessing or using any product or service offered by Superatom AI
     Private Limited (incorporated in India) and Superatom AI LLC
-    (incorporated in the United States) — collectively referred to as
+    (incorporated in the United States), collectively referred to as
     &ldquo;Superatom&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;, or
-    &ldquo;our&rdquo; — you agree to be bound by these Terms &amp;
+    &ldquo;our&rdquo;, you agree to be bound by these Terms &amp;
     Conditions. If you do not agree, please do not use our Services.
   </p>
 );
@@ -80,7 +80,7 @@ export default function TermsOfService() {
         <h2 className={h2}>1. Accounts & Registration</h2>
         <ul className={ul}>
           <li>
-            You must provide accurate, complete, and current information
+            You must provide accurate, complete and current information
             when creating an account and keep it up to date.
           </li>
           <li>
@@ -124,7 +124,7 @@ export default function TermsOfService() {
       <LegalSection id="ip">
         <h2 className={h2}>3. Intellectual Property</h2>
         <p className={p}>
-          All content, software, algorithms, trademarks, logos, and user
+          All content, software, algorithms, trademarks, logos and user
           interfaces that form part of the Services are the exclusive
           property of Superatom and its licensors. Nothing in these Terms
           transfers any intellectual property rights to you. You may not
@@ -191,10 +191,10 @@ export default function TermsOfService() {
         </div>
         <p className={p}>
           To the maximum extent permitted by applicable law, Superatom and
-          its officers, directors, employees, and licensors shall not be
+          its officers, directors, employees and licensors shall not be
           liable for any indirect, incidental, special, consequential, or
-          punitive damages — including loss of profits, data, goodwill, or
-          business opportunities — arising out of or in connection with
+          punitive damages, including loss of profits, data, goodwill, or
+          business opportunities, arising out of or in connection with
           your use of the Services, even if we have been advised of the
           possibility of such damages. Our total aggregate liability shall
           not exceed the greater of (a) the fees you paid us in the twelve

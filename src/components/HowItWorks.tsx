@@ -22,7 +22,7 @@ export default function HowItWorks() {
               <span className="text-primary-500">Super Intelligence.</span>
             </>
           }
-          description="Superatom AI brings together your enterprise data, business context, rules and AI to help teams make, execute and continuously improve thousands of decisions — every day."
+          description="Superatom AI brings together your enterprise data, business context, rules and AI to help teams make, execute and continuously improve thousands of decisions every day."
         />
       </div>
 

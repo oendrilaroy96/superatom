@@ -203,7 +203,7 @@ export default function HowItWorksDiagram() {
     });
     const erpRect = sources[0].rect;
 
-    // ---------- Orbit ring, inner ring, spokes to the core, and a circling light ----------
+    // ---------- Orbit ring, inner ring, spokes to the core and a circling light ----------
     const bonds: SVGElement[] = [];
     bonds.push(
       mk(
@@ -245,7 +245,7 @@ export default function HowItWorksDiagram() {
       bondsGroup,
     );
 
-    // ---------- Line from the core to the video frame, and the feedback loop back ----------
+    // ---------- Line from the core to the video frame and the feedback loop back ----------
     const desktop = window.matchMedia("(min-width: 1180px)");
     let outLen = 0;
     let loopLen = 0;
@@ -616,7 +616,7 @@ export default function HowItWorksDiagram() {
           ref={vizRef}
           viewBox="0 96 456 294"
           role="img"
-          aria-label="ERPs, IoT, Data Lake and APIs flow into Superatom AI, where Tribal Knowledge, Optimization Engine, Semantic Modeling and Generative UI connect, and the decision is delivered."
+          aria-label="ERPs, IoT, Data Lake and APIs flow into Superatom AI, where Tribal Knowledge, Optimization Engine, Semantic Modeling and Generative UI connect and the decision is delivered."
         >
           <defs>
             <filter id={`${uid}-glow`} x="-50%" y="-50%" width="200%" height="200%">

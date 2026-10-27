@@ -184,7 +184,7 @@ export default function Blog() {
           <SectionHeading
             headingAs="h1"
             heading="Superatom Digest"
-            description="Trends, insights, and practical guidance on how decision intelligence is reshaping supply chains."
+            description="Trends, insights and practical guidance on how decision intelligence is reshaping supply chains."
             descriptionClassName="max-w-2xl"
             animate
           />
@@ -259,7 +259,7 @@ export default function Blog() {
             <SectionHeading
               theme={isDark ? "dark" : "light"}
               heading="Latest from the blog"
-              description="Research and practical thinking across inventory, procurement, design operations, and regulated supply chains."
+              description="Research and practical thinking across inventory, procurement, design operations and regulated supply chains."
               descriptionClassName="max-w-xl"
             />
           </div>

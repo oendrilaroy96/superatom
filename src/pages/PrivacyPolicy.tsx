@@ -29,10 +29,10 @@ const intro = (
   <>
     <p className="text-sm leading-relaxed text-body">
       This privacy notice for Superatom AI Private Limited (incorporated in
-      India) and Superatom AI LLC (incorporated in the United States) —
+      India) and Superatom AI LLC (incorporated in the United States),
       collectively referred to as &ldquo;Superatom&rdquo;,
-      &ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo; — describes
-      how and why we might collect, store, use, and/or share
+      &ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;, describes
+      how and why we might collect, store, use and/or share
       (&ldquo;process&rdquo;) your information when you use our services
       (&ldquo;Services&rdquo;), such as when you:
     </p>
@@ -74,7 +74,7 @@ const intro = (
         </strong>{" "}
         When you visit, use, or navigate our Services, we may process
         personal information depending on how you interact with us, the
-        choices you make, and the products and features you use.
+        choices you make and the products and features you use.
       </li>
       <li>
         <strong className="text-heading">
@@ -92,8 +92,8 @@ const intro = (
         <strong className="text-heading">
           How do we process your information?
         </strong>{" "}
-        We process your information to provide, improve, and administer our
-        Services, communicate with you, for security and fraud prevention,
+        We process your information to provide, improve and administer our
+        Services, communicate with you, for security and fraud prevention
         and to comply with law. We process your information only when we
         have a valid legal reason to do so.
       </li>
@@ -166,7 +166,7 @@ export default function PrivacyPolicy() {
         </ul>
         <p className={p}>
           All personal information that you provide to us must be true,
-          complete, and accurate. You must notify us of any changes to such
+          complete and accurate. You must notify us of any changes to such
           personal information.
         </p>
         <h3 className={h3}>Information automatically collected</h3>
@@ -178,7 +178,7 @@ export default function PrivacyPolicy() {
         <ul className={ul}>
           <li>
             <strong className="text-heading">Usage Data:</strong> Features
-            used, queries entered, session duration, and interaction
+            used, queries entered, session duration and interaction
             patterns within the platform
           </li>
           <li>
@@ -200,50 +200,50 @@ export default function PrivacyPolicy() {
           <li>
             <strong className="text-heading">
               To deliver and maintain our Services
-            </strong>{" "}
-            — to create and manage your account, authenticate users, and
+            </strong>:{" "}
+            to create and manage your account, authenticate users and
             ensure the platform functions correctly.
           </li>
           <li>
             <strong className="text-heading">
               To respond to your inquiries and requests
-            </strong>{" "}
-            — to schedule demos, answer support tickets, and communicate
+            </strong>:{" "}
+            to schedule demos, answer support tickets and communicate
             with you about your account.
           </li>
           <li>
             <strong className="text-heading">
               To send administrative information
-            </strong>{" "}
-            — to notify you of changes to our terms, conditions, and
+            </strong>:{" "}
+            to notify you of changes to our terms, conditions and
             policies.
           </li>
           <li>
             <strong className="text-heading">
               To improve our Services
-            </strong>{" "}
-            — to analyse usage patterns, diagnose technical issues, and
+            </strong>:{" "}
+            to analyse usage patterns, diagnose technical issues and
             develop new features.
           </li>
           <li>
             <strong className="text-heading">
               To protect our Services
-            </strong>{" "}
-            — to monitor for fraud, abuse, and security threats, and to
+            </strong>:{" "}
+            to monitor for fraud, abuse and security threats and to
             enforce our terms of service.
           </li>
           <li>
             <strong className="text-heading">
               To comply with legal obligations
-            </strong>{" "}
-            — to respond to lawful requests from regulatory authorities and
+            </strong>:{" "}
+            to respond to lawful requests from regulatory authorities and
             fulfil statutory requirements.
           </li>
           <li>
             <strong className="text-heading">
               To process employment applications
-            </strong>{" "}
-            — to evaluate candidates who submit their information via our
+            </strong>:{" "}
+            to evaluate candidates who submit their information via our
             &ldquo;Work With Us&rdquo; form.
           </li>
         </ul>
@@ -262,26 +262,26 @@ export default function PrivacyPolicy() {
         <h3 className={h3}>If you are in the EU / UK (GDPR / UK GDPR):</h3>
         <ul className={ul}>
           <li>
-            <strong className="text-heading">Consent</strong> — where you
+            <strong className="text-heading">Consent</strong>: where you
             have given us specific permission to process your data for a
             defined purpose (e.g., marketing emails). You may withdraw
             consent at any time.
           </li>
           <li>
-            <strong className="text-heading">Contract performance</strong>{" "}
-            — where processing is necessary to fulfil a contract with you
+            <strong className="text-heading">Contract performance</strong>:{" "}
+            where processing is necessary to fulfil a contract with you
             or to take pre-contractual steps at your request.
           </li>
           <li>
-            <strong className="text-heading">Legal obligation</strong> —
+            <strong className="text-heading">Legal obligation</strong>:
             where we are required to process your data to comply with
             applicable law.
           </li>
           <li>
             <strong className="text-heading">
               Legitimate interests
-            </strong>{" "}
-            — where processing is in our legitimate business interests
+            </strong>:{" "}
+            where processing is in our legitimate business interests
             (e.g., fraud prevention, platform security) and does not
             override your rights.
           </li>
@@ -289,12 +289,12 @@ export default function PrivacyPolicy() {
         <h3 className={h3}>If you are in India (DPDP Act 2023):</h3>
         <ul className={ul}>
           <li>
-            <strong className="text-heading">Consent</strong> — we obtain
-            your free, specific, informed, and unambiguous consent before
+            <strong className="text-heading">Consent</strong>: we obtain
+            your free, specific, informed and unambiguous consent before
             processing your personal data.
           </li>
           <li>
-            <strong className="text-heading">Legitimate uses</strong> — as
+            <strong className="text-heading">Legitimate uses</strong>: as
             permitted under the Digital Personal Data Protection Act, 2023,
             including compliance with legal obligations and performance of
             contracts.
@@ -303,7 +303,7 @@ export default function PrivacyPolicy() {
         <h3 className={h3}>If you are in the United States:</h3>
         <p className={p}>
           See Section 12 for state-specific privacy rights (California,
-          Virginia, Colorado, and other applicable states).
+          Virginia, Colorado and other applicable states).
         </p>
       </LegalSection>
 
@@ -334,29 +334,29 @@ export default function PrivacyPolicy() {
           <li>
             <strong className="text-heading">
               Strictly necessary cookies
-            </strong>{" "}
-            — required for the platform to function (e.g., authentication
+            </strong>:{" "}
+            required for the platform to function (e.g., authentication
             tokens, session management). These cannot be disabled.
           </li>
           <li>
             <strong className="text-heading">
               Performance / analytics cookies
-            </strong>{" "}
-            — help us understand how visitors use our website (e.g., page
+            </strong>:{" "}
+            help us understand how visitors use our website (e.g., page
             views, traffic sources). Data is aggregated and anonymous.
           </li>
           <li>
             <strong className="text-heading">
               Functional cookies
-            </strong>{" "}
-            — remember your preferences (e.g., language, region) to provide
+            </strong>:{" "}
+            remember your preferences (e.g., language, region) to provide
             a personalised experience.
           </li>
           <li>
             <strong className="text-heading">
               Targeting / marketing cookies
-            </strong>{" "}
-            — used only with your consent to deliver relevant advertising
+            </strong>:{" "}
+            used only with your consent to deliver relevant advertising
             and measure campaign effectiveness.
           </li>
         </ul>
@@ -382,7 +382,7 @@ export default function PrivacyPolicy() {
         </p>
         <p className={p}>
           We use this information only to authenticate you and provide
-          access to our Services. We do not control, and are not
+          access to our Services. We do not control and are not
           responsible for, how Microsoft collects or uses your personal
           information. We recommend you review{" "}
           <a
@@ -408,14 +408,14 @@ export default function PrivacyPolicy() {
         </p>
         <ul className={ul}>
           <li>
-            <strong className="text-heading">Account data</strong> —
+            <strong className="text-heading">Account data</strong>:
             deleted immediately upon account closure.
           </li>
           <li>
             <strong className="text-heading">
               Employment application data
-            </strong>{" "}
-            — retained for 6 months after the recruitment process
+            </strong>:{" "}
+            retained for 6 months after the recruitment process
             concludes, or longer if required by law.
           </li>
         </ul>
@@ -478,46 +478,46 @@ export default function PrivacyPolicy() {
         </p>
         <ul className={ul}>
           <li>
-            <strong className="text-heading">Right of access</strong> —
+            <strong className="text-heading">Right of access</strong>:
             request a copy of the personal data we hold about you.
           </li>
           <li>
             <strong className="text-heading">
               Right to rectification
-            </strong>{" "}
-            — request correction of inaccurate or incomplete data.
+            </strong>:{" "}
+            request correction of inaccurate or incomplete data.
           </li>
           <li>
             <strong className="text-heading">
               Right to erasure (&ldquo;right to be forgotten&rdquo;)
-            </strong>{" "}
-            — request deletion of your personal data where there is no
+            </strong>:{" "}
+            request deletion of your personal data where there is no
             compelling reason to continue processing.
           </li>
           <li>
             <strong className="text-heading">
               Right to restrict processing
-            </strong>{" "}
-            — request that we limit how we use your data while a dispute is
+            </strong>:{" "}
+            request that we limit how we use your data while a dispute is
             resolved.
           </li>
           <li>
             <strong className="text-heading">
               Right to data portability
-            </strong>{" "}
-            — receive your personal data in a structured, commonly used,
+            </strong>:{" "}
+            receive your personal data in a structured, commonly used,
             machine-readable format.
           </li>
           <li>
-            <strong className="text-heading">Right to object</strong> —
+            <strong className="text-heading">Right to object</strong>:
             object to processing based on legitimate interests or for
             direct marketing purposes.
           </li>
           <li>
             <strong className="text-heading">
               Right to withdraw consent
-            </strong>{" "}
-            — where we rely on consent as a legal basis, you may withdraw
+            </strong>:{" "}
+            where we rely on consent as a legal basis, you may withdraw
             it at any time without affecting the lawfulness of prior
             processing.
           </li>
@@ -573,22 +573,22 @@ export default function PrivacyPolicy() {
         <ul className={ul}>
           <li>
             Right to know what personal information we collect, use,
-            disclose, and sell
+            disclose and sell
           </li>
           <li>
             Right to delete personal information we hold about you (with
             certain exceptions)
           </li>
           <li>
-            Right to opt out of the sale or sharing of personal information
-            — we do not sell or share personal information
+            Right to opt out of the sale or sharing of personal information:
+            we do not sell or share personal information
           </li>
           <li>
             Right to non-discrimination for exercising your privacy rights
           </li>
           <li>Right to correct inaccurate personal information</li>
           <li>
-            Right to limit use of sensitive personal information — we do
+            Right to limit use of sensitive personal information: we do
             not process sensitive PI
           </li>
         </ul>
@@ -597,7 +597,7 @@ export default function PrivacyPolicy() {
           (UCPA)
         </h3>
         <ul className={ul}>
-          <li>Right to access, correct, and delete personal data</li>
+          <li>Right to access, correct and delete personal data</li>
           <li>Right to data portability</li>
           <li>Right to opt out of targeted advertising and profiling</li>
         </ul>

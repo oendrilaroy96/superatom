@@ -161,7 +161,7 @@ export default function About() {
                     <GradientText>Speed of Business.</GradientText>
                   </>
                 }
-                description="Superatom AI exists to close the gap between enterprise data, business context, and action."
+                description="Superatom AI exists to close the gap between enterprise data, business context and action."
                 descriptionClassName="max-w-lg"
               />
               <Reveal as="div" delay={0.24} className="mt-9">
@@ -218,13 +218,13 @@ export default function About() {
               <div className="space-y-4 text-p text-body">
                 <p>
                   We bring together a diverse team of strategic thinkers,
-                  technology experts, and customer-obsessed builders. Our
+                  technology experts and customer-obsessed builders. Our
                   collective experience spans building and scaling teams across
                   geographies, developing enterprise-grade products, GTM experts
                   and building startups from the ground up.
                 </p>
                 <p>
-                  With experience across organizations such as Blue Yonder, DHL,
+                  With experience across organizations such as Blue Yonder, DHL
                   and Pine Labs, alongside entrepreneurial experience and
                   backgrounds from prestigious institutions, including the IITs,
                   our team combines enterprise expertise with a builder&rsquo;s
@@ -291,12 +291,12 @@ export default function About() {
               </p>
               <p>
                 We wanted to understand how enterprises really use business
-                intelligence: what works, what breaks, and where decisions get
+                intelligence: what works, what breaks and where decisions get
                 stuck. The same themes kept coming up. Business analytics teams
                 are stretched thin. Dashboards multiply while answers slow down.
                 Leaders need to decide faster and with more confidence than
                 their current BI setup allows. Those conversations with
-                technology and business leaders became our foundation, and they
+                technology and business leaders became our foundation and they
                 shaped one clear vision:
               </p>
             </div>
@@ -316,7 +316,7 @@ export default function About() {
             />
             <p className="relative font-display text-[17px] font-semibold leading-snug tracking-tight text-heading sm:text-[19px]">
               To transform how enterprises make decisions by bridging the gap
-              between enterprise data, business context, and action.
+              between enterprise data, business context and action.
             </p>
           </div>
         </div>

@@ -168,13 +168,13 @@ const capabilities: {
 }[] = [
   {
     title: "Inventory Optimization",
-    desc: "Recommends optimal inventory levels by evaluating demand patterns, lead times, and supply variability.",
+    desc: "Recommends optimal inventory levels by evaluating demand patterns, lead times and supply variability.",
     illustration: optimizationArt,
     illoBg: illoBgA,
   },
   {
     title: "Inventory Rebalancing",
-    desc: "Identifies when, where, and how much inventory to transfer across plants, warehouses, and distribution centers.",
+    desc: "Identifies when, where and how much inventory to transfer across plants, warehouses and distribution centers.",
     illustration: rebalancingArt,
     illoBg: illoBgB,
   },
@@ -186,7 +186,7 @@ const capabilities: {
   },
   {
     title: "Predictive Excess Inventory Intelligence",
-    desc: "Anticipates future excess from demand trends, production plans, procurement schedules, and inventory policies.",
+    desc: "Anticipates future excess from demand trends, production plans, procurement schedules and inventory policies.",
     illustration: predictiveExcessArt,
     illoBg: illoBgB,
   },
@@ -198,13 +198,13 @@ const capabilities: {
   },
   {
     title: "Dynamic Inventory Policy Optimization",
-    desc: "Continuously optimizes safety stock, reorder points, and inventory norms as conditions change.",
+    desc: "Continuously optimizes safety stock, reorder points and inventory norms as conditions change.",
     illustration: dynamicPolicyArt,
     illoBg: illoBgB,
   },
   {
     title: "Replenishment Decision Intelligence",
-    desc: "Recommends what to replenish, when to replenish, where to deploy inventory, and the optimal quantity.",
+    desc: "Recommends what to replenish, when to replenish, where to deploy inventory and the optimal quantity.",
     illustration: replenishmentArt,
     illoBg: illoBgA,
   },
@@ -369,7 +369,7 @@ const distortionStats: { value: string; label: string; dotColor: string }[] = [
 const industries: { label: string; desc: string; Icon: IconComponent }[] = [
   {
     label: "Supply Chain & Logistics",
-    desc: "End-to-end visibility across locations, partners, and inventory flows.",
+    desc: "End-to-end visibility across locations, partners and inventory flows.",
     Icon: LocalShippingIcon,
   },
   {
@@ -384,7 +384,7 @@ const industries: { label: string; desc: string; Icon: IconComponent }[] = [
   },
   {
     label: "Manufacturing",
-    desc: "Production-ready materials planning across sites, teams, and suppliers.",
+    desc: "Production-ready materials planning across sites, teams and suppliers.",
     Icon: PrecisionManufacturingIcon,
   },
 ];
@@ -450,7 +450,7 @@ export default function InventoryIntelligence() {
   // made, stacking a second release on top of the deliberate one. `sticky`
   // releasing a little later than the cards land (UNSTACK_PX's comment) —
   // never earlier — reads as the heading staying put a beat longer, not as
-  // a bug, and sidesteps all of that.
+  // a bug and sidesteps all of that.
   const [cardStyles, setCardStyles] = useState<CardStyle[]>(() =>
     capabilities.map((_, i) => {
       const slot = stackSlots[i];
@@ -477,7 +477,7 @@ export default function InventoryIntelligence() {
   const headingHeightRef = useRef(0);
   // The real gap between the heading's bottom edge and row one's natural
   // top, MINUS UNSTACK_PX — the Capabilities section's own py-[120px] plus
-  // the grid's own mt-16, not a number worth hardcoding here, and not
+  // the grid's own mt-16, not a number worth hardcoding here and not
   // UNSTACK_PX's own spacer div, which also sits in that stretch of
   // document: that part needs subtracting back out, or retuning UNSTACK_PX
   // for sticky's timing would also silently push the stack's landing spot
@@ -489,7 +489,7 @@ export default function InventoryIntelligence() {
 
   // `updateMorph` is handed to useLenis below and must keep one stable
   // identity for the life of the component: useLenis re-subscribes whenever
-  // the function reference it's given changes, and setCardStyles always
+  // the function reference it's given changes and setCardStyles always
   // produces a brand-new array, so a fresh closure here on every render
   // would re-subscribe -> re-run -> setState -> re-render in an infinite
   // loop. Reading isDesktop/order/exitingIndex through refs (synced
@@ -516,7 +516,7 @@ export default function InventoryIntelligence() {
   //   C  beyond unstackEndY           embedded in the grid, tracking 1:1
   // unstackEndY is shared by every card, not computed per card: each card's
   // Phase B target is its OWN row's floor (ARRANGE_FLOOR, offset down by
-  // that row's real gap below row one), and since the two rows sit a fixed
+  // that row's real gap below row one) and since the two rows sit a fixed
   // distance apart in the document no matter how far the page has
   // scrolled, targeting each row's true position rather than one shared
   // point means both rows naturally finish fanning at the very same
@@ -756,7 +756,7 @@ export default function InventoryIntelligence() {
       {/* Dark enterprise-style hero (Stripe's /enterprise page look): a
           diagonal warm glow over a dark navy section, bold white heading
           with the last line in the brand's existing purple-to-orange
-          gradient (same one Hero3 uses), and a floating stack of capability
+          gradient (same one Hero3 uses) and a floating stack of capability
           cards on the right instead of a dashboard screenshot. On desktop,
           hero and the highlights bar right under it together fill exactly
           one viewport height, so both are visible without scrolling on
@@ -972,8 +972,8 @@ export default function InventoryIntelligence() {
                     The enterprise reality
                   </p>
                   <p className="mt-3 text-sm leading-relaxed text-body">
-                    Small inventory gaps compound across locations, channels,
-                    and teams. The result is trapped capital, missed demand,
+                    Small inventory gaps compound across locations, channels
+                    and teams. The result is trapped capital, missed demand
                     and slower growth.
                   </p>
                 </div>
@@ -1032,7 +1032,7 @@ export default function InventoryIntelligence() {
                   </span>
                 </span>
               }
-              description="Inventory Intelligence adapts to the demands of your sector, connecting every site, system, and team on one secure platform."
+              description="Inventory Intelligence adapts to the demands of your sector, connecting every site, system and team on one secure platform."
               descriptionClassName="mx-auto max-w-2xl"
             />
           </div>

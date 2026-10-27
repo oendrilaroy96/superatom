@@ -6,12 +6,12 @@ const faqs: { question: string; answer: ReactNode }[] = [
   {
     question: "What is Superatom AI?",
     answer:
-      "Superatom AI is a Data-to-Insights platform that acts like an analyst for leadership teams. It connects directly to enterprise systems such as ERPs, CRMs, databases, and operational tools to deliver real-time, actionable insights. Instead of analyzing dashboards or switching between apps, users get clear answers, explanations, and recommended actions instantly. Superatom transforms complex enterprise data into simple, decision-ready intelligence for every team.",
+      "Superatom AI is a Data-to-Insights platform that acts like an analyst for leadership teams. It connects directly to enterprise systems such as ERPs, CRMs, databases and operational tools to deliver real-time, actionable insights. Instead of analyzing dashboards or switching between apps, users get clear answers, explanations and recommended actions instantly. Superatom transforms complex enterprise data into simple, decision-ready intelligence for every team.",
   },
   {
     question: "Who is Superatom AI for?",
     answer:
-      "Superatom AI is designed for business leaders, operations teams, analysts, and decision-makers who work with high-volume enterprise data. It helps organizations reduce decision delays, improve visibility, and take data-driven actions easily. Whether you work in supply chain, logistics, manufacturing, sales, or finance, Superatom provides every role with the insights they need—without depending on BI teams or analysts.",
+      "Superatom AI is designed for business leaders, operations teams, analysts and decision-makers who work with high-volume enterprise data. It helps organizations reduce decision delays, improve visibility and take data-driven actions easily. Whether you work in supply chain, logistics, manufacturing, sales, or finance, Superatom provides every role with the insights they need, without depending on BI teams or analysts.",
   },
   {
     question: "How is Superatom AI different from a traditional dashboard?",
@@ -23,10 +23,10 @@ const faqs: { question: string; answer: ReactNode }[] = [
         <p className="mt-2">
           Instead of static charts and predefined layouts, Superatom
           interprets enterprise data in real time and explains what&rsquo;s
-          happening, why it&rsquo;s happening, and what to do next. Its
+          happening, why it&rsquo;s happening and what to do next. Its
           adaptive UI adjusts based on questions and workflows, helping
           teams move seamlessly from data → insights → action in one
-          place—without dashboard overload or context switching.
+          place, without dashboard overload or context switching.
         </p>
       </>
     ),
@@ -34,7 +34,7 @@ const faqs: { question: string; answer: ReactNode }[] = [
   {
     question: "Can Superatom AI integrate with our existing systems?",
     answer:
-      "Yes. Superatom integrates seamlessly with ERPs, CRMs, WMS, databases, IoT systems, and internal APIs. It doesn't replace your tools—it unifies them. By pulling data into a single intelligence layer, Superatom delivers end-to-end visibility across operations without disrupting existing workflows or security policies.",
+      "Yes. Superatom integrates seamlessly with ERPs, CRMs, WMS, databases, IoT systems and internal APIs. It doesn't replace your tools. It unifies them. By pulling data into a single intelligence layer, Superatom delivers end-to-end visibility across operations without disrupting existing workflows or security policies.",
   },
   {
     question: "How does Superatom AI improve decision-making?",
@@ -45,11 +45,11 @@ const faqs: { question: string; answer: ReactNode }[] = [
         </p>
         <p className="mt-2">
           It analyzes data across all systems, identifies patterns,
-          highlights anomalies, and surfaces the insights that matter
-          most—instantly. Instead of digging through reports, teams
-          receive ready-to-use intelligence, recommended actions, and
+          highlights anomalies and surfaces the insights that matter
+          most, instantly. Instead of digging through reports, teams
+          receive ready-to-use intelligence, recommended actions and
           workflow shortcuts, enabling faster and more confident decisions
-          across supply chain, sales, operations, and finance.
+          across supply chain, sales, operations and finance.
         </p>
       </>
     ),
@@ -57,12 +57,12 @@ const faqs: { question: string; answer: ReactNode }[] = [
   {
     question: "Do we need training to use Superatom AI?",
     answer:
-      "Not at all. Superatom is built for a zero learning curve. Its conversational interface lets users ask questions in natural language and receive instant insights. With its no-code workflows and adaptive UI, anyone can explore data, generate reports, or trigger actions—just like chatting with a personal operations assistant.",
+      "Not at all. Superatom is built for a zero learning curve. Its conversational interface lets users ask questions in natural language and receive instant insights. With its no-code workflows and adaptive UI, anyone can explore data, generate reports, or trigger actions, just like chatting with a personal operations assistant.",
   },
   {
     question: "Is Superatom AI secure?",
     answer:
-      "Yes. Superatom follows enterprise-grade security and compliance standards. All data remains within your environment, fully encrypted, and protected by role-based access controls. While the platform makes data access smarter and easier, it never compromises on security, governance, or auditability.",
+      "Yes. Superatom follows enterprise-grade security and compliance standards. All data remains within your environment, fully encrypted and protected by role-based access controls. While the platform makes data access smarter and easier, it never compromises on security, governance, or auditability.",
   },
 ];
 

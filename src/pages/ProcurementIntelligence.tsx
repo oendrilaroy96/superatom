@@ -54,7 +54,7 @@ const industries: { label: string; desc: string; Icon: IconComponent }[] = [
   },
   {
     label: "Manufacturing",
-    desc: "Reliable materials sourcing across sites, suppliers, and production schedules.",
+    desc: "Reliable materials sourcing across sites, suppliers and production schedules.",
     Icon: PrecisionManufacturingIcon,
   },
 ];
@@ -150,13 +150,13 @@ const capabilities: {
 }[] = [
   {
     title: "Supplier Selection Intelligence",
-    desc: "Recommends the optimal supplier by evaluating cost, quality, lead time, capacity, contracts, ESG, and supply risk.",
+    desc: "Recommends the optimal supplier by evaluating cost, quality, lead time, capacity, contracts, ESG and supply risk.",
     illustration: supplierSelectionArt,
     illoBg: "#EFEDFF",
   },
   {
     title: "Procurement Planning",
-    desc: "Determines whether procurement is required by evaluating inventory, demand forecasts, production plans, and existing purchase commitments.",
+    desc: "Determines whether procurement is required by evaluating inventory, demand forecasts, production plans and existing purchase commitments.",
     illustration: procurementPlanningArt,
     illoBg: "#EFEDFF",
     dotGrid: true,
@@ -164,14 +164,14 @@ const capabilities: {
   },
   {
     title: "Contract Intelligence",
-    desc: "Recommends the most beneficial contract by evaluating pricing, commercial terms, commitments, expiry, and negotiated agreements.",
+    desc: "Recommends the most beneficial contract by evaluating pricing, commercial terms, commitments, expiry and negotiated agreements.",
     illustration: contractIntelligenceArt,
     illoBg: "#FFFFFF",
     illoBorder: "#DCD6FD",
   },
   {
     title: "Order Quantity Optimization",
-    desc: "Recommends the optimal purchase quantity by balancing demand, inventory, MOQ, lead time, and working capital objectives.",
+    desc: "Recommends the optimal purchase quantity by balancing demand, inventory, MOQ, lead time and working capital objectives.",
     illustration: orderQuantityArt,
     illoBg: "#EFEDFF",
   },
@@ -183,7 +183,7 @@ const capabilities: {
   },
   {
     title: "Procurement Risk Intelligence",
-    desc: "Continuously monitors supplier, geopolitical, logistics, and compliance risks and recommends proactive sourcing actions.",
+    desc: "Continuously monitors supplier, geopolitical, logistics and compliance risks and recommends proactive sourcing actions.",
     illustration: riskIntelligenceArt,
     illoBg: "#E4DFFF",
   },
@@ -643,8 +643,8 @@ export default function ProcurementIntelligence() {
                   </span>
                 </Reveal>
                 <Reveal as="p" delay={0.2} className="mt-6 max-w-lg text-[18px] leading-[1.55] text-white/70">
-                  Superatom brings together your data, business context, rules, and policies to help you
-                  make and automate better procurement decisions — from supplier selection to contracting,
+                  Superatom brings together your data, business context, rules and policies to help you
+                  make and automate better procurement decisions from supplier selection to contracting,
                   ordering and risk management.
                 </Reveal>
                 <Reveal delay={0.3}>
@@ -791,7 +791,7 @@ export default function ProcurementIntelligence() {
                   </span>
                 </span>
               }
-              description="Procurement Intelligence adapts to the demands of your sector, connecting every supplier, system, and team on one secure platform."
+              description="Procurement Intelligence adapts to the demands of your sector, connecting every supplier, system and team on one secure platform."
               descriptionClassName="mx-auto max-w-2xl"
             />
           </div>

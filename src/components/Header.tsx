@@ -72,7 +72,7 @@ function DropdownNavItem({
 }) {
   // Visibility is tracked explicitly (not left to pure CSS :hover) so it
   // can be force-closed below on navigation: clicking a link inside the
-  // panel changes the route without the cursor actually moving away, and
+  // panel changes the route without the cursor actually moving away and
   // since the header isn't remounted between pages, :hover alone would
   // keep the panel showing on top of the new page underneath it.
   const [open, setOpen] = useState(false);

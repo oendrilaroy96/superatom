@@ -301,7 +301,7 @@ export default function Features() {
   const semanticOutputResolved = semanticPhase >= SEMANTIC_STAGES.length;
 
   // Cycle which workflow step is "running", which question the Generative UI
-  // card is answering, and how far the Semantic Modeling pipeline has
+  // card is answering and how far the Semantic Modeling pipeline has
   // progressed, so the cards that literally describe automation and dynamic
   // generation visibly demonstrate it rather than sitting static.
   useEffect(() => {
@@ -596,8 +596,8 @@ export default function Features() {
             </p>
             <p className="mt-2 text-sm leading-relaxed text-caption">
               Superatom unifies data from your ERPs, databases, data
-              lakes, files, and APIs. It analyzes structures,
-              relationships, patterns, and business context to build a unified
+              lakes, files and APIs. It analyzes structures,
+              relationships, patterns and business context to build a unified
               semantic model of your business in 3 days instead of 3–6 months.
             </p>
             <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-primary-500/15 bg-primary-100/50 px-3 py-1.5">
@@ -625,7 +625,7 @@ export default function Features() {
             </p>
             <p className="mt-3 max-w-[560px] text-sm leading-relaxed text-caption">
               Every business has knowledge built over years of experience, much
-              of it held by people who understand its processes, exceptions, and
+              of it held by people who understand its processes, exceptions and
               ways of working. Superatom captures and operationalizes this
               knowledge across three levels:
             </p>

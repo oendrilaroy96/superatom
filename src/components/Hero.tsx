@@ -50,7 +50,7 @@ const HOLD_CAPTION = "Signals from across your supply chain";
 const CAPTIONS = [
   "Scattered signals connect in the decision intelligence layer",
   "The optimization engine weighs every option",
-  "The decision is delivered, and every outcome feeds back",
+  "The decision is delivered and every outcome feeds back",
 ];
 
 function StatIcon({ Icon }: { Icon: IconComponent }) {
@@ -355,7 +355,7 @@ function HeroDiagram({
         ref={svgRef}
         viewBox="0 0 640 480"
         role="img"
-        aria-label="Supply chain signals connect into a semantic layer, the optimization engine weighs the best option, and the decision is delivered and fed back into future decisions."
+        aria-label="Supply chain signals connect into a semantic layer, the optimization engine weighs the best option and the decision is delivered and fed back into future decisions."
         className="w-full"
       >
         <defs>

@@ -284,7 +284,7 @@ export default function CaseStudyDetail() {
         </section>
 
         {/* Next case study: same width and position as the result rows above it
-            (second column of the result grid on desktop, full width below),
+            (second column of the result grid on desktop, full width below)
             and it fades to the dark style together with the rest of this block. */}
         <Container className="pb-20 lg:pb-[100px]">
           <div className="lg:grid lg:grid-cols-[minmax(0,411fr)_minmax(0,617fr)] lg:gap-6">

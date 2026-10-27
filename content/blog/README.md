@@ -44,7 +44,7 @@ More text, with **bold**, *italic*, `code` and [links](https://example.com).
 | `title` | yes | A post without a title is skipped. |
 | `date` | recommended | Written as `YYYY-MM-DD`. A **future date hides the post until that day**. |
 | `category` | no | Posts with the same category are grouped under one filter button. |
-| `series` | no | A label shown above the title. Written as `Series name — Part 2 of 3`, it also labels the card ("Part 2 of 3") and links all parts of that series together at the bottom of each article. A series without the "Part N of M" ending is just shown as a label. |
+| `series` | no | A label shown above the title. Written as `Series name - Part 2 of 3`, it also labels the card ("Part 2 of 3") and links all parts of that series together at the bottom of each article. A series without the "Part N of M" ending is just shown as a label. |
 | `subtitle` | no | A standfirst shown under the title. Also used as the card summary when there's no `excerpt`. |
 | `excerpt` | no | Card summary. If empty, the subtitle, then the first paragraph, is used. |
 | `cover` | no | Thumbnail for the blog cards, for example `/blog/cover.jpg`. If empty, a placeholder is shown. It is not shown on the post page itself. |
