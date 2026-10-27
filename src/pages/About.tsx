@@ -101,19 +101,17 @@ function TeamCard({ member }: { member: TeamMember }) {
         <AvatarPlaceholder colors={member.avatarGradient!} />
       )}
       <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-secondary-600/95 via-secondary-600/35 to-transparent" />
-      <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3 sm:inset-x-5 sm:bottom-5">
-        <div>
-          <p className="font-display text-[15px] font-bold leading-tight text-white sm:text-[19px]">
-            {member.name}
-          </p>
-          <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-white/65 sm:text-[11px]">
-            {member.role}
-          </p>
-        </div>
-        <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-white/20 bg-white/10 text-white transition-transform duration-200 group-hover:scale-110 sm:size-11">
-          <LinkedInIcon className="!text-[20px] sm:!text-[24px]" />
-        </span>
+      <div className="absolute inset-x-4 bottom-4 sm:inset-x-5 sm:bottom-5">
+        <p className="whitespace-nowrap font-display text-[10px] font-bold leading-tight text-white min-[380px]:text-[11px] min-[420px]:text-[12px] sm:text-[17px] lg:text-[14px] min-[1100px]:text-[15px] xl:text-[18px]">
+          {member.name}
+        </p>
+        <p className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-white/65 min-[420px]:text-[10px] sm:text-[11px]">
+          {member.role}
+        </p>
       </div>
+      <span className="absolute right-3 top-3 flex size-9 items-center justify-center rounded-lg border border-white/30 bg-secondary-500/75 text-white backdrop-blur-[6px] transition-transform duration-200 group-hover:scale-110 sm:right-4 sm:top-4 sm:size-11">
+        <LinkedInIcon className="!text-[20px] sm:!text-[24px]" />
+      </span>
     </a>
   );
 }
