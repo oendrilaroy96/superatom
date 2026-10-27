@@ -231,7 +231,7 @@ function OptimizationDiagram({ tick }: { tick: number }) {
 const SEMANTIC_SOURCES = [
   { label: "ERP", color: "#29b9bb" },
   { label: "Databases", color: "#ff7600" },
-  { label: "Warehouses", color: "#533afd" },
+  { label: "Data lakes", color: "#533afd" },
   { label: "Files", color: "#ff7eb0" },
   { label: "APIs", color: "#873eff" },
 ];
@@ -596,7 +596,7 @@ export default function Features() {
             </p>
             <p className="mt-2 text-sm leading-relaxed text-caption">
               Superatom unifies data from your ERPs, databases, data
-              warehouses, files, and APIs. It analyzes structures,
+              lakes, files, and APIs. It analyzes structures,
               relationships, patterns, and business context to build a unified
               semantic model of your business in 3 days instead of 3–6 months.
             </p>
