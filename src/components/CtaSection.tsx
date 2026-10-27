@@ -9,6 +9,8 @@ type Office = {
   country: string;
   city: string;
   address: string[];
+  email?: string;
+  phone?: string;
 };
 
 const offices: Office[] = [
@@ -24,6 +26,13 @@ const offices: Office[] = [
       "Trendz Inspire, Kavuri Hills Rd, CBI Colony",
       "Madhapur, Hyderabad, Telangana 500033",
     ],
+  },
+  {
+    country: "Australia & New Zealand",
+    city: "Kellyville, Australia",
+    address: [],
+    email: "enquiries@co-labholdings.com",
+    phone: "+61 403 996 894",
   },
 ];
 
@@ -42,14 +51,31 @@ function OfficeCard({ office }: { office: Office }) {
         </span>
       </div>
       <p className="mt-4 font-display text-lg font-semibold text-white">{office.city}</p>
-      <p className="mt-1.5 text-sm leading-relaxed text-white/50">
-        {office.address.map((line, i) => (
-          <span key={i}>
-            {line}
-            {i < office.address.length - 1 && <br />}
-          </span>
-        ))}
-      </p>
+      {office.address.length > 0 && (
+        <p className="mt-1.5 text-sm leading-relaxed text-white/50">
+          {office.address.map((line, i) => (
+            <span key={i}>
+              {line}
+              {i < office.address.length - 1 && <br />}
+            </span>
+          ))}
+        </p>
+      )}
+      {(office.email || office.phone) && (
+        <p className="mt-1.5 text-sm leading-relaxed text-white/50">
+          {office.email && (
+            <a href={`mailto:${office.email}`} className="transition-colors hover:text-white">
+              {office.email}
+            </a>
+          )}
+          {office.email && office.phone && <br />}
+          {office.phone && (
+            <a href={`tel:${office.phone.replace(/\s/g, "")}`} className="transition-colors hover:text-white">
+              {office.phone}
+            </a>
+          )}
+        </p>
+      )}
     </div>
   );
 }
@@ -86,7 +112,7 @@ export default function CtaSection() {
     >
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
         <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr]">
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 p-10 sm:p-12">
+          <div className="relative flex flex-col justify-center overflow-hidden rounded-3xl border border-white/10 p-10 sm:p-12">
             {/* No z-index here (relies on DOM order, painted before the
                 content below): a negative z-index on a child of this
                 position:relative div, which itself doesn't establish its own
