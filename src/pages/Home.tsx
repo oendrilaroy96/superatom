@@ -5,6 +5,7 @@ import Features from "../components/Features";
 // import Infrastructure from "../components/Infrastructure";
 import Testimonial from "../components/Testimonial";
 import Customers from "../components/Customers";
+import Integrations from "../components/Integrations";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
       {/* <Infrastructure /> */}
       <Customers />
       <Testimonial />
+      <Integrations />
     </>
   );
 }
