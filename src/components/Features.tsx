@@ -403,8 +403,8 @@ export default function Features() {
           {/* 2. On-Premise Deployment — the Superatom logo continuously travels
               from the left into the client's system, which pulses as it
               lands, to depict Superatom deploying into their environment. */}
-          <GlowCard className={HOVER_LIFT} contentClassName="p-6">
-            <DashedBox className="relative h-[132px]">
+          <GlowCard className={HOVER_LIFT} contentClassName="flex h-full flex-col p-6">
+            <DashedBox className="relative min-h-[132px] flex-1">
               <p className="absolute left-3 top-3 text-[9px] font-bold uppercase tracking-[0.1em] text-caption">
                 Your infrastructure
               </p>
