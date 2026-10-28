@@ -50,7 +50,9 @@ function OfficeCard({ office }: { office: Office }) {
           <LocationOnIcon style={{ fontSize: 16 }} />
         </span>
       </div>
-      <p className="-mt-2 font-display text-lg font-semibold text-white">{office.city}</p>
+      <p className="-mt-2 font-display text-lg font-semibold text-white">
+        {office.city}
+      </p>
       {office.address.length > 0 && (
         <p className="mt-1.5 text-sm leading-relaxed text-white/50">
           {office.address.map((line, i) => (
@@ -64,13 +66,19 @@ function OfficeCard({ office }: { office: Office }) {
       {(office.email || office.phone) && (
         <p className="mt-1.5 text-sm leading-relaxed text-white/50">
           {office.email && (
-            <a href={`mailto:${office.email}`} className="transition-colors hover:text-white">
+            <a
+              href={`mailto:${office.email}`}
+              className="transition-colors hover:text-white"
+            >
               {office.email}
             </a>
           )}
           {office.email && office.phone && <br />}
           {office.phone && (
-            <a href={`tel:${office.phone.replace(/\s/g, "")}`} className="transition-colors hover:text-white">
+            <a
+              href={`tel:${office.phone.replace(/\s/g, "")}`}
+              className="transition-colors hover:text-white"
+            >
               {office.phone}
             </a>
           )}
@@ -110,8 +118,8 @@ export default function CtaSection() {
       }`}
     >
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-        <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr]">
-          <div className="relative flex flex-col justify-center overflow-hidden rounded-3xl border border-white/10 p-10 sm:p-12">
+        <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-6">
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 p-8 sm:p-12">
             {/* No z-index here (relies on DOM order, painted before the
                 content below): a negative z-index on a child of this
                 position:relative div, which itself doesn't establish its own
@@ -144,22 +152,24 @@ export default function CtaSection() {
                 like the two absolute glow/line divs above — regardless of
                 DOM order. Without its own stacking layer, this content would
                 render but be completely covered by the opaque glow div. */}
-            <div className="relative z-10">
-              <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
-                Decision Intelligence
-              </p>
-              <h2 className="mt-3 max-w-xl font-display text-[28px] font-semibold leading-[1.2] text-white sm:text-[34px] lg:text-[40px] lg:leading-[1.15]">
-                {isCaseStudies
-                  ? "See what Superatom AI could do for yours."
-                  : "See how your data can drive faster, smarter decisions."}
-              </h2>
-              <p className="mt-4 max-w-lg text-p text-white/60">
-                {isCaseStudies
-                  ? "Book a short demo to see how it works on inventory and procurement decisions like these."
-                  : "Get a personalised walkthrough of Superatom AI built around your business, your data and the decisions that matter most to you."}
-              </p>
+            <div className="relative z-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
+              <div>
+                <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
+                  Decision Intelligence
+                </p>
+                <h2 className="mt-3 max-w-xl font-display text-[28px] font-semibold leading-[1.2] text-white sm:text-[34px] lg:text-[40px] lg:leading-[1.15]">
+                  {isCaseStudies
+                    ? "See what Superatom AI could do for yours."
+                    : "See how your data can drive faster, smarter decisions."}
+                </h2>
+                <p className="mt-4 max-w-lg text-p text-white/60">
+                  {isCaseStudies
+                    ? "Book a short demo to see how it works on inventory and procurement decisions like these."
+                    : "Get a personalised walkthrough of Superatom AI built around your business, your data and the decisions that matter most to you."}
+                </p>
+              </div>
 
-              <div className="mt-10 flex flex-wrap items-center gap-3">
+              <div className="flex shrink-0 flex-wrap items-center gap-3">
                 <button
                   type="button"
                   onClick={() => setDemoOpen(true)}
@@ -178,7 +188,7 @@ export default function CtaSection() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
             {offices.map((office) => (
               <OfficeCard key={office.country} office={office} />
             ))}
