@@ -41,16 +41,16 @@ function OfficeCard({ office }: { office: Office }) {
     // Fixed dark bg (not a translucent white overlay) so this card and its
     // light text stay legible even while the section itself is in its light
     // (pre-scroll) crossfade state.
-    <div className="rounded-2xl border border-white/10 bg-secondary-600 p-5 sm:p-6">
+    <div className="rounded-2xl border border-white/10 bg-secondary-600 p-7">
       <div className="flex items-start justify-between">
         <p className="text-xs font-semibold uppercase tracking-[0.15em] text-secondary-300">
           {office.country}
         </p>
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-500/20 text-primary-300">
-          <LocationOnIcon style={{ fontSize: 16 }} />
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary-500/20 text-primary-300">
+          <LocationOnIcon style={{ fontSize: 18 }} />
         </span>
       </div>
-      <p className="-mt-2 font-display text-lg font-semibold text-white">
+      <p className="mt-4 font-display text-lg font-semibold text-white">
         {office.city}
       </p>
       {office.address.length > 0 && (
