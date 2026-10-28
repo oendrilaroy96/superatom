@@ -13,11 +13,18 @@ export default function Testimonial() {
 
   return (
     <section
-      className={`py-[140px] transition-colors duration-700 ease-in-out ${
+      className={`relative py-[140px] transition-colors duration-700 ease-in-out ${
         isDark ? "bg-secondary-500" : "bg-transparent"
       }`}
     >
-      <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
+      {/* Lavender that fades to transparent towards the bottom; it fades out as the section goes dark. */}
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-0 bg-gradient-to-b from-[#f5f5ff] to-transparent transition-opacity duration-700 ease-in-out ${
+          isDark ? "opacity-0" : "opacity-100"
+        }`}
+      />
+      <div className="relative mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
         <div className="mx-auto max-w-4xl text-center">
           <p
             className={`text-xs font-semibold uppercase tracking-[0.3em] transition-colors duration-700 ease-in-out ${
