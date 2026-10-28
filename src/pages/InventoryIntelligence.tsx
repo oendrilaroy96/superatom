@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { useLenis } from "lenis/react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -14,7 +14,6 @@ import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
 import type { IconComponent } from "../types/icon";
 import Button from "../components/ui/Button";
 import Reveal from "../components/ui/Reveal";
-import GlowCard from "../components/ui/GlowCard";
 import SectionHeading from "../components/ui/SectionHeading";
 import DemoModal from "../components/DemoModal";
 import { useDarkTransition } from "../context/DarkTransitionContext";
@@ -154,59 +153,45 @@ const replenishmentArt = (
   </svg>
 );
 
-// Illustration-box backgrounds alternate between two near-identical light
-// lavender tints (matching the Figma capabilities grid) instead of the
-// bordered/dot-grid one-off variants the previous design used.
-const illoBgA = "#F0EFFF";
-const illoBgB = "#F2F4FF";
-
 const capabilities: {
   title: string;
   desc: string;
   illustration: ReactNode;
-  illoBg: string;
 }[] = [
   {
     title: "Inventory Optimization",
     desc: "Recommends optimal inventory levels by evaluating demand patterns, lead times and supply variability.",
     illustration: optimizationArt,
-    illoBg: illoBgA,
   },
   {
     title: "Inventory Rebalancing",
     desc: "Identifies when, where and how much inventory to transfer across plants, warehouses and distribution centers.",
     illustration: rebalancingArt,
-    illoBg: illoBgB,
   },
   {
     title: "Aging Inventory Intelligence",
     desc: "Surfaces aging and slow-moving inventory early, then recommends the right corrective action.",
     illustration: agingArt,
-    illoBg: illoBgA,
   },
   {
     title: "Predictive Excess Inventory Intelligence",
     desc: "Anticipates future excess from demand trends, production plans, procurement schedules and inventory policies.",
     illustration: predictiveExcessArt,
-    illoBg: illoBgB,
   },
   {
     title: "Stockout Prevention",
     desc: "Predicts stockout risk and recommends replenishment, transfers, or production changes to protect service levels.",
     illustration: stockoutArt,
-    illoBg: illoBgA,
   },
   {
     title: "Dynamic Inventory Policy Optimization",
     desc: "Continuously optimizes safety stock, reorder points and inventory norms as conditions change.",
     illustration: dynamicPolicyArt,
-    illoBg: illoBgB,
   },
   {
     title: "Replenishment Decision Intelligence",
     desc: "Recommends what to replenish, when to replenish, where to deploy inventory and the optimal quantity.",
     illustration: replenishmentArt,
-    illoBg: illoBgA,
   },
 ];
 
@@ -251,7 +236,7 @@ const ENTER_SLOT = { x: 450, y: 158, rotate: 18, scale: 0.7, opacity: 0 };
 // and the capabilities grid, so a card keeps the same footprint as it
 // travels from one to the other instead of resizing mid-flight.
 const CARD_W = 252;
-const CARD_H = 270;
+const CARD_H = 315;
 
 // How much bigger than its true (grid) size the stack renders while it
 // still sits in the hero; lerps back down to 1 as the cards unstack into
@@ -272,26 +257,59 @@ const UNSTACK_PX = 200;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-/** Illustration, title and description shared by every rendering of a capability card. */
+/** Illustration, title and description shared by every rendering of a capability card. The title
+ * and description each reserve a fixed height (two and four lines) so every card lines up, and the
+ * illustration takes whatever is left of the 4:5 card. */
 function CapabilityCardFace({ c }: { c: (typeof capabilities)[number] }) {
   return (
-    <div className="flex h-full flex-col">
-      <div
-        className="flex h-28 shrink-0 items-center justify-center overflow-hidden rounded-lg p-2"
-        style={{ background: c.illoBg }}
-      >
-        {c.illustration}
-      </div>
-      <div className="mt-2 flex flex-1 flex-col">
+    <div className="relative flex h-full flex-col gap-2.5">
+      <div className="flex min-h-14 flex-1 items-center justify-center px-1 pt-1.5">{c.illustration}</div>
+      <div className="flex flex-col gap-1.5 px-1 pb-1">
         <span
-          className="mb-2 h-0.5 w-6 shrink-0 rounded-full"
+          className="h-0.5 w-6 shrink-0 rounded-full"
           style={{ backgroundImage: "linear-gradient(90deg, #486FFD, #873EFF)" }}
         />
-        <p className="line-clamp-2 font-display text-h4 font-semibold leading-tight text-heading">
+        <p className="line-clamp-2 min-h-[36px] font-display text-[15px] font-semibold leading-[1.2] tracking-tight text-heading">
           {c.title}
         </p>
-        <p className="mt-1 line-clamp-4 text-[13px] leading-relaxed text-body">{c.desc}</p>
+        <p className="line-clamp-4 min-h-[72px] text-xs leading-[1.5] text-body">{c.desc}</p>
       </div>
+    </div>
+  );
+}
+
+/** The soft glow card: lavender fading to white, a faint purple glow behind the art and a thin
+ * brand-gradient edge along the top. The caller sets position (absolute or relative) and any transform. */
+function CapabilityCard({
+  c,
+  className = "",
+  style,
+}: {
+  c: (typeof capabilities)[number];
+  className?: string;
+  style?: CSSProperties;
+}) {
+  return (
+    <div
+      className={`overflow-hidden rounded-[14px] border border-secondary-100 bg-gradient-to-b from-[#f1eeff] from-0% to-white to-[78%] p-3.5 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)] ${className}`}
+      style={style}
+    >
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage: "radial-gradient(170px 140px at 50% 26%, rgba(83,58,253,0.08), transparent 72%)",
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-x-0 top-0 h-0.5"
+        style={{
+          backgroundImage:
+            "linear-gradient(90deg, transparent, #533afd 30%, #ff7eb0 65%, #ff7600 85%, transparent)",
+        }}
+        aria-hidden="true"
+      />
+      <CapabilityCardFace c={c} />
     </div>
   );
 }
@@ -315,18 +333,19 @@ function MobileCardStack({
           i === exitingIndex ? EXIT_SLOT : i === enteringIndex ? ENTER_SLOT : stackSlots[order.indexOf(i)];
         const isTransitioning = i === exitingIndex || i === enteringIndex;
         return (
-          <div
+          <CapabilityCard
             key={c.title}
-            className="absolute inset-x-0 top-0 rounded-lg border border-secondary-100 bg-white p-3 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)]"
+            c={c}
+            className="absolute left-0 top-0"
             style={{
+              width: CARD_W,
+              height: CARD_H,
               transform: `translate(${slot.x}px, ${slot.y}px) rotate(${slot.rotate}deg) scale(${slot.scale})`,
               opacity: slot.opacity,
               zIndex: isTransitioning ? stackSlots.length + 1 : stackSlots.length - stackSlots.indexOf(slot),
               transition: shuffling ? "transform 0.7s cubic-bezier(.22,1,.36,1), opacity 0.7s ease" : "none",
             }}
-          >
-            <CapabilityCardFace c={c} />
-          </div>
+          />
         );
       })}
     </div>
@@ -859,9 +878,10 @@ export default function InventoryIntelligence() {
           {capabilities.map((c, i) => {
             const s = cardStyles[i];
             return (
-              <div
+              <CapabilityCard
                 key={c.title}
-                className="absolute rounded-lg border border-secondary-100 bg-white p-3 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)]"
+                c={c}
+                className="absolute"
                 style={{
                   top: s.top,
                   left: s.left,
@@ -875,9 +895,7 @@ export default function InventoryIntelligence() {
                   opacity: s.ready ? s.opacity : 0,
                   zIndex: s.zIndex,
                 }}
-              >
-                <CapabilityCardFace c={c} />
-              </div>
+              />
             );
           })}
         </div>
@@ -927,18 +945,9 @@ export default function InventoryIntelligence() {
             </div>
           ) : (
             <>
-              <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                {capabilities.slice(0, 4).map((c) => (
-                  <GlowCard key={c.title} contentClassName="p-3">
-                    <CapabilityCardFace c={c} />
-                  </GlowCard>
-                ))}
-              </div>
-              <div className="mx-auto mt-6 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {capabilities.slice(4).map((c) => (
-                  <GlowCard key={c.title} contentClassName="p-3">
-                    <CapabilityCardFace c={c} />
-                  </GlowCard>
+              <div className="mx-auto mt-16 flex max-w-6xl flex-wrap justify-center gap-4">
+                {capabilities.map((c) => (
+                  <CapabilityCard key={c.title} c={c} className="relative" style={{ width: CARD_W, height: CARD_H }} />
                 ))}
               </div>
             </>
