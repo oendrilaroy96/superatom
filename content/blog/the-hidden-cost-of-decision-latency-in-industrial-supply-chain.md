@@ -1,6 +1,6 @@
 ---
 title: The Hidden Cost of Decision Latency in Industrial Supply Chain
-date: 2026-10-27
+date: 2026-08-11
 category: Decision intelligence
 cover: /blog/decision-latency-cover.webp
 ---

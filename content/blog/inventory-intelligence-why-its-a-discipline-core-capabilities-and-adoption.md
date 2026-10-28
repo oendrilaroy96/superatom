@@ -2,7 +2,7 @@
 title: Inventory Intelligence: Why It's a Discipline, Its Core Capabilities and Where Adoption Stands
 series: Inventory Intelligence - Part 2 of 3
 subtitle: Continued from Part 1, which covered the definition of inventory intelligence and the $1.7 trillion cost of not having it.
-date: 2026-10-20
+date: 2026-09-11
 category: Inventory intelligence
 cover: /blog/inventory-intelligence-part-2-cover-v2.webp
 stat1: <25% | of retailers have deployed AI or ML in the areas most tied to inventory distortion

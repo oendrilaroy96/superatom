@@ -2,7 +2,7 @@
 title: Inventory Intelligence: Trends, Risks and How to Build This Capability
 series: Inventory Intelligence - Part 3 of 3
 subtitle: The final part in this series: continued from Part 1 (definition and the cost of the problem) and Part 2 (capabilities and adoption).
-date: 2026-10-21
+date: 2026-09-16
 category: Inventory intelligence
 cover: /blog/inventory-intelligence-part-3-cover-v2.webp
 stat1: $1.7T | the proven annual cost of inventory decisions made on scattered, lagging data
