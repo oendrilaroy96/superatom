@@ -13,7 +13,7 @@ import superatomMark from "../assets/superatom-mark.png";
 
 /** Lift + shadow a card gets on hover, shared by every tile in the grid below. */
 const HOVER_LIFT =
-  "transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_-24px_rgba(13,23,56,0.25)]";
+  "transition-shadow duration-300 hover:shadow-[0_24px_48px_-24px_rgba(13,23,56,0.25)]";
 
 /** Dashed-border mockup box with a faint dot-grid background, used inside the feature cards below for their mini illustrations. */
 function DashedBox({
