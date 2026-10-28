@@ -130,33 +130,6 @@ body {
   font-family: var(--font-sans);
 }
 
-/* ================= Hero decision diagram ================= */
-.hero-heading span {
-  display: block;
-  color: #c9d2df;
-  transition: color 0.5s ease;
-}
-.hero-heading span.on {
-  color: var(--color-heading);
-}
-.hero-heading > span:last-child {
-  width: fit-content;
-}
-.hero-heading > span.on:last-child {
-  background: linear-gradient(
-    90deg,
-    var(--color-primary-500) 0%,
-    var(--color-primary-400) 45%,
-    var(--color-accent-500) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-.hero-heading.intro span {
-  color: var(--color-heading);
-}
-
 /* ================= Hero2 (video variant) heading ================= */
 .hero2-heading {
   font-size: 72px;
@@ -500,49 +473,6 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .customers-marquee-track {
-    animation: none;
-  }
-}
-
-.hero-viz {
-  position: relative;
-}
-.hero-viz::before {
-  content: "";
-  position: absolute;
-  inset: -6% -4%;
-  z-index: -1;
-  border-radius: 40px;
-  background:
-    radial-gradient(40% 45% at 35% 45%, rgba(83, 58, 253, 0.1), transparent 70%),
-    radial-gradient(35% 40% at 80% 55%, rgba(255, 118, 0, 0.08), transparent 70%);
-}
-
-.hero-caption {
-  min-height: 20px;
-  font-size: 13.5px;
-  color: var(--color-muted);
-  transition: opacity 0.4s ease;
-}
-
-/* ================= Infrastructure stack diagram ================= */
-.infra-layer {
-  animation: infraGlow 4.4s ease-in-out infinite;
-}
-@keyframes infraGlow {
-  0%,
-  85%,
-  100% {
-    border-color: rgba(83, 58, 253, 0.3);
-    box-shadow: none;
-  }
-  10% {
-    border-color: var(--color-primary-300);
-    box-shadow: 0 0 0 1px rgba(83, 58, 253, 0.25);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .infra-layer {
     animation: none;
   }
 }
