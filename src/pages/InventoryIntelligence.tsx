@@ -1036,6 +1036,7 @@ export default function InventoryIntelligence() {
             <SectionHeading
               align="center"
               theme={isDark ? "dark" : "light"}
+              headingClassName="text-[26px] leading-[1.15] sm:text-[40px]"
               heading={
                 <span className="lg:whitespace-nowrap">
                   Better inventory decisions.
