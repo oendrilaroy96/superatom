@@ -2,6 +2,7 @@
 title: "Procurement Intelligence in Pharma: A Framework for Supply Chain Leaders"
 date: 2026-09-21
 category: Pharma
+cover: /blog/procurement-framework-cover.webp
 ---
 
 AI in pharma procurement intelligence has moved from pilot to mainstream fast. A McKinsey survey of more than 100 US health system supply chain leaders found 85% are already pursuing AI and 79% of that adoption happened in just the past 12 months, with 65% already anticipating 5% to 10% cost savings.
