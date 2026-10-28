@@ -708,6 +708,7 @@ export default function InventoryIntelligence() {
       <SectionHeading
         align="center"
         theme="light"
+        headingClassName="text-[26px] leading-[1.15] sm:text-[40px]"
         heading={
           <>
             Seven capabilities.
@@ -927,7 +928,7 @@ export default function InventoryIntelligence() {
             <div className="grid grid-cols-1 gap-8 px-8 pb-10 pt-12 sm:px-12 lg:grid-cols-2 lg:items-end lg:gap-16">
               <div>
                 <Eyebrow>The inventory gap</Eyebrow>
-                <h2 className="mt-5 font-display text-[36px] font-semibold leading-[1.1] tracking-tight text-heading sm:text-[44px]">
+                <h2 className="mt-5 font-display text-[36px] font-semibold leading-[1.1] tracking-tight text-heading sm:text-[40px]">
                   The cost of running
                   <br />
                   <span className="bg-clip-text text-transparent" style={{ backgroundImage: BRAND_GRADIENT }}>
@@ -988,6 +989,7 @@ export default function InventoryIntelligence() {
             <SectionHeading
               align="center"
               theme="light"
+              headingClassName="text-[26px] leading-[1.15] sm:text-[40px]"
               heading={
                 <span className="lg:whitespace-nowrap">
                   Built for complex inventory.

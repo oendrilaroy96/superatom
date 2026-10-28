@@ -593,7 +593,7 @@ export default function ProcurementIntelligence() {
       theme="light"
       eyebrow="Capabilities"
       eyebrowColor="primary"
-      headingClassName="text-[26px] leading-[1.15] sm:text-[58px]"
+      headingClassName="text-[26px] leading-[1.15] sm:text-[40px]"
       heading={
         <span className="sm:whitespace-nowrap">
           End-to-end procurement
@@ -783,6 +783,7 @@ export default function ProcurementIntelligence() {
             <SectionHeading
               align="center"
               theme="light"
+              headingClassName="text-[26px] leading-[1.15] sm:text-[40px]"
               heading={
                 <span className="lg:whitespace-nowrap">
                   Built for complex sourcing.
