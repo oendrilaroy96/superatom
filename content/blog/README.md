@@ -70,7 +70,8 @@ text and highlights the section being read. It is built automatically from the h
 
 ## Images
 
-Put image files in `public/blog/` and refer to them as `/blog/file-name.jpg`.
+Put image files in `src/assets/blog/` and refer to them as `/blog/file-name.jpg` (the site swaps that path for the built,
+fingerprinted file, so keep the `/blog/` prefix in the post).
 Use `cover:` for the thumbnail on the blog cards, and `![description](/blog/file-name.jpg)` inside the text.
 The text in the square brackets is the image's description for screen readers. To also show a visible
 caption under the image, add it in quotes: `![description](/blog/file-name.jpg "Caption text")`.

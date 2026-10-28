@@ -158,7 +158,7 @@ function parseBlocks(markdown: string): BlogBlock[] {
     const image = line.trim().match(IMAGE);
     if (image) {
       if (/^(\/|https?:\/\/)/.test(image[2])) {
-        blocks.push({ type: "image", src: image[2], alt: image[1], caption: image[3] || undefined });
+        blocks.push({ type: "image", src: resolveImage(image[2]), alt: image[1], caption: image[3] || undefined });
       }
       i++;
       continue;
@@ -263,12 +263,21 @@ function parsePost(slug: string, source: string): BlogPost | null {
     category: data.category || null,
     date: data.date || null,
     readMinutes: Math.max(1, Math.round(words / 225)),
-    cover: data.cover || null,
+    cover: data.cover ? resolveImage(data.cover) : null,
     featured: data.featured?.toLowerCase() === "true",
     stats: parseStats(data),
     blocks,
   };
 }
+
+/** Blog images live in src/assets/blog so Vite fingerprints their file names. Posts keep
+ * referring to them as /blog/file-name.webp; this swaps that for the built URL. */
+const imageUrls: Record<string, string> = Object.fromEntries(
+  Object.entries(
+    import.meta.glob("../assets/blog/*", { query: "?url", import: "default", eager: true }) as Record<string, string>,
+  ).map(([path, url]) => ["/blog/" + path.split("/").pop(), url]),
+);
+const resolveImage = (src: string) => imageUrls[src] ?? src;
 
 const files = import.meta.glob(["../../content/blog/*.md", "!../../content/blog/README.md"], {
   query: "?raw",
