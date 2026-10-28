@@ -68,7 +68,7 @@ function OfficeCard({ office }: { office: Office }) {
           {office.email && (
             <a
               href={`mailto:${office.email}`}
-              className="underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white/60"
+              className="transition-colors hover:text-white"
             >
               {office.email}
             </a>
@@ -77,7 +77,7 @@ function OfficeCard({ office }: { office: Office }) {
           {office.phone && (
             <a
               href={`tel:${office.phone.replace(/\s/g, "")}`}
-              className="underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white/60"
+              className="transition-colors hover:text-white"
             >
               {office.phone}
             </a>
