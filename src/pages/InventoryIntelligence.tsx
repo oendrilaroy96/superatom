@@ -916,7 +916,7 @@ export default function InventoryIntelligence() {
       </section>
 
       {/* The inventory gap */}
-      <section className="pb-[80px] pt-0">
+      <section className="pb-[120px] pt-0">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[24px] border border-secondary-100 bg-white shadow-[0_30px_90px_-30px_rgba(20,34,60,0.14)]">
             <span
