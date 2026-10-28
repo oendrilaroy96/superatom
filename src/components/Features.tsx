@@ -249,9 +249,11 @@ const SEMANTIC_STAGES: { label: string }[] = [
 // running (and the matching source "being read"), 5 (held) = the pipeline
 // has finished and the semantic model output is resolved, before the cycle
 // resets and runs again.
-const SEMANTIC_PHASES = [-1, 0, 1, 2, 3, 4, 5, 5, 5] as const;
+const SEMANTIC_PHASES = [-1, 0, 1, 2, 3, 4, 5, 5] as const;
 /** How long each phase lasts: one source connects, and one ring segment fills, per step. */
-const SEMANTIC_STEP_MS = 1600;
+const SEMANTIC_STEP_MS = 2600;
+/** How long a source's dashed line takes to draw across to the model (a little under one step). */
+const SEMANTIC_DRAW_S = 2.4;
 
 // Generative UI card: a plain-language question is "typed", then the
 // component Superatom would pick for that data pattern renders under it,
@@ -294,7 +296,7 @@ function SourceDot({ pathId, color }: { pathId: string; color: string }) {
   }, []);
   return (
     <circle r={4} fill={color} className="motion-reduce:hidden">
-      <animateMotion ref={motionRef} dur="1.6s" repeatCount="indefinite" begin="indefinite">
+      <animateMotion ref={motionRef} dur={`${SEMANTIC_DRAW_S}s`} repeatCount="indefinite" begin="indefinite">
         <mpath href={`#${pathId}`} />
       </animateMotion>
     </circle>
@@ -491,18 +493,44 @@ export default function Features() {
                     const pathId = `semantic-src-${i}`;
                     // Source i connects (and ring segment i fills) at phase i, then stays connected.
                     const connected = i <= semanticPhase;
+                    const d = `M ${width + 12} ${y} C 190 ${y}, 200 ${SEMANTIC_RING.cy}, 234 ${SEMANTIC_RING.cy}`;
+                    const maskId = `semantic-mask-${i}`;
                     return (
                       <g key={source.label}>
+                        {/* Faint line, always there. */}
                         <path
                           id={pathId}
-                          d={`M ${width + 12} ${y} C 190 ${y}, 200 ${SEMANTIC_RING.cy}, 234 ${SEMANTIC_RING.cy}`}
+                          d={d}
                           fill="none"
-                          strokeWidth={connected ? 1.6 : 1.2}
+                          strokeWidth={1.2}
                           strokeDasharray="3 5"
-                          stroke={connected ? source.color : undefined}
-                          className={`transition-[stroke,stroke-width] duration-700 ${
-                            connected ? "" : "stroke-secondary-100"
-                          }`}
+                          className="stroke-secondary-200"
+                        />
+                        {/* The coloured dashed line is revealed from the source towards
+                            the model by a mask whose stroke draws in. */}
+                        <mask id={maskId} maskUnits="userSpaceOnUse" x={0} y={0} width={380} height={256}>
+                          <path
+                            d={d}
+                            fill="none"
+                            stroke="white"
+                            strokeWidth={8}
+                            pathLength={1}
+                            strokeDasharray={1}
+                            style={{
+                              strokeDashoffset: connected ? 0 : 1,
+                              transition: connected
+                                ? `stroke-dashoffset ${SEMANTIC_DRAW_S}s ease-in-out`
+                                : "none",
+                            }}
+                          />
+                        </mask>
+                        <path
+                          d={d}
+                          fill="none"
+                          stroke={source.color}
+                          strokeWidth={1.8}
+                          strokeDasharray="3 5"
+                          mask={`url(#${maskId})`}
                         />
                         <rect
                           x={8}
@@ -511,14 +539,14 @@ export default function Features() {
                           height={28}
                           rx={7}
                           strokeDasharray="3 3"
-                          className={`fill-white transition-colors duration-500 ${
+                          className={`fill-white transition-colors duration-700 ${
                             connected ? "stroke-primary-300" : "stroke-secondary-200"
                           }`}
                         />
                         <text
                           x={18}
                           y={y + 4}
-                          className={`font-mono text-[12px] transition-colors duration-500 ${
+                          className={`font-mono text-[12px] transition-colors duration-700 ${
                             connected ? "fill-heading" : "fill-caption"
                           }`}
                         >
@@ -544,6 +572,9 @@ export default function Features() {
                         className={`transition-colors duration-500 ${
                           i <= semanticPhase ? "stroke-primary-500" : "stroke-secondary-100"
                         }`}
+                        style={{
+                          transitionDelay: i === semanticPhase ? `${SEMANTIC_DRAW_S}s` : "0s",
+                        }}
                       />
                     ))}
                   </g>
