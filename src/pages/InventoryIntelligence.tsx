@@ -877,7 +877,7 @@ export default function InventoryIntelligence() {
           an in-flow one, so it reads as empty rather than as breathing
           room) — pb stays the full 120px so spacing below the grid, before
           the next section, is unaffected. */}
-      <section className="pb-[120px] pt-[120px] xl:pt-10">
+      <section className="pb-[80px] pt-[120px] xl:pt-10">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           {/* On desktop this heading already lives in the sticky block
               above; rendering it again here would duplicate it right as it
@@ -928,7 +928,7 @@ export default function InventoryIntelligence() {
       </section>
 
       {/* The inventory gap */}
-      <section className="py-[120px]">
+      <section className="pb-[80px] pt-0">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[24px] border border-secondary-100 bg-white shadow-[0_30px_90px_-30px_rgba(20,34,60,0.14)]">
             <span
@@ -993,7 +993,7 @@ export default function InventoryIntelligence() {
       </section>
 
       {/* Industries */}
-      <section className="py-[120px]">
+      <section className="pb-[80px] pt-0">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="mx-auto max-w-5xl text-center">
             <Eyebrow align="center">Industries</Eyebrow>
