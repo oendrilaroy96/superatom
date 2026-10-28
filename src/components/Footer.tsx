@@ -42,8 +42,6 @@ const socials: { label: string; Icon: IconComponent; href: string }[] = [
   { label: "YouTube", Icon: YouTubeIcon, href: "https://www.youtube.com/@SuperatomAI" },
 ];
 
-const offices = ["USA", "India"];
-
 const legalLinks = [
   { name: "Privacy", path: "/privacy-policy" },
   { name: "Terms", path: "/terms-of-service" },
@@ -111,14 +109,11 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-14 flex flex-col items-center gap-4 border-t border-white/10 pt-6 sm:grid sm:grid-cols-3 sm:gap-0">
+        <div className="mt-14 flex flex-col items-center gap-4 border-t border-white/10 pt-6 sm:flex-row sm:justify-between sm:gap-6">
           <p className="order-1 text-sm text-white/50 sm:text-left">
             &copy; {new Date().getFullYear()} Superatom AI
           </p>
-          <p className="order-3 text-xs font-medium uppercase tracking-[0.2em] text-white/30 sm:order-2 sm:text-center">
-            {offices.join(" · ")}
-          </p>
-          <div className="order-2 flex flex-wrap items-center justify-center gap-6 sm:order-3 sm:justify-end">
+          <div className="order-2 flex flex-wrap items-center justify-center gap-6 sm:justify-end">
             {legalLinks.map((link) => (
               <Link
                 key={link.name}
