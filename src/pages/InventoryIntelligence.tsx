@@ -3,7 +3,6 @@ import { useLenis } from "lenis/react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import CheckIcon from "@mui/icons-material/Check";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
@@ -344,8 +343,6 @@ const industries: { label: string; desc: string; Icon: IconComponent }[] = [
     Icon: PrecisionManufacturingIcon,
   },
 ];
-
-const industryChecklist = ["Global operations", "Multi-site visibility", "Enterprise-grade control"];
 
 const outcomeGroups: {
   eyebrow: string;
@@ -1015,17 +1012,6 @@ export default function InventoryIntelligence() {
               description="Inventory Intelligence adapts to the demands of your sector, connecting every site, system and team on one secure platform."
               descriptionClassName="mx-auto max-w-2xl"
             />
-          </div>
-
-          <div className="mx-auto mt-9 flex flex-wrap items-center justify-center gap-x-7 gap-y-3">
-            {industryChecklist.map((item) => (
-              <div key={item} className="flex items-center gap-2">
-                <span className="flex size-5 shrink-0 items-center justify-center rounded-[10px] border border-primary-500/30 bg-white text-primary-500">
-                  <CheckIcon style={{ fontSize: 12 }} />
-                </span>
-                <p className="text-[13px] font-semibold text-heading">{item}</p>
-              </div>
-            ))}
           </div>
 
           <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-px overflow-hidden rounded-[20px] border border-secondary-100 bg-secondary-100 shadow-[0_28px_90px_-30px_rgba(20,34,60,0.15)] sm:grid-cols-2 lg:grid-cols-4">
