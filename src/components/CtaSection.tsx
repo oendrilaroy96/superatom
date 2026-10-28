@@ -100,14 +100,13 @@ export default function CtaSection() {
   const [demoOpen, setDemoOpen] = useState(false);
   const isDark = useDarkTransition();
   const { pathname } = useLocation();
-  const isAboutPage = pathname === "/about";
   const isCaseStudies = pathname.startsWith("/case-studies");
 
   return (
     <section
       id="cta-section"
       className={`transition-colors duration-700 ease-in-out py-[120px] ${
-        isDark ? "bg-transparent" : isAboutPage ? "bg-white" : "bg-[#f5f5ff]"
+        isDark ? "bg-transparent" : "bg-white"
       }`}
     >
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">

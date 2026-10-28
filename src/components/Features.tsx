@@ -251,9 +251,9 @@ const SEMANTIC_STAGES: { label: string }[] = [
 // resets and runs again.
 const SEMANTIC_PHASES = [-1, 0, 1, 2, 3, 4, 5, 5] as const;
 /** How long each phase lasts: one source connects, and one ring segment fills, per step. */
-const SEMANTIC_STEP_MS = 2600;
+const SEMANTIC_STEP_MS = 2000;
 /** How long a source's dashed line takes to draw across to the model (a little under one step). */
-const SEMANTIC_DRAW_S = 2.4;
+const SEMANTIC_DRAW_S = 1.8;
 
 // Generative UI card: a plain-language question is "typed", then the
 // component Superatom would pick for that data pattern renders under it,

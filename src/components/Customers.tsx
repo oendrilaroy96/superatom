@@ -96,7 +96,7 @@ export default function Customers() {
           <span className="sr-only">{customers.map((c) => c.name).join(", ")}</span>
           <div
             ref={trackRef}
-            className="customers-marquee-track [--logo-scale:0.7] sm:[--logo-scale:0.85] xl:[--logo-scale:1]"
+            className="customers-marquee-track [--logo-scale:0.8] sm:[--logo-scale:1] xl:[--logo-scale:1.15]"
             aria-hidden="true"
             style={{ animationDuration: `${duration}s` }}
           >

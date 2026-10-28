@@ -153,7 +153,7 @@ export default function About() {
             eyebrow="Our Story"
             heading={
               <>
-                Built from 60+ conversations,{" "}
+                Built from 100+ conversations,{" "}
                 <GradientText>not assumptions</GradientText>
               </>
             }
@@ -167,7 +167,7 @@ export default function About() {
                 listening.
               </p>
               <p>
-                Before writing a line of code, we spoke with more than 60+ CIOs
+                Before writing a line of code, we spoke with more than 100+ CIOs
                 around the globe and across industries.
               </p>
               <p>
@@ -185,24 +185,6 @@ export default function About() {
             <div className="mx-auto w-full max-w-[720px] lg:max-w-none">
               <SuperatomDiagram />
             </div>
-          </div>
-
-          <div className="relative mt-12 overflow-hidden rounded-[22px] border border-primary-500/10 bg-white p-7 sm:px-8">
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute right-6 top-0 select-none font-display text-[90px] font-bold leading-none text-primary-500/10"
-            >
-              &rdquo;
-            </span>
-            <span
-              className="absolute left-0 top-0 h-full w-[3px]"
-              style={{ backgroundImage: BRAND_GRADIENT }}
-              aria-hidden="true"
-            />
-            <p className="relative font-display text-[17px] font-semibold leading-snug tracking-tight text-heading sm:text-[19px]">
-              To transform how enterprises make decisions by bridging the gap
-              between enterprise data, business context and action.
-            </p>
           </div>
         </div>
       </section>
