@@ -1047,22 +1047,6 @@ export default function InventoryIntelligence() {
               </div>
             ))}
           </div>
-
-          <div className="mx-auto mt-6 flex max-w-6xl flex-col items-start justify-between gap-4 rounded-2xl bg-secondary-500 px-7 py-6 shadow-[0_20px_30px_-10px_rgba(13,30,58,0.25)] sm:flex-row sm:items-center">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-300">
-                One operational view
-              </p>
-              <p className="mt-1.5 text-base font-medium text-white">
-                From regional teams to global networks, every decision
-                starts with trusted inventory data.
-              </p>
-            </div>
-            <span className="flex shrink-0 items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3.5 py-2.5">
-              <span className="size-[7px] rounded-full bg-[#29b9bb] shadow-[0_0_0_4px_rgba(41,185,187,0.14)]" />
-              <span className="text-xs font-semibold text-white">Built to scale</span>
-            </span>
-          </div>
         </div>
       </section>
 
