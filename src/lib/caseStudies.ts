@@ -1,5 +1,9 @@
 // Case studies shown on /case-studies and /case-studies/:slug. To add one, add an entry here
-// and put its photo in public/case-studies/.
+// and put its photo in src/assets/case-studies/ (import it below).
+
+import distributionCenter from "../assets/case-studies/distribution-center.webp";
+import freightTrucks from "../assets/case-studies/freight-trucks.webp";
+import warehouseAisles from "../assets/case-studies/warehouse-aisles.webp";
 
 export type CaseStudy = {
   slug: string;
@@ -30,7 +34,7 @@ export const caseStudies: CaseStudy[] = [
     headline: "Turning trapped inventory into working capital.",
     stat: { value: "$50+M", label: "in dead/excess inventory identified" },
     image: {
-      src: "/case-studies/distribution-center.webp",
+      src: distributionCenter,
       alt: "Aerial view of a modern distribution center filled with shipping containers",
     },
     accent: "#533afd",
@@ -78,7 +82,7 @@ export const caseStudies: CaseStudy[] = [
       label: "retail outlets in the distribution network",
     },
     image: {
-      src: "/case-studies/warehouse-aisles.webp",
+      src: warehouseAisles,
       alt: "Tall warehouse aisles lined with blue shelves and inventory",
     },
     accent: "#ff7eb0",
@@ -118,7 +122,7 @@ export const caseStudies: CaseStudy[] = [
     headline: "A single operating view across 140+ branches.",
     stat: { value: "140+", label: "branches with real-time visibility" },
     image: {
-      src: "/case-studies/freight-trucks.webp",
+      src: freightTrucks,
       alt: "Fleet of freight trucks parked at a logistics facility",
     },
     accent: "#ff7600",
