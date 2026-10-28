@@ -195,12 +195,21 @@ export default function Blog() {
       {featured && (
         <section className="pb-[120px]">
           <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-            <div className="mx-auto grid max-w-6xl grid-cols-1 overflow-hidden rounded-[28px] border border-secondary-100 lg:grid-cols-[3fr_2fr]">
-              <div className="relative min-h-[320px]">
-                <ArticleArt
-                  category={featured.category}
-                  cover={featured.cover}
-                />
+            <div className="mx-auto grid max-w-6xl grid-cols-1 overflow-hidden rounded-[28px] border border-secondary-100 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+              {/* A cover keeps its own 16:9 shape (it prints text near the edges, so cropping it
+                  cuts words); a post without one just needs some height for the placeholder. */}
+              <div
+                className={`relative ${featured.cover ? "" : "min-h-[320px]"}`}
+              >
+                {/* Padding-top spacer instead of aspect-ratio: Chrome sizes the grid
+                    row from the ratio before the column width is known and clips the text column. */}
+                {featured.cover && <div className="pt-[56.25%]" aria-hidden="true" />}
+                <div className={featured.cover ? "absolute inset-0" : "h-full"}>
+                  <ArticleArt
+                    category={featured.category}
+                    cover={featured.cover}
+                  />
+                </div>
                 {/* Covers print their own branding and part label, so the pill is only for posts without a cover. */}
                 {!featured.cover && (
                   <span className="absolute left-5 top-5 rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-white backdrop-blur-sm">
@@ -209,7 +218,7 @@ export default function Blog() {
                   </span>
                 )}
               </div>
-              <div className="flex flex-col justify-between gap-8 bg-page p-8 sm:p-12">
+              <div className="flex flex-col justify-between gap-6 bg-page p-8">
                 <div>
                   <div className="flex items-center gap-3">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary-500">
@@ -224,7 +233,7 @@ export default function Blog() {
                       {featured.readTime}
                     </p>
                   </div>
-                  <p className="mt-5 font-display text-[28px] font-semibold leading-tight tracking-tight text-heading sm:text-[32px]">
+                  <p className="mt-5 font-display text-[26px] font-semibold leading-tight tracking-tight text-heading">
                     {featured.title}
                   </p>
                   {featured.excerpt && (

@@ -3,6 +3,7 @@ title: Smarter Buying, Stronger Margins: Procurement Intelligence for Manufactur
 subtitle: How manufacturers can turn scattered procurement data into faster, better buying decisions
 date: 2026-10-28
 category: Procurement
+cover: /blog/procurement-intelligence-cover.webp
 ---
 
 ## Procurement is the biggest cost in a factory
