@@ -113,7 +113,7 @@ export default function CtaSection() {
   return (
     <section
       id="cta-section"
-      className={`transition-colors duration-700 ease-in-out py-[120px] ${
+      className={`transition-colors duration-700 ease-in-out py-[80px] ${
         isDark ? "bg-transparent" : "bg-white"
       }`}
     >
