@@ -842,27 +842,27 @@ export default function ProcurementIntelligence() {
             descriptionClassName="mx-auto max-w-xl"
           />
 
-          <div className="mx-auto mt-14 grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
+          <div className="mx-auto mt-14 grid max-w-6xl grid-cols-1 gap-6 lg:grid-cols-2">
             {outcomeGroups.map((group) => (
               <div
                 key={group.eyebrow}
-                className="relative overflow-hidden rounded-[20px] border border-secondary-100 bg-white p-8 shadow-[0_26px_80px_-30px_rgba(20,34,60,0.15)]"
+                className="relative flex flex-col overflow-hidden rounded-[20px] border border-secondary-100 bg-white p-8 shadow-[0_26px_80px_-30px_rgba(20,34,60,0.15)]"
               >
                 <span
                   className="absolute left-0 top-0 h-[2px] w-full"
                   style={{ backgroundImage: group.accent }}
                   aria-hidden="true"
                 />
-                <div className="flex items-start justify-between gap-4">
+                <div>
                   <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-caption">
                     {group.eyebrow}
                   </p>
-                  <p className="text-right font-display text-xl font-semibold tracking-tight text-heading">
+                  <p className="mt-2 font-display text-xl font-semibold tracking-tight text-heading">
                     {group.title}
                   </p>
                 </div>
                 <div
-                  className={`mt-8 grid grid-cols-1 gap-px overflow-hidden rounded-[14px] border border-secondary-100 bg-secondary-100 ${group.items.length > 2 ? "sm:grid-cols-2" : ""
+                  className={`mt-8 grid flex-1 auto-rows-fr grid-cols-1 gap-px overflow-hidden rounded-[14px] border border-secondary-100 bg-secondary-100 ${group.items.length > 2 ? "sm:grid-cols-2" : ""
                     }`}
                 >
                   {group.items.map((o) => (
