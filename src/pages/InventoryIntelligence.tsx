@@ -321,25 +321,21 @@ const distortionStats: { prefix?: string; value: string; label: string }[] = [
   { value: "2.3x", label: "higher sales growth for the retailers that do" },
 ];
 
-const industries: { label: string; desc: string; Icon: IconComponent }[] = [
+const industries: { label: string; Icon: IconComponent }[] = [
   {
     label: "Supply Chain & Logistics",
-    desc: "End-to-end visibility across locations, partners and inventory flows.",
     Icon: LocalShippingIcon,
   },
   {
     label: "Retail & E-Commerce",
-    desc: "Accurate availability and intelligent allocation at every channel.",
     Icon: StorefrontIcon,
   },
   {
     label: "Pharma",
-    desc: "Controlled, compliant inventory operations for critical supply networks.",
     Icon: LocalHospitalIcon,
   },
   {
     label: "Manufacturing",
-    desc: "Production-ready materials planning across sites, teams and suppliers.",
     Icon: PrecisionManufacturingIcon,
   },
 ];
@@ -1015,7 +1011,7 @@ export default function InventoryIntelligence() {
           </div>
 
           <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-px overflow-hidden rounded-[20px] border border-secondary-100 bg-secondary-100 shadow-[0_28px_90px_-30px_rgba(20,34,60,0.15)] sm:grid-cols-2 lg:grid-cols-4">
-            {industries.map(({ label, desc, Icon }) => (
+            {industries.map(({ label, Icon }) => (
               <div key={label} className="flex flex-col bg-white p-8">
                 <div>
                   <span className="relative flex size-[52px] shrink-0 items-center justify-center rounded-2xl border border-secondary-100 bg-page text-heading">
@@ -1029,7 +1025,6 @@ export default function InventoryIntelligence() {
                 <p className="mt-8 font-display text-xl font-semibold tracking-tight text-heading">
                   {label}
                 </p>
-                <p className="mt-3 text-sm leading-relaxed text-body">{desc}</p>
               </div>
             ))}
           </div>
