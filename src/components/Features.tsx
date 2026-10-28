@@ -287,8 +287,9 @@ const GENERATIVE_DONUT = [
  * (2x2) and Enterprise Knowledge (2x2) share rows 2-3; Workflows (2x1) and
  * Generative UI (2x1) fill row 4.
  */
-/** A dot that runs along a source's line into the model. It starts from the
- * beginning of the line the moment the source connects. */
+/** A dot that runs once along a source's line into the model, starting the
+ * moment the source connects, and then stays where it arrived (it does not
+ * loop). */
 function SourceDot({ pathId, color }: { pathId: string; color: string }) {
   const motionRef = useRef<SVGAnimateMotionElement>(null);
   useEffect(() => {
@@ -296,7 +297,7 @@ function SourceDot({ pathId, color }: { pathId: string; color: string }) {
   }, []);
   return (
     <circle r={4} fill={color} className="motion-reduce:hidden">
-      <animateMotion ref={motionRef} dur={`${SEMANTIC_DRAW_S}s`} repeatCount="indefinite" begin="indefinite">
+      <animateMotion ref={motionRef} dur={`${SEMANTIC_DRAW_S}s`} repeatCount={1} fill="freeze" begin="indefinite">
         <mpath href={`#${pathId}`} />
       </animateMotion>
     </circle>
