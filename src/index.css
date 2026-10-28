@@ -414,6 +414,11 @@ body {
   }
   .hiw-viz {
     flex-direction: column;
+    /* The 16:10 screen is shorter than the old 4:3 one, which left the
+       diagram 43px higher against it. This keeps the diagram where it was
+       relative to the screen, so the dotted feedback loop keeps its shape. */
+    position: relative;
+    top: 43px;
   }
   .hiw-viz svg {
     max-height: none;
