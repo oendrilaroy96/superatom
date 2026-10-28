@@ -594,13 +594,15 @@ export default function ProcurementIntelligence() {
       eyebrow="Capabilities"
       eyebrowColor="primary"
       heading={
-        <span style={{ overflowWrap: "break-word", hyphens: "auto" }}>
-          End-to-end procurement decision intelligence
+        <span className="sm:whitespace-nowrap">
+          End-to-end procurement
+          <br />
+          decision intelligence
         </span>
       }
       description="From sourcing to payment, Superatom helps you make and automate better procurement decisions across your entire supply chain."
-      className="mx-auto max-w-2xl"
-      descriptionClassName="mx-auto"
+      className="mx-auto max-w-4xl"
+      descriptionClassName="mx-auto max-w-2xl"
     />
   );
 
