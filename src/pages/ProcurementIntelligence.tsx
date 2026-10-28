@@ -831,6 +831,7 @@ export default function ProcurementIntelligence() {
             theme={isDark ? "dark" : "light"}
             eyebrow="Business Outcomes"
             eyebrowColor="primary"
+            headingClassName="text-[26px] leading-[1.15] sm:text-[40px]"
             heading={
               <span style={{ overflowWrap: "break-word", hyphens: "auto" }}>
                 Lower costs. Greater resilience.
