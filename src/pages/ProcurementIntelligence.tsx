@@ -15,6 +15,8 @@ import Button from "../components/ui/Button";
 import Reveal from "../components/ui/Reveal";
 import SectionHeading from "../components/ui/SectionHeading";
 import DemoModal from "../components/DemoModal";
+import IsoScene from "../components/IsoScene";
+import type { IsoSceneKey } from "../lib/isoScenes";
 import { useDarkTransition } from "../context/DarkTransitionContext";
 // Placeholder photos: the case-study photos, until a photo for each industry is supplied.
 import freightTrucks from "../assets/case-studies/freight-trucks.webp";
@@ -45,118 +47,40 @@ const industries: { label: string; Icon: IconComponent; photo: string }[] = [
   { label: "Manufacturing", Icon: PrecisionManufacturingIcon, photo: distributionCenter },
 ];
 
-// Each capability's own small inline illustration, matching the style and
-// color tokens ported for InventoryIntelligence.tsx's capability cards (see
-// that file's comment above its own illustration consts).
-const supplierSelectionArt = (
-  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
-    <path d="M10 100h180" stroke="#CFC9FA" strokeWidth={1.5} />
-    <rect x={30} y={60} width={26} height={40} rx={3} fill="#CFC9FA" />
-    <rect x={87} y={40} width={26} height={60} rx={3} fill="#5B47E0" />
-    <rect x={144} y={66} width={26} height={34} rx={3} fill="#A79CF3" />
-    <path
-      d="M100 16 L104.5 27 L116 28 L107 35.5 L110 47 L100 40.5 L90 47 L93 35.5 L84 28 L95.5 27 Z"
-      fill="#5B47E0"
-    />
-  </svg>
-);
-
-const procurementPlanningArt = (
-  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
-    <rect x={30} y={22} width={140} height={76} rx={8} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2} />
-    <path d="M30 44h140" stroke="#5B47E0" strokeWidth={2} />
-    <path d="M58 14v16M142 14v16" stroke="#8A7BF0" strokeWidth={3} />
-    <circle cx={54} cy={60} r={4} fill="#CFC9FA" />
-    <circle cx={74} cy={60} r={4} fill="#CFC9FA" />
-    <circle cx={94} cy={60} r={4} fill="#CFC9FA" />
-    <circle cx={54} cy={78} r={4} fill="#CFC9FA" />
-    <rect x={110} y={52} width={44} height={34} rx={6} fill="#5B47E0" />
-    <path d="M122 69l7 7 14-14" stroke="#FFFFFF" strokeWidth={3} />
-  </svg>
-);
-
-const contractIntelligenceArt = (
-  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
-    <rect x={54} y={10} width={92} height={94} rx={8} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
-    <path d="M70 32h60M70 46h60M70 60h38" stroke="#CFC9FA" strokeWidth={4} />
-    <circle cx={146} cy={84} r={20} fill="#5B47E0" />
-    <path d="M137 84.5l5.5 5.5 11-11" stroke="#FFFFFF" strokeWidth={3} />
-  </svg>
-);
-
-const orderQuantityArt = (
-  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
-    <path d="M100 16v74" stroke="#5B47E0" strokeWidth={3} />
-    <path d="M38 38h124" stroke="#5B47E0" strokeWidth={3} />
-    <path d="M38 38 L22 72 A18 18 0 0 0 54 72 Z" fill="#CFC9FA" stroke="#5B47E0" strokeWidth={2} />
-    <path d="M162 38 L146 72 A18 18 0 0 0 178 72 Z" fill="#5B47E0" />
-    <circle cx={100} cy={18} r={6} fill="#5B47E0" />
-    <rect x={82} y={92} width={36} height={12} rx={3} fill="#5B47E0" />
-  </svg>
-);
-
-const workflowIntelligenceArt = (
-  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
-    <circle cx={100} cy={18} r={10} fill="#5B47E0" />
-    <path
-      d="M100 28 V46 M100 46 L40 78 M100 46 L100 78 M100 46 L160 78"
-      stroke="#8A7BF0"
-      strokeWidth={1.5}
-      strokeDasharray="4 4"
-    />
-    <circle cx={40} cy={88} r={9} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
-    <circle cx={100} cy={88} r={9} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
-    <circle cx={160} cy={88} r={9} fill="#FFFFFF" stroke="#5B47E0" strokeWidth={2.5} />
-    <path d="M36 88l3 3 5-5" stroke="#5B47E0" strokeWidth={2} />
-  </svg>
-);
-
-const riskIntelligenceArt = (
-  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
-    <circle cx={100} cy={55} r={46} fill="none" stroke="#DDD8FC" strokeWidth={1} strokeDasharray="3 5" />
-    <circle cx={100} cy={55} r={31} fill="none" stroke="#CFC9FA" strokeWidth={1} strokeDasharray="3 5" />
-    <path
-      d="M100 18 L132 29 V54 C132 75 118 91 100 98 C82 91 68 75 68 54 V29 Z"
-      fill="#5B47E0"
-    />
-    <path d="M87 55l9 9 18-18" stroke="#FFFFFF" strokeWidth={3} />
-  </svg>
-);
-
 const capabilities: {
   title: string;
   desc: string;
-  illustration: ReactNode;
+  scene: IsoSceneKey;
 }[] = [
   {
     title: "Supplier Selection Intelligence",
     desc: "Recommends the optimal supplier by evaluating cost, quality, lead time, capacity, contracts, ESG and supply risk.",
-    illustration: supplierSelectionArt,
+    scene: "sup",
   },
   {
     title: "Procurement Planning",
     desc: "Determines whether procurement is required by evaluating inventory, demand forecasts, production plans and existing purchase commitments.",
-    illustration: procurementPlanningArt,
+    scene: "pla",
   },
   {
     title: "Contract Intelligence",
     desc: "Recommends the most beneficial contract by evaluating pricing, commercial terms, commitments, expiry and negotiated agreements.",
-    illustration: contractIntelligenceArt,
+    scene: "con",
   },
   {
     title: "Order Quantity Optimization",
     desc: "Recommends the optimal purchase quantity by balancing demand, inventory, MOQ, lead time and working capital objectives.",
-    illustration: orderQuantityArt,
+    scene: "qty",
   },
   {
     title: "Procurement Workflow Intelligence",
     desc: "Identifies routine procurement decisions that can be automated, while routing exceptions and high-impact trade-offs to the right teams with recommendations and explainable reasoning.",
-    illustration: workflowIntelligenceArt,
+    scene: "wf",
   },
   {
     title: "Procurement Risk Intelligence",
     desc: "Continuously monitors supplier, geopolitical, logistics and compliance risks and recommends proactive sourcing actions.",
-    illustration: riskIntelligenceArt,
+    scene: "rsk",
   },
 ];
 
@@ -212,10 +136,12 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 /** Illustration, title and description shared by every rendering of a capability card. The title and
  * description each reserve a fixed height (two and six lines) so every card lines up, and the
  * illustration takes whatever is left of the 4:5 card. */
-function CapabilityCardFace({ c }: { c: (typeof capabilities)[number] }) {
+function CapabilityCardFace({ c, playKey }: { c: (typeof capabilities)[number]; playKey: number }) {
   return (
     <div className="relative flex h-full flex-col gap-2.5">
-      <div className="flex min-h-14 flex-1 items-center justify-center px-1 pt-1.5">{c.illustration}</div>
+      <div className="flex min-h-14 flex-1 items-center justify-center px-1 pt-1.5">
+        <IsoScene key={playKey} scene={c.scene} animate={playKey > 0} />
+      </div>
       <div className="flex flex-col gap-1.5 px-1 pb-1">
         <span
           className="h-0.5 w-6 shrink-0 rounded-full"
@@ -234,17 +160,23 @@ function CapabilityCardFace({ c }: { c: (typeof capabilities)[number] }) {
  * brand-gradient edge along the top. The caller sets position (absolute or relative) and any transform. */
 function CapabilityCard({
   c,
+  playKey,
   className = "",
   style,
+  onMouseEnter,
 }: {
   c: (typeof capabilities)[number];
+  /** 0 shows the finished scene; each increase replays the build-up animation. */
+  playKey: number;
   className?: string;
   style?: CSSProperties;
+  onMouseEnter?: () => void;
 }) {
   return (
     <div
-      className={`overflow-hidden rounded-[14px] border border-secondary-100 bg-gradient-to-b from-[#f1eeff] from-0% to-white to-[78%] p-3.5 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)] ${className}`}
+      className={`iso-card overflow-hidden rounded-[14px] border border-secondary-100 bg-gradient-to-b from-[#f1eeff] from-0% to-white to-[78%] p-3.5 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)] ${className}`}
       style={style}
+      onMouseEnter={onMouseEnter}
     >
       <div
         className="pointer-events-none absolute inset-0"
@@ -261,7 +193,36 @@ function CapabilityCard({
         }}
         aria-hidden="true"
       />
-      <CapabilityCardFace c={c} />
+      <CapabilityCardFace c={c} playKey={playKey} />
+    </div>
+  );
+}
+
+/** A card in the plain (non-scrolling) grid: its illustration builds up when the card scrolls into view and on hover. */
+function GridCapabilityCard({ c }: { c: (typeof capabilities)[number] }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [playKey, setPlayKey] = useState(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setPlayKey((k) => k + 1);
+      },
+      { threshold: 0.6 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div ref={ref} style={{ width: CARD_W, height: CARD_H }}>
+      <CapabilityCard
+        c={c}
+        playKey={playKey}
+        className="relative"
+        style={{ width: CARD_W, height: CARD_H }}
+        onMouseEnter={() => setPlayKey((k) => k + 1)}
+      />
     </div>
   );
 }
@@ -272,11 +233,13 @@ function MobileCardStack({
   exitingIndex,
   enteringIndex,
   shuffling,
+  playKeys,
 }: {
   order: number[];
   exitingIndex: number | null;
   enteringIndex: number | null;
   shuffling: boolean;
+  playKeys: number[];
 }) {
   return (
     <div className="relative h-[420px] w-full max-w-sm">
@@ -288,6 +251,7 @@ function MobileCardStack({
           <CapabilityCard
             key={c.title}
             c={c}
+            playKey={playKeys[i]}
             className="absolute left-0 top-0"
             style={{
               width: CARD_W,
@@ -366,6 +330,8 @@ type CardStyle = {
   opacity: number;
   zIndex: number;
   ready: boolean;
+  /** True once the card has landed in its grid cell, so its illustration can play. */
+  settled: boolean;
 };
 
 /**
@@ -404,9 +370,19 @@ export default function ProcurementIntelligence() {
         opacity: slot.opacity,
         zIndex: stackSlots.length - i,
         ready: false,
+        settled: false,
       };
     })
   );
+
+  // Which cards replay their illustration, and when. A key of 0 shows the finished scene; each increase
+  // remounts the svg with the build-up animation. A card plays when it becomes the front card of the
+  // stack, and every card plays (staggered) as the grid settles. Hovering a settled card replays it.
+  const [playKeys, setPlayKeys] = useState<number[]>(() => capabilities.map(() => 0));
+  const wasActive = useRef<boolean[]>(capabilities.map(() => false));
+  const bump = useCallback((i: number) => {
+    setPlayKeys((prev) => prev.map((k, j) => (j === i ? k + 1 : k)));
+  }, []);
 
   const heroSlotRef = useRef<HTMLDivElement>(null);
   const cellRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -521,6 +497,7 @@ export default function ProcurementIntelligence() {
         opacity: lerp(1, slot.opacity, fan),
         zIndex: stackSlots.length - stackSlots.indexOf(slot),
         ready: true,
+        settled: fan === 0,
       };
     });
     setCardStyles(next);
@@ -544,6 +521,27 @@ export default function ProcurementIntelligence() {
   }, [updateMorph, isDesktop, order]);
 
   useLenis(updateMorph);
+
+  // Pending staggered plays live in a ref, not in the effect's own cleanup: the effect re-runs on every
+  // scroll tick, and clearing them there would cancel plays that were just scheduled.
+  const playTimers = useRef<number[]>([]);
+  useEffect(() => {
+    const timers = playTimers.current;
+    return () => timers.forEach((t) => window.clearTimeout(t));
+  }, []);
+  useEffect(() => {
+    const active = capabilities.map((_, i) =>
+      isDesktop && cardStyles[i].ready && cardStyles[i].settled ? true : !morphActiveRef.current && order[0] === i,
+    );
+    active.forEach((on, i) => {
+      if (on && !wasActive.current[i]) playTimers.current.push(window.setTimeout(() => bump(i), isDesktop ? i * 110 : 0));
+    });
+    wasActive.current = active;
+  }, [cardStyles, order, isDesktop, bump]);
+
+  const replay = (i: number) => {
+    if (cardStyles[i].settled) bump(i);
+  };
 
   // See InventoryIntelligence.tsx's own comment on this block: shuffling
   // gates the CSS transition so only these carousel windows animate, never
@@ -667,6 +665,7 @@ export default function ProcurementIntelligence() {
                     exitingIndex={exitingIndex}
                     enteringIndex={enteringIndex}
                     shuffling={shuffling}
+                    playKeys={playKeys}
                   />
                 )}
               </div>
@@ -701,6 +700,7 @@ export default function ProcurementIntelligence() {
               <CapabilityCard
                 key={c.title}
                 c={c}
+                playKey={playKeys[i]}
                 className="absolute"
                 style={{
                   top: s.top,
@@ -745,6 +745,7 @@ export default function ProcurementIntelligence() {
                       cellRefs.current[i] = el;
                     }}
                     style={{ width: CARD_W, height: CARD_H }}
+                    onMouseEnter={() => replay(i)}
                   />
                 ))}
               </div>
@@ -756,6 +757,7 @@ export default function ProcurementIntelligence() {
                       cellRefs.current[i + 3] = el;
                     }}
                     style={{ width: CARD_W, height: CARD_H }}
+                    onMouseEnter={() => replay(i + 3)}
                   />
                 ))}
               </div>
@@ -763,7 +765,7 @@ export default function ProcurementIntelligence() {
           ) : (
             <div className="mx-auto mt-16 flex max-w-6xl flex-wrap justify-center gap-4">
               {capabilities.map((c) => (
-                <CapabilityCard key={c.title} c={c} className="relative" style={{ width: CARD_W, height: CARD_H }} />
+                <GridCapabilityCard key={c.title} c={c} />
               ))}
             </div>
           )}

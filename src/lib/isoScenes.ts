@@ -155,7 +155,9 @@ function pallet(s: Scene, w: number, d: number) {
   s.box(0, 0, w, d, 0.2, 0, PAL.tile, { bg: true, a: fade });
 }
 
-export type IsoSceneKey = "opt" | "reb" | "age" | "pre" | "sto" | "pol" | "rep";
+export type IsoSceneKey =
+  | "opt" | "reb" | "age" | "pre" | "sto" | "pol" | "rep" // Inventory Intelligence
+  | "sup" | "pla" | "con" | "qty" | "wf" | "rsk"; // Procurement Intelligence
 
 const builders: Record<IsoSceneKey, () => IsoShape[]> = {
   // Stacks rise toward the optimum, the orange block lands on top.
@@ -256,6 +258,78 @@ const builders: Record<IsoSceneKey, () => IsoShape[]> = {
     s.box(1.8, 1.8, 1.4, 1.4, 1.5, 0.2, PAL.deep, { a: drop(0.15, 26) });
     return s.render();
   },
+  // Supplier blocks of different heights; the chosen supplier (orange) lands last with a marker on top.
+  sup: () => {
+    const s = new Scene();
+    pallet(s, 5.6, 2.2);
+    ([[0.3, 1.4, PAL.purple], [1.55, 2.6, PAL.orange], [2.8, 1.9, PAL.mid], [4.05, 1.1, PAL.pale]] as const).forEach(([x, h, pal], i) => {
+      s.box(x, 0.6, 1, 1, h, 0.2, pal, { cls: i === 1 ? "iso-acc" : "", a: drop(0.15 + i * 0.2 + (i === 1 ? 0.5 : 0), i === 1 ? 30 : 18) });
+    });
+    s.box(1.8, 0.85, 0.5, 0.5, 0.5, 3.4, PAL.deep, { cls: "iso-acc", a: drop(1.5, 24) });
+    return s.render();
+  },
+  // A calendar of tiles filling with planned orders; the orange order drops onto the next free day.
+  pla: () => {
+    const s = new Scene();
+    pallet(s, 5.2, 2.6);
+    for (let r = 0; r < 2; r++) {
+      for (let c = 0; c < 4; c++) {
+        s.box(0.15 + c * 1.25, 0.15 + r * 1.2, 1.05, 1.0, 0.12, 0.2, PAL.pale, { a: { t: "fade", d: 0.05 + (r * 4 + c) * 0.04 } });
+      }
+    }
+    ([[0, 0], [1, 0], [2, 1]] as const).forEach(([cx, cy], i) => {
+      s.box(0.3 + cx * 1.25, 0.3 + cy * 1.2, 0.75, 0.75, 0.8, 0.32, i % 2 ? PAL.purple : PAL.deep, { bias: 3, a: drop(0.4 + i * 0.2, 16) });
+    });
+    s.box(0.3 + 3 * 1.25, 0.3, 0.75, 0.75, 0.8, 0.32, null, { ghost: true, bias: 3, a: { t: "flow", d: 0.9, fo: -7 } });
+    s.box(0.3 + 3 * 1.25, 0.3 + 1.2, 0.75, 0.75, 0.8, 0.32, PAL.orange, { cls: "iso-acc", bias: 3, a: drop(1.3, 34) });
+    return s.render();
+  },
+  // Contract sheets stack up; the best contract (orange) lands on top and a seal drops onto it.
+  con: () => {
+    const s = new Scene();
+    pallet(s, 4.2, 3.4);
+    [PAL.deep, PAL.purple, PAL.mid, PAL.orange].forEach((pal, i) => {
+      s.box(0.5 + i * 0.12, 0.5 + i * 0.12, 3, 2.2, 0.38, 0.2 + i * 0.55, pal, { cls: i === 3 ? "iso-acc" : "", a: drop(0.15 + i * 0.3, i === 3 ? 36 : 22) });
+    });
+    s.box(2.5, 1.6, 0.5, 0.5, 0.22, 2.0, PAL.deep, { bias: 3, a: drop(1.5, 14) });
+    return s.render();
+  },
+  // Two stacks of different heights; the orange block makes them level, with a dashed level line.
+  qty: () => {
+    const s = new Scene();
+    pallet(s, 3.8, 2.2);
+    for (let i = 0; i < 3; i++) s.box(0.3, 0.6, 1, 1, 1, 0.2 + i, i % 2 ? PAL.purple : PAL.deep, { a: drop(0.15 + i * 0.14, 18) });
+    for (let j = 0; j < 2; j++) s.box(2.3, 0.6, 1, 1, 1, 0.2 + j, j % 2 ? PAL.deep : PAL.purple, { a: drop(0.3 + j * 0.14, 18) });
+    s.line([1.3, 1.1, 3.2], [2.3, 1.1, 3.2], "3 3", 8, { t: "flow", d: 0.9, fo: -6 });
+    s.box(2.3, 0.6, 1, 1, 1, 2.2, PAL.orange, { cls: "iso-acc", a: drop(1.3, 32) });
+    return s.render();
+  },
+  // Three platforms linked by dashed lines: the exception (orange) waits for review in the middle,
+  // while a routine block hops from the first platform to the last.
+  wf: () => {
+    const s = new Scene();
+    [0, 2.6, 5.2].forEach((x) => s.box(x, 0, 1.8, 1.8, 0.2, 0, PAL.tile, { bg: true, a: fade }));
+    s.line([1.8, 0.9, 0.22], [2.6, 0.9, 0.22], "3 3", -40, { t: "flow", d: 0.7, fo: -6 });
+    s.line([4.4, 0.9, 0.22], [5.2, 0.9, 0.22], "3 3", -40, { t: "flow", d: 0.8, fo: -6 });
+    s.box(2.9, 0.3, 1.2, 1.2, 1, 0.2, PAL.orange, { cls: "iso-acc", a: drop(0.3, 28) });
+    const from = P(0.5, 0.4, 0.2);
+    const to = P(5.5, 0.4, 0.2);
+    s.box(5.5, 0.4, 1, 1, 1, 0.2, PAL.deep, { a: { t: "path", d: 0.9, dur: 1.4, fx: from[0] - to[0], fy: from[1] - to[1] } });
+    s.box(0.3, 0.3, 0.8, 0.8, 0.5, 0.2, PAL.mid, { a: drop(0.15, 14) });
+    return s.render();
+  },
+  // Protected stock inside a dashed boundary; the orange risk block lands outside it with a dashed marker.
+  rsk: () => {
+    const s = new Scene();
+    pallet(s, 6.2, 3);
+    s.slot(0.3, 0.3, 3.6, 2.4, 0.21, { t: "flow", d: 0.6, fo: -7 });
+    s.box(0.8, 0.8, 1, 1, 1.6, 0.2, PAL.deep, { a: drop(0.2, 20) });
+    s.box(2.1, 1.0, 1, 1, 1, 0.2, PAL.purple, { a: drop(0.4, 18) });
+    s.box(2.3, 0.3, 0.7, 0.7, 0.6, 0.2, PAL.mid, { a: drop(0.55, 14) });
+    s.line([4.9, 1.2, 0.3], [4.9, 1.2, 2.6], "3 3", 12, { t: "flow", d: 1.1, fo: -6 });
+    s.box(4.4, 0.7, 1, 1, 1, 0.2, PAL.orange, { cls: "iso-acc", a: drop(1.0, 36) });
+    return s.render();
+  },
 };
 
 /** Built once at load: the scenes never change. */
@@ -267,4 +341,10 @@ export const isoScenes: Record<IsoSceneKey, IsoShape[]> = {
   sto: builders.sto(),
   pol: builders.pol(),
   rep: builders.rep(),
+  sup: builders.sup(),
+  pla: builders.pla(),
+  con: builders.con(),
+  qty: builders.qty(),
+  wf: builders.wf(),
+  rsk: builders.rsk(),
 };
