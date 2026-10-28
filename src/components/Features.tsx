@@ -249,7 +249,7 @@ const SEMANTIC_STAGES: { label: string }[] = [
 // running (and the matching source "being read"), 5 (held) = the pipeline
 // has finished and the semantic model output is resolved, before the cycle
 // resets and runs again.
-const SEMANTIC_PHASES = [-1, 0, 1, 2, 3, 4, 5, 5] as const;
+const SEMANTIC_PHASES = [-1, 0, 1, 2, 3, 4, 5, 5, 5] as const;
 /** How long each phase lasts: one source connects, and one ring segment fills, per step. */
 const SEMANTIC_STEP_MS = 2600;
 /** How long a source's dashed line takes to draw across to the model (a little under one step). */
@@ -288,16 +288,33 @@ const GENERATIVE_DONUT = [
  * Generative UI (2x1) fill row 4.
  */
 /** A dot that runs once along a source's line into the model, starting the
- * moment the source connects, and then stays where it arrived (it does not
- * loop). */
-function SourceDot({ pathId, color }: { pathId: string; color: string }) {
+ * moment the source connects, and then rests where it arrived. Once every
+ * source is connected (`flowing`), all the dots restart together and keep
+ * flowing into the model. */
+function SourceDot({
+  pathId,
+  color,
+  flowing,
+}: {
+  pathId: string;
+  color: string;
+  flowing: boolean;
+}) {
   const motionRef = useRef<SVGAnimateMotionElement>(null);
+  // Runs on mount (the first pass) and again when `flowing` turns on, so all
+  // the dots start their loop at the same moment.
   useEffect(() => {
     motionRef.current?.beginElement();
-  }, []);
+  }, [flowing]);
   return (
     <circle r={4} fill={color} className="motion-reduce:hidden">
-      <animateMotion ref={motionRef} dur={`${SEMANTIC_DRAW_S}s`} repeatCount={1} fill="freeze" begin="indefinite">
+      <animateMotion
+        ref={motionRef}
+        dur={`${SEMANTIC_DRAW_S}s`}
+        repeatCount={flowing ? "indefinite" : 1}
+        fill="freeze"
+        begin="indefinite"
+      >
         <mpath href={`#${pathId}`} />
       </animateMotion>
     </circle>
@@ -553,7 +570,13 @@ export default function Features() {
                         >
                           {source.label}
                         </text>
-                        {connected && <SourceDot pathId={pathId} color={source.color} />}
+                        {connected && (
+                          <SourceDot
+                            pathId={pathId}
+                            color={source.color}
+                            flowing={semanticOutputResolved}
+                          />
+                        )}
                       </g>
                     );
                   })}
