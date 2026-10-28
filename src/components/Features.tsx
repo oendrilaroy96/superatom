@@ -760,7 +760,7 @@ export default function Features() {
                 <span className="hiw-caret shrink-0" style={{ background: "#fff", height: 12 }} />
               </div>
 
-              <div className="mt-3 min-h-0 flex-1" aria-hidden="true">
+              <div className="relative mt-3 min-h-0 flex-1" aria-hidden="true">
                 {generativeExample.component === "Bar chart" && (
                   <div className="flex h-full items-end gap-1.5">
                     {GENERATIVE_BAR_HEIGHTS.map((h, i) => (
@@ -773,8 +773,10 @@ export default function Features() {
                   </div>
                 )}
 
+                {/* Absolute so the chart fills the box without its own aspect ratio
+                    (viewBox 208x78) pushing the card taller than the other examples. */}
                 {generativeExample.component === "Line chart" && (
-                  <svg viewBox="-4 -4 208 78" preserveAspectRatio="none" className="h-full w-full">
+                  <svg viewBox="-4 -4 208 78" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
                     <polygon
                       points="0,58 33,50 66,54 100,36 133,30 166,18 200,10 200,70 0,70"
                       className="genui-fade-up fill-white/15"
