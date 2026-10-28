@@ -54,7 +54,7 @@ function OfficeCard({ office }: { office: Office }) {
         {office.city}
       </p>
       {office.address.length > 0 && (
-        <p className="mt-1.5 text-sm leading-relaxed text-white/50">
+        <p className="mt-1.5 text-sm leading-relaxed text-white/65">
           {office.address.map((line, i) => (
             <span key={i}>
               {line}
@@ -64,11 +64,11 @@ function OfficeCard({ office }: { office: Office }) {
         </p>
       )}
       {(office.email || office.phone) && (
-        <p className="mt-1.5 text-sm leading-relaxed text-white/50">
+        <p className="mt-1.5 text-sm leading-relaxed text-white/65">
           {office.email && (
             <a
               href={`mailto:${office.email}`}
-              className="transition-colors hover:text-white"
+              className="underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white/60"
             >
               {office.email}
             </a>
@@ -77,7 +77,7 @@ function OfficeCard({ office }: { office: Office }) {
           {office.phone && (
             <a
               href={`tel:${office.phone.replace(/\s/g, "")}`}
-              className="transition-colors hover:text-white"
+              className="underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white/60"
             >
               {office.phone}
             </a>
@@ -118,7 +118,7 @@ export default function CtaSection() {
       }`}
     >
       <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
-        <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-6">
+        <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-4">
           <div className="relative overflow-hidden rounded-3xl border border-white/10 p-8 sm:p-12">
             {/* No z-index here (relies on DOM order, painted before the
                 content below): a negative z-index on a child of this
@@ -152,7 +152,7 @@ export default function CtaSection() {
                 like the two absolute glow/line divs above — regardless of
                 DOM order. Without its own stacking layer, this content would
                 render but be completely covered by the opaque glow div. */}
-            <div className="relative z-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
+            <div className="relative z-10 flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
               <div>
                 <p className="font-sans text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
                   Decision Intelligence
