@@ -201,16 +201,20 @@ export default function Blog() {
                   category={featured.category}
                   cover={featured.cover}
                 />
-                <span className="absolute left-5 top-5 rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-white backdrop-blur-sm">
-                  {featured.category}
-                  {featured.partLabel && ` · ${featured.partLabel}`}
-                </span>
+                {/* Covers print their own branding and part label, so the pill is only for posts without a cover. */}
+                {!featured.cover && (
+                  <span className="absolute left-5 top-5 rounded-full border border-white/20 bg-white/10 px-3.5 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-white backdrop-blur-sm">
+                    {featured.category}
+                    {featured.partLabel && ` · ${featured.partLabel}`}
+                  </span>
+                )}
               </div>
               <div className="flex flex-col justify-between gap-8 bg-page p-8 sm:p-12">
                 <div>
                   <div className="flex items-center gap-3">
                     <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-primary-500">
                       Featured
+                      {featured.cover && ` · ${featured.category}`}
                     </p>
                     <span
                       className="h-px w-6 bg-accent-300"
