@@ -28,7 +28,7 @@ const offices: Office[] = [
     ],
   },
   {
-    country: "AUD & NZ",
+    country: "AUS & NZ",
     city: "Kellyville, Australia",
     address: [],
     email: "enquiries@co-labholdings.com",
