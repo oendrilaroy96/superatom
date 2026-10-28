@@ -823,7 +823,7 @@ export default function ProcurementIntelligence() {
 
       {/* Business outcomes */}
       <section
-        className={`pb-[120px] pt-0 transition-colors duration-700 ease-in-out ${isDark ? "bg-secondary-500" : "bg-transparent"
+        className={`pb-[80px] pt-0 transition-colors duration-700 ease-in-out ${isDark ? "bg-secondary-500" : "bg-transparent"
           }`}
       >
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
