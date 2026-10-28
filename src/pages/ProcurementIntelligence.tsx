@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { useLenis } from "lenis/react";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
@@ -6,7 +6,6 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import SavingsIcon from "@mui/icons-material/Savings";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import BoltIcon from "@mui/icons-material/Bolt";
-import CheckIcon from "@mui/icons-material/Check";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
@@ -14,10 +13,13 @@ import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturi
 import type { IconComponent } from "../types/icon";
 import Button from "../components/ui/Button";
 import Reveal from "../components/ui/Reveal";
-import GlowCard from "../components/ui/GlowCard";
 import SectionHeading from "../components/ui/SectionHeading";
 import DemoModal from "../components/DemoModal";
 import { useDarkTransition } from "../context/DarkTransitionContext";
+// Placeholder photos: the case-study photos, until a photo for each industry is supplied.
+import freightTrucks from "../assets/case-studies/freight-trucks.webp";
+import distributionCenter from "../assets/case-studies/distribution-center.webp";
+import warehouseAisles from "../assets/case-studies/warehouse-aisles.webp";
 
 const BRAND_GRADIENT =
   "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)";
@@ -36,30 +38,12 @@ function Eyebrow({ children, align = "left" }: { children: ReactNode; align?: "l
   );
 }
 
-const industries: { label: string; desc: string; Icon: IconComponent }[] = [
-  {
-    label: "Supply Chain & Logistics",
-    desc: "Coordinated sourcing and supplier visibility across every lane and partner.",
-    Icon: LocalShippingIcon,
-  },
-  {
-    label: "Retail & E-Commerce",
-    desc: "Faster, smarter purchasing decisions across every channel and SKU.",
-    Icon: StorefrontIcon,
-  },
-  {
-    label: "Pharma",
-    desc: "Controlled, compliant sourcing for critical supply networks.",
-    Icon: LocalHospitalIcon,
-  },
-  {
-    label: "Manufacturing",
-    desc: "Reliable materials sourcing across sites, suppliers and production schedules.",
-    Icon: PrecisionManufacturingIcon,
-  },
+const industries: { label: string; Icon: IconComponent; photo: string }[] = [
+  { label: "Supply Chain & Logistics", Icon: LocalShippingIcon, photo: freightTrucks },
+  { label: "Retail & E-Commerce", Icon: StorefrontIcon, photo: distributionCenter },
+  { label: "Pharma", Icon: LocalHospitalIcon, photo: warehouseAisles },
+  { label: "Manufacturing", Icon: PrecisionManufacturingIcon, photo: distributionCenter },
 ];
-
-const industryChecklist = ["Global operations", "Multi-site visibility", "Enterprise-grade control"];
 
 // Each capability's own small inline illustration, matching the style and
 // color tokens ported for InventoryIntelligence.tsx's capability cards (see
@@ -143,49 +127,36 @@ const capabilities: {
   title: string;
   desc: string;
   illustration: ReactNode;
-  illoBg: string;
-  illoBorder?: string;
-  dotGrid?: boolean;
-  accent?: "dot";
 }[] = [
   {
     title: "Supplier Selection Intelligence",
     desc: "Recommends the optimal supplier by evaluating cost, quality, lead time, capacity, contracts, ESG and supply risk.",
     illustration: supplierSelectionArt,
-    illoBg: "#EFEDFF",
   },
   {
     title: "Procurement Planning",
     desc: "Determines whether procurement is required by evaluating inventory, demand forecasts, production plans and existing purchase commitments.",
     illustration: procurementPlanningArt,
-    illoBg: "#EFEDFF",
-    dotGrid: true,
-    accent: "dot",
   },
   {
     title: "Contract Intelligence",
     desc: "Recommends the most beneficial contract by evaluating pricing, commercial terms, commitments, expiry and negotiated agreements.",
     illustration: contractIntelligenceArt,
-    illoBg: "#FFFFFF",
-    illoBorder: "#DCD6FD",
   },
   {
     title: "Order Quantity Optimization",
     desc: "Recommends the optimal purchase quantity by balancing demand, inventory, MOQ, lead time and working capital objectives.",
     illustration: orderQuantityArt,
-    illoBg: "#EFEDFF",
   },
   {
     title: "Procurement Workflow Intelligence",
     desc: "Identifies routine procurement decisions that can be automated, while routing exceptions and high-impact trade-offs to the right teams with recommendations and explainable reasoning.",
     illustration: workflowIntelligenceArt,
-    illoBg: "#FFFFFF",
   },
   {
     title: "Procurement Risk Intelligence",
     desc: "Continuously monitors supplier, geopolitical, logistics and compliance risks and recommends proactive sourcing actions.",
     illustration: riskIntelligenceArt,
-    illoBg: "#E4DFFF",
   },
 ];
 
@@ -217,7 +188,7 @@ const ENTER_SLOT = { x: 450, y: 133, rotate: 16, scale: 0.75, opacity: 0 };
 // and the capabilities grid, so a card keeps the same footprint as it
 // travels from one to the other instead of resizing mid-flight.
 const CARD_W = 252;
-const CARD_H = 300;
+const CARD_H = 315;
 
 // How much bigger than its true (grid) size the stack renders while it
 // still sits in the hero; lerps back down to 1 as the cards unstack into
@@ -238,32 +209,59 @@ const UNSTACK_PX = 200;
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-/** Illustration, title and description shared by every rendering of a capability card. */
+/** Illustration, title and description shared by every rendering of a capability card. The title and
+ * description each reserve a fixed height (two and six lines) so every card lines up, and the
+ * illustration takes whatever is left of the 4:5 card. */
 function CapabilityCardFace({ c }: { c: (typeof capabilities)[number] }) {
   return (
-    <div className="flex h-full flex-col">
-      <div
-        className="flex h-28 shrink-0 items-center justify-center overflow-hidden rounded-lg p-2"
-        style={{
-          background: c.illoBg,
-          border: c.illoBorder ? `1px solid ${c.illoBorder}` : undefined,
-          backgroundImage: c.dotGrid ? "radial-gradient(#D6D0FB 1px, transparent 1px)" : undefined,
-          backgroundSize: c.dotGrid ? "10px 10px" : undefined,
-        }}
-      >
-        {c.illustration}
-      </div>
-      <div className="mt-2 flex flex-1 flex-col">
-        {c.accent === "dot" ? (
-          <span className="mb-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-primary-500" />
-        ) : (
-          <span className="mb-2 h-[3px] w-6 shrink-0 rounded-full bg-primary-500" />
-        )}
-        <p className="line-clamp-2 font-display text-h4 font-semibold leading-tight text-heading">
+    <div className="relative flex h-full flex-col gap-2.5">
+      <div className="flex min-h-14 flex-1 items-center justify-center px-1 pt-1.5">{c.illustration}</div>
+      <div className="flex flex-col gap-1.5 px-1 pb-1">
+        <span
+          className="h-0.5 w-6 shrink-0 rounded-full"
+          style={{ backgroundImage: "linear-gradient(90deg, #486FFD, #873EFF)" }}
+        />
+        <p className="line-clamp-2 min-h-[36px] font-display text-[15px] font-semibold leading-[1.2] tracking-tight text-heading">
           {c.title}
         </p>
-        <p className="mt-1 line-clamp-4 text-xs leading-relaxed text-caption">{c.desc}</p>
+        <p className="line-clamp-6 min-h-[90px] text-xs leading-[1.25] text-body">{c.desc}</p>
       </div>
+    </div>
+  );
+}
+
+/** The soft glow card: lavender fading to white, a faint purple glow behind the art and a thin
+ * brand-gradient edge along the top. The caller sets position (absolute or relative) and any transform. */
+function CapabilityCard({
+  c,
+  className = "",
+  style,
+}: {
+  c: (typeof capabilities)[number];
+  className?: string;
+  style?: CSSProperties;
+}) {
+  return (
+    <div
+      className={`overflow-hidden rounded-[14px] border border-secondary-100 bg-gradient-to-b from-[#f1eeff] from-0% to-white to-[78%] p-3.5 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)] ${className}`}
+      style={style}
+    >
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage: "radial-gradient(170px 140px at 50% 26%, rgba(83,58,253,0.08), transparent 72%)",
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-x-0 top-0 h-0.5"
+        style={{
+          backgroundImage:
+            "linear-gradient(90deg, transparent, #533afd 30%, #ff7eb0 65%, #ff7600 85%, transparent)",
+        }}
+        aria-hidden="true"
+      />
+      <CapabilityCardFace c={c} />
     </div>
   );
 }
@@ -287,18 +285,19 @@ function MobileCardStack({
           i === exitingIndex ? EXIT_SLOT : i === enteringIndex ? ENTER_SLOT : stackSlots[order.indexOf(i)];
         const isTransitioning = i === exitingIndex || i === enteringIndex;
         return (
-          <div
+          <CapabilityCard
             key={c.title}
-            className="absolute inset-x-0 top-0 rounded-lg border border-secondary-100 bg-white p-3 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)]"
+            c={c}
+            className="absolute left-0 top-0"
             style={{
+              width: CARD_W,
+              height: CARD_H,
               transform: `translate(${slot.x}px, ${slot.y}px) rotate(${slot.rotate}deg) scale(${slot.scale})`,
               opacity: slot.opacity,
               zIndex: isTransitioning ? stackSlots.length + 1 : stackSlots.length - stackSlots.indexOf(slot),
               transition: shuffling ? "transform 0.7s cubic-bezier(.22,1,.36,1), opacity 0.7s ease" : "none",
             }}
-          >
-            <CapabilityCardFace c={c} />
-          </div>
+          />
         );
       })}
     </div>
@@ -699,9 +698,10 @@ export default function ProcurementIntelligence() {
           {capabilities.map((c, i) => {
             const s = cardStyles[i];
             return (
-              <div
+              <CapabilityCard
                 key={c.title}
-                className="absolute rounded-lg border border-secondary-100 bg-white p-3 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)]"
+                c={c}
+                className="absolute"
                 style={{
                   top: s.top,
                   left: s.left,
@@ -715,16 +715,14 @@ export default function ProcurementIntelligence() {
                   opacity: s.ready ? s.opacity : 0,
                   zIndex: s.zIndex,
                 }}
-              >
-                <CapabilityCardFace c={c} />
-              </div>
+              />
             );
           })}
         </div>
       )}
 
       {/* Capabilities */}
-      <section className="pb-[120px] pt-[120px] xl:pt-10">
+      <section className="pb-[120px] pt-[120px] xl:pt-0">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           {/* On desktop this heading already lives in the sticky block
               above; rendering it again here would duplicate it right as it
@@ -763,11 +761,9 @@ export default function ProcurementIntelligence() {
               </div>
             </div>
           ) : (
-            <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mx-auto mt-16 flex max-w-6xl flex-wrap justify-center gap-4">
               {capabilities.map((c) => (
-                <GlowCard key={c.title} contentClassName="p-3">
-                  <CapabilityCardFace c={c} />
-                </GlowCard>
+                <CapabilityCard key={c.title} c={c} className="relative" style={{ width: CARD_W, height: CARD_H }} />
               ))}
             </div>
           )}
@@ -775,7 +771,7 @@ export default function ProcurementIntelligence() {
       </section>
 
       {/* Industries */}
-      <section className="py-[120px]">
+      <section className="pb-[120px] pt-0">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="mx-auto max-w-5xl text-center">
             <Eyebrow align="center">Industries</Eyebrow>
@@ -796,66 +792,32 @@ export default function ProcurementIntelligence() {
             />
           </div>
 
-          <div className="mx-auto mt-9 flex flex-wrap items-center justify-center gap-x-7 gap-y-3">
-            {industryChecklist.map((item) => (
-              <div key={item} className="flex items-center gap-2">
-                <span className="flex size-5 shrink-0 items-center justify-center rounded-[10px] border border-primary-500/30 bg-white text-primary-500">
-                  <CheckIcon style={{ fontSize: 12 }} />
+          <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {industries.map(({ label, Icon, photo }) => (
+              <div
+                key={label}
+                role="img"
+                aria-label={label}
+                className="group relative isolate flex aspect-[4/5] items-end overflow-hidden rounded-[20px] bg-secondary-500 bg-cover bg-center text-white transition-transform duration-300 hover:-translate-y-1"
+                style={{ backgroundImage: `url(${photo})` }}
+              >
+                <div
+                  className="absolute inset-0 -z-10 bg-gradient-to-b from-secondary-500/0 from-[45%] to-secondary-500/90"
+                  aria-hidden="true"
+                />
+                <span className="absolute left-3.5 top-3.5 flex size-[46px] items-center justify-center rounded-[14px] bg-white/95 text-primary-600">
+                  <Icon style={{ fontSize: 24 }} />
                 </span>
-                <p className="text-[13px] font-semibold text-heading">{item}</p>
+                <p className="p-5 font-display text-2xl font-bold leading-[1.1] tracking-tight">{label}</p>
               </div>
             ))}
-          </div>
-
-          <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-px overflow-hidden rounded-[20px] border border-secondary-100 bg-secondary-100 shadow-[0_28px_90px_-30px_rgba(20,34,60,0.15)] sm:grid-cols-2 lg:grid-cols-4">
-            {industries.map(({ label, desc, Icon }, i) => (
-              <div key={label} className="flex flex-col bg-white p-7">
-                <div className="flex items-center justify-between">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-caption">
-                    {String(i + 1).padStart(2, "0")}
-                  </p>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-caption">
-                    Industry
-                  </p>
-                </div>
-                <div className="mt-16">
-                  <span className="relative flex size-[52px] shrink-0 items-center justify-center rounded-2xl border border-secondary-100 bg-page text-heading">
-                    <Icon style={{ fontSize: 24 }} />
-                    <span
-                      className="absolute -bottom-1.5 left-3.5 h-[3px] w-[22px] rounded-full"
-                      style={{ backgroundImage: BRAND_GRADIENT }}
-                    />
-                  </span>
-                </div>
-                <p className="mt-8 font-display text-xl font-semibold tracking-tight text-heading">
-                  {label}
-                </p>
-                <p className="mt-3 text-sm leading-relaxed text-caption">{desc}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mx-auto mt-6 flex max-w-6xl flex-col items-start justify-between gap-4 rounded-2xl bg-secondary-500 px-7 py-6 shadow-[0_20px_30px_-10px_rgba(13,30,58,0.25)] sm:flex-row sm:items-center">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-primary-300">
-                One operational view
-              </p>
-              <p className="mt-1.5 text-base font-medium text-white">
-                From regional teams to global networks, every decision
-                starts with trusted procurement data.
-              </p>
-            </div>
-            <span className="flex shrink-0 items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3.5 py-2.5">
-              <span className="size-[7px] rounded-full bg-[#29b9bb] shadow-[0_0_0_4px_rgba(41,185,187,0.14)]" />
-              <span className="text-xs font-semibold text-white">Built to scale</span>
-            </span>
           </div>
         </div>
       </section>
 
       {/* Business outcomes */}
       <section
-        className={`py-[120px] transition-colors duration-700 ease-in-out ${isDark ? "bg-secondary-500" : "bg-transparent"
+        className={`pb-[120px] pt-0 transition-colors duration-700 ease-in-out ${isDark ? "bg-secondary-500" : "bg-transparent"
           }`}
       >
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
@@ -913,17 +875,6 @@ export default function ProcurementIntelligence() {
                 </div>
               </div>
             ))}
-          </div>
-
-          <div className="mt-7 flex items-center justify-center gap-2.5">
-            <span className="size-[7px] rounded-full bg-[#29b9bb] shadow-[0_0_0_5px_rgba(41,185,187,0.12)]" />
-            <p
-              className={`text-xs font-semibold transition-colors duration-700 ease-in-out ${isDark ? "text-white/60" : "text-caption"
-                }`}
-            >
-              One connected procurement view. Six measurable ways to improve
-              performance.
-            </p>
           </div>
         </div>
       </section>
