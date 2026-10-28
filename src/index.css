@@ -404,9 +404,9 @@ body {
 /* ---------- Desktop: diagram and video side by side ---------- */
 @media (min-width: 1180px) {
   .hiw-flow {
-    /* 103px top + the 48px above the diagram puts the "Outcome learned" label
-       (which sits 30px above the screen) 100px under the section description. */
-    padding: 103px clamp(32px, 4.5vw, 96px) 96px;
+    /* 72px top + the 48px above the diagram = a 120px gap between the section
+       description and the demo screen. */
+    padding: 72px clamp(32px, 4.5vw, 96px) 96px;
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
     column-gap: clamp(40px, 5vw, 110px);
     row-gap: 0;
