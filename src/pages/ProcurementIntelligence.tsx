@@ -593,6 +593,7 @@ export default function ProcurementIntelligence() {
       theme="light"
       eyebrow="Capabilities"
       eyebrowColor="primary"
+      headingClassName="text-[26px] leading-[1.15] sm:text-[58px]"
       heading={
         <span className="sm:whitespace-nowrap">
           End-to-end procurement
