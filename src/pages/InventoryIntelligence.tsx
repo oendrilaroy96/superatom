@@ -18,6 +18,10 @@ import DemoModal from "../components/DemoModal";
 import IsoScene from "../components/IsoScene";
 import type { IsoSceneKey } from "../lib/isoScenes";
 import { useDarkTransition } from "../context/DarkTransitionContext";
+// Placeholder photos: the case-study photos, until a photo for each industry is supplied.
+import freightTrucks from "../assets/case-studies/freight-trucks.webp";
+import distributionCenter from "../assets/case-studies/distribution-center.webp";
+import warehouseAisles from "../assets/case-studies/warehouse-aisles.webp";
 
 const BRAND_GRADIENT =
   "linear-gradient(90deg, #533afd 0%, #873eff 33%, #ff7eb0 66%, #ff7600 100%)";
@@ -321,23 +325,11 @@ const distortionStats: { prefix?: string; value: string; label: string }[] = [
   { value: "2.3x", label: "higher sales growth for the retailers that do" },
 ];
 
-const industries: { label: string; Icon: IconComponent }[] = [
-  {
-    label: "Supply Chain & Logistics",
-    Icon: LocalShippingIcon,
-  },
-  {
-    label: "Retail & E-Commerce",
-    Icon: StorefrontIcon,
-  },
-  {
-    label: "Pharma",
-    Icon: LocalHospitalIcon,
-  },
-  {
-    label: "Manufacturing",
-    Icon: PrecisionManufacturingIcon,
-  },
+const industries: { label: string; Icon: IconComponent; photo: string }[] = [
+  { label: "Supply Chain & Logistics", Icon: LocalShippingIcon, photo: freightTrucks },
+  { label: "Retail & E-Commerce", Icon: StorefrontIcon, photo: distributionCenter },
+  { label: "Pharma", Icon: LocalHospitalIcon, photo: warehouseAisles },
+  { label: "Manufacturing", Icon: PrecisionManufacturingIcon, photo: distributionCenter },
 ];
 
 const outcomeGroups: {
@@ -1010,21 +1002,23 @@ export default function InventoryIntelligence() {
             />
           </div>
 
-          <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-px overflow-hidden rounded-[20px] border border-secondary-100 bg-secondary-100 shadow-[0_28px_90px_-30px_rgba(20,34,60,0.15)] sm:grid-cols-2 lg:grid-cols-4">
-            {industries.map(({ label, Icon }) => (
-              <div key={label} className="flex flex-col bg-white p-8">
-                <div>
-                  <span className="relative flex size-[52px] shrink-0 items-center justify-center rounded-2xl border border-secondary-100 bg-page text-heading">
-                    <Icon style={{ fontSize: 24 }} />
-                    <span
-                      className="absolute -bottom-1.5 left-3.5 h-[3px] w-[22px] rounded-full"
-                      style={{ backgroundImage: BRAND_GRADIENT }}
-                    />
-                  </span>
-                </div>
-                <p className="mt-8 font-display text-xl font-semibold tracking-tight text-heading">
-                  {label}
-                </p>
+          <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {industries.map(({ label, Icon, photo }) => (
+              <div
+                key={label}
+                role="img"
+                aria-label={label}
+                className="group relative isolate flex aspect-[4/5] items-end overflow-hidden rounded-[20px] bg-secondary-500 bg-cover bg-center text-white transition-transform duration-300 hover:-translate-y-1"
+                style={{ backgroundImage: `url(${photo})` }}
+              >
+                <div
+                  className="absolute inset-0 -z-10 bg-gradient-to-b from-secondary-500/0 from-[45%] to-secondary-500/90"
+                  aria-hidden="true"
+                />
+                <span className="absolute left-3.5 top-3.5 flex size-[46px] items-center justify-center rounded-[14px] bg-white/95 text-primary-600">
+                  <Icon style={{ fontSize: 24 }} />
+                </span>
+                <p className="p-5 font-display text-2xl font-bold leading-[1.1] tracking-tight">{label}</p>
               </div>
             ))}
           </div>
