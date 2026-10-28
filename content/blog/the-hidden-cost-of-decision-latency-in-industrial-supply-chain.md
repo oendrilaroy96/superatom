@@ -2,7 +2,7 @@
 title: The Hidden Cost of Decision Latency in Industrial Supply Chain
 date: 2026-08-11
 category: Decision intelligence
-cover: /blog/decision-latency-cover.webp
+cover: /blog/decision-latency-cover-v2.webp
 ---
 
 A machine slows on the line. A supplier misses a shipment window. A demand spike hits three SKUs at once.
