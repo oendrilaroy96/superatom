@@ -776,7 +776,11 @@ export default function Features() {
                 {/* Absolute so the chart fills the box without its own aspect ratio
                     (viewBox 208x78) pushing the card taller than the other examples. */}
                 {generativeExample.component === "Line chart" && (
-                  <svg viewBox="-4 -4 208 78" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
+                  <>
+                    <p className="genui-fade-up absolute left-0 top-0 text-[9px] font-semibold uppercase tracking-[0.1em] text-white/75" style={{ "--d": "0.6s" } as CSSProperties}>
+                      Monthly revenue
+                    </p>
+                    <svg viewBox="-4 -4 208 78" preserveAspectRatio="none" className="absolute inset-x-0 bottom-4 top-4 h-[calc(100%-2rem)] w-full">
                     <polygon
                       points="0,58 33,50 66,54 100,36 133,30 166,18 200,10 200,70 0,70"
                       className="genui-fade-up fill-white/15"
@@ -793,6 +797,12 @@ export default function Features() {
                       style={{ "--d": "0.7s" } as CSSProperties}
                     />
                   </svg>
+                    <div className="genui-fade-up absolute inset-x-0 bottom-0 flex justify-between text-[9px] text-white/70" style={{ "--d": "1s" } as CSSProperties}>
+                      {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"].map((m) => (
+                        <span key={m}>{m}</span>
+                      ))}
+                    </div>
+                  </>
                 )}
 
                 {generativeExample.component === "Donut chart" && (
