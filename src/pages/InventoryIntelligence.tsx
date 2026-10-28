@@ -1100,17 +1100,6 @@ export default function InventoryIntelligence() {
               </div>
             ))}
           </div>
-
-          <div className="mt-7 flex items-center justify-center gap-2.5">
-            <span className="size-[7px] rounded-full bg-[#29b9bb] shadow-[0_0_0_5px_rgba(41,185,187,0.12)]" />
-            <p
-              className={`text-sm font-semibold transition-colors duration-700 ease-in-out ${isDark ? "text-white/75" : "text-body"
-                }`}
-            >
-              One connected inventory view. Six measurable ways to improve
-              performance.
-            </p>
-          </div>
         </div>
       </section>
 
