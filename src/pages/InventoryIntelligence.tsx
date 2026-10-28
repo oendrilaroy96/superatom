@@ -981,7 +981,7 @@ export default function InventoryIntelligence() {
       </section>
 
       {/* Industries */}
-      <section className="pb-[80px] pt-0">
+      <section className="pb-[120px] pt-0">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           <div className="mx-auto max-w-5xl text-center">
             <Eyebrow align="center">Industries</Eyebrow>
