@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import EmailIcon from "@mui/icons-material/Email";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
@@ -6,8 +7,10 @@ import YouTubeIcon from "@mui/icons-material/YouTube";
 import type { IconComponent } from "../types/icon";
 import logo from "../assets/logo-white.png";
 import { openCookiePreferences } from "../lib/cookieConsent";
+import DemoModal from "./DemoModal";
 
-const columns: { heading: string; links: { name: string; path?: string }[] }[] = [
+/** A link either goes to a page (`path`) or opens the Book a demo form (`demo`). */
+const columns: { heading: string; links: { name: string; path?: string; demo?: boolean }[] }[] = [
   {
     heading: "Solutions",
     links: [
@@ -27,13 +30,13 @@ const columns: { heading: string; links: { name: string; path?: string }[] }[] =
     heading: "Company",
     links: [
       { name: "About us", path: "/about" },
-      { name: "Contact" },
+      { name: "Contact", demo: true },
     ],
   },
 ];
 
 const socials: { label: string; Icon: IconComponent; href: string }[] = [
-  { label: "Email", Icon: EmailIcon, href: "#" },
+  { label: "Email", Icon: EmailIcon, href: "mailto:contact@superatom.ai" },
   { label: "LinkedIn", Icon: LinkedInIcon, href: "https://www.linkedin.com/company/superatom-0ai/posts/" },
   { label: "X (Twitter)", Icon: XIcon, href: "https://x.com/SuperatomA22530" },
   { label: "YouTube", Icon: YouTubeIcon, href: "https://www.youtube.com/@SuperatomAI" },
@@ -47,6 +50,8 @@ const legalLinks = [
 ];
 
 export default function Footer() {
+  const [demoOpen, setDemoOpen] = useState(false);
+
   return (
     <footer>
       <div className="mx-auto max-w-[1920px] px-4 pb-10 pt-20 sm:px-10 sm:pt-[120px] xl:px-20">
@@ -62,7 +67,7 @@ export default function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
-                  {...(href !== "#" ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                   className="flex h-9 w-9 items-center justify-center rounded-md border border-white/10 bg-white/5 text-white/70 transition-colors hover:border-white/20 hover:text-white"
                 >
                   <Icon style={{ fontSize: 18 }} aria-hidden="true" />
@@ -89,14 +94,15 @@ export default function Footer() {
                         </span>
                       </Link>
                     ) : (
-                      <a
-                        href="#"
+                      <button
+                        type="button"
+                        onClick={() => setDemoOpen(true)}
                         className="group inline-flex items-center text-sm text-white/60 transition-colors hover:text-white"
                       >
                         <span className="transition-transform duration-200 group-hover:translate-x-0.5">
                           {link.name}
                         </span>
-                      </a>
+                      </button>
                     )}
                   </li>
                 ))}
@@ -132,6 +138,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
+      <DemoModal open={demoOpen} onClose={() => setDemoOpen(false)} />
     </footer>
   );
 }
