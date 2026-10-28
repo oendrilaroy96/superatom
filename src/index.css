@@ -233,7 +233,7 @@ body {
 .hiw-frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9;
   border-radius: 16px;
   overflow: hidden;
   background-color: #0a2540;
