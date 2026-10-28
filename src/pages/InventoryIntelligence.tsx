@@ -272,7 +272,7 @@ function CapabilityCardFace({ c }: { c: (typeof capabilities)[number] }) {
         <p className="line-clamp-2 min-h-[36px] font-display text-[15px] font-semibold leading-[1.2] tracking-tight text-heading">
           {c.title}
         </p>
-        <p className="line-clamp-4 min-h-[72px] text-xs leading-[1.5] text-body">{c.desc}</p>
+        <p className="line-clamp-4 min-h-[60px] text-xs leading-[1.25] text-body">{c.desc}</p>
       </div>
     </div>
   );
