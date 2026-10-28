@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import ShieldIcon from "@mui/icons-material/Shield";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import TimelineIcon from "@mui/icons-material/Timeline";
@@ -283,6 +283,22 @@ const GENERATIVE_DONUT = [
  * (2x2) and Enterprise Knowledge (2x2) share rows 2-3; Workflows (2x1) and
  * Generative UI (2x1) fill row 4.
  */
+/** A dot that runs along a source's line into the model. It starts from the
+ * beginning of the line the moment the source connects. */
+function SourceDot({ pathId, color }: { pathId: string; color: string }) {
+  const motionRef = useRef<SVGAnimateMotionElement>(null);
+  useEffect(() => {
+    motionRef.current?.beginElement();
+  }, []);
+  return (
+    <circle r={4} fill={color} className="motion-reduce:hidden">
+      <animateMotion ref={motionRef} dur="0.9s" repeatCount="indefinite" begin="indefinite">
+        <mpath href={`#${pathId}`} />
+      </animateMotion>
+    </circle>
+  );
+}
+
 export default function Features() {
   const [activeStep, setActiveStep] = useState(0);
   const [optimizationTick, setOptimizationTick] = useState(() =>
@@ -471,15 +487,20 @@ export default function Features() {
                     const y = 32 + i * 48;
                     const width = 20 + source.label.length * 7.6;
                     const pathId = `semantic-src-${i}`;
+                    // Source i connects (and ring segment i fills) at phase i, then stays connected.
+                    const connected = i <= semanticPhase;
                     return (
                       <g key={source.label}>
                         <path
                           id={pathId}
                           d={`M ${width + 12} ${y} C 190 ${y}, 200 ${SEMANTIC_RING.cy}, 234 ${SEMANTIC_RING.cy}`}
                           fill="none"
-                          strokeWidth={1.2}
+                          strokeWidth={connected ? 1.6 : 1.2}
                           strokeDasharray="3 5"
-                          className="stroke-secondary-300"
+                          stroke={connected ? source.color : undefined}
+                          className={`transition-[stroke,stroke-width] duration-500 ${
+                            connected ? "" : "stroke-secondary-100"
+                          }`}
                         />
                         <rect
                           x={8}
@@ -488,16 +509,20 @@ export default function Features() {
                           height={28}
                           rx={7}
                           strokeDasharray="3 3"
-                          className="fill-white stroke-secondary-300"
+                          className={`fill-white transition-colors duration-500 ${
+                            connected ? "stroke-primary-300" : "stroke-secondary-200"
+                          }`}
                         />
-                        <text x={18} y={y + 4} className="fill-caption font-mono text-[12px]">
+                        <text
+                          x={18}
+                          y={y + 4}
+                          className={`font-mono text-[12px] transition-colors duration-500 ${
+                            connected ? "fill-heading" : "fill-caption"
+                          }`}
+                        >
                           {source.label}
                         </text>
-                        <circle r={4} fill={source.color} className="motion-reduce:hidden">
-                          <animateMotion dur="2.4s" repeatCount="indefinite" begin={`-${i * 0.4}s`}>
-                            <mpath href={`#${pathId}`} />
-                          </animateMotion>
-                        </circle>
+                        {connected && <SourceDot pathId={pathId} color={source.color} />}
                       </g>
                     );
                   })}
