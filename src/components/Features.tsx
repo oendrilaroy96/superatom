@@ -332,7 +332,7 @@ export default function Features() {
     // the Customers section's background color by the bottom, so the grid
     // fades out gradually instead of being hard-covered.
     <section
-      className="relative overflow-hidden py-[120px]"
+      className="relative overflow-hidden pb-[120px] pt-[60px]"
       style={{
         backgroundImage: "linear-gradient(to bottom, transparent 70%, #f5f5ff 100%)",
       }}
