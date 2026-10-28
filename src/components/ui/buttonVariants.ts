@@ -99,21 +99,3 @@ export const buttonVariants: Record<ButtonVariant, VariantTokens> = {
     ring: "ring-heading",
   },
 };
-
-// Figma: Components / Text Button. Text Button has no fill in any state,
-// so it needed its own on-white text colors — see the page's audit note
-// for why each of these differs from the filled Button's text color.
-export const textButtonColors: Record<
-  ButtonVariant,
-  { text: string; hoverText: string }
-> = {
-  primary: { text: "text-primary-500", hoverText: "hover:text-primary-600" },
-  secondary: { text: "text-heading", hoverText: "hover:text-secondary-600" },
-  accentOutline: { text: "text-accent-500", hoverText: "hover:text-secondary-600" },
-  accent: { text: "text-accent-700", hoverText: "hover:text-accent-800" },
-  default: { text: "text-body", hoverText: "hover:text-heading" },
-  subtle: { text: "text-muted", hoverText: "hover:text-body" },
-  warning: { text: "text-warning-700", hoverText: "hover:text-warning-800" },
-  danger: { text: "text-error-500", hoverText: "hover:text-error-600" },
-  discovery: { text: "text-primary-600", hoverText: "hover:text-primary-700" },
-};
