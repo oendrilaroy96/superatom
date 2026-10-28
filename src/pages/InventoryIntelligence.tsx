@@ -16,6 +16,8 @@ import Button from "../components/ui/Button";
 import Reveal from "../components/ui/Reveal";
 import SectionHeading from "../components/ui/SectionHeading";
 import DemoModal from "../components/DemoModal";
+import IsoScene from "../components/IsoScene";
+import type { IsoSceneKey } from "../lib/isoScenes";
 import { useDarkTransition } from "../context/DarkTransitionContext";
 
 const BRAND_GRADIENT =
@@ -48,150 +50,45 @@ function Eyebrow({
   );
 }
 
-// Each capability's own small inline illustration (line chart, transfer
-// arrows, aging bars, etc.) instead of a single generic icon — ported from
-// the supplied portrait-card designs. Kept as plain SVG markup (not a
-// per-capability component) since none of them take props.
-const optimizationArt = (
-  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
-    <path d="M10 100h180" stroke="#CFC9FA" strokeWidth={1.5} />
-    <path d="M10 70h180M10 40h180" stroke="#DDD8FC" strokeWidth={1} strokeDasharray="3 5" />
-    <polyline points="14 88 58 58 96 72 140 36 186 22" stroke="#5746E8" strokeWidth={3} />
-    <circle cx={58} cy={58} r={4.5} fill="#FFFFFF" stroke="#5746E8" strokeWidth={2.5} />
-    <circle cx={96} cy={72} r={4.5} fill="#FFFFFF" stroke="#5746E8" strokeWidth={2.5} />
-    <circle cx={140} cy={36} r={4.5} fill="#FFFFFF" stroke="#5746E8" strokeWidth={2.5} />
-    <circle cx={186} cy={22} r={5.5} fill="#5746E8" />
-    <path d="M168 4v8M164 8h8" stroke="#8671F0" strokeWidth={2} />
-  </svg>
-);
-
-const rebalancingArt = (
-  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
-    <path d="M10 100h180" stroke="#CFC9FA" strokeWidth={1.5} />
-    <path d="M20 54 L45 38 L70 54 V100 H20 Z" fill="#FFFFFF" stroke="#5746E8" strokeWidth={2.5} />
-    <path d="M36 100 V78 H54 V100" stroke="#5746E8" strokeWidth={2} />
-    <path d="M130 54 L155 38 L180 54 V100 H130 Z" fill="#FFFFFF" stroke="#5746E8" strokeWidth={2.5} />
-    <path d="M146 100 V78 H164 V100" stroke="#5746E8" strokeWidth={2} />
-    <path d="M76 44 Q100 22 124 44" stroke="#5746E8" strokeWidth={2.5} />
-    <path d="M115 43 L124 44 L122 35" stroke="#5746E8" strokeWidth={2.5} />
-    <path d="M124 72 Q100 92 76 72" stroke="#8671F0" strokeWidth={2.5} strokeDasharray="4 5" />
-    <path d="M85 73 L76 72 L78 81" stroke="#8671F0" strokeWidth={2.5} />
-  </svg>
-);
-
-const agingArt = (
-  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
-    <path d="M10 100h180" stroke="#CFC9FA" strokeWidth={1.5} />
-    <rect x={20} y={40} width={22} height={60} rx={3} fill="#5746E8" />
-    <rect x={52} y={52} width={22} height={48} rx={3} fill="#7C6CEC" />
-    <rect x={84} y={62} width={22} height={38} rx={3} fill="#AEA3F5" />
-    <rect x={116} y={72} width={22} height={28} rx={3} fill="#CFC9FA" />
-    <circle cx={166} cy={40} r={22} fill="#FFFFFF" stroke="#5746E8" strokeWidth={2.5} />
-    <path d="M166 27 V40 L175 46" stroke="#5746E8" strokeWidth={2.5} />
-  </svg>
-);
-
-const predictiveExcessArt = (
-  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
-    <path d="M10 100h180" stroke="#CFC9FA" strokeWidth={1.5} />
-    <rect x={20} y={66} width={20} height={34} rx={3} fill="#5746E8" />
-    <rect x={48} y={58} width={20} height={42} rx={3} fill="#5746E8" />
-    <rect x={76} y={52} width={20} height={48} rx={3} fill="#5746E8" />
-    <rect x={104} y={44} width={20} height={56} rx={3} fill="#FFFFFF" stroke="#5746E8" strokeWidth={2} strokeDasharray="4 3" />
-    <rect x={132} y={34} width={20} height={66} rx={3} fill="#FFFFFF" stroke="#5746E8" strokeWidth={2} strokeDasharray="4 3" />
-    <rect x={160} y={22} width={20} height={78} rx={3} fill="#FFFFFF" stroke="#5746E8" strokeWidth={2} strokeDasharray="4 3" />
-    <rect x={133} y={35} width={18} height={9} fill="#AEA3F5" />
-    <rect x={161} y={23} width={18} height={21} fill="#AEA3F5" />
-    <path d="M10 44h180" stroke="#5746E8" strokeWidth={1.5} strokeDasharray="6 5" />
-    <path d="M186 6v8M182 10h8" stroke="#8671F0" strokeWidth={2} />
-  </svg>
-);
-
-const stockoutArt = (
-  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
-    <path d="M10 100h180" stroke="#CFC9FA" strokeWidth={1.5} />
-    <path d="M10 82h180" stroke="#8671F0" strokeWidth={1.5} strokeDasharray="6 5" />
-    <polyline points="14 30 50 42 86 58 112 70" stroke="#5746E8" strokeWidth={3} />
-    <polyline points="112 70 136 54 158 44" stroke="#5746E8" strokeWidth={3} strokeDasharray="5 5" />
-    <circle cx={112} cy={70} r={5} fill="#FFFFFF" stroke="#5746E8" strokeWidth={2.5} />
-    <path
-      d="M180 8 L194 13 V25 C194 34 188 40 180 43 C172 40 166 34 166 25 V13 Z"
-      fill="#5746E8"
-    />
-    <path d="M174 25 L178 29 L186 20" stroke="#FFFFFF" strokeWidth={2.5} />
-  </svg>
-);
-
-const dynamicPolicyArt = (
-  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
-    <path d="M30 28h140M30 55h140M30 82h140" stroke="#CFC9FA" strokeWidth={5} />
-    <path d="M30 28h80" stroke="#5746E8" strokeWidth={5} />
-    <path d="M30 55h40" stroke="#5746E8" strokeWidth={5} />
-    <path d="M30 82h110" stroke="#5746E8" strokeWidth={5} />
-    <circle cx={110} cy={28} r={9} fill="#FFFFFF" stroke="#5746E8" strokeWidth={2.5} />
-    <circle cx={70} cy={55} r={9} fill="#FFFFFF" stroke="#5746E8" strokeWidth={2.5} />
-    <circle cx={140} cy={82} r={9} fill="#FFFFFF" stroke="#5746E8" strokeWidth={2.5} />
-    <path d="M180 10v8M176 14h8" stroke="#8671F0" strokeWidth={2} />
-  </svg>
-);
-
-const replenishmentArt = (
-  <svg viewBox="0 0 200 110" fill="none" strokeLinecap="round" strokeLinejoin="round" className="h-full w-full">
-    <path
-      d="M78 48 L31 26 M78 70 L31 92 M122 48 L169 26 M122 70 L169 92"
-      stroke="#8671F0"
-      strokeWidth={1.5}
-      strokeDasharray="4 4"
-    />
-    <circle cx={24} cy={22} r={7} fill="#FFFFFF" stroke="#8671F0" strokeWidth={2} />
-    <circle cx={24} cy={96} r={7} fill="#FFFFFF" stroke="#8671F0" strokeWidth={2} />
-    <circle cx={176} cy={22} r={7} fill="#FFFFFF" stroke="#8671F0" strokeWidth={2} />
-    <circle cx={176} cy={96} r={7} fill="#FFFFFF" stroke="#8671F0" strokeWidth={2} />
-    <rect x={80} y={44} width={40} height={36} rx={4} fill="#FFFFFF" stroke="#5746E8" strokeWidth={2.5} />
-    <rect x={75} y={32} width={50} height={14} rx={3} fill="#5746E8" />
-    <path d="M93 58h14" stroke="#5746E8" strokeWidth={2.5} />
-  </svg>
-);
-
 const capabilities: {
   title: string;
   desc: string;
-  illustration: ReactNode;
+  scene: IsoSceneKey;
 }[] = [
   {
     title: "Inventory Optimization",
     desc: "Recommends optimal inventory levels by evaluating demand patterns, lead times and supply variability.",
-    illustration: optimizationArt,
+    scene: "opt",
   },
   {
     title: "Inventory Rebalancing",
     desc: "Identifies when, where and how much inventory to transfer across plants, warehouses and distribution centers.",
-    illustration: rebalancingArt,
+    scene: "reb",
   },
   {
     title: "Aging Inventory Intelligence",
     desc: "Surfaces aging and slow-moving inventory early, then recommends the right corrective action.",
-    illustration: agingArt,
+    scene: "age",
   },
   {
     title: "Predictive Excess Inventory Intelligence",
     desc: "Anticipates future excess from demand trends, production plans, procurement schedules and inventory policies.",
-    illustration: predictiveExcessArt,
+    scene: "pre",
   },
   {
     title: "Stockout Prevention",
     desc: "Predicts stockout risk and recommends replenishment, transfers, or production changes to protect service levels.",
-    illustration: stockoutArt,
+    scene: "sto",
   },
   {
     title: "Dynamic Inventory Policy Optimization",
     desc: "Continuously optimizes safety stock, reorder points and inventory norms as conditions change.",
-    illustration: dynamicPolicyArt,
+    scene: "pol",
   },
   {
     title: "Replenishment Decision Intelligence",
     desc: "Recommends what to replenish, when to replenish, where to deploy inventory and the optimal quantity.",
-    illustration: replenishmentArt,
+    scene: "rep",
   },
 ];
 
@@ -260,10 +157,12 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 /** Illustration, title and description shared by every rendering of a capability card. The title
  * and description each reserve a fixed height (two and four lines) so every card lines up, and the
  * illustration takes whatever is left of the 4:5 card. */
-function CapabilityCardFace({ c }: { c: (typeof capabilities)[number] }) {
+function CapabilityCardFace({ c, playKey }: { c: (typeof capabilities)[number]; playKey: number }) {
   return (
     <div className="relative flex h-full flex-col gap-2.5">
-      <div className="flex min-h-14 flex-1 items-center justify-center px-1 pt-1.5">{c.illustration}</div>
+      <div className="flex min-h-14 flex-1 items-center justify-center px-1 pt-1.5">
+        <IsoScene key={playKey} scene={c.scene} animate={playKey > 0} />
+      </div>
       <div className="flex flex-col gap-1.5 px-1 pb-1">
         <span
           className="h-0.5 w-6 shrink-0 rounded-full"
@@ -282,17 +181,23 @@ function CapabilityCardFace({ c }: { c: (typeof capabilities)[number] }) {
  * brand-gradient edge along the top. The caller sets position (absolute or relative) and any transform. */
 function CapabilityCard({
   c,
+  playKey,
   className = "",
   style,
+  onMouseEnter,
 }: {
   c: (typeof capabilities)[number];
+  /** 0 shows the finished scene; each increase replays the build-up animation. */
+  playKey: number;
   className?: string;
   style?: CSSProperties;
+  onMouseEnter?: () => void;
 }) {
   return (
     <div
-      className={`overflow-hidden rounded-[14px] border border-secondary-100 bg-gradient-to-b from-[#f1eeff] from-0% to-white to-[78%] p-3.5 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)] ${className}`}
+      className={`iso-card overflow-hidden rounded-[14px] border border-secondary-100 bg-gradient-to-b from-[#f1eeff] from-0% to-white to-[78%] p-3.5 shadow-[0_12px_24px_-12px_rgba(13,23,56,0.18)] ${className}`}
       style={style}
+      onMouseEnter={onMouseEnter}
     >
       <div
         className="pointer-events-none absolute inset-0"
@@ -309,7 +214,36 @@ function CapabilityCard({
         }}
         aria-hidden="true"
       />
-      <CapabilityCardFace c={c} />
+      <CapabilityCardFace c={c} playKey={playKey} />
+    </div>
+  );
+}
+
+/** A card in the plain (non-scrolling) grid: its illustration builds up when the card scrolls into view and on hover. */
+function GridCapabilityCard({ c }: { c: (typeof capabilities)[number] }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [playKey, setPlayKey] = useState(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setPlayKey((k) => k + 1);
+      },
+      { threshold: 0.6 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div ref={ref} style={{ width: CARD_W, height: CARD_H }}>
+      <CapabilityCard
+        c={c}
+        playKey={playKey}
+        className="relative"
+        style={{ width: CARD_W, height: CARD_H }}
+        onMouseEnter={() => setPlayKey((k) => k + 1)}
+      />
     </div>
   );
 }
@@ -320,11 +254,13 @@ function MobileCardStack({
   exitingIndex,
   enteringIndex,
   shuffling,
+  playKeys,
 }: {
   order: number[];
   exitingIndex: number | null;
   enteringIndex: number | null;
   shuffling: boolean;
+  playKeys: number[];
 }) {
   return (
     <div className="relative h-[420px] w-full max-w-sm">
@@ -336,6 +272,7 @@ function MobileCardStack({
           <CapabilityCard
             key={c.title}
             c={c}
+            playKey={playKeys[i]}
             className="absolute left-0 top-0"
             style={{
               width: CARD_W,
@@ -446,6 +383,8 @@ type CardStyle = {
   opacity: number;
   zIndex: number;
   ready: boolean;
+  /** True once the card has landed in its grid cell, so its illustration can play. */
+  settled: boolean;
 };
 
 export default function InventoryIntelligence() {
@@ -481,9 +420,19 @@ export default function InventoryIntelligence() {
         opacity: slot.opacity,
         zIndex: stackSlots.length - i,
         ready: false,
+        settled: false,
       };
     })
   );
+
+  // Which cards replay their illustration, and when. A key of 0 shows the finished scene; each increase
+  // remounts the svg with the build-up animation. A card plays when it becomes the front card of the
+  // stack, and every card plays (staggered) as the grid settles. Hovering a settled card replays it.
+  const [playKeys, setPlayKeys] = useState<number[]>(() => capabilities.map(() => 0));
+  const wasActive = useRef<boolean[]>(capabilities.map(() => false));
+  const bump = useCallback((i: number) => {
+    setPlayKeys((prev) => prev.map((k, j) => (j === i ? k + 1 : k)));
+  }, []);
 
   const heroSlotRef = useRef<HTMLDivElement>(null);
   const cellRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -656,6 +605,7 @@ export default function InventoryIntelligence() {
         opacity: lerp(1, slot.opacity, fan),
         zIndex: stackSlots.length - stackSlots.indexOf(slot),
         ready: true,
+        settled: fan === 0,
       };
     });
     setCardStyles(next);
@@ -679,6 +629,27 @@ export default function InventoryIntelligence() {
   }, [updateMorph, isDesktop, order]);
 
   useLenis(updateMorph);
+
+  // Pending staggered plays live in a ref, not in the effect's own cleanup: the effect re-runs on every
+  // scroll tick, and clearing them there would cancel plays that were just scheduled.
+  const playTimers = useRef<number[]>([]);
+  useEffect(() => {
+    const timers = playTimers.current;
+    return () => timers.forEach((t) => window.clearTimeout(t));
+  }, []);
+  useEffect(() => {
+    const active = capabilities.map((_, i) =>
+      isDesktop && cardStyles[i].ready && cardStyles[i].settled ? true : !morphActiveRef.current && order[0] === i,
+    );
+    active.forEach((on, i) => {
+      if (on && !wasActive.current[i]) playTimers.current.push(window.setTimeout(() => bump(i), isDesktop ? i * 110 : 0));
+    });
+    wasActive.current = active;
+  }, [cardStyles, order, isDesktop, bump]);
+
+  const replay = (i: number) => {
+    if (cardStyles[i].settled) bump(i);
+  };
 
   // While true, the overlay cards get a CSS transition so each step of the
   // carousel reads as motion (the retiring card sliding out, the next one
@@ -840,6 +811,7 @@ export default function InventoryIntelligence() {
                     exitingIndex={exitingIndex}
                     enteringIndex={enteringIndex}
                     shuffling={shuffling}
+                    playKeys={playKeys}
                   />
                 )}
               </div>
@@ -881,6 +853,7 @@ export default function InventoryIntelligence() {
               <CapabilityCard
                 key={c.title}
                 c={c}
+                playKey={playKeys[i]}
                 className="absolute"
                 style={{
                   top: s.top,
@@ -928,6 +901,7 @@ export default function InventoryIntelligence() {
                       cellRefs.current[i] = el;
                     }}
                     style={{ width: CARD_W, height: CARD_H }}
+                    onMouseEnter={() => replay(i)}
                   />
                 ))}
               </div>
@@ -939,6 +913,7 @@ export default function InventoryIntelligence() {
                       cellRefs.current[i + 4] = el;
                     }}
                     style={{ width: CARD_W, height: CARD_H }}
+                    onMouseEnter={() => replay(i + 4)}
                   />
                 ))}
               </div>
@@ -947,7 +922,7 @@ export default function InventoryIntelligence() {
             <>
               <div className="mx-auto mt-16 flex max-w-6xl flex-wrap justify-center gap-4">
                 {capabilities.map((c) => (
-                  <CapabilityCard key={c.title} c={c} className="relative" style={{ width: CARD_W, height: CARD_H }} />
+                  <GridCapabilityCard key={c.title} c={c} />
                 ))}
               </div>
             </>

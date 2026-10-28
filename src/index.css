@@ -742,3 +742,82 @@ body {
 .blog-prose.is-dark figcaption { color: rgb(255 255 255 / 0.55); }
 .blog-prose.is-dark hr { border-color: rgb(255 255 255 / 0.12); }
 .blog-prose.is-dark li::marker { color: var(--color-primary-300); }
+
+/* Inventory Intelligence capability cards: isometric block illustrations (src/lib/isoScenes.ts).
+   The scenes rest in their finished state. `.iso-anim` is added (and the svg remounted) to replay the
+   build, and the fill mode is "backwards" so the orange block's hover lift still works afterwards. */
+.iso-acc {
+  transition: transform 0.35s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+@media (hover: hover) {
+  .iso-card:hover .iso-acc {
+    transform: translateY(-5px);
+  }
+}
+.iso-anim .i-fade {
+  animation: isoFade 0.55s ease-out var(--d, 0s) backwards;
+}
+.iso-anim .i-drop {
+  animation: isoDrop 0.65s cubic-bezier(0.3, 1.35, 0.5, 1) var(--d, 0s) backwards;
+}
+.iso-anim .i-slide {
+  animation: isoSlide var(--dur, 0.9s) cubic-bezier(0.35, 0.9, 0.3, 1) var(--d, 0s) backwards;
+}
+.iso-anim .i-path {
+  animation: isoPath var(--dur, 1.2s) cubic-bezier(0.4, 0, 0.2, 1) var(--d, 0s) backwards;
+}
+.iso-anim .i-flow {
+  animation:
+    isoFade 0.5s ease-out var(--d, 0s) backwards,
+    isoFlow 1.2s linear calc(var(--d, 0s) + 0.5s) 3;
+}
+@keyframes isoFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes isoDrop {
+  from {
+    transform: translateY(calc(var(--h, 16) * -1px));
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes isoSlide {
+  from {
+    transform: translate(var(--fx, 0px), var(--fy, 0px));
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes isoPath {
+  0% {
+    transform: translate(var(--fx, 0px), var(--fy, 0px));
+  }
+  50% {
+    transform: translate(calc(var(--fx, 0px) * 0.45), calc(var(--fy, 0px) * 0.45 - 12px));
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes isoFlow {
+  to {
+    stroke-dashoffset: var(--fo, -7);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .iso-anim * {
+    animation: none !important;
+  }
+  .iso-acc {
+    transition: none;
+  }
+}
