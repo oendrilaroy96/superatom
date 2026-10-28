@@ -404,7 +404,8 @@ body {
 /* ---------- Desktop: diagram and video side by side ---------- */
 @media (min-width: 1180px) {
   .hiw-flow {
-    padding: 96px clamp(32px, 4.5vw, 96px);
+    /* 32px top + the 48px above the diagram = an 80px gap under the section description. */
+    padding: 32px clamp(32px, 4.5vw, 96px) 96px;
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
     column-gap: clamp(40px, 5vw, 110px);
     row-gap: 0;
