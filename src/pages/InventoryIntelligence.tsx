@@ -860,12 +860,12 @@ export default function InventoryIntelligence() {
       )}
 
       {/* Capabilities */}
-      {/* xl:pt-10 shrinks the gap above the grid specifically on desktop
+      {/* xl:pt-0 shrinks the gap above the grid specifically on desktop
           (where that space sits below the pinned heading rather than above
           an in-flow one, so it reads as empty rather than as breathing
           room) — pb stays the full 120px so spacing below the grid, before
           the next section, is unaffected. */}
-      <section className="pb-[120px] pt-[120px] xl:pt-10">
+      <section className="pb-[120px] pt-[120px] xl:pt-0">
         <div className="mx-auto max-w-[1920px] px-4 sm:px-10 xl:px-20">
           {/* On desktop this heading already lives in the sticky block
               above; rendering it again here would duplicate it right as it
