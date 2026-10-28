@@ -250,6 +250,8 @@ const SEMANTIC_STAGES: { label: string }[] = [
 // has finished and the semantic model output is resolved, before the cycle
 // resets and runs again.
 const SEMANTIC_PHASES = [-1, 0, 1, 2, 3, 4, 5, 5, 5] as const;
+/** How long each phase lasts: one source connects, and one ring segment fills, per step. */
+const SEMANTIC_STEP_MS = 1600;
 
 // Generative UI card: a plain-language question is "typed", then the
 // component Superatom would pick for that data pattern renders under it,
@@ -292,7 +294,7 @@ function SourceDot({ pathId, color }: { pathId: string; color: string }) {
   }, []);
   return (
     <circle r={4} fill={color} className="motion-reduce:hidden">
-      <animateMotion ref={motionRef} dur="0.9s" repeatCount="indefinite" begin="indefinite">
+      <animateMotion ref={motionRef} dur="1.6s" repeatCount="indefinite" begin="indefinite">
         <mpath href={`#${pathId}`} />
       </animateMotion>
     </circle>
@@ -333,7 +335,7 @@ export default function Features() {
     }, 3600);
     const semanticTimer = setInterval(() => {
       setSemanticTick((t) => (t + 1) % SEMANTIC_PHASES.length);
-    }, 700);
+    }, SEMANTIC_STEP_MS);
     return () => {
       clearInterval(stepTimer);
       clearInterval(optimizationTimer);
@@ -498,7 +500,7 @@ export default function Features() {
                           strokeWidth={connected ? 1.6 : 1.2}
                           strokeDasharray="3 5"
                           stroke={connected ? source.color : undefined}
-                          className={`transition-[stroke,stroke-width] duration-500 ${
+                          className={`transition-[stroke,stroke-width] duration-700 ${
                             connected ? "" : "stroke-secondary-100"
                           }`}
                         />
