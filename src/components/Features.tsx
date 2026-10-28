@@ -735,7 +735,7 @@ export default function Features() {
               example remounts via `key`, replaying the CSS entrance
               animations (see .genui-* in index.css). */}
           <div
-            className={`group relative overflow-hidden rounded-2xl p-6 sm:col-span-2 lg:col-span-2 ${HOVER_LIFT}`}
+            className={`group relative flex flex-col overflow-hidden rounded-2xl p-6 sm:col-span-2 lg:col-span-2 ${HOVER_LIFT}`}
             style={{
               background:
                 "linear-gradient(135deg, #533afd 0%, #873eff 40%, #ff7eb0 75%, #ff7600 100%)",
@@ -750,7 +750,7 @@ export default function Features() {
             </button>
             <div
               key={generativeIndex}
-              className="@container flex h-[176px] flex-col rounded-xl border border-dashed border-white/30 bg-white/10 p-3"
+              className="@container flex min-h-[176px] flex-1 flex-col rounded-xl border border-dashed border-white/30 bg-white/10 p-3"
             >
               {/* Question input. mr-8 keeps it clear of the + button. */}
               <div className="mr-8 flex items-center gap-1.5 rounded-lg bg-white/15 px-2.5 py-1.5">
@@ -784,7 +784,7 @@ export default function Features() {
                       points="0,58 33,50 66,54 100,36 133,30 166,18 200,10"
                       pathLength={1}
                       fill="none"
-                      strokeWidth={2.5}
+                      strokeWidth={1.3}
                       strokeLinejoin="round"
                       strokeLinecap="round"
                       className="genui-draw stroke-white"
@@ -867,7 +867,7 @@ export default function Features() {
             <p className="mt-5 font-display text-h3 font-semibold text-white">
               Generative UI
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-white/80">
+            <p className="mt-2 max-w-[480px] text-sm leading-relaxed text-white/80">
               User interfaces are dynamically generated based on context,
               significantly reducing cognitive overhead when exploring complex
               data.
